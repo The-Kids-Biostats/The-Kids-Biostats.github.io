@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: "The-Kids-Biostats.github.io"
+  title: "The Kids Biostats"
   navbar:
     right:
       - about.qmd

@@ -1,0 +1,563 @@
+---
+title: "Handling Missing Data with LMER"
+output: html_document
+date: "2024-04-22"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F, warning = F)
+
+library(lme4); library(merTools); library(AER)
+library(gtsummary); library(jtools); library(parameters)
+library(patchwork); library(tidyverse)
+
+theme_clean <- function() {
+  theme_minimal(base_family = "Barlow Semi Condensed") +
+    theme(panel.grid.minor = element_blank(),
+          plot.title = element_text(family = "BarlowSemiCondensed-Bold"),
+          axis.title = element_text(family = "BarlowSemiCondensed-Medium"),
+          strip.text = element_text(family = "BarlowSemiCondensed-Bold",
+                                    size = rel(1), hjust = 0),
+          strip.background = element_rect(fill = "grey80", color = NA))
+}
+```
+
+# Overview
+
+As consultant statisticians, we are often approached by people who are already done some preliminary data analysis and who are (now) looking (for assistance) to move onto something more complex; and often, they have done some methodology research. As missing data is present (or not present?) in most health related datasets, this is a topic that we regularly find ourselves discussing. Working through even the basics on this topics will mean one will also have to work through the challenging and varied (often cryptic) statistical nomenclature.
+
+"Can we use mixed models, they use all available data (?)"
+
+This brief worked example was motivated by [reading this paper](https://statisticalhorizons.com/wp-content/uploads/MissingDataByML.pdf) that looked to have an interesting worked example that I thought could benefit from some figures.
+
+# Setting the scene
+
+We're going to use data from the [AER package](https://cran.r-project.org/web/packages/AER/index.html) which contains Panel Data from a Study of Income Dynamics [(read more here)](https://search.r-project.org/CRAN/refmans/AER/html/PSID7682.html). In brief:
+
+-   Complete data on 595 individuals
+-   Collected between 1976 and 1982
+-   7 (annual) observations per person
+-   The focus is on modelling the *wage* data over time
+
+We acknowledge that the issues related to gender pay differences and trends are a sensitive subject and are simply using this example as it was and is a readily available, tidy, tangible, cross discipline dataset that allows the demonstration of the statistical principals of interest.
+
+## Research question
+
+Are there differences in the rate of wage growth between males and females over time (in this dataset)?
+
+That question is quite straightforward to answer here,; but the motivating commentary is really around how mixed effects model can be beneficial in the presence of systematic missing (follow-up) data - with a focus on parameter estimates and their graphical interpretation.
+
+Missing follow-up data (lost to follow, attrition, drop out) is often seen in health research datasets. The data might be Missing At Random, it my be Missing Completely At Random, the important nuances of these are largely out of scope
+
+## R Session info
+
+# Data inspection
+
+Let's take an initial look at the data.
+
+```{r }
+data("PSID7682")
+dat <- PSID7682
+dat <- dat %>% 
+  mutate(gender = case_when(gender == "male" ~ "Male",
+                            T ~ "Female"),
+         gender = factor(gender),
+         gender = relevel(gender, "Male"),
+         lwage = log(wage)) %>% 
+  group_by(id) %>% 
+  mutate(t = 1:7)
+head(dat)
+```
+
+How much data do we have?
+
+```{r }
+dat %>% 
+  ungroup() %>% 
+  select(gender, t) %>% 
+  tbl_summary(by = gender,
+              statistic = all_categorical() ~ "{n}")
+```
+
+And, what does it look like...
+
+```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5}
+dat %>% 
+  ggplot(aes(t, wage, colour = gender)) +
+  geom_point(alpha = 0.15) +
+  geom_line(aes(group = id), alpha = 0.15) + 
+  facet_wrap(~ gender) +
+  scale_colour_viridis_d(option = "viridis", end = 0.4) +
+  theme_clean() +
+  theme(legend.position="none") +
+  labs(x = "Time (years)", y = "Wage")
+```
+
+We can see that, generally the wage for most individuals goes up at a fairly steady rate for most individuals across the 7 years of follow-up. We can also see some characteristics (upper skew, heteroskedasticity) that are likely to invalidate some modeling assumptions. Let's look at the log of wage.
+
+```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5}
+dat %>% 
+  ggplot(aes(t, lwage, colour = gender)) +
+  geom_point(alpha = 0.15) +
+  geom_line(aes(group = id), alpha = 0.15) + 
+  facet_wrap(~ gender) +
+  scale_colour_viridis_d(option = "viridis", end = 0.4) +
+  theme_clean() +
+  theme(legend.position="none") +
+  labs(x = "Time (years)", y = "Wage (logged)") +
+  coord_cartesian(xlim = c(0,7),
+                  ylim = c(4.5,9))
+```
+
+# Modelling the complete data
+
+## Erroneous basic linear regression model
+
+To address the question of **"are there differences in the rate of wage growth"**, we are going to fit a gender by time interaction term which will give us an indication of if 'as time changes' the outcome (logged wage) changes at a different rate for each gender.
+
+```{r echo = T}
+mod1 <- lm(lwage ~ gender * t, data = dat)
+export_summs(mod1, error_format = "[{conf.low}, {conf.high}]",
+             error_pos = "right", digits = 3,
+             statistics = c(N = "nobs"))
+```
+
+We can see there is an effect of gender present, and an effect of time (the growth overtime we saw in the original plot), but the very small beta coefficient (relative to the scale of data we are working with) and the p-value of 0.6 are suggestive that the rate of wage growth over time does not differ significantly between genders.
+
+To view this, we're not going to use `geom_smooth` or `stat_summary` as we might do on the fly. To set this up for later in the article, we'll create a new dataset and use predictions to draw our (straight) line.
+
+```{r echo = T}
+newdat <- expand.grid(t = 1:7, gender = c("Male", "Female")) %>% 
+  mutate(gender = factor(gender),
+         gender = relevel(gender, "Male"),
+         id = c(rep(1, 7), rep(2, 7)))
+
+p_mod1 <- cbind(newdat, 
+                lwage = predict(mod1, newdat, interval = "prediction"))
+```
+
+```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5}
+dat %>% 
+  ggplot(aes(t, lwage, colour = gender)) +
+  geom_point(alpha = 0.15) +
+  geom_line(aes(group = id), alpha = 0.15) + 
+  facet_wrap(~ gender) +
+  geom_line(data = p_mod1, aes(y = lwage.fit), colour = "red", linewidth = 1) +
+  scale_colour_viridis_d(option = "viridis", end = 0.4) +
+  theme_clean() +
+  theme(legend.position="none") +
+  labs(x = "Time (years)", y = "Wage (logged)") +
+  coord_cartesian(xlim = c(0,7),
+                  ylim = c(4.5,9))
+```
+
+Okay, these red fitted lines look like quite a good 'line of best fit', they pass the eye test of broadly representing the trends of the data well.
+
+Fitted with a prediction confidence interval, we see.
+
+```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5}
+p_mod1 %>% 
+  ggplot(aes(t, lwage.fit, ymin = lwage.lwr, ymax = lwage.upr, fill = gender)) +
+  geom_ribbon(alpha = 0.5) +
+  geom_line(colour = "black", linewidth = 1) + 
+  facet_wrap(~ gender) +
+  scale_fill_viridis_d(option = "viridis", end = 0.4) +
+  theme_clean() +
+  theme(legend.position="none") +
+  labs(x = "Time (years)", y = "Wage (logged)")  +
+  coord_cartesian(xlim = c(0,7),
+                  ylim = c(4.5,9)) -> p1
+p1
+```
+
+These lines look parallel - suggestive of no difference in growth rates between the genders (the non-signficant interaction term we saw).
+
+Of course, we have no adjusted for the within person correlation present in the data. The model above is inappropriate as one of the main assumptions of the model is violated - the data points are not all independent (we know there are 7 from each individual).
+
+## Mixed effects model
+
+Here we run a fairly basic linear mixed effects model, the model has the same fixed effects terms as above (the interaction term we are curious about) but also includes a random effect, that is, the intercept is allowed to varied for each individual.
+
+```{r echo = T}
+mod2 <- lmer(lwage ~ gender * t + (1 | id), data = dat)
+export_summs(mod2, error_format = "[{conf.low}, {conf.high}]",
+             error_pos = "right", digits = 3,
+             statistics = c(N = "nobs"))
+```
+
+Lets also fit the predicted values from this model.
+
+```{r echo = T}
+newdat <- expand.grid(t = 1:7, gender = c("Male", "Female")) %>% 
+  mutate(gender = factor(gender),
+         gender = relevel(gender, "Male"),
+         id = c(rep(1, 7), rep(2, 7)))
+p_mod2 <- cbind(newdat,
+                predictInterval(mod2, newdat, which = "fixed", n.sims = 1000, level = 0.95, type="linear.prediction"))
+
+```
+
+### Slight segway
+
+With the standard linear regression model (above), we used `predict` to generate a `prediction` interval. With linear mixed effects models, we do no have the same function available (that will incorporate the random effects variability in the interval), so rather than calculating these, we simulate! Some extra content on this can be read [here](https://tmalsburg.github.io/predict-vs-simulate.html) or [(somewhat less so) here](https://stackoverflow.com/questions/63198626/predictinterval-and-the-which-option). This use of simulation is part of the reason behind the confidence intervals not being parallel.
+
+## Back to our Mixed effects model
+
+```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5}
+p_mod2 %>% 
+  ggplot(aes(t, fit, ymin = lwr, ymax = upr, fill = gender)) +
+  geom_ribbon(alpha = 0.5) +
+  geom_line(colour = "black", linewidth = 1) + 
+  facet_wrap(~ gender) +
+  scale_fill_viridis_d(option = "viridis", end = 0.4) +
+  theme_clean() +
+  theme(legend.position="none") +
+  labs(x = "Time (years)", y = "Wage (logged)") +
+  coord_cartesian(xlim = c(0,7),
+                  ylim = c(4.5,9)) -> p2
+p2
+```
+
+When we compare the output of this model with the earlier (erroneous) model, we see two expected things.
+
+```{r echo = T}
+export_summs(mod1, mod2,
+             error_format = "[{conf.low}, {conf.high}]",
+             error_pos = "right", digits = 3,
+             statistics = c(N = "nobs"))
+```
+
+-   The coefficients have the same value in each model as these represent the fixed effect
+-   The confidence intervals for those coefficients are slightly narrower in Model 2, this is because some of the variation present \[within Model 1\] is explained by the random effects \[present in Model 2 and not Model 1\].
+
+We can see this when we plot the predicted values side by side.
+
+```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=10}
+p1 / p2
+```
+
+# Introduction of missing data
+
+We now create a modified copy of the dataset whereby ***wage data is missing as a function of the previous wage value***. That is, as one's wage gets higher, there probability of not showing completing the following years survey is increased. I was unable to implement the exact same missing data function as the [inspiring example](https://statisticalhorizons.com/wp-content/uploads/MissingDataByML.pdf) but the below is similar and serves the same purpose. Without diving too far down the missing data hole (intended), this is an example of data \['missing At random'\](https://www.ncbi.nlm.nih.gov/books/NBK493614/#:\~:text=Missing%20completely%20at%20random%20(MCAR,and%20those%20with%20complete%20data.), in that the fact that the data is missing is related to something observed (by design), that being, the previous years wage value.
+
+```{r echo=T}
+mdat <- dat %>% 
+  group_by(id) %>% 
+  mutate(plwage = c(0, lwage[1:6]),
+         pt = 1 / (1+exp(-6.9 + plwage)),
+         mlwage = case_when(pt > 0.5 ~ lwage,
+                           pt < 0.5 ~ 0),
+         is_zero_following = ifelse(mlwage == 0, 1, 0),
+         # Use cummax to make this vector 1 from the first occurrence of 0 onwards
+         is_zero_following = cummax(is_zero_following),
+         # Replace wage with 0 where is_zero_following is 1
+         mlwage = ifelse(is_zero_following == 1, NA, mlwage)) 
+```
+
+What impact has this had on the data? We can see a significant loss of data, especially across the latter years.
+
+```{r echo=T}
+mdat %>% 
+  group_by(t) %>% 
+  summarise(N = sum(!is.na(mlwage)))
+```
+
+This also looks to have impacted males more than females.
+
+```{r echo=T}
+mdat %>% 
+  ungroup() %>% 
+  filter(!is.na(mlwage)) %>% 
+  select(gender, t) %>% 
+  tbl_summary(by = gender,
+              statistic = all_categorical() ~ "{n}")
+```
+
+Visually, our data looks like this:
+
+```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5, warning=FALSE, message=FALSE}
+mdat %>% 
+  ggplot(aes(t, mlwage, colour = gender)) +
+  geom_point(alpha = 0.15) +
+  geom_line(aes(group = id), alpha = 0.15) + 
+  facet_wrap(~ gender) +
+  scale_colour_viridis_d(option = "viridis", end = 0.4) +
+  theme_clean() +
+  theme(legend.position="none") +
+  labs(x = "Time (years)", y = "Wage (logged)")  +
+  coord_cartesian(xlim = c(0,7),
+                  ylim = c(4.5,9)) 
+```
+
+What what is missing?
+
+```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5, warning=FALSE, message=FALSE}
+mdat %>% 
+  ggplot(aes(t, mlwage, colour = gender)) +
+  geom_point(data = mdat %>% filter(is_zero_following == 1),
+             aes(y = lwage, group = id), alpha = 0.1, colour = "red") +
+  geom_line(data = mdat %>% filter(is_zero_following == 1),
+            aes(y = lwage, group = id), alpha = 0.15, colour = "red") + 
+  geom_point(alpha = 0.15) +
+  geom_line(aes(group = id), alpha = 0.15) + 
+  facet_wrap(~ gender) +
+  scale_colour_viridis_d(option = "viridis", end = 0.4) +
+  theme_clean() +
+  theme(legend.position="none",
+        plot.subtitle=element_text(colour = "red")) +
+  labs(x = "Time (years)", y = "Wage (logged)",
+       subtitle = "Missing data shown in red")  +
+  coord_cartesian(xlim = c(0,7),
+                  ylim = c(4.5,9))
+```
+
+## Missing - Erroneous basic linear regression model
+
+```{r echo = T}
+mod3 <- lm(mlwage ~ gender * t, data = mdat)
+export_summs(mod3, error_format = "[{conf.low}, {conf.high}]",
+             error_pos = "right", digits = 3,
+             statistics = c(N = "nobs"))
+```
+
+Now the model is indicating that there is a strong interaction effect for gender by time. The coefficient of the interaction term implies that (logged) wages increase at a faster rate (over time) for females than they do for males. Let's visual this alongside our modified dataset.
+
+```{r echo = T}
+newdat <- expand.grid(t = 1:7, gender = c("Male", "Female"), id = 1) %>% 
+  mutate(gender = factor(gender),
+         gender = relevel(gender, "Male"))
+
+p_mod3 <- cbind(newdat, 
+                lwage = predict(mod3, newdat, interval = "prediction"))
+```
+
+```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5, warning=F, message=F}
+mdat %>% 
+  ggplot(aes(t, mlwage, colour = gender)) +
+  geom_ribbon(data = p_mod3, aes(t, lwage.fit, ymin = lwage.lwr, ymax = lwage.upr, fill = gender), alpha = 0.5) +
+  geom_line(data = p_mod3, aes(t, lwage.fit), colour = "black", linewidth = 1) + 
+  geom_point(data = mdat %>% filter(is_zero_following == 1),
+             aes(y = lwage, group = id), alpha = 0.1, colour = "red") +
+  geom_line(data = mdat %>% filter(is_zero_following == 1),
+            aes(y = lwage, group = id), alpha = 0.15, colour = "red") + 
+  geom_point(alpha = 0.15) +
+  geom_line(aes(group = id), alpha = 0.15) + 
+  facet_wrap(~ gender) +
+  scale_colour_viridis_d(option = "viridis", end = 0.4) +
+  theme_clean() +
+  theme(legend.position="none",
+        plot.subtitle=element_text(colour = "red")) +
+  labs(x = "Time (years)", y = "Wage (logged)",
+       subtitle = "Missing data shown in red")  +
+  coord_cartesian(xlim = c(0,7),
+                  ylim = c(4.5,9)) -> p4
+p4
+```
+
+We can see the predicted line and bands (95% prediction interval) represent the (non-missing) data well, and we can see the difference in slope between genders - the observed signficant interaction term.
+
+## Missing - Mixed effects model
+
+```{r echo = T}
+mod4 <- lmer(mlwage ~ gender * t + (1 | id), data = mdat)
+export_summs(mod4, error_format = "[{conf.low}, {conf.high}]",
+             error_pos = "right", digits = 3,
+             statistics = c(N = "nobs"))
+```
+
+When we run the mixed effects model on the dataset with missing data, we (correctly) *do not* see a significant interaction effect.
+
+In fact:
+
+```{r echo = F}
+export_summs(mod4, mod3,
+             error_format = "[{conf.low}, {conf.high}]",
+             error_pos = "right", digits = 3,
+             model.names = c("ME - Missing", "ME - Complete"),
+             statistics = c(N = "nobs"))
+```
+
+Our mixed effects model on the dataset with a lot of missing data (ME - Missing) generates quite similar estimates to what we know as truth from the model on the complete data (ME - Complete).
+
+To comparatively visualise this.
+
+```{r echo = T}
+newdat <- expand.grid(t = 1:7, gender = c("Male", "Female"), id = 1) %>% 
+  mutate(gender = factor(gender),
+         gender = relevel(gender, "Male"))
+
+p_mod4 <- cbind(newdat,
+                predictInterval(mod4, newdat, which = "fixed", n.sims = 1000, level = 0.95))
+```
+
+```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5, warning=FALSE, message=FALSE}
+mdat %>% 
+  ggplot(aes(t, mlwage, colour = gender)) +
+  geom_ribbon(data = p_mod4, aes(t, fit, ymin = lwr, ymax = upr, fill = gender), alpha = 0.5) +
+  geom_line(data = p_mod4, aes(t, fit), colour = "black", linewidth = 1) + 
+  geom_point(data = mdat %>% filter(is_zero_following == 1),
+             aes(y = lwage, group = id), alpha = 0.1, colour = "red") +
+  geom_line(data = mdat %>% filter(is_zero_following == 1),
+            aes(y = lwage, group = id), alpha = 0.15, colour = "red") + 
+  geom_point(alpha = 0.15) +
+  geom_line(aes(group = id), alpha = 0.15) + 
+  facet_wrap(~ gender) +
+  scale_colour_viridis_d(option = "viridis", end = 0.4) +
+  theme_clean() +
+  theme(legend.position="none",
+        plot.subtitle=element_text(colour = "red")) +
+  labs(x = "Time (years)", y = "Wage (logged)",
+       subtitle = "Missing data shown in red")  +
+  coord_cartesian(xlim = c(0,7),
+                  ylim = c(4.5,9)) -> p4
+p4
+```
+
+These lines (predicted lines; by gender) look parallel (as they should), notably with the Males, we see the predicted line "pulled up" in the direction of the missing data even though that data was not available to the model - this is because the model has leveraged the slope of the data it did have access to, at the individual (person) level, when converging on its estimates.
+
+If the erroneous interaction effect (non-parallel lines) was not obvious in the plot separated by gender, here we see the predictred lines on the same plot for each model.
+
+```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5, warning=FALSE, message=FALSE}
+p_mod3 %>% 
+  ggplot(aes(t, lwage.fit, ymin = lwage.lwr, ymax = lwage.upr, fill = gender)) +
+  geom_ribbon(alpha = 0.5) +
+  geom_line(colour = "black", linewidth = 1) + 
+  scale_fill_viridis_d(option = "viridis", end = 0.4) +
+  theme_clean() +
+  labs(x = "Time (years)", y = "Wage (logged)",
+       title = "Erroneous basic linear regression",
+       subtitle = "Missing data present") +
+  coord_cartesian(xlim = c(0,7),
+                  ylim = c(4.5,9)) -> p5
+
+p_mod4 %>% 
+  ggplot(aes(t, fit, ymin = lwr, ymax = upr, fill = gender)) +
+  geom_ribbon(alpha = 0.5) +
+  geom_line(colour = "black", linewidth = 1) + 
+  scale_fill_viridis_d(option = "viridis", end = 0.4) +
+  theme_clean() +
+  labs(x = "Time (years)", y = "Wage (logged)",
+       title = "Mixed effects regression",
+       subtitle = "Missing data present")  +
+  coord_cartesian(xlim = c(0,7),
+                  ylim = c(4.5,9)) -> p6
+
+p5 + p6 + plot_layout(guides = "collect") & theme(legend.position='bottom')
+```
+
+# Bonus content
+
+## Less aggressive missingness
+
+What if we whip through the same process and comparison, in a setting that 'less aggressively' has drop out with increasing wage and also some additional random missingness throughout.
+
+```{r echo = T}
+mdat <- dat %>% 
+  group_by(id) %>% 
+  mutate(plwage = c(0, lwage[1:6]),
+         pt = 1 / (1+exp(-7.2 + plwage))) %>% # Less aggressive dropout as a function of age
+  rowwise() %>% 
+  mutate(pt = case_when(pt > 0.5 & runif(1) < 0.10 & t > 2 ~ 0, # Adding an underlying random component to dropout
+                        T ~ pt)) %>% 
+  group_by(id) %>% 
+  mutate(mlwage = case_when(pt > 0.5 ~ lwage,
+                            pt < 0.5 ~ 0),
+         is_zero_following = ifelse(mlwage == 0, 1, 0),
+         is_zero_following = cummax(is_zero_following),
+         mlwage = ifelse(is_zero_following == 1, NA, mlwage)) 
+```
+
+```{r echo=FALSE}
+mdat %>% 
+  ungroup() %>% 
+  filter(!is.na(mlwage)) %>% 
+  select(gender, t) %>% 
+  tbl_summary(by = gender,
+              statistic = all_categorical() ~ "{n}")
+```
+
+```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5, warning=FALSE, message=FALSE}
+mdat %>% 
+  ggplot(aes(t, mlwage, colour = gender)) +
+  geom_point(data = mdat %>% filter(is_zero_following == 1),
+             aes(y = lwage, group = id), alpha = 0.1, colour = "red") +
+  geom_line(data = mdat %>% filter(is_zero_following == 1),
+            aes(y = lwage, group = id), alpha = 0.15, colour = "red") + 
+  geom_point(alpha = 0.15) +
+  geom_line(aes(group = id), alpha = 0.15) + 
+  facet_wrap(~ gender) +
+  scale_colour_viridis_d(option = "viridis", end = 0.4) +
+  theme_clean() +
+  theme(legend.position="none") +
+  labs(x = "Time (years)", y = "Wage (logged)")  +
+  coord_cartesian(xlim = c(0,7),
+                  ylim = c(4.5,9))
+```
+
+```{r echo = F}
+b1_mod1 <- lm(mlwage ~ gender * t, data = mdat)
+b1_mod2 <- lmer(mlwage ~ gender * t + (1 | id), data = mdat)
+
+export_summs(mod2, b1_mod1, b1_mod2,
+             error_format = "[{conf.low}, {conf.high}]",
+             error_pos = "right", digits = 3,
+             model.names = c("ME - Complete", "Basic - Missing", "ME - Missing"),
+             statistics = c(N = "nobs"))
+```
+
+We can see, the (erroneous) basic linear regression still inappropriately suggests a significant interaction effect is present, while the mixed effects models continues to perform well (relative to the model using the complete data).
+
+## Completely random missingness
+
+What if missingness (simulated dropout) is complete random?
+
+```{r echo = T}
+mdat <- dat %>% 
+  group_by(id) %>% 
+  rowwise() %>% 
+  mutate(pt = 1,
+         pt = case_when(runif(1) < 0.10 & t > 2 ~ 0, # Implementing random dropout
+                        T ~ pt)) %>% 
+  group_by(id) %>% 
+  mutate(mlwage = case_when(pt > 0.5 ~ lwage,
+                            pt < 0.5 ~ 0),
+         is_zero_following = ifelse(mlwage == 0, 1, 0),
+         is_zero_following = cummax(is_zero_following),
+         mlwage = ifelse(is_zero_following == 1, NA, mlwage)) 
+```
+
+```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5, warning=FALSE, message=FALSE}
+mdat %>% 
+  ggplot(aes(t, mlwage, colour = gender)) +
+  geom_point(data = mdat %>% filter(is_zero_following == 1),
+             aes(y = lwage, group = id), alpha = 0.1, colour = "red") +
+  geom_line(data = mdat %>% filter(is_zero_following == 1),
+            aes(y = lwage, group = id), alpha = 0.15, colour = "red") + 
+  geom_point(alpha = 0.15) +
+  geom_line(aes(group = id), alpha = 0.15) + 
+  facet_wrap(~ gender) +
+  scale_colour_viridis_d(option = "viridis", end = 0.4) +
+  theme_clean() +
+  theme(legend.position="none") +
+  labs(x = "Time (years)", y = "Wage (logged)")  +
+  coord_cartesian(xlim = c(0,7),
+                  ylim = c(4.5,9))
+```
+
+```{r echo = F}
+b2_mod1 <- lm(mlwage ~ gender * t, data = mdat)
+b2_mod2 <- lmer(mlwage ~ gender * t + (1 | id), data = mdat)
+
+export_summs(mod2, b2_mod1, b2_mod2,
+             error_format = "[{conf.low}, {conf.high}]",
+             error_pos = "right", digits = 3,
+             model.names = c("ME - Complete", "Basic - Missing", "ME - Missing"),
+             statistics = c(N = "nobs"))
+             
+```
+
+The basic regression model is no long suggesting there is a significant gender by time interaction effect, and comparatively, all three models give similar estimates.
+
+# Conclusion
+
+We have seen that in the face of missing follow-up data, it is a grave mistake to continue with a basic linear regression model. We have then seen that mixed effects models are extremely robust in dealing with the issue and return coefficients and standard errors similar to those of a complete-data model.
