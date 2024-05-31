@@ -1,5 +1,5 @@
 ---
-title: "The-Kids-Biostats.github.io"
+title: "The Kids Biostats"
 listing:
   contents: posts
   sort: "date desc"

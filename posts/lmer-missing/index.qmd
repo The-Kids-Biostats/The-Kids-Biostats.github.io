@@ -3,6 +3,9 @@ title: "Handling Missing Data with LMER"
 output: html_document
 date: "2024-04-22"
 author: "Dr Matthew Cooper"
+categories:
+  - missingdata
+  - mixedmodels
 ---
 
 ```{r setup, include=FALSE}
