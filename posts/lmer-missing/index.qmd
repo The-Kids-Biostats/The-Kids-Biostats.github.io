@@ -571,7 +571,7 @@ Thanks to Elizabeth McKinnon, Zac Dempsey and Wesley Billingham for reviewing th
 
 To access the qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:
 
-[https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.i](https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io)o/posts\
+[https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io](https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io)\
 \
 The session information can also be seen below.
 
