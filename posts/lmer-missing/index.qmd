@@ -28,9 +28,9 @@ theme_clean <- function() {
 
 # Overview
 
-As consultant statisticians, we are often approached by people who are already done some preliminary data analysis and who are (now) looking (for assistance) to move onto something more complex; and often, they have done some methodology research. As missing data is present (or not present?) in most health related datasets, this is a topic that we regularly find ourselves discussing. Working through even the basics on this topics will mean one will also have to work through the challenging and varied (often cryptic) statistical nomenclature.
+As consultant statisticians, we are often approached by people who have already done some preliminary data analysis and who are (now) looking to move onto something more complex; and often, they have done some methodology research. As missing data is present (or not present?) in most health related datasets, this is a topic that we regularly find ourselves discussing. Working through even the basics on this topics will mean one will also have to work through the challenging and varied (often cryptic) statistical nomenclature.
 
-"Can we use mixed models, they use all available data (?)"
+"Can we use mixed models, since they use all available data (?)"
 
 This brief worked example was motivated by [reading this paper](https://statisticalhorizons.com/wp-content/uploads/MissingDataByML.pdf) that looked to have an interesting worked example that I thought could benefit from some figures.
 
@@ -574,8 +574,8 @@ Thanks to Elizabeth McKinnon, Zac Dempsey and Wesley Billingham for reviewing th
 
 To access the qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:
 
-[https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io](https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io)\
-\
+<https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io>
+
 The session information can also be seen below.
 
 ```{r}

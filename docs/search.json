@@ -88,13 +88,13 @@
     "href": "about.html",
     "title": "About",
     "section": "",
-    "text": "We are members of the biostatistics team at Telethon Kids Institute in Perth, Western Australia. Our work involves providing statistical consultation and collaboration to child health researchers at all stages of the scientific pipeline, from design to analysis to publication.\n\nPrimarily R users, we will often encounter particular coding or analysis challenges on a regular basis. The idea of this site is to house a centralised repository of our solutions to these recurrent challenges, for both our reference and yours! We hope you’ll find something useful here."
+    "text": "We are members of the biostatistics team at Telethon Kids Institute in Perth, Western Australia. Our work involves providing statistical consultation and collaboration to child health researchers at all stages of the scientific pipeline, from design to analysis to publication.\n\nPrimarily R users, we will often encounter particular coding or analysis challenges on a regular basis. The idea of this site is to house a centralised repository of our solutions to these recurrent challenges, for both our reference and yours! We hope you’ll find something useful here!"
   },
   {
     "objectID": "index.html",
     "href": "index.html",
     "title": "The Kids Biostats",
     "section": "",
-    "text": "Handling Missing Data with LMER\n\n\n\n\n\n\n\n\n\n\n\nApr 22, 2024\n\n\nDr Matthew Cooper\n\n\n\n\n\n\nNo matching items"
+    "text": "Handling Missing Data with LMER\n\n\n\n\n\n\nmissingdata\n\n\nmixedmodels\n\n\n\n\n\n\n\n\n\nApr 22, 2024\n\n\nDr Matthew Cooper\n\n\n\n\n\n\nNo matching items"
   }
 ]
