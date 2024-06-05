@@ -1,0 +1,10 @@
+---
+title: "AI in Biostatistics"
+output: html_document
+date: "2024-05-06"
+author: "Dr Matthew Cooper, Wesley Billingham"
+categories:
+  - AI
+  - R
+draft: true
+---
