@@ -29,7 +29,7 @@ theme_clean <- function() {
 
 # Overview
 
-As consultant statisticians, we are often approached by people who have already done some preliminary data analysis and who are (now) looking to move onto something more complex; and often, they have done some methodology research. As missing data is present (or not present?) in most health related datasets, this is a topic that we regularly find ourselves discussing. Working through even the basics on this topics will mean one will also have to work through the challenging and varied (often cryptic) statistical nomenclature.
+As consultant statisticians, we are often approached by people who have already done some preliminary data analysis and who are looking to move onto something more complex. Often, they have done some methodology research. As missing data is present (or not present?) in most health related datasets, this is a topic that we regularly find ourselves discussing. Working through even the basics on this topics will mean one will also have to work through the challenging and varied (often cryptic) statistical nomenclature.
 
 "Can we use mixed models, since they use all available data (?)"
 

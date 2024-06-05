@@ -10,9 +10,9 @@ website:
     right:
       - about.qmd
       - icon: github
-        href: https://github.com/
-      - icon: twitter
-        href: https://twitter.com
+        href: https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io
+      - icon: rss
+        href: index.xml
 format:
   html:
     theme: cosmo
