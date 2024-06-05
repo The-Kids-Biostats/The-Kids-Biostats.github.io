@@ -70,23 +70,23 @@
 <div class="cell">
 <div class="cell-output-display">
 <div>
-<div id="ktxaiheobh" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#ktxaiheobh table {
+<div id="updlnusans" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#updlnusans table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#ktxaiheobh thead, #ktxaiheobh tbody, #ktxaiheobh tfoot, #ktxaiheobh tr, #ktxaiheobh td, #ktxaiheobh th {
+#updlnusans thead, #updlnusans tbody, #updlnusans tfoot, #updlnusans tr, #updlnusans td, #updlnusans th {
   border-style: none;
 }
 
-#ktxaiheobh p {
+#updlnusans p {
   margin: 0;
   padding: 0;
 }
 
-#ktxaiheobh .gt_table {
+#updlnusans .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -112,12 +112,12 @@
   border-left-color: #D3D3D3;
 }
 
-#ktxaiheobh .gt_caption {
+#updlnusans .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#ktxaiheobh .gt_title {
+#updlnusans .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -129,7 +129,7 @@
   border-bottom-width: 0;
 }
 
-#ktxaiheobh .gt_subtitle {
+#updlnusans .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -141,7 +141,7 @@
   border-top-width: 0;
 }
 
-#ktxaiheobh .gt_heading {
+#updlnusans .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -153,13 +153,13 @@
   border-right-color: #D3D3D3;
 }
 
-#ktxaiheobh .gt_bottom_border {
+#updlnusans .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#ktxaiheobh .gt_col_headings {
+#updlnusans .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -174,7 +174,7 @@
   border-right-color: #D3D3D3;
 }
 
-#ktxaiheobh .gt_col_heading {
+#updlnusans .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -194,7 +194,7 @@
   overflow-x: hidden;
 }
 
-#ktxaiheobh .gt_column_spanner_outer {
+#updlnusans .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -206,15 +206,15 @@
   padding-right: 4px;
 }
 
-#ktxaiheobh .gt_column_spanner_outer:first-child {
+#updlnusans .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#ktxaiheobh .gt_column_spanner_outer:last-child {
+#updlnusans .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#ktxaiheobh .gt_column_spanner {
+#updlnusans .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -226,11 +226,11 @@
   width: 100%;
 }
 
-#ktxaiheobh .gt_spanner_row {
+#updlnusans .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#ktxaiheobh .gt_group_heading {
+#updlnusans .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -256,7 +256,7 @@
   text-align: left;
 }
 
-#ktxaiheobh .gt_empty_group_heading {
+#updlnusans .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -271,15 +271,15 @@
   vertical-align: middle;
 }
 
-#ktxaiheobh .gt_from_md > :first-child {
+#updlnusans .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#ktxaiheobh .gt_from_md > :last-child {
+#updlnusans .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#ktxaiheobh .gt_row {
+#updlnusans .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -298,7 +298,7 @@
   overflow-x: hidden;
 }
 
-#ktxaiheobh .gt_stub {
+#updlnusans .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -311,7 +311,7 @@
   padding-right: 5px;
 }
 
-#ktxaiheobh .gt_stub_row_group {
+#updlnusans .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -325,15 +325,15 @@
   vertical-align: top;
 }
 
-#ktxaiheobh .gt_row_group_first td {
+#updlnusans .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#ktxaiheobh .gt_row_group_first th {
+#updlnusans .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#ktxaiheobh .gt_summary_row {
+#updlnusans .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -343,16 +343,16 @@
   padding-right: 5px;
 }
 
-#ktxaiheobh .gt_first_summary_row {
+#updlnusans .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#ktxaiheobh .gt_first_summary_row.thick {
+#updlnusans .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#ktxaiheobh .gt_last_summary_row {
+#updlnusans .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -362,7 +362,7 @@
   border-bottom-color: #D3D3D3;
 }
 
-#ktxaiheobh .gt_grand_summary_row {
+#updlnusans .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -372,7 +372,7 @@
   padding-right: 5px;
 }
 
-#ktxaiheobh .gt_first_grand_summary_row {
+#updlnusans .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -382,7 +382,7 @@
   border-top-color: #D3D3D3;
 }
 
-#ktxaiheobh .gt_last_grand_summary_row_top {
+#updlnusans .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -392,11 +392,11 @@
   border-bottom-color: #D3D3D3;
 }
 
-#ktxaiheobh .gt_striped {
+#updlnusans .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#ktxaiheobh .gt_table_body {
+#updlnusans .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -405,7 +405,7 @@
   border-bottom-color: #D3D3D3;
 }
 
-#ktxaiheobh .gt_footnotes {
+#updlnusans .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -419,7 +419,7 @@
   border-right-color: #D3D3D3;
 }
 
-#ktxaiheobh .gt_footnote {
+#updlnusans .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -428,7 +428,7 @@
   padding-right: 5px;
 }
 
-#ktxaiheobh .gt_sourcenotes {
+#updlnusans .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -442,7 +442,7 @@
   border-right-color: #D3D3D3;
 }
 
-#ktxaiheobh .gt_sourcenote {
+#updlnusans .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -450,63 +450,63 @@
   padding-right: 5px;
 }
 
-#ktxaiheobh .gt_left {
+#updlnusans .gt_left {
   text-align: left;
 }
 
-#ktxaiheobh .gt_center {
+#updlnusans .gt_center {
   text-align: center;
 }
 
-#ktxaiheobh .gt_right {
+#updlnusans .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#ktxaiheobh .gt_font_normal {
+#updlnusans .gt_font_normal {
   font-weight: normal;
 }
 
-#ktxaiheobh .gt_font_bold {
+#updlnusans .gt_font_bold {
   font-weight: bold;
 }
 
-#ktxaiheobh .gt_font_italic {
+#updlnusans .gt_font_italic {
   font-style: italic;
 }
 
-#ktxaiheobh .gt_super {
+#updlnusans .gt_super {
   font-size: 65%;
 }
 
-#ktxaiheobh .gt_footnote_marks {
+#updlnusans .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#ktxaiheobh .gt_asterisk {
+#updlnusans .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#ktxaiheobh .gt_indent_1 {
+#updlnusans .gt_indent_1 {
   text-indent: 5px;
 }
 
-#ktxaiheobh .gt_indent_2 {
+#updlnusans .gt_indent_2 {
   text-indent: 10px;
 }
 
-#ktxaiheobh .gt_indent_3 {
+#updlnusans .gt_indent_3 {
   text-indent: 15px;
 }
 
-#ktxaiheobh .gt_indent_4 {
+#updlnusans .gt_indent_4 {
   text-indent: 20px;
 }
 
-#ktxaiheobh .gt_indent_5 {
+#updlnusans .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -1163,23 +1163,23 @@ background-color: null;
 font-style: inherit;">"{n}"</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div>
-<div id="nirgfsekbk" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#nirgfsekbk table {
+<div id="edmjexcwyf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#edmjexcwyf table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#nirgfsekbk thead, #nirgfsekbk tbody, #nirgfsekbk tfoot, #nirgfsekbk tr, #nirgfsekbk td, #nirgfsekbk th {
+#edmjexcwyf thead, #edmjexcwyf tbody, #edmjexcwyf tfoot, #edmjexcwyf tr, #edmjexcwyf td, #edmjexcwyf th {
   border-style: none;
 }
 
-#nirgfsekbk p {
+#edmjexcwyf p {
   margin: 0;
   padding: 0;
 }
 
-#nirgfsekbk .gt_table {
+#edmjexcwyf .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1205,12 +1205,12 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-left-color: #D3D3D3;
 }
 
-#nirgfsekbk .gt_caption {
+#edmjexcwyf .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#nirgfsekbk .gt_title {
+#edmjexcwyf .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1222,7 +1222,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-bottom-width: 0;
 }
 
-#nirgfsekbk .gt_subtitle {
+#edmjexcwyf .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1234,7 +1234,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-top-width: 0;
 }
 
-#nirgfsekbk .gt_heading {
+#edmjexcwyf .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1246,13 +1246,13 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-right-color: #D3D3D3;
 }
 
-#nirgfsekbk .gt_bottom_border {
+#edmjexcwyf .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#nirgfsekbk .gt_col_headings {
+#edmjexcwyf .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1267,7 +1267,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-right-color: #D3D3D3;
 }
 
-#nirgfsekbk .gt_col_heading {
+#edmjexcwyf .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1287,7 +1287,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   overflow-x: hidden;
 }
 
-#nirgfsekbk .gt_column_spanner_outer {
+#edmjexcwyf .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1299,15 +1299,15 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   padding-right: 4px;
 }
 
-#nirgfsekbk .gt_column_spanner_outer:first-child {
+#edmjexcwyf .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#nirgfsekbk .gt_column_spanner_outer:last-child {
+#edmjexcwyf .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#nirgfsekbk .gt_column_spanner {
+#edmjexcwyf .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1319,11 +1319,11 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   width: 100%;
 }
 
-#nirgfsekbk .gt_spanner_row {
+#edmjexcwyf .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#nirgfsekbk .gt_group_heading {
+#edmjexcwyf .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1349,7 +1349,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   text-align: left;
 }
 
-#nirgfsekbk .gt_empty_group_heading {
+#edmjexcwyf .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1364,15 +1364,15 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   vertical-align: middle;
 }
 
-#nirgfsekbk .gt_from_md > :first-child {
+#edmjexcwyf .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#nirgfsekbk .gt_from_md > :last-child {
+#edmjexcwyf .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#nirgfsekbk .gt_row {
+#edmjexcwyf .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1391,7 +1391,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   overflow-x: hidden;
 }
 
-#nirgfsekbk .gt_stub {
+#edmjexcwyf .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1404,7 +1404,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   padding-right: 5px;
 }
 
-#nirgfsekbk .gt_stub_row_group {
+#edmjexcwyf .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1418,15 +1418,15 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   vertical-align: top;
 }
 
-#nirgfsekbk .gt_row_group_first td {
+#edmjexcwyf .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#nirgfsekbk .gt_row_group_first th {
+#edmjexcwyf .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#nirgfsekbk .gt_summary_row {
+#edmjexcwyf .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1436,16 +1436,16 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   padding-right: 5px;
 }
 
-#nirgfsekbk .gt_first_summary_row {
+#edmjexcwyf .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#nirgfsekbk .gt_first_summary_row.thick {
+#edmjexcwyf .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#nirgfsekbk .gt_last_summary_row {
+#edmjexcwyf .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1455,7 +1455,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-bottom-color: #D3D3D3;
 }
 
-#nirgfsekbk .gt_grand_summary_row {
+#edmjexcwyf .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1465,7 +1465,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   padding-right: 5px;
 }
 
-#nirgfsekbk .gt_first_grand_summary_row {
+#edmjexcwyf .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1475,7 +1475,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-top-color: #D3D3D3;
 }
 
-#nirgfsekbk .gt_last_grand_summary_row_top {
+#edmjexcwyf .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1485,11 +1485,11 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-bottom-color: #D3D3D3;
 }
 
-#nirgfsekbk .gt_striped {
+#edmjexcwyf .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#nirgfsekbk .gt_table_body {
+#edmjexcwyf .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1498,7 +1498,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-bottom-color: #D3D3D3;
 }
 
-#nirgfsekbk .gt_footnotes {
+#edmjexcwyf .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1512,7 +1512,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-right-color: #D3D3D3;
 }
 
-#nirgfsekbk .gt_footnote {
+#edmjexcwyf .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1521,7 +1521,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   padding-right: 5px;
 }
 
-#nirgfsekbk .gt_sourcenotes {
+#edmjexcwyf .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1535,7 +1535,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-right-color: #D3D3D3;
 }
 
-#nirgfsekbk .gt_sourcenote {
+#edmjexcwyf .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1543,63 +1543,63 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   padding-right: 5px;
 }
 
-#nirgfsekbk .gt_left {
+#edmjexcwyf .gt_left {
   text-align: left;
 }
 
-#nirgfsekbk .gt_center {
+#edmjexcwyf .gt_center {
   text-align: center;
 }
 
-#nirgfsekbk .gt_right {
+#edmjexcwyf .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#nirgfsekbk .gt_font_normal {
+#edmjexcwyf .gt_font_normal {
   font-weight: normal;
 }
 
-#nirgfsekbk .gt_font_bold {
+#edmjexcwyf .gt_font_bold {
   font-weight: bold;
 }
 
-#nirgfsekbk .gt_font_italic {
+#edmjexcwyf .gt_font_italic {
   font-style: italic;
 }
 
-#nirgfsekbk .gt_super {
+#edmjexcwyf .gt_super {
   font-size: 65%;
 }
 
-#nirgfsekbk .gt_footnote_marks {
+#edmjexcwyf .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#nirgfsekbk .gt_asterisk {
+#edmjexcwyf .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#nirgfsekbk .gt_indent_1 {
+#edmjexcwyf .gt_indent_1 {
   text-indent: 5px;
 }
 
-#nirgfsekbk .gt_indent_2 {
+#edmjexcwyf .gt_indent_2 {
   text-indent: 10px;
 }
 
-#nirgfsekbk .gt_indent_3 {
+#edmjexcwyf .gt_indent_3 {
   text-indent: 15px;
 }
 
-#nirgfsekbk .gt_indent_4 {
+#edmjexcwyf .gt_indent_4 {
   text-indent: 20px;
 }
 
-#nirgfsekbk .gt_indent_5 {
+#edmjexcwyf .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -2154,23 +2154,23 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
 <div class="cell">
 <div class="cell-output-display">
 <div>
-<div id="lzkkjhnamc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#lzkkjhnamc table {
+<div id="bpeihtizoh" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#bpeihtizoh table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#lzkkjhnamc thead, #lzkkjhnamc tbody, #lzkkjhnamc tfoot, #lzkkjhnamc tr, #lzkkjhnamc td, #lzkkjhnamc th {
+#bpeihtizoh thead, #bpeihtizoh tbody, #bpeihtizoh tfoot, #bpeihtizoh tr, #bpeihtizoh td, #bpeihtizoh th {
   border-style: none;
 }
 
-#lzkkjhnamc p {
+#bpeihtizoh p {
   margin: 0;
   padding: 0;
 }
 
-#lzkkjhnamc .gt_table {
+#bpeihtizoh .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -2196,12 +2196,12 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
   border-left-color: #D3D3D3;
 }
 
-#lzkkjhnamc .gt_caption {
+#bpeihtizoh .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#lzkkjhnamc .gt_title {
+#bpeihtizoh .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -2213,7 +2213,7 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
   border-bottom-width: 0;
 }
 
-#lzkkjhnamc .gt_subtitle {
+#bpeihtizoh .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2225,7 +2225,7 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
   border-top-width: 0;
 }
 
-#lzkkjhnamc .gt_heading {
+#bpeihtizoh .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2237,13 +2237,13 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
   border-right-color: #D3D3D3;
 }
 
-#lzkkjhnamc .gt_bottom_border {
+#bpeihtizoh .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#lzkkjhnamc .gt_col_headings {
+#bpeihtizoh .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2258,7 +2258,7 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
   border-right-color: #D3D3D3;
 }
 
-#lzkkjhnamc .gt_col_heading {
+#bpeihtizoh .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2278,7 +2278,7 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
   overflow-x: hidden;
 }
 
-#lzkkjhnamc .gt_column_spanner_outer {
+#bpeihtizoh .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2290,15 +2290,15 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
   padding-right: 4px;
 }
 
-#lzkkjhnamc .gt_column_spanner_outer:first-child {
+#bpeihtizoh .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#lzkkjhnamc .gt_column_spanner_outer:last-child {
+#bpeihtizoh .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#lzkkjhnamc .gt_column_spanner {
+#bpeihtizoh .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2310,11 +2310,11 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
   width: 100%;
 }
 
-#lzkkjhnamc .gt_spanner_row {
+#bpeihtizoh .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#lzkkjhnamc .gt_group_heading {
+#bpeihtizoh .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2340,7 +2340,7 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
   text-align: left;
 }
 
-#lzkkjhnamc .gt_empty_group_heading {
+#bpeihtizoh .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2355,15 +2355,15 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
   vertical-align: middle;
 }
 
-#lzkkjhnamc .gt_from_md > :first-child {
+#bpeihtizoh .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#lzkkjhnamc .gt_from_md > :last-child {
+#bpeihtizoh .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#lzkkjhnamc .gt_row {
+#bpeihtizoh .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2382,7 +2382,7 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
   overflow-x: hidden;
 }
 
-#lzkkjhnamc .gt_stub {
+#bpeihtizoh .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2395,7 +2395,7 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
   padding-right: 5px;
 }
 
-#lzkkjhnamc .gt_stub_row_group {
+#bpeihtizoh .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2409,15 +2409,15 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
   vertical-align: top;
 }
 
-#lzkkjhnamc .gt_row_group_first td {
+#bpeihtizoh .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#lzkkjhnamc .gt_row_group_first th {
+#bpeihtizoh .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#lzkkjhnamc .gt_summary_row {
+#bpeihtizoh .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2427,16 +2427,16 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
   padding-right: 5px;
 }
 
-#lzkkjhnamc .gt_first_summary_row {
+#bpeihtizoh .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#lzkkjhnamc .gt_first_summary_row.thick {
+#bpeihtizoh .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#lzkkjhnamc .gt_last_summary_row {
+#bpeihtizoh .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2446,7 +2446,7 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
   border-bottom-color: #D3D3D3;
 }
 
-#lzkkjhnamc .gt_grand_summary_row {
+#bpeihtizoh .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2456,7 +2456,7 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
   padding-right: 5px;
 }
 
-#lzkkjhnamc .gt_first_grand_summary_row {
+#bpeihtizoh .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2466,7 +2466,7 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
   border-top-color: #D3D3D3;
 }
 
-#lzkkjhnamc .gt_last_grand_summary_row_top {
+#bpeihtizoh .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2476,11 +2476,11 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
   border-bottom-color: #D3D3D3;
 }
 
-#lzkkjhnamc .gt_striped {
+#bpeihtizoh .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#lzkkjhnamc .gt_table_body {
+#bpeihtizoh .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2489,7 +2489,7 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
   border-bottom-color: #D3D3D3;
 }
 
-#lzkkjhnamc .gt_footnotes {
+#bpeihtizoh .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2503,7 +2503,7 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
   border-right-color: #D3D3D3;
 }
 
-#lzkkjhnamc .gt_footnote {
+#bpeihtizoh .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2512,7 +2512,7 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
   padding-right: 5px;
 }
 
-#lzkkjhnamc .gt_sourcenotes {
+#bpeihtizoh .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2526,7 +2526,7 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
   border-right-color: #D3D3D3;
 }
 
-#lzkkjhnamc .gt_sourcenote {
+#bpeihtizoh .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2534,63 +2534,63 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
   padding-right: 5px;
 }
 
-#lzkkjhnamc .gt_left {
+#bpeihtizoh .gt_left {
   text-align: left;
 }
 
-#lzkkjhnamc .gt_center {
+#bpeihtizoh .gt_center {
   text-align: center;
 }
 
-#lzkkjhnamc .gt_right {
+#bpeihtizoh .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#lzkkjhnamc .gt_font_normal {
+#bpeihtizoh .gt_font_normal {
   font-weight: normal;
 }
 
-#lzkkjhnamc .gt_font_bold {
+#bpeihtizoh .gt_font_bold {
   font-weight: bold;
 }
 
-#lzkkjhnamc .gt_font_italic {
+#bpeihtizoh .gt_font_italic {
   font-style: italic;
 }
 
-#lzkkjhnamc .gt_super {
+#bpeihtizoh .gt_super {
   font-size: 65%;
 }
 
-#lzkkjhnamc .gt_footnote_marks {
+#bpeihtizoh .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#lzkkjhnamc .gt_asterisk {
+#bpeihtizoh .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#lzkkjhnamc .gt_indent_1 {
+#bpeihtizoh .gt_indent_1 {
   text-indent: 5px;
 }
 
-#lzkkjhnamc .gt_indent_2 {
+#bpeihtizoh .gt_indent_2 {
   text-indent: 10px;
 }
 
-#lzkkjhnamc .gt_indent_3 {
+#bpeihtizoh .gt_indent_3 {
   text-indent: 15px;
 }
 
-#lzkkjhnamc .gt_indent_4 {
+#bpeihtizoh .gt_indent_4 {
   text-indent: 20px;
 }
 
-#lzkkjhnamc .gt_indent_5 {
+#bpeihtizoh .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
@@ -2604,8 +2604,8 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
 <thead>
 <tr class="header gt_col_headings">
 <th id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
-<th id="<strong>Male</strong>, N = 2,692<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Male</strong>, N = 2,692<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
-<th id="<strong>Female</strong>, N = 382<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Female</strong>, N = 382<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+<th id="<strong>Male</strong>, N = 2,768<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Male</strong>, N = 2,768<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+<th id="<strong>Female</strong>, N = 360<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Female</strong>, N = 360<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
 </tr>
 </thead>
 <tbody class="gt_table_body">
@@ -2628,28 +2628,28 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;3</td>
-<td class="gt_row gt_center" headers="stat_1">460</td>
-<td class="gt_row gt_center" headers="stat_2">63</td>
+<td class="gt_row gt_center" headers="stat_1">473</td>
+<td class="gt_row gt_center" headers="stat_2">55</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;4</td>
-<td class="gt_row gt_center" headers="stat_1">371</td>
-<td class="gt_row gt_center" headers="stat_2">53</td>
+<td class="gt_row gt_center" headers="stat_1">391</td>
+<td class="gt_row gt_center" headers="stat_2">51</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;5</td>
-<td class="gt_row gt_center" headers="stat_1">314</td>
-<td class="gt_row gt_center" headers="stat_2">50</td>
+<td class="gt_row gt_center" headers="stat_1">333</td>
+<td class="gt_row gt_center" headers="stat_2">45</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;6</td>
-<td class="gt_row gt_center" headers="stat_1">265</td>
-<td class="gt_row gt_center" headers="stat_2">44</td>
+<td class="gt_row gt_center" headers="stat_1">276</td>
+<td class="gt_row gt_center" headers="stat_2">40</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;7</td>
-<td class="gt_row gt_center" headers="stat_1">226</td>
-<td class="gt_row gt_center" headers="stat_2">38</td>
+<td class="gt_row gt_center" headers="stat_1">239</td>
+<td class="gt_row gt_center" headers="stat_2">35</td>
 </tr>
 </tbody><tfoot class="gt_footnotes">
 <tr class="odd">
@@ -2678,15 +2678,15 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
 <colgroup><col><col><col><col><col><col><col></colgroup><tbody><tr>
 <th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><th colspan="2" style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">ME - Complete</th><th colspan="2" style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Basic - Missing</th><th colspan="2" style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">ME - Missing</th></tr>
 <tr>
-<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(Intercept)</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">6.340 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[6.307, 6.373]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">6.380 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[6.352, 6.408]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">6.342 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[6.311, 6.374]</td></tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(Intercept)</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">6.340 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[6.307, 6.373]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">6.384 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[6.356, 6.412]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">6.342 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[6.311, 6.374]</td></tr>
 <tr>
-<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">genderFemale</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.456 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[-0.553, -0.358]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.481 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[-0.561, -0.400]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.450 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[-0.543, -0.356]</td></tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">genderFemale</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.456 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[-0.553, -0.358]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.485 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[-0.567, -0.402]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.445 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[-0.538, -0.352]</td></tr>
 <tr>
-<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">t</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.097 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[0.095, 0.100]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.075 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[0.068, 0.082]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.094 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[0.091, 0.097]</td></tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">t</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.097 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[0.095, 0.100]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.071 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[0.064, 0.078]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.093 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[0.090, 0.096]</td></tr>
 <tr>
-<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">genderFemale:t</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.005&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[-0.012, 0.003]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.011&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[-0.009, 0.030]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.005&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[-0.013, 0.004]</td></tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">genderFemale:t</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.005&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[-0.012, 0.003]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.017&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[-0.003, 0.037]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.009&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[-0.017, 0.000]</td></tr>
 <tr>
-<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">N</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">4165&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3074&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3074&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">N</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">4165&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3128&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3128&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
 <tr>
 <th colspan="7" style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"> *** p &lt; 0.001;  ** p &lt; 0.01;  * p &lt; 0.05.</th></tr>
 </tbody></table>
@@ -2823,15 +2823,15 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
 <colgroup><col><col><col><col><col><col><col></colgroup><tbody><tr>
 <th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><th colspan="2" style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">ME - Complete</th><th colspan="2" style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Basic - Missing</th><th colspan="2" style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">ME - Missing</th></tr>
 <tr>
-<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(Intercept)</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">6.340 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[6.307, 6.373]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">6.334 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[6.305, 6.363]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">6.338 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[6.306, 6.371]</td></tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">(Intercept)</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">6.340 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[6.307, 6.373]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">6.327 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[6.298, 6.356]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">6.333 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[6.301, 6.365]</td></tr>
 <tr>
-<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">genderFemale</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.456 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[-0.553, -0.358]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.441 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[-0.529, -0.354]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.445 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[-0.542, -0.347]</td></tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">genderFemale</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.456 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[-0.553, -0.358]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.449 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[-0.537, -0.362]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.446 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[-0.543, -0.350]</td></tr>
 <tr>
-<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">t</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.097 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[0.095, 0.100]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.100 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[0.093, 0.107]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.097 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[0.094, 0.100]</td></tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">t</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.097 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[0.095, 0.100]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.104 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[0.097, 0.111]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">0.100 ***</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[0.097, 0.103]</td></tr>
 <tr>
-<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">genderFemale:t</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.005&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[-0.012, 0.003]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.009&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[-0.030, 0.012]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.010 *&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[-0.018, -0.001]</td></tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">genderFemale:t</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.005&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[-0.012, 0.003]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.005&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[-0.026, 0.017]</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">-0.007&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">[-0.016, 0.003]</td></tr>
 <tr>
-<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">N</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">4165&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3392&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3392&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+<th style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">N</th><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">4165&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3319&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">3319&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td style="vertical-align: top; text-align: right; white-space: normal; border-style: solid solid solid solid; border-width: 0.4pt 0pt 0.8pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
 <tr>
 <th colspan="7" style="vertical-align: top; text-align: left; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"> *** p &lt; 0.001;  ** p &lt; 0.01;  * p &lt; 0.05.</th></tr>
 </tbody></table>
