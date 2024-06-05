@@ -13,6 +13,8 @@ website:
         href: https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io
       - icon: rss
         href: index.xml
+      - icon: twitter
+        href: "https://x.com/telethonkids"
       - text: "R-bloggers"
         href: https://www.r-bloggers.com
 format:
