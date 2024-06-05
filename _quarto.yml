@@ -4,6 +4,8 @@ project:
 
 website:
   title: "The Kids Biostats"
+  site-url: "https://www.the-kids-biostats.github.io"
+  description: "Biostats R solutions"
   navbar:
     right:
       - about.qmd
