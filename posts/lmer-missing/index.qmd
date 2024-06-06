@@ -1,6 +1,9 @@
 ---
 title: "Handling Missing Data with LMER"
-output: html_document
+format:
+  html:
+    theme: journal   # cosmo bootswatch theme
+    code-fold: true
 date: "2024-04-22"
 author: "Dr Matthew Cooper"
 categories:
@@ -29,19 +32,21 @@ theme_clean <- function() {
 
 # Overview
 
-As consultant statisticians, we are often approached by people who have already done some preliminary data analysis and who are looking to move onto something more complex. Often, they have done some methodology research. As missing data is present (or not present?) in most health related datasets, this is a topic that we regularly find ourselves discussing. Working through even the basics on this topics will mean one will also have to work through the challenging and varied (often cryptic) statistical nomenclature.
+As consultant statisticians, we are often approached by people who have already carried out some preliminary data analysis and who are now looking to move onto something more complex. Often, they have done some methodology research and bring ideas to the table. As missing data is generally present (or not present?) in health related datasets, we find this is a topic is regularly raised - with people looking for a solution. Working through even the basics on this topic will mean one will also have to work through challenging and varied (often cryptic) statistical nomenclature.
 
 "Can we use mixed models, since they use all available data (?)"
 
-This brief worked example was motivated by [reading this paper](https://statisticalhorizons.com/wp-content/uploads/MissingDataByML.pdf) that looked to have an interesting worked example that I thought could benefit from some figures.
+This worked example below was motivated by [reading this paper](https://statisticalhorizons.com/wp-content/uploads/MissingDataByML.pdf) that has an interesting worked example on 'missing data and mixed models' that I thought could benefit from some figures to aid in the understanding of what is achieved.
 
 # Setting the scene
 
-We're going to use data from the [AER package](https://cran.r-project.org/web/packages/AER/index.html) which contains Panel Data from a Study of Income Dynamics [(read more here)](https://search.r-project.org/CRAN/refmans/AER/html/PSID7682.html). In brief:
+We're going to use a dataset from the [AER package](https://cran.r-project.org/web/packages/AER/index.html), a Panel Data from a Study of Income Dynamics [(read more here)](https://search.r-project.org/CRAN/refmans/AER/html/PSID7682.html).
+
+In brief:
 
 -   Complete data on 595 individuals
 -   Collected between 1976 and 1982
--   7 (annual) observations per person
+-   7 observations per person (annual assessements)
 -   The focus is on modelling the *wage* data over time
 
 We acknowledge that the issues related to gender pay differences and trends are a sensitive subject and are simply using this example as it was and is a readily available, tidy, tangible, cross discipline dataset that allows the demonstration of the statistical principals of interest.
@@ -50,11 +55,9 @@ We acknowledge that the issues related to gender pay differences and trends are 
 
 Are there differences in the rate of wage growth between males and females over time (in this dataset)?
 
-That question is quite straightforward to answer here,; but the motivating commentary is really around how mixed effects model can be beneficial in the presence of systematic missing (follow-up) data - with a focus on parameter estimates and their graphical interpretation.
+That question is quite straightforward to answer here, but the motivating commentary is really around how mixed effects model can be beneficial in the presence of systematic missing (follow-up) data - with a focus on parameter estimates and their graphical interpretation.
 
-Missing follow-up data (lost to follow, attrition, drop out) is often seen in health research datasets. The data might be Missing At Random, it my be Missing Completely At Random, the important nuances of these are largely out of scope
-
-## R Session info
+Missing follow-up data (lost to follow, attrition, drop out) is often seen in health research datasets. The data might be Missing At Random, it my be Missing Completely At Random, the important nuances of these are largely out of scope for this post.
 
 # Data inspection
 
@@ -84,7 +87,9 @@ dat %>%
               statistic = all_categorical() ~ "{n}")
 ```
 
-And, what does it look like...
+Data for 595 individuals across 7 time points - as expected.
+
+And, what does the wage data look like:
 
 ```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5}
 dat %>% 
@@ -98,7 +103,9 @@ dat %>%
   labs(x = "Time (years)", y = "Wage")
 ```
 
-We can see that, generally the wage for most individuals goes up at a fairly steady rate for most individuals across the 7 years of follow-up. We can also see some characteristics (upper skew, heteroskedasticity) that are likely to invalidate some modeling assumptions. Let's look at the log of wage.
+We can see that, generally the wage goes up at a fairly steady rate for most individuals across the 7 years of follow-up. We can also see some characteristics (upper skew, heteroskedasticity) that are likely to invalidate some modeling assumptions.
+
+Let's look at the log of wage.
 
 ```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5}
 dat %>% 
@@ -114,11 +121,13 @@ dat %>%
                   ylim = c(4.5,9))
 ```
 
+This now looks more homoskedastic (variability looks more consistent over time).
+
 # Modelling the complete data
 
 ## Erroneous basic linear regression model
 
-To address the question of **"are there differences in the rate of wage growth"**, we are going to fit a gender by time interaction term which will give us an indication of if 'as time changes' the outcome (logged wage) changes at a different rate for each gender.
+To address the question of **"are there differences between genders in the rate of wage growth"**, we are going to fit a gender by time interaction term which will give us an indication of if 'as time changes' whether the outcome (logged wage) changes at a different rate for each gender.
 
 ```{r echo = T}
 mod1 <- lm(lwage ~ gender * t, data = dat)
@@ -129,13 +138,14 @@ export_summs(mod1, error_format = "[{conf.low}, {conf.high}]",
 
 We can see there is an effect of gender present, and an effect of time (the growth overtime we saw in the original plot), but the very small beta coefficient (relative to the scale of data we are working with) and the p-value of 0.6 are suggestive that the rate of wage growth over time does not differ significantly between genders.
 
-To view this, we're not going to use `geom_smooth` or `stat_summary` as we might do on the fly. To set this up for later in the article, we'll create a new dataset and use predictions to draw our (straight) line.
+To view this, we're not going to use `geom_smooth` or `stat_summary` as we might do when graphing on-the-fly.
+
+To set a coding framework which we'll use again later in the post, we'll create a new dataset and use predictions to draw our (straight) line.
 
 ```{r echo = T}
 newdat <- expand.grid(t = 1:7, gender = c("Male", "Female")) %>% 
   mutate(gender = factor(gender),
-         gender = relevel(gender, "Male"),
-         id = c(rep(1, 7), rep(2, 7)))
+         gender = relevel(gender, "Male"))
 
 p_mod1 <- cbind(newdat, 
                 lwage = predict(mod1, newdat, interval = "prediction"))
@@ -175,9 +185,9 @@ p_mod1 %>%
 p1
 ```
 
-These lines look parallel - suggestive of no difference in growth rates between the genders (the non-signficant interaction term we saw).
+These lines look parallel - suggestive of no difference in growth rates between the genders (in line with the non-signficant interaction term we saw).
 
-Of course, we have no adjusted for the within person correlation present in the data. The model above is inappropriate as one of the main assumptions of the model is violated - the data points are not all independent (we know there are 7 from each individual).
+[Of course, we have not adjusted for the within person correlation present in the data.]{.underline} The model above is inappropriate as one of the main assumptions of the model is violated - the data points are not all independent (we know there are 7 from each individual).
 
 ## Mixed effects model
 
@@ -196,15 +206,25 @@ Lets also fit the predicted values from this model.
 newdat <- expand.grid(t = 1:7, gender = c("Male", "Female")) %>% 
   mutate(gender = factor(gender),
          gender = relevel(gender, "Male"),
-         id = c(rep(1, 7), rep(2, 7)))
-p_mod2 <- cbind(newdat,
-                predictInterval(mod2, newdat, which = "fixed", n.sims = 1000, level = 0.95, type="linear.prediction"))
+         id = c(rep(4, 7), rep(8, 7)))
 
+store <- simulate(mod2, seed=1, newdata=newdat, re.form=NA,
+                  allow.new.levels=T, nsim = 500)
+
+p_mod2 <- cbind(newdat,
+                store %>% 
+                  rowwise() %>% 
+                  mutate(fit = mean(c_across(sim_1:sim_500)),
+                         lwr = quantile(c_across(sim_1:sim_500), 0.025),
+                         upr = quantile(c_across(sim_1:sim_500), 0.975)) %>% 
+                  select(fit, lwr, upr))
 ```
 
-### Slight segway
+### \-- Slight segway
 
-With the standard linear regression model (above), we used `predict` to generate a `prediction` interval. With linear mixed effects models, we do no have the same function available (that will incorporate the random effects variability in the interval), so rather than calculating these, we simulate! Some extra content on this can be read [here](https://tmalsburg.github.io/predict-vs-simulate.html) or [(somewhat less so) here](https://stackoverflow.com/questions/63198626/predictinterval-and-the-which-option). This use of simulation is part of the reason behind the confidence intervals not being parallel.
+With standard linear regression model (first used), we used `predict` to generate a 'prediction interval'. With linear mixed effects models, we do no have the same function available (that will incorporate the random effects variability into the prediction interval), so rather than calculating these with a formula, we simulate! Some extra content on this can be read [here](https://tmalsburg.github.io/predict-vs-simulate.html) or [(somewhat less so) here](https://stackoverflow.com/questions/63198626/predictinterval-and-the-which-option).
+
+This use of simulation is part of the reason behind the confidence intervals not being parallel.
 
 ## Back to our Mixed effects model
 
@@ -229,7 +249,8 @@ When we compare the output of this model with the earlier (erroneous) model, we 
 export_summs(mod1, mod2,
              error_format = "[{conf.low}, {conf.high}]",
              error_pos = "right", digits = 3,
-             statistics = c(N = "nobs"))
+             statistics = c(N = "nobs"),
+             model.names = c("Erroneous model", "Mixed efects model"))
 ```
 
 -   The coefficients have the same value in each model as these represent the fixed effect
@@ -237,13 +258,15 @@ export_summs(mod1, mod2,
 
 We can see this when we plot the predicted values side by side.
 
-```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=10}
-p1 / p2
+```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=12}
+(p1 + labs(title = "Erroneous model")) / (p1 + labs(title = "Mixed effects model"))
 ```
 
 # Introduction of missing data
 
-We now create a modified copy of the dataset whereby ***wage data is missing as a function of the previous wage value***. That is, as one's wage gets higher, there probability of not showing completing the following years survey is increased. I was unable to implement the exact same missing data function as the [inspiring example](https://statisticalhorizons.com/wp-content/uploads/MissingDataByML.pdf) but the below is similar and serves the same purpose. Without diving too far down the missing data hole (intended), this is an example of data \['missing At random'\](https://www.ncbi.nlm.nih.gov/books/NBK493614/#:\~:text=Missing%20completely%20at%20random%20(MCAR,and%20those%20with%20complete%20data.), in that the fact that the data is missing is related to something observed (by design), that being, the previous years wage value.
+We now create a modified copy of the dataset whereby ***wage data is missing as a function of the previous wage value***.
+
+That is, as one's wage gets higher, there probability of not completing the following years survey is increased. I was unable to implement the exact same missing data function as the [inspiring example](https://statisticalhorizons.com/wp-content/uploads/MissingDataByML.pdf), but the below is similar and serves the same purpose. Without diving too far down the missing data hole (intended), this is an example of data \[missing at random\](https://www.ncbi.nlm.nih.gov/books/NBK493614/#:\~:text=Missing%20completely%20at%20random%20(MCAR,and%20those%20with%20complete%20data), in the fact that the data missing is related to [something observed]{.underline} (by design), that being, the previous years wage value.
 
 ```{r echo=T}
 mdat <- dat %>% 
@@ -263,8 +286,10 @@ What impact has this had on the data? We can see a significant loss of data, esp
 
 ```{r echo=T}
 mdat %>% 
-  group_by(t) %>% 
-  summarise(N = sum(!is.na(mlwage)))
+  ungroup() %>% 
+  select(gender, t) %>% 
+  tbl_summary(by = gender,
+              statistic = all_categorical() ~ "{n}")
 ```
 
 This also looks to have impacted males more than females.
@@ -278,7 +303,7 @@ mdat %>%
               statistic = all_categorical() ~ "{n}")
 ```
 
-Visually, our data looks like this:
+Visually, our data now looks like this:
 
 ```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5, warning=FALSE, message=FALSE}
 mdat %>% 
@@ -294,7 +319,7 @@ mdat %>%
                   ylim = c(4.5,9)) 
 ```
 
-What what is missing?
+What is missing?
 
 ```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5, warning=FALSE, message=FALSE}
 mdat %>% 
@@ -325,7 +350,9 @@ export_summs(mod3, error_format = "[{conf.low}, {conf.high}]",
              statistics = c(N = "nobs"))
 ```
 
-Now the model is indicating that there is a strong interaction effect for gender by time. The coefficient of the interaction term implies that (logged) wages increase at a faster rate (over time) for females than they do for males. Let's visual this alongside our modified dataset.
+Now the model is indicating that there is a strong interaction effect for gender by time. The coefficient of the interaction term implies that (logged) wages increase at a faster rate (over time) for females than they do for males.
+
+Let's visual this alongside our modified dataset.
 
 ```{r echo = T}
 newdat <- expand.grid(t = 1:7, gender = c("Male", "Female"), id = 1) %>% 
@@ -359,7 +386,7 @@ mdat %>%
 p4
 ```
 
-We can see the predicted line and bands (95% prediction interval) represent the (non-missing) data well, and we can see the difference in slope between genders - the observed signficant interaction term.
+We can see the predicted line and bands (95% prediction interval) represent the ([**non-missing**]{.underline}) data well, and we can see the difference in slope between genders - the observed significant interaction term.
 
 ## Missing - Mixed effects model
 
@@ -375,24 +402,33 @@ When we run the mixed effects model on the dataset with missing data, we (correc
 In fact:
 
 ```{r echo = F}
-export_summs(mod4, mod3,
+export_summs(mod4, mod2,
              error_format = "[{conf.low}, {conf.high}]",
              error_pos = "right", digits = 3,
              model.names = c("ME - Missing", "ME - Complete"),
              statistics = c(N = "nobs"))
 ```
 
-Our mixed effects model on the dataset with a lot of missing data (ME - Missing) generates quite similar estimates to what we know as truth from the model on the complete data (ME - Complete).
+Our mixed effects model on the dataset with a lot of missing data (ME - Missing) generates quite similar estimates to what we know the 'truth' to be from the model on the complete data (ME - Complete).
 
 To comparatively visualise this.
 
 ```{r echo = T}
-newdat <- expand.grid(t = 1:7, gender = c("Male", "Female"), id = 1) %>% 
+newdat <- expand.grid(t = 1:7, gender = c("Male", "Female")) %>% 
   mutate(gender = factor(gender),
-         gender = relevel(gender, "Male"))
+         gender = relevel(gender, "Male"),
+         id = c(rep(4, 7), rep(8, 7)))
+
+store <- simulate(mod4, seed=1, newdata=newdat, re.form=NA,
+                  allow.new.levels=T, nsim = 500)
 
 p_mod4 <- cbind(newdat,
-                predictInterval(mod4, newdat, which = "fixed", n.sims = 1000, level = 0.95))
+                store %>% 
+                  rowwise() %>% 
+                  mutate(fit = mean(c_across(sim_1:sim_500)),
+                         lwr = quantile(c_across(sim_1:sim_500), 0.025),
+                         upr = quantile(c_across(sim_1:sim_500), 0.975)) %>% 
+                  select(fit, lwr, upr))
 ```
 
 ```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5, warning=FALSE, message=FALSE}
@@ -418,9 +454,9 @@ mdat %>%
 p4
 ```
 
-These lines (predicted lines; by gender) look parallel (as they should), notably with the Males, we see the predicted line "pulled up" in the direction of the missing data even though that data was not available to the model - this is because the model has leveraged the slope of the data it did have access to, at the individual (person) level, when converging on its estimates.
+These lines (predicted lines; by gender) look parallel (as they should). Notably with the Males, we see the predicted line "pulled up" in the direction of the missing data even though that data was not available to the model - this is because the model has leveraged the slope of the data it did have access to, at the individual (person) level, when converging on its estimates.
 
-If the erroneous interaction effect (non-parallel lines) was not obvious in the plot separated by gender, here we see the predictred lines on the same plot for each model.
+If the erroneous interaction effect (non-parallel lines) was not obvious in the plot separated by gender, here we see the predicted lines on the same plot for each model.
 
 ```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5, warning=FALSE, message=FALSE}
 p_mod3 %>% 
@@ -514,14 +550,16 @@ We can see, the (erroneous) basic linear regression still inappropriately sugges
 
 ## Completely random missingness
 
-What if missingness (simulated dropout) is complete random?
+What if the dropout is completely at random?
+
+Note, this is [**dropout**]{.underline} at random, not [**sporadic missingness**]{.underline}, these are two different things.
 
 ```{r echo = T}
 mdat <- dat %>% 
   group_by(id) %>% 
   rowwise() %>% 
   mutate(pt = 1,
-         pt = case_when(runif(1) < 0.10 & t > 2 ~ 0, # Implementing random dropout
+         pt = case_when(runif(1) < 0.10 & t > 2 ~ 0, # Implementing completely random dropout
                         T ~ pt)) %>% 
   group_by(id) %>% 
   mutate(mlwage = case_when(pt > 0.5 ~ lwage,
@@ -565,11 +603,13 @@ The basic regression model is no long suggesting there is a significant gender b
 
 # Conclusion
 
-We have seen that in the face of missing follow-up data, it is a grave mistake to continue with a basic linear regression model. We have then seen that mixed effects models are extremely robust in dealing with the issue and return coefficients and standard errors similar to those of a complete-data model.
+We have seen that in the face of missing follow-up data, it is a grave mistake to continue with a basic linear regression model. We have then seen that mixed effects models are quite robust in dealing with the issue of missing data (as it relates to drop out) and return coefficients and standard errors similar to those of a complete-data model.
 
 ## Acknowledgements
 
-Thanks to Elizabeth McKinnon, Zac Dempsey and Wesley Billingham for reviewing this post. You can look forward to seeing posts from these other team members here in the coming weeks and months.
+Thanks to Elizabeth McKinnon, Zac Dempsey, and Wesley Billingham for providing feedback on and reviewing this post.
+
+You can look forward to seeing posts from these other team members here in the coming weeks and months.
 
 ## Reproducibility Information
 
