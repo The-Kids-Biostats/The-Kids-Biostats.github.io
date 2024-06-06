@@ -4,7 +4,7 @@ format:
   html:
     theme: journal   # cosmo bootswatch theme
     code-fold: true
-date: "2024-04-22"
+date: "2024-06-07"
 author: "Dr Matthew Cooper"
 categories:
   - Missing Data
@@ -63,7 +63,7 @@ Missing follow-up data (lost to follow, attrition, drop out) is often seen in he
 
 Let's take an initial look at the data.
 
-```{r }
+```{r echo = T}
 data("PSID7682")
 dat <- PSID7682
 dat <- dat %>% 
@@ -79,7 +79,7 @@ head(dat)
 
 How much data do we have?
 
-```{r }
+```{r echo = T}
 dat %>% 
   ungroup() %>% 
   select(gender, t) %>% 
@@ -91,7 +91,7 @@ Data for 595 individuals across 7 time points - as expected.
 
 And, what does the wage data look like:
 
-```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5}
+```{r echo=T, fig.align='center', fig.width=10, fig.height=5}
 dat %>% 
   ggplot(aes(t, wage, colour = gender)) +
   geom_point(alpha = 0.15) +
@@ -107,7 +107,7 @@ We can see that, generally the wage goes up at a fairly steady rate for most ind
 
 Let's look at the log of wage.
 
-```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5}
+```{r echo=T, fig.align='center', fig.width=10, fig.height=5}
 dat %>% 
   ggplot(aes(t, lwage, colour = gender)) +
   geom_point(alpha = 0.15) +
@@ -151,7 +151,7 @@ p_mod1 <- cbind(newdat,
                 lwage = predict(mod1, newdat, interval = "prediction"))
 ```
 
-```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5}
+```{r echo=T, fig.align='center', fig.width=10, fig.height=5}
 dat %>% 
   ggplot(aes(t, lwage, colour = gender)) +
   geom_point(alpha = 0.15) +
@@ -170,7 +170,7 @@ Okay, these red fitted lines look like quite a good 'line of best fit', they pas
 
 Fitted with a prediction confidence interval, we see.
 
-```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5}
+```{r echo=T, fig.align='center', fig.width=10, fig.height=5}
 p_mod1 %>% 
   ggplot(aes(t, lwage.fit, ymin = lwage.lwr, ymax = lwage.upr, fill = gender)) +
   geom_ribbon(alpha = 0.5) +
@@ -185,7 +185,7 @@ p_mod1 %>%
 p1
 ```
 
-These lines look parallel - suggestive of no difference in growth rates between the genders (in line with the non-signficant interaction term we saw).
+These lines look parallel - suggestive of no difference in growth rates between the genders (in line with the non-significant interaction term we saw).
 
 [Of course, we have not adjusted for the within person correlation present in the data.]{.underline} The model above is inappropriate as one of the main assumptions of the model is violated - the data points are not all independent (we know there are 7 from each individual).
 
@@ -206,7 +206,7 @@ Lets also fit the predicted values from this model.
 newdat <- expand.grid(t = 1:7, gender = c("Male", "Female")) %>% 
   mutate(gender = factor(gender),
          gender = relevel(gender, "Male"),
-         id = c(rep(4, 7), rep(8, 7)))
+         id = c(rep(1, 7), rep(2, 7)))
 
 store <- simulate(mod2, seed=1, newdata=newdat, re.form=NA,
                   allow.new.levels=T, nsim = 500)
@@ -220,7 +220,7 @@ p_mod2 <- cbind(newdat,
                   select(fit, lwr, upr))
 ```
 
-### \-- Slight segway
+### -- Slight segway
 
 With standard linear regression model (first used), we used `predict` to generate a 'prediction interval'. With linear mixed effects models, we do no have the same function available (that will incorporate the random effects variability into the prediction interval), so rather than calculating these with a formula, we simulate! Some extra content on this can be read [here](https://tmalsburg.github.io/predict-vs-simulate.html) or [(somewhat less so) here](https://stackoverflow.com/questions/63198626/predictinterval-and-the-which-option).
 
@@ -228,7 +228,7 @@ This use of simulation is part of the reason behind the confidence intervals not
 
 ## Back to our Mixed effects model
 
-```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5}
+```{r echo=T, fig.align='center', fig.width=10, fig.height=5}
 p_mod2 %>% 
   ggplot(aes(t, fit, ymin = lwr, ymax = upr, fill = gender)) +
   geom_ribbon(alpha = 0.5) +
@@ -258,7 +258,7 @@ export_summs(mod1, mod2,
 
 We can see this when we plot the predicted values side by side.
 
-```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=12}
+```{r echo=T, fig.align='center', fig.width=10, fig.height=12}
 (p1 + labs(title = "Erroneous model")) / (p1 + labs(title = "Mixed effects model"))
 ```
 
@@ -305,7 +305,7 @@ mdat %>%
 
 Visually, our data now looks like this:
 
-```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5, warning=FALSE, message=FALSE}
+```{r echo=T, fig.align='center', fig.width=10, fig.height=5, warning=FALSE, message=FALSE}
 mdat %>% 
   ggplot(aes(t, mlwage, colour = gender)) +
   geom_point(alpha = 0.15) +
@@ -321,7 +321,7 @@ mdat %>%
 
 What is missing?
 
-```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5, warning=FALSE, message=FALSE}
+```{r echo=T, fig.align='center', fig.width=10, fig.height=5, warning=FALSE, message=FALSE}
 mdat %>% 
   ggplot(aes(t, mlwage, colour = gender)) +
   geom_point(data = mdat %>% filter(is_zero_following == 1),
@@ -363,7 +363,7 @@ p_mod3 <- cbind(newdat,
                 lwage = predict(mod3, newdat, interval = "prediction"))
 ```
 
-```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5, warning=F, message=F}
+```{r echo=T, fig.align='center', fig.width=10, fig.height=5, warning=F, message=F}
 mdat %>% 
   ggplot(aes(t, mlwage, colour = gender)) +
   geom_ribbon(data = p_mod3, aes(t, lwage.fit, ymin = lwage.lwr, ymax = lwage.upr, fill = gender), alpha = 0.5) +
@@ -401,7 +401,7 @@ When we run the mixed effects model on the dataset with missing data, we (correc
 
 In fact:
 
-```{r echo = F}
+```{r echo = T}
 export_summs(mod4, mod2,
              error_format = "[{conf.low}, {conf.high}]",
              error_pos = "right", digits = 3,
@@ -431,7 +431,7 @@ p_mod4 <- cbind(newdat,
                   select(fit, lwr, upr))
 ```
 
-```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5, warning=FALSE, message=FALSE}
+```{r echo=T, fig.align='center', fig.width=10, fig.height=5, warning=FALSE, message=FALSE}
 mdat %>% 
   ggplot(aes(t, mlwage, colour = gender)) +
   geom_ribbon(data = p_mod4, aes(t, fit, ymin = lwr, ymax = upr, fill = gender), alpha = 0.5) +
@@ -458,7 +458,7 @@ These lines (predicted lines; by gender) look parallel (as they should). Notably
 
 If the erroneous interaction effect (non-parallel lines) was not obvious in the plot separated by gender, here we see the predicted lines on the same plot for each model.
 
-```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5, warning=FALSE, message=FALSE}
+```{r echo=T, fig.align='center', fig.width=10, fig.height=5, warning=FALSE, message=FALSE}
 p_mod3 %>% 
   ggplot(aes(t, lwage.fit, ymin = lwage.lwr, ymax = lwage.upr, fill = gender)) +
   geom_ribbon(alpha = 0.5) +
@@ -517,7 +517,7 @@ mdat %>%
               statistic = all_categorical() ~ "{n}")
 ```
 
-```{r echo=FALSE, fig.align='center', fig.width=10, fig.height=5, warning=FALSE, message=FALSE}
+```{r echo=T, fig.align='center', fig.width=10, fig.height=5, warning=FALSE, message=FALSE}
 mdat %>% 
   ggplot(aes(t, mlwage, colour = gender)) +
   geom_point(data = mdat %>% filter(is_zero_following == 1),
@@ -535,7 +535,7 @@ mdat %>%
                   ylim = c(4.5,9))
 ```
 
-```{r echo = F}
+```{r echo = T}
 b1_mod1 <- lm(mlwage ~ gender * t, data = mdat)
 b1_mod2 <- lmer(mlwage ~ gender * t + (1 | id), data = mdat)
 
@@ -613,7 +613,7 @@ You can look forward to seeing posts from these other team members here in the c
 
 ## Reproducibility Information
 
-To access the qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:
+To access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:
 
 <https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io>
 

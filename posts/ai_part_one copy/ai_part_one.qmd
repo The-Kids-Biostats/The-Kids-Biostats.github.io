@@ -1,0 +1,20 @@
+---
+title: "AI in Biostatistics"
+output: html_document
+date: "2024-05-06"
+author: "Dr Matthew Cooper, Wesley Billingham"
+categories:
+  - AI
+  - R
+draft: true
+---
+
+# Overview
+
+AI is a hot topic in most fields right now, and biostatistics is no exception! We (the Telethon Kids Institute biostats team) were asked to present at the weekly Institute seminar on the use of AI in statistical workflows.
+
+The term AI has many meanings depending on the context - in this article we are referring exclusively to (and use the term interchangeably with) large language models (LLMs) such as ChatGPT and Claude. These tools are useful not just for writing sentences and paragraphs of text, but also functioning code!
+
+Since first investigating the capabilities of ChatGPT at writing R code, our team has been working to utilise it safely and effectively in our everyday workflows.
+
+The summary of our message to the Institute staff was that we cannot ignore the massive increase in efficiency that AI ***can*** bring if used properly. However, we also need to stress its limitations and the need for human experts to validate any non-trivial output.
