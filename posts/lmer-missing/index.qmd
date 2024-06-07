@@ -32,24 +32,24 @@ theme_clean <- function() {
 
 # Overview
 
-As consultant statisticians, we are often approached by people who have already carried out some preliminary data analysis and who are now looking to move onto something more complex. Often, they have done some methodology research and bring ideas to the table. As missing data is generally present (or not present?) in health related datasets, we find this is a topic is regularly raised - with people looking for a solution. Working through even the basics on this topic will mean one will also have to work through challenging and varied (often cryptic) statistical nomenclature.
+As consultant statisticians, we are often approached by people who have already carried out some preliminary data analysis and who are now looking to move onto something more complex. As missing data is generally present (or rather not present!) in health-related datasets, we find this is a question that is regularly raised:
 
-"Can we use mixed models, since they use all available data (?)"
+"Can we use mixed models, since they use all available data?"
 
-This worked example below was motivated by [reading this paper](https://statisticalhorizons.com/wp-content/uploads/MissingDataByML.pdf) that has an interesting worked example on 'missing data and mixed models' that I thought could benefit from some figures to aid in the understanding of what is achieved.
+Working through even the basics on this topic will mean one will also have to work through challenging and varied (often cryptic) statistical nomenclature. This post is a worked example and was motivated by [reading this paper](https://statisticalhorizons.com/wp-content/uploads/MissingDataByML.pdf). It has an interesting example of 'missing data and mixed models' that we thought could benefit from some figures and commentary to aid in the understanding of what is achieved.
 
 # Setting the scene
 
 We're going to use a dataset from the [AER package](https://cran.r-project.org/web/packages/AER/index.html), a Panel Data from a Study of Income Dynamics [(read more here)](https://search.r-project.org/CRAN/refmans/AER/html/PSID7682.html).
 
-In brief:
+In brief, this dataset has:
 
 -   Complete data on 595 individuals
--   Collected between 1976 and 1982
+-   Data collected between 1976 and 1982
 -   7 observations per person (annual assessements)
--   The focus is on modelling the *wage* data over time
+-   A focus on modelling the *wage* data over time
 
-We acknowledge that the issues related to gender pay differences and trends are a sensitive subject and are simply using this example as it was and is a readily available, tidy, tangible, cross discipline dataset that allows the demonstration of the statistical principals of interest.
+We acknowledge that the issues related to gender pay differences and trends are a sensitive subject and are simply using this example as it was and is a readily available, tidy, tangible, cross-discipline dataset that allows the demonstration of the statistical principals of interest.
 
 ## Research question
 
@@ -65,8 +65,7 @@ Let's take an initial look at the data.
 
 ```{r echo = T}
 data("PSID7682")
-dat <- PSID7682
-dat <- dat %>% 
+dat <- PSID7682 %>% 
   mutate(gender = case_when(gender == "male" ~ "Male",
                             T ~ "Female"),
          gender = factor(gender),
@@ -89,7 +88,7 @@ dat %>%
 
 Data for 595 individuals across 7 time points - as expected.
 
-And, what does the wage data look like:
+And, what does the wage data look like?
 
 ```{r echo=T, fig.align='center', fig.width=10, fig.height=5}
 dat %>% 
@@ -138,7 +137,7 @@ export_summs(mod1, error_format = "[{conf.low}, {conf.high}]",
 
 We can see there is an effect of gender present, and an effect of time (the growth overtime we saw in the original plot), but the very small beta coefficient (relative to the scale of data we are working with) and the p-value of 0.6 are suggestive that the rate of wage growth over time does not differ significantly between genders.
 
-To view this, we're not going to use `geom_smooth` or `stat_summary` as we might do when graphing on-the-fly.
+To view this, we're not going to use `geom_smooth` or `stat_summary` as we might do when graphing on-the-fly, rather we will use the predict() function to create data for our line of best fit.
 
 To set a coding framework which we'll use again later in the post, we'll create a new dataset and use predictions to draw our (straight) line.
 
@@ -166,7 +165,7 @@ dat %>%
                   ylim = c(4.5,9))
 ```
 
-Okay, these red fitted lines look like quite a good 'line of best fit', they pass the eye test of broadly representing the trends of the data well.
+Okay, these red fitted lines look like quite good as a 'line of best fit'; they pass the eye test of broadly representing the trends of the data well.
 
 Fitted with a prediction confidence interval, we see.
 
@@ -220,7 +219,7 @@ p_mod2 <- cbind(newdat,
                   select(fit, lwr, upr))
 ```
 
-### -- Slight segway
+### -- Slight segue
 
 With standard linear regression model (first used), we used `predict` to generate a 'prediction interval'. With linear mixed effects models, we do no have the same function available (that will incorporate the random effects variability into the prediction interval), so rather than calculating these with a formula, we simulate! Some extra content on this can be read [here](https://tmalsburg.github.io/predict-vs-simulate.html) or [(somewhat less so) here](https://stackoverflow.com/questions/63198626/predictinterval-and-the-which-option).
 
@@ -259,14 +258,14 @@ export_summs(mod1, mod2,
 We can see this when we plot the predicted values side by side.
 
 ```{r echo=T, fig.align='center', fig.width=10, fig.height=12}
-(p1 + labs(title = "Erroneous model")) / (p1 + labs(title = "Mixed effects model"))
+(p1 + labs(title = "Erroneous model")) / (p2 + labs(title = "Mixed effects model"))
 ```
 
 # Introduction of missing data
 
 We now create a modified copy of the dataset whereby ***wage data is missing as a function of the previous wage value***.
 
-That is, as one's wage gets higher, there probability of not completing the following years survey is increased. I was unable to implement the exact same missing data function as the [inspiring example](https://statisticalhorizons.com/wp-content/uploads/MissingDataByML.pdf), but the below is similar and serves the same purpose. Without diving too far down the missing data hole (intended), this is an example of data \[missing at random\](https://www.ncbi.nlm.nih.gov/books/NBK493614/#:\~:text=Missing%20completely%20at%20random%20(MCAR,and%20those%20with%20complete%20data), in the fact that the data missing is related to [something observed]{.underline} (by design), that being, the previous years wage value.
+That is, as a person's wage gets higher, their probability of not completing the following years survey is increased. I was unable to implement the exact same missing data function as the [inspiring example](https://statisticalhorizons.com/wp-content/uploads/MissingDataByML.pdf), but the below is similar and serves the same purpose. Without diving too far down the missing data hole (intended), this is an example of data [missing at random](https://www.ncbi.nlm.nih.gov/books/NBK493614/#:\~:text=Missing%20completely%20at%20random%20(MCAR,and%20those%20with%20complete%20data), in the fact that the data missing is related to [something observed]{.underline} (by design), that being, the previous years wage value.
 
 ```{r echo=T}
 mdat <- dat %>% 
@@ -284,7 +283,7 @@ mdat <- dat %>%
 
 What impact has this had on the data? We can see a significant loss of data, especially across the latter years.
 
-```{r echo=T}
+```{r echo = F, eval = F}
 mdat %>% 
   ungroup() %>% 
   select(gender, t) %>% 
@@ -294,7 +293,7 @@ mdat %>%
 
 This also looks to have impacted males more than females.
 
-```{r echo=T}
+```{r echo = F, eval = F}
 mdat %>% 
   ungroup() %>% 
   filter(!is.na(mlwage)) %>% 
@@ -302,6 +301,25 @@ mdat %>%
   tbl_summary(by = gender,
               statistic = all_categorical() ~ "{n}")
 ```
+
+```{r echo=T}
+mdat %>% 
+  filter(!is.na(mlwage)) %>% 
+  mutate(missing = "After") %>%
+  rbind(
+    mdat %>% mutate(missing = "Before")
+  ) %>%
+  mutate(missing = factor(missing, levels = c("Before", "After"))) %>%
+  ungroup() %>%
+  select(gender, t, missing) %>%
+  tbl_strata(
+    strata = missing,
+    .tbl_fun = ~ .x %>%
+      tbl_summary(by = gender,
+                  statistic = all_categorical() ~ "{n}")
+  )
+```
+
 
 Visually, our data now looks like this:
 
