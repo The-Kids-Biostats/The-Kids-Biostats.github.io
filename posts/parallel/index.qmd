@@ -1,0 +1,269 @@
+---
+title: "Parallel Computing in R"
+output: html_document
+author: "Zac Dempsey, Wes Billingham"
+date: "`r Sys.Date()`"
+categories:
+  - R
+  - Parallel
+draft: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r echo = F, message = F, warning = F}
+library(tidyverse)  # For general "tidyverse" style manipulations
+library(parallel)   # base R
+library(foreach)    # For looping
+library(doParallel) # Parallel back-end for the `foreach` package
+```
+
+<br>
+
+## Why Parallel Computing?
+
+While most of our datasets are a manageable size here at Telethon Kids Institute, there are occasions where we are suddenly presented with data containing millions of rows and hundreds if not thousands of columns. Performing almost any operation on these large datasets can take hours to execute -- a real test of patience.
+
+Parallel computing is one relatively simple way to improve computation time on large datasets, by using more of your computer's resources and distributing tasks "in parallel" across multiple processors. This is particularly useful for loop-based computations/simulations, where one must sweep over a range of parameters/conditions and return an output. That being said, it is still worth investing the time to make sure the packages and/or functions being run are compatible with a parallel workflow.
+
+```{r echo = F}
+#Parallel computing is a way to use more of your computer's resources to get these operations done quicker, and hopefully with not too much extra code. (That being said, with particularly large datasets, its worth investing the time to make sure there aren't functions and/or packages that significantly speed things up even without parallel computing.)
+```
+
+<p>
+
+## What is Parallel Computing?
+
+Parallel computing refers to allocating multiple operations in 'parallel' across a machine's multiple cores/processors. Most modern computers have at least four cores, and often vastly more. By default, R uses only one core, running iterative operations one after the other; not starting the next until the previous is complete. Under a parallel framework, multiple iterations/calculations can be allocated across multiple cores and completed at the same time -- saving time.
+
+In this blog, we will have a look at some examples using the [`doParallel`](https://cran.r-project.org/web/packages/doParallel/) and [`foreach`](https://cran.r-project.org/web/packages/foreach/) packages in `R`. These packages together facilitate parallel computing in R. We provide some simple examples and use cases, in addition to some further resources if you would like to learn more.
+
+These examples are run using `r R.version$version.string` on `r Sys.info()["sysname"]` `r Sys.info()["release"]`.
+
+### Resources (move to the end?)
+
+-   Vignettes
+    -   <https://cran.r-project.org/web/packages/doParallel/vignettes/gettingstartedParallel.pdf>
+-   Tutorials
+    -   <https://unc-libraries-data.github.io/R-Open-Labs/Extras/Parallel/foreach.html>
+
+<br>
+
+### Setup
+
+-   Let's check the number of cores available on our machine.
+
+```{r echo = T}
+parallel::detectCores()
+```
+
+<p>
+
+-   We should not allocate all of our machine's available cores to parallel computations, as this will consume all of the available resources.
+-   Let's use 6 cores for our examples.
+
+```{r echo = T}
+doParallel::registerDoParallel(6)
+```
+
+-   Below is a screenshot from the Windows task manager. R "front-end" instances are initialised for each of the 6 cores.
+
+```{r out.width="400px", fig.align='center', echo = F}
+knitr::include_graphics(path = "parallel_comps.png")
+```
+
+-   When we no longer require a parallel environment, we must shut down and de-register the parallel cluster.
+
+```{r echo = T}
+doParallel::stopImplicitCluster()
+```
+
+<p>
+
+## Example 1: Bootstrapping
+
+**Pre-amble about what bootstrapping is and what we use it for**
+
+-   Let's use the `mtcars` data set to run a basic linear regression.
+    -   We would like to explore the association between a vehicle's fuel efficiency (`mpg`) and horsepower (`hp`), weight (`wt`) and transmission type (automatic/manual, `am`)
+-   We suspect some of the assumptions of standard linear regression may be violated (normality of errors) because of the small sample size. By bootstrapping, we can explore the stability of the regression coefficients by calculating a confidence interval about the bootstrapped coefficient estimates.
+
+```{r echo = T}
+# Let's set up the data and number of bootstrap samples
+data(mtcars)
+mtcars <- as_tibble(mtcars)
+
+head(mtcars)
+```
+
+<p>
+
+-   Let's set the number of bootstrap replicates to be 1000
+
+```{r echo = T}
+trials <- 10000 # Number of bootstrap samples
+```
+
+<p>
+
+### For-loop
+
+-   Let's
+
+```{r}
+set.seed(2024)
+
+start <- proc.time()
+
+# Initialise a matrix to store the coefficients from each bootstrap sample
+bootstrap_coefs <- matrix(NA, nrow = trials, ncol = 4)
+colnames(bootstrap_coefs) <- names(coef(lm(mpg ~ hp + wt + am, data = mtcars)))
+
+for (i in 1:trials){
+  ind <- mtcars[sample(nrow(mtcars), replace = TRUE),]
+  result <- lm(mpg ~ hp + wt + as_factor(am), data = ind)
+  
+  bootstrap_coefs[i, ] <- coef(result)
+}
+
+# Calculate the 2.5th and 97.5th percentile for each variable's coefficient estimates from the bootstrap distribution.
+bootstrap_cis <- apply(bootstrap_coefs, 2, function(coefs){quantile(coefs, probs = c(0.025, 0.975))})
+
+end <- proc.time()
+print(end - start)
+```
+
+<p>
+
+### `%do%` loop (not parallel)
+
+-   As an alternative, let's also use the `%do%` operator from the `foreach` package. Similar to a for-loop, the loop is sequentially executed.
+-   This is slightly faster than the standard for-loop execution.
+
+```{r echo = T}
+start <- proc.time()
+
+bootstrap_results <- foreach::foreach(i = 1:trials, .combine = rbind) %do% {
+  ind <- mtcars[sample(nrow(mtcars), replace = TRUE), ]
+  result <- lm(mpg ~ hp + wt + am, data = ind)
+  coef(result)
+}
+
+# Calculate the 2.5th and 97.5th percentile for each variable's coefficient estimates from the bootstrap distribution.
+bootstrap_cis <- apply(bootstrap_results, 2, function(coefs) {quantile(coefs, probs = c(0.025, 0.975))})
+
+end <- proc.time()
+print(end - start)
+```
+
+<p>
+
+### `%dopar%` parallelisation
+
+-   Now, let's run this in parallel across 6 cores.
+-   The execution time is significantly reduced relative to the above two cases.
+
+```{r}
+doParallel::registerDoParallel(cores = 6)
+
+start <- proc.time()
+bootstrap_results <- foreach(i = 1:trials, .combine = rbind, .packages = 'stats') %dopar% {
+  ind <- mtcars[sample(nrow(mtcars), replace = TRUE), ]
+  result <- lm(mpg ~ hp + wt + am, data = ind)
+  coef(result)
+}
+
+# Calculate the 2.5th and 97.5th percentile for each variable's coefficient estimates from the bootstrap distribution.
+bootstrap_cis <- apply(bootstrap_results, 2, function(coefs) {quantile(coefs, probs = c(0.025, 0.975))})
+
+end <- proc.time()
+print(end - start)
+
+doParallel::stopImplicitCluster()
+```
+
+<br>
+
+## Example 2: Parallel regressions with different outcomes
+
+-   This is a situation where parallel computing may not be
+-   Let's use the `diamonds` dataset from `ggplot2`.
+
+```{r echo = T}
+data(diamonds)
+head(diamonds)
+```
+
+-   Outcome variables
+    -   price (USD)
+    -   carat (weight)
+-   Explanatory variables
+    -   x (length)
+    -   y (width)
+    -   z (depth)
+
+```{r echo = T}
+input_vars <- c("x", "y", "z")
+output_vars <- c("price", "carat")
+
+formulas <- map(output_vars, ~paste(.x, "~", paste(input_vars, collapse = " + ")))
+```
+
+<p>
+
+### For-loop
+
+```{r echo = T}
+results <- list()
+
+start <- proc.time()
+for (i in 1:length(formulas)){
+  formula <- formulas[[i]]
+  result <- lm(formula = formula, data = diamonds)
+  results[[ output_vars[[i]] ]] <- result
+}
+end <- proc.time()
+print(end - start)
+```
+
+<p>
+
+### `purrr:map` "parallelisation"
+
+```{r}
+start <- proc.time()
+results <- map(formulas, ~{
+  lm(as.formula(.x), data = diamonds)
+})
+end <- proc.time()
+print(end - start)
+```
+
+<p>
+
+### `%dopar%` parallelisation
+
+-   This probably isn't the best example to demonstrate the superior time complexity.
+
+```{r echo = T}
+doParallel::registerDoParallel(cores = 6)
+
+start <- proc.time()
+results <- foreach(frm = iter(formulas), .combine='list') %dopar% {
+  lm(frm, data = diamonds)
+}
+end <- proc.time()
+print(end - start)
+
+doParallel::stopImplicitCluster()
+```
+
+<br>
+
+## Session Info
+
+```{r echo = T}
+sessionInfo()
+```
