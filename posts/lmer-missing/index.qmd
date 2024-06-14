@@ -4,6 +4,8 @@ format:
   html:
     theme: journal   # cosmo bootswatch theme
     code-fold: true
+    toc: true
+    toc-location: left
 date: "2024-06-07"
 author: "Dr Matthew Cooper"
 categories:
@@ -265,7 +267,7 @@ We can see this when we plot the predicted values side by side.
 
 We now create a modified copy of the dataset whereby ***wage data is missing as a function of the previous wage value***.
 
-That is, as a person's wage gets higher, their probability of not completing the following years survey is increased. I was unable to implement the exact same missing data function as the [inspiring example](https://statisticalhorizons.com/wp-content/uploads/MissingDataByML.pdf), but the below is similar and serves the same purpose. Without diving too far down the missing data hole (intended), this is an example of data [missing at random](https://www.ncbi.nlm.nih.gov/books/NBK493614/#:\~:text=Missing%20completely%20at%20random%20(MCAR,and%20those%20with%20complete%20data), in the fact that the data missing is related to [something observed]{.underline} (by design), that being, the previous years wage value.
+That is, as a person's wage gets higher, their probability of not completing the following years survey is increased. I was unable to implement the exact same missing data function as the [inspiring example](https://statisticalhorizons.com/wp-content/uploads/MissingDataByML.pdf), but the below is similar and serves the same purpose. Without diving too far down the missing data hole (intended), this is an example of data \[missing at random\](https://www.ncbi.nlm.nih.gov/books/NBK493614/#:\~:text=Missing%20completely%20at%20random%20(MCAR,and%20those%20with%20complete%20data), in the fact that the data missing is related to [something observed]{.underline} (by design), that being, the previous years wage value.
 
 ```{r echo=T}
 mdat <- dat %>% 
@@ -319,7 +321,6 @@ mdat %>%
                   statistic = all_categorical() ~ "{n}")
   )
 ```
-
 
 Visually, our data now looks like this:
 
