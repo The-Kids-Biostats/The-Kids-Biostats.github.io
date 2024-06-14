@@ -28,7 +28,7 @@ While most of the datasets we work wtih are of a manageable size here at Teletho
 
 Parallel computing is one relatively simple way to reduce computation time on large datasets – leveraging computer's processing capabilities and simultaneously distributing tasks "in parallel" across multiple processors (without too much extra code). This is particularly useful for loop-based computations/simulations, where multiple parameters/conditions must be swept over and explored to appropriately tune a model or output.
 
-That being said, parallel computing is not the "magical general solution" to all computationally intensive tasks – it is still worth investing the time to make sure the packages and/or functions being used are compatible in a parallel workflow. There are still circumstances where the always handy `purrr::map` functinon, or basic for-loops can be equally or more efficient than initialising a parallel environment.
+That being said, parallel computing is not the "magical general solution" to all computationally intensive tasks – it is still worth investing the time to make sure the packages and/or functions being used are compatible in a parallel workflow. There are still circumstances where the always handy `purrr::map` function, or basic for-loops can be equally or more efficient than initialising a parallel environment.
 
 ```{r echo = F}
 #Parallel computing is a way to use more of your computer's resources to get these operations done quicker, and hopefully with not too much extra code. (That being said, with particularly large datasets, its worth investing the time to make sure there aren't functions and/or packages that significantly speed things up even without parallel computing.)
@@ -38,11 +38,11 @@ That being said, parallel computing is not the "magical general solution" to all
 
 ## What is Parallel Computing?
 
-Parallel computing refers to allocating multiple operations in "parallel" across a machine's multiple cores/processors. Most modern computers have at least four cores, and often vastly more. By default, R uses only one core, running iterative operations sequentially; not starting the next until the previous is complete. Therefore, under a parallel framework, multiple iterations/calculations can be allocated across multiple cores and completed at the same time -- saving time.
+Parallel computing refers to allocating multiple operations in "parallel" across a machine's multiple cores/processors. Most modern computers have at least four cores, and often many more. By default, R uses only one core, running iterative operations sequentially; not starting the next until the previous is complete. However, under a parallel framework, multiple iterations/calculations can be allocated across multiple cores and completed at the same time, thus saving time.
 
-In this blog, we will have a look at a couple of examples using `R`. We provide some simple examples and use cases, in addition to some further resources if you would like to learn more.
+In this post, we will have a look at a couple of examples using `R`. We provide some simple examples and use-cases, in addition to some further resources if you would like to learn more.
 
-The [`doParallel`](#0) and [`foreach`](#0) packages of `R` are one set of packages, aimed to be used together, to facilitate a syntactically simple parallel computing environment in `R` – by use of the `%dopar` operator. Additionally the base `parallel` package is used for some basic set-up and detection.
+The [`doParallel`](#0) and [`foreach`](#0) packages of `R` are one set of packages, aimed to be used together, to facilitate a syntactically simple parallel computing environment in `R` – by use of the `%dopar%` operator. Additionally the base `parallel` package is used for some basic set-up and detection.
 
 These examples are run using `r R.version$version.string` on `r Sys.info()["sysname"]` `r Sys.info()["release"]`.
 
@@ -87,7 +87,7 @@ set.seed(2024)
 
 ## Example 1: Bootstrapping
 
-Bootstrapping is a simple metric that uses random sampling with replacement to mimic the sampling process. This allows us to estimate the sampling distribution for a statistic (mean, variance, etc.) and assess its stability/reliability, without making strong assumptions about the underlying population. What is more, when we are constrained by the data (small sample sizes, insufficient variation, violation of model assumptions) we can use bootstrapping to assess stability and validity.
+Bootstrapping is a relatively simple method that uses random sampling with replacement to mimic random sampling. This allows us to estimate the sampling distribution for a statistic (mean, variance, etc.) and assess its stability/reliability, without making strong assumptions about the underlying population. This especially useful when the data is problematic in some fundamental way (small sample sizes, insufficient variation, violation of model assumptions).
 
 In `R`, for-loops can be used to derive a set of bootstrap samples. As we will see, parallel environments can much more efficiently handle operations like these of a repeated nature.
 

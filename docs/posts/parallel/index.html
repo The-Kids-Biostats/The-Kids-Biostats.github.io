@@ -203,15 +203,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="overview">Overview</h2>
 <p>While most of the datasets we work wtih are of a manageable size here at Telethon Kids Institute, occasionally we are suddenly presented with data containing <em>millions</em> of rows and <em>thousands</em> of columns. Performing almost any operation on these large datasets can take hours to execute – a real test of patience for exploratory work!</p>
 <p>Parallel computing is one relatively simple way to reduce computation time on large datasets – leveraging computer’s processing capabilities and simultaneously distributing tasks “in parallel” across multiple processors (without too much extra code). This is particularly useful for loop-based computations/simulations, where multiple parameters/conditions must be swept over and explored to appropriately tune a model or output.</p>
-<p>That being said, parallel computing is not the “magical general solution” to all computationally intensive tasks – it is still worth investing the time to make sure the packages and/or functions being used are compatible in a parallel workflow. There are still circumstances where the always handy <code>purrr::map</code> functinon, or basic for-loops can be equally or more efficient than initialising a parallel environment.</p>
+<p>That being said, parallel computing is not the “magical general solution” to all computationally intensive tasks – it is still worth investing the time to make sure the packages and/or functions being used are compatible in a parallel workflow. There are still circumstances where the always handy <code>purrr::map</code> function, or basic for-loops can be equally or more efficient than initialising a parallel environment.</p>
 <p>
 </p></section>
 <section id="what-is-parallel-computing" class="level2">
 <h2 class="anchored" data-anchor-id="what-is-parallel-computing">What is Parallel Computing?</h2>
-<p>Parallel computing refers to allocating multiple operations in “parallel” across a machine’s multiple cores/processors. Most modern computers have at least four cores, and often vastly more. By default, R uses only one core, running iterative operations sequentially; not starting the next until the previous is complete. Therefore, under a parallel framework, multiple iterations/calculations can be allocated across multiple cores and completed at the same time – saving time.</p>
-<p>In this blog, we will have a look at a couple of examples using <code>R</code>. We provide some simple examples and use cases, in addition to some further resources if you would like to learn more.</p>
-<p>The <a href="#0"><code>doParallel</code></a> and <a href="#0"><code>foreach</code></a> packages of <code>R</code> are one set of packages, aimed to be used together, to facilitate a syntactically simple parallel computing environment in <code>R</code> – by use of the <code>%dopar</code> operator. Additionally the base <code>parallel</code> package is used for some basic set-up and detection.</p>
-<p>These examples are run using R version 4.3.2 (2023-10-31 ucrt) on Windows 10 x64.</p>
+<p>Parallel computing refers to allocating multiple operations in “parallel” across a machine’s multiple cores/processors. Most modern computers have at least four cores, and often many more. By default, R uses only one core, running iterative operations sequentially; not starting the next until the previous is complete. However, under a parallel framework, multiple iterations/calculations can be allocated across multiple cores and completed at the same time, thus saving time.</p>
+<p>In this post, we will have a look at a couple of examples using <code>R</code>. We provide some simple examples and use-cases, in addition to some further resources if you would like to learn more.</p>
+<p>The <a href="#0"><code>doParallel</code></a> and <a href="#0"><code>foreach</code></a> packages of <code>R</code> are one set of packages, aimed to be used together, to facilitate a syntactically simple parallel computing environment in <code>R</code> – by use of the <code>%dopar%</code> operator. Additionally the base <code>parallel</code> package is used for some basic set-up and detection.</p>
+<p>These examples are run using R version 4.3.1 (2023-06-16 ucrt) on Windows 10 x64.</p>
 <p><br></p>
 <section id="setup" class="level3">
 <h3 class="anchored" data-anchor-id="setup">Setup</h3>
@@ -329,7 +329,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   8.97    0.10    9.11 </code></pre>
+   7.59    0.08    7.67 </code></pre>
 </div>
 </div>
 <p>
@@ -357,7 +357,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   7.38    0.02    7.41 </code></pre>
+   6.73    0.06    6.81 </code></pre>
 </div>
 </div>
 <p>
@@ -387,7 +387,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   2.23    0.30    3.63 </code></pre>
+   1.94    0.35    3.14 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">stopImplicitCluster</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -475,7 +475,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(end <span class="sc">-</span> start)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.26    0.22    1.49 </code></pre>
+   1.06    0.35    1.42 </code></pre>
 </div>
 </div>
 <p>
@@ -506,7 +506,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(end <span class="sc">-</span> start)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   0.18    0.07    0.98 </code></pre>
+   0.20    0.11    1.02 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">stopImplicitCluster</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -543,9 +543,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>R version 4.3.2 (2023-10-31 ucrt)
+<pre><code>R version 4.3.1 (2023-06-16 ucrt)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
-Running under: Windows 10 x64 (build 19045)
+Running under: Windows 10 x64 (build 19044)
 
 Matrix products: default
 
@@ -569,15 +569,15 @@ other attached packages:
 [13] tidyverse_2.0.0  
 
 loaded via a namespace (and not attached):
- [1] gtable_0.3.5       jsonlite_1.8.8     compiler_4.3.2     tidyselect_1.2.1  
+ [1] gtable_0.3.5       jsonlite_1.8.8     compiler_4.3.1     tidyselect_1.2.1  
  [5] nycflights13_1.0.2 scales_1.3.0       yaml_2.3.8         fastmap_1.1.1     
- [9] R6_2.5.1           generics_0.1.3     knitr_1.46         htmlwidgets_1.6.4 
-[13] munsell_0.5.1      pillar_1.9.0       tzdb_0.4.0         rlang_1.1.3       
-[17] utf8_1.2.4         stringi_1.8.3      xfun_0.43          timechange_0.3.0  
+ [9] R6_2.5.1           generics_0.1.3     knitr_1.47         htmlwidgets_1.6.4 
+[13] munsell_0.5.1      pillar_1.9.0       tzdb_0.4.0         rlang_1.1.4       
+[17] utf8_1.2.4         stringi_1.8.4      xfun_0.44          timechange_0.3.0  
 [21] cli_3.6.2          withr_3.0.0        magrittr_2.0.3     digest_0.6.35     
-[25] grid_4.3.2         rstudioapi_0.16.0  hms_1.1.3          lifecycle_1.0.4   
-[29] vctrs_0.6.5        evaluate_0.23      glue_1.7.0         codetools_0.2-20  
-[33] fansi_1.0.6        colorspace_2.1-0   rmarkdown_2.26     tools_4.3.2       
+[25] grid_4.3.1         rstudioapi_0.16.0  hms_1.1.3          lifecycle_1.0.4   
+[29] vctrs_0.6.5        evaluate_0.23      glue_1.7.0         codetools_0.2-19  
+[33] fansi_1.0.6        colorspace_2.1-0   rmarkdown_2.26.2   tools_4.3.1       
 [37] pkgconfig_2.0.3    htmltools_0.5.8.1 </code></pre>
 </div>
 </div>
