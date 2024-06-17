@@ -67,7 +67,7 @@ doParallel::registerDoParallel(6)
 
 -   Below is a screenshot from the Windows task manager. R "front-end" instances are initialised for each of the 6 initialised cores.
 
-```{r out.width="400px", fig.align='center', echo = F}
+```{r out.width="700px", fig.align='center', echo = F}
 knitr::include_graphics(path = "parallel_comps.png")
 ```
 
@@ -195,6 +195,8 @@ print(time3)
 doParallel::stopImplicitCluster()
 ```
 
+We can see that the parallel initialisation is significantly faster than traditional for-loop methods— about `r paste0(round(100*(time1[3]-time3[3])/time1[3],0),"%")` so! For datasets greater in size, or with more bootstrap samples, these time savings certainly add up.
+
 <br>
 
 ## Example 2: Parallel regressions with different outcomes
@@ -265,7 +267,8 @@ for (i in unique(flights$month)){
   }
 }
 end <- proc.time()
-print(end - start)
+time4 <- end-start
+print(time4)
 ```
 
 <p>
@@ -293,10 +296,13 @@ results <- foreach(i = unique(flights$month), .packages = "stats") %:%
     }
   }
 end <- proc.time()
-print(end - start)
+time5 <- end - start
+print(time5)
 
 doParallel::stopImplicitCluster()
 ```
+
+Again, this simple example represents a `r paste0(round(100*(time4[3]-time5[3])/time4[3],0),"%")` time saving relative to a standard for-loop implementation.
 
 <br>
 
@@ -327,4 +333,8 @@ You can look forward to seeing posts from these other team members here in the c
 
 ```{r echo = T}
 sessionInfo()
+```
+
+```{r echo = F}
+rm(time1, time2, time3, time4, time5, trials, results, i, j, model, outcome_vars, input_vars, start, end, ind, bootstrap_results, bootstrap_coefs, bootstrap_cis, mtcars, result, month_dat, flights)
 ```
