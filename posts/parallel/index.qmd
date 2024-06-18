@@ -1,12 +1,16 @@
 ---
 title: "Parallel Computing in R"
-output: html_document
 author: "Zac Dempsey"
-date: "`r Sys.Date()`"
+format:
+  html:
+    code-fold: true
+    toc: true
+    toc-location: left
+date: "2024-06-18"
 categories:
   - R
   - Parallel
-draft: true
+draft: false
 ---
 
 ```{r setup, include=FALSE}
@@ -20,13 +24,11 @@ library(foreach)    # For looping
 library(doParallel) # Parallel back-end for the `foreach` package
 ```
 
-<br>
-
 ## Overview
 
-While most of the datasets we work wtih are of a manageable size here at Telethon Kids Institute, occasionally we are suddenly presented with data containing *millions* of rows and *thousands* of columns. Performing almost any operation on these large datasets can take hours to execute -- a real test of patience for exploratory work!
+While most of the datasets we work wtih are of a manageable size here at Telethon Kids Institute, occasionally we are presented with data containing *millions* of rows and/or *thousands* of columns. Performing almost any operation on these large datasets can take hours to execute -- a real test of patience for exploratory work!
 
-Parallel computing is one relatively simple way to reduce computation time on large datasets – leveraging computer's processing capabilities and simultaneously distributing tasks "in parallel" across multiple processors (without too much extra code). This is particularly useful for loop-based computations/simulations, where multiple parameters/conditions must be swept over and explored to appropriately tune a model or output.
+Parallel computing is one relatively simple way to reduce computation time on large datasets – leveraging our computer's processing capabilities by simultaneously distributing tasks "in parallel" across multiple processors (without too much extra code). This is particularly useful for loop-based computations/simulations, where multiple parameters/conditions must be swept over and explored to appropriately tune a model or output.
 
 That being said, parallel computing is not the "magical general solution" to all computationally intensive tasks – it is still worth investing the time to make sure the packages and/or functions being used are compatible in a parallel workflow. There are still circumstances where the always handy `purrr::map` function, or basic for-loops can be equally or more efficient than initialising a parallel environment.
 
@@ -42,7 +44,7 @@ Parallel computing refers to allocating multiple operations in "parallel" across
 
 In this post, we will have a look at a couple of examples using `R`. We provide some simple examples and use-cases, in addition to some further resources if you would like to learn more.
 
-The [`doParallel`](#0) and [`foreach`](#0) packages of `R` are one set of packages, aimed to be used together, to facilitate a syntactically simple parallel computing environment in `R` – by use of the `%dopar%` operator. Additionally the base `parallel` package is used for some basic set-up and detection.
+The [`doParallel`](#0) and [`foreach`](#0) packages of `R` are one set of packages, intended to be used together, to facilitate a syntactically simple parallel computing environment in `R` – by use of the `%dopar%` operator. Additionally the base `parallel` package is used for some basic set-up and detection.
 
 These examples are run using `r R.version$version.string` on `r Sys.info()["sysname"]` `r Sys.info()["release"]`.
 
@@ -87,7 +89,7 @@ set.seed(2024)
 
 ## Example 1: Bootstrapping
 
-Bootstrapping is a relatively simple method that uses random sampling with replacement to mimic random sampling. This allows us to estimate the sampling distribution for a statistic (mean, variance, etc.) and assess its stability/reliability, without making strong assumptions about the underlying population. This especially useful when the data is problematic in some fundamental way (small sample sizes, insufficient variation, violation of model assumptions).
+Bootstrapping is a relatively simple method that uses random sampling with replacement to mimic random sampling of a population. This allows us to estimate the sampling distribution for a statistic (mean, variance, etc.) and assess its stability/reliability, without making strong assumptions about the underlying population. This especially useful when the data is problematic in some fundamental way (small sample sizes, insufficient variation, violation of model assumptions).
 
 In `R`, for-loops can be used to derive a set of bootstrap samples. As we will see, parallel environments can much more efficiently handle operations like these of a repeated nature.
 
@@ -121,7 +123,7 @@ trials <- 10000 # Number of bootstrap samples
     -   Extract the coefficients from `results`, and append this to an overall coefficient matrix `bootstrap_coefs`.
 -   Subsequently, we can calculate a 95% confidence interval for each of our parameter estimates by taking the 2.5th and 97.5th percentiles from the bootstrap distribution.
 
-```{r}
+```{r echo = T}
 start <- proc.time() # Start our timer!
 
 # Initialise a matrix to store the coefficients from each bootstrap sample
@@ -175,7 +177,7 @@ print(time2)
 -   The execution time is significantly reduced relative to the above two cases.
 -   The `%dopar%` operator defines the for-loop in the parallel environment.
 
-```{r}
+```{r echo = T}
 doParallel::registerDoParallel(cores = 6)
 
 start <- proc.time()

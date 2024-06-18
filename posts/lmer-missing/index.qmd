@@ -2,7 +2,6 @@
 title: "Handling Missing Data with LMER"
 format:
   html:
-    theme: journal   # cosmo bootswatch theme
     code-fold: true
     toc: true
     toc-location: left

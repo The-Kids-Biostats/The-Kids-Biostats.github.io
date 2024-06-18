@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Zac Dempsey">
-<meta name="dcterms.date" content="2024-06-17">
+<meta name="dcterms.date" content="2024-06-18">
 
 <title>The Kids Biostats - Parallel Computing in R</title>
 <style>
@@ -107,7 +107,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="floating nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
@@ -155,7 +155,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
       <h1 class="title">Parallel Computing in R</h1>
@@ -179,7 +179,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">June 17, 2024</p>
+        <p class="date">June 18, 2024</p>
       </div>
     </div>
     
@@ -189,8 +189,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#what-is-parallel-computing" id="toc-what-is-parallel-computing" class="nav-link" data-scroll-target="#what-is-parallel-computing">What is Parallel Computing?</a>
+  <ul class="collapse">
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup">Setup</a></li>
+  </ul></li>
+  <li><a href="#example-1-bootstrapping" id="toc-example-1-bootstrapping" class="nav-link" data-scroll-target="#example-1-bootstrapping">Example 1: Bootstrapping</a>
+  <ul class="collapse">
+  <li><a href="#for-loop" id="toc-for-loop" class="nav-link" data-scroll-target="#for-loop">For-loop</a></li>
+  <li><a href="#do-loop-not-parallel" id="toc-do-loop-not-parallel" class="nav-link" data-scroll-target="#do-loop-not-parallel"><code>%do%</code> loop (not parallel)</a></li>
+  <li><a href="#dopar-parallelisation" id="toc-dopar-parallelisation" class="nav-link" data-scroll-target="#dopar-parallelisation"><code>%dopar%</code> parallelisation</a></li>
+  </ul></li>
+  <li><a href="#example-2-parallel-regressions-with-different-outcomes" id="toc-example-2-parallel-regressions-with-different-outcomes" class="nav-link" data-scroll-target="#example-2-parallel-regressions-with-different-outcomes">Example 2: Parallel regressions with different outcomes</a>
+  <ul class="collapse">
+  <li><a href="#for-loop-1" id="toc-for-loop-1" class="nav-link" data-scroll-target="#for-loop-1">For-loop</a></li>
+  <li><a href="#dopar-parallelisation-1" id="toc-dopar-parallelisation-1" class="nav-link" data-scroll-target="#dopar-parallelisation-1"><code>%dopar%</code> parallelisation</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements"><strong>Acknowledgements</strong></a></li>
+  <li><a href="#further-resources" id="toc-further-resources" class="nav-link" data-scroll-target="#further-resources">Further Resources</a></li>
+  <li><a href="#session-info" id="toc-session-info" class="nav-link" data-scroll-target="#session-info">Session Info</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    </div>
 <!-- main -->
 <main class="content quarto-banner-title-block" id="quarto-document-content">
 
@@ -201,8 +231,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><br></p>
 <section id="overview" class="level2">
 <h2 class="anchored" data-anchor-id="overview">Overview</h2>
-<p>While most of the datasets we work wtih are of a manageable size here at Telethon Kids Institute, occasionally we are suddenly presented with data containing <em>millions</em> of rows and <em>thousands</em> of columns. Performing almost any operation on these large datasets can take hours to execute – a real test of patience for exploratory work!</p>
-<p>Parallel computing is one relatively simple way to reduce computation time on large datasets – leveraging computer’s processing capabilities and simultaneously distributing tasks “in parallel” across multiple processors (without too much extra code). This is particularly useful for loop-based computations/simulations, where multiple parameters/conditions must be swept over and explored to appropriately tune a model or output.</p>
+<p>While most of the datasets we work wtih are of a manageable size here at Telethon Kids Institute, occasionally we are presented with data containing <em>millions</em> of rows and/or <em>thousands</em> of columns. Performing almost any operation on these large datasets can take hours to execute – a real test of patience for exploratory work!</p>
+<p>Parallel computing is one relatively simple way to reduce computation time on large datasets – leveraging our computer’s processing capabilities by simultaneously distributing tasks “in parallel” across multiple processors (without too much extra code). This is particularly useful for loop-based computations/simulations, where multiple parameters/conditions must be swept over and explored to appropriately tune a model or output.</p>
 <p>That being said, parallel computing is not the “magical general solution” to all computationally intensive tasks – it is still worth investing the time to make sure the packages and/or functions being used are compatible in a parallel workflow. There are still circumstances where the always handy <code>purrr::map</code> function, or basic for-loops can be equally or more efficient than initialising a parallel environment.</p>
 <p>
 </p></section>
@@ -210,8 +240,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="what-is-parallel-computing">What is Parallel Computing?</h2>
 <p>Parallel computing refers to allocating multiple operations in “parallel” across a machine’s multiple cores/processors. Most modern computers have at least four cores, and often many more. By default, R uses only one core, running iterative operations sequentially; not starting the next until the previous is complete. However, under a parallel framework, multiple iterations/calculations can be allocated across multiple cores and completed at the same time, thus saving time.</p>
 <p>In this post, we will have a look at a couple of examples using <code>R</code>. We provide some simple examples and use-cases, in addition to some further resources if you would like to learn more.</p>
-<p>The <a href="#0"><code>doParallel</code></a> and <a href="#0"><code>foreach</code></a> packages of <code>R</code> are one set of packages, aimed to be used together, to facilitate a syntactically simple parallel computing environment in <code>R</code> – by use of the <code>%dopar%</code> operator. Additionally the base <code>parallel</code> package is used for some basic set-up and detection.</p>
-<p>These examples are run using R version 4.3.2 (2023-10-31 ucrt) on Windows 10 x64.</p>
+<p>The <a href="#0"><code>doParallel</code></a> and <a href="#0"><code>foreach</code></a> packages of <code>R</code> are one set of packages, intended to be used together, to facilitate a syntactically simple parallel computing environment in <code>R</code> – by use of the <code>%dopar%</code> operator. Additionally the base <code>parallel</code> package is used for some basic set-up and detection.</p>
+<p>These examples are run using R version 4.3.1 (2023-06-16 ucrt) on Windows 10 x64.</p>
 <p><br></p>
 <section id="setup" class="level3">
 <h3 class="anchored" data-anchor-id="setup">Setup</h3>
@@ -219,7 +249,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Let’s check the number of cores available on our machine.</li>
 </ul>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>parallel<span class="sc">::</span><span class="fu">detectCores</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 8</code></pre>
 </div>
@@ -230,7 +263,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Let’s use 6 cores for our examples.</li>
 </ul>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">registerDoParallel</span>(<span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <ul>
 <li>Below is a screenshot from the Windows task manager. R “front-end” instances are initialised for each of the 6 initialised cores.</li>
@@ -248,20 +284,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>When we no longer require a parallel environment, we must shut down and de-register the parallel cluster – otherwise they will remain active.</li>
 </ul>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">stopImplicitCluster</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <ul>
 <li>Let’s also set a random seed for sample reproducibility</li>
 </ul>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p><br></p>
 </section>
 </section>
 <section id="example-1-bootstrapping" class="level2">
 <h2 class="anchored" data-anchor-id="example-1-bootstrapping">Example 1: Bootstrapping</h2>
-<p>Bootstrapping is a relatively simple method that uses random sampling with replacement to mimic random sampling. This allows us to estimate the sampling distribution for a statistic (mean, variance, etc.) and assess its stability/reliability, without making strong assumptions about the underlying population. This especially useful when the data is problematic in some fundamental way (small sample sizes, insufficient variation, violation of model assumptions).</p>
+<p>Bootstrapping is a relatively simple method that uses random sampling with replacement to mimic random sampling of a population. This allows us to estimate the sampling distribution for a statistic (mean, variance, etc.) and assess its stability/reliability, without making strong assumptions about the underlying population. This especially useful when the data is problematic in some fundamental way (small sample sizes, insufficient variation, violation of model assumptions).</p>
 <p>In <code>R</code>, for-loops can be used to derive a set of bootstrap samples. As we will see, parallel environments can much more efficiently handle operations like these of a repeated nature.</p>
 <ul>
 <li>Let’s use the <code>mtcars</code> data set to run a basic linear regression.
@@ -271,11 +313,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>We suspect some of the assumptions of standard linear regression may be violated (normality of errors) because of the small sample size. By bootstrapping, we can explore the stability of the regression coefficients by calculating a confidence interval about the bootstrapped coefficient estimates.</li>
 </ul>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's set up the data and number of bootstrap samples</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(mtcars)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>mtcars <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(mtcars)</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(mtcars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 11
     mpg   cyl  disp    hp  drat    wt  qsec    vs    am  gear  carb
@@ -293,7 +338,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Let’s set the number of bootstrap trials.</li>
 </ul>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>trials <span class="ot">&lt;-</span> <span class="dv">10000</span> <span class="co"># Number of bootstrap samples</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>
 </p><section id="for-loop" class="level3">
@@ -308,6 +356,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Subsequently, we can calculate a 95% confidence interval for each of our parameter estimates by taking the 2.5th and 97.5th percentiles from the bootstrap distribution.</li>
 </ul>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">proc.time</span>() <span class="co"># Start our timer!</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialise a matrix to store the coefficients from each bootstrap sample</span></span>
@@ -327,9 +377,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">proc.time</span>() <span class="co"># End our timer!</span></span>
 <span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>time1 <span class="ot">&lt;-</span> end<span class="sc">-</span>start</span>
 <span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   9.34    0.12    9.53 </code></pre>
+   7.83    0.15    7.97 </code></pre>
 </div>
 </div>
 <p>
@@ -341,6 +392,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>This is similar in execution time to the for-loop operation..</li>
 </ul>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>bootstrap_results <span class="ot">&lt;-</span> foreach<span class="sc">::</span><span class="fu">foreach</span>(<span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>trials, <span class="at">.combine =</span> rbind) <span class="sc">%do%</span> {</span>
@@ -355,9 +408,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
 <span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>time2 <span class="ot">&lt;-</span> end<span class="sc">-</span>start</span>
 <span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   8.17    0.14    8.36 </code></pre>
+   6.98    0.04    7.05 </code></pre>
 </div>
 </div>
 <p>
@@ -370,6 +424,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>The <code>%dopar%</code> operator defines the for-loop in the parallel environment.</li>
 </ul>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">registerDoParallel</span>(<span class="at">cores =</span> <span class="dv">6</span>)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
@@ -385,13 +441,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
 <span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>time3 <span class="ot">&lt;-</span> end<span class="sc">-</span>start</span>
 <span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   2.66    0.53    4.77 </code></pre>
+   1.97    0.26    3.30 </code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">stopImplicitCluster</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
-<p>We can see that the parallel initialisation is significantly faster than traditional for-loop methods— about 50% so! For datasets greater in size, or with more bootstrap samples, these time savings certainly add up.</p>
+<p>We can see that the parallel initialisation is significantly faster than traditional for-loop methods— about 59% so! For datasets greater in size, or with more bootstrap samples, these time savings certainly add up.</p>
 <p><br></p>
 </section>
 </section>
@@ -403,11 +463,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>We would like to explore how arrival delay (as a continuous and dichotomous outcome variable) may be influenced by a set of independent variables. We would like to stratify this by month.</li>
 </ul>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>flights <span class="ot">&lt;-</span> nycflights13<span class="sc">::</span>flights</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>flights <span class="ot">&lt;-</span> flights <span class="sc">%&gt;%</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(year, month, day, dep_delay, arr_delay, air_time, distance) <span class="sc">%&gt;%</span></span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">arr_delay_bin =</span> <span class="fu">as.factor</span>(<span class="fu">case_when</span>(arr_delay <span class="sc">&gt;</span>  <span class="dv">15</span> <span class="sc">~</span> <span class="dv">1</span>, <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span>)))</span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>flights</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 336,776 × 8
     year month   day dep_delay arr_delay air_time distance arr_delay_bin
@@ -445,10 +508,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul></li>
 </ul>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>outcome_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"distance"</span>, <span class="st">"air_time"</span>, <span class="st">"dep_delay"</span>)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>input_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"arr_delay"</span>, <span class="st">"arr_delay_bin"</span>)</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co">#formulas &lt;- map(output_vars, ~paste(.x, "~", paste(input_vars, collapse = " + ")))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>
 </p><section id="for-loop-1" class="level3">
@@ -458,6 +524,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>For each outcome variable, we run a model. If the outcome variable is continuous, we run a simple linear model; otherwise we run a basic logistic regression.</p></li>
 </ul>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">unique</span>(flights<span class="sc">$</span>month)){</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  month_dat <span class="ot">&lt;-</span> flights <span class="sc">%&gt;%</span> <span class="fu">filter</span>(month <span class="sc">==</span> i)</span>
@@ -475,9 +543,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
 <span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>time4 <span class="ot">&lt;-</span> end<span class="sc">-</span>start</span>
 <span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.30    0.31    1.63 </code></pre>
+   1.06    0.28    1.35 </code></pre>
 </div>
 </div>
 <p>
@@ -489,6 +558,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>The syntax does not differ too dramatically.</p></li>
 </ul>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">registerDoParallel</span>(<span class="at">cores =</span> <span class="dv">6</span>)</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
@@ -507,13 +578,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
 <span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>time5 <span class="ot">&lt;-</span> end <span class="sc">-</span> start</span>
 <span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time5)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   0.13    0.15    1.20 </code></pre>
+   0.09    0.09    0.83 </code></pre>
 </div>
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">stopImplicitCluster</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
-<p>Again, this simple example represents a 26% time saving relative to a standard for-loop implementation.</p>
+<p>Again, this simple example represents a 39% time saving relative to a standard for-loop implementation.</p>
 <p><br></p>
 </section>
 </section>
@@ -545,11 +620,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="session-info" class="level2">
 <h2 class="anchored" data-anchor-id="session-info">Session Info</h2>
 <div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output cell-output-stdout">
-<pre><code>R version 4.3.2 (2023-10-31 ucrt)
+<pre><code>R version 4.3.1 (2023-06-16 ucrt)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
-Running under: Windows 10 x64 (build 19045)
+Running under: Windows 10 x64 (build 19044)
 
 Matrix products: default
 
@@ -573,15 +651,15 @@ other attached packages:
 [13] tidyverse_2.0.0  
 
 loaded via a namespace (and not attached):
- [1] gtable_0.3.5       jsonlite_1.8.8     compiler_4.3.2     tidyselect_1.2.1  
+ [1] gtable_0.3.5       jsonlite_1.8.8     compiler_4.3.1     tidyselect_1.2.1  
  [5] nycflights13_1.0.2 scales_1.3.0       yaml_2.3.8         fastmap_1.1.1     
- [9] R6_2.5.1           generics_0.1.3     knitr_1.46         htmlwidgets_1.6.4 
-[13] munsell_0.5.1      pillar_1.9.0       tzdb_0.4.0         rlang_1.1.3       
-[17] utf8_1.2.4         stringi_1.8.3      xfun_0.43          timechange_0.3.0  
+ [9] R6_2.5.1           generics_0.1.3     knitr_1.47         htmlwidgets_1.6.4 
+[13] munsell_0.5.1      pillar_1.9.0       tzdb_0.4.0         rlang_1.1.4       
+[17] utf8_1.2.4         stringi_1.8.4      xfun_0.44          timechange_0.3.0  
 [21] cli_3.6.2          withr_3.0.0        magrittr_2.0.3     digest_0.6.35     
-[25] grid_4.3.2         rstudioapi_0.16.0  hms_1.1.3          lifecycle_1.0.4   
-[29] vctrs_0.6.5        evaluate_0.23      glue_1.7.0         codetools_0.2-20  
-[33] fansi_1.0.6        colorspace_2.1-0   rmarkdown_2.26     tools_4.3.2       
+[25] grid_4.3.1         rstudioapi_0.16.0  hms_1.1.3          lifecycle_1.0.4   
+[29] vctrs_0.6.5        evaluate_0.23      glue_1.7.0         codetools_0.2-19  
+[33] fansi_1.0.6        colorspace_2.1-0   rmarkdown_2.26.2   tools_4.3.1       
 [37] pkgconfig_2.0.3    htmltools_0.5.8.1 </code></pre>
 </div>
 </div>
