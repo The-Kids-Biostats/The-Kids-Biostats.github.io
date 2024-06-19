@@ -633,7 +633,7 @@ You can look forward to seeing posts from these other team members here in the c
 
 To access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:
 
-<https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io>
+<https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/lmer-missingx>
 
 The session information can also be seen below.
 

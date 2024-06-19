@@ -6,43 +6,41 @@
       version="2.0">
 <channel>
 <title>The Kids Biostats</title>
-<link>https://www.the-kids-biostats.github.io/</link>
+<link>https://www.the-kids-biostats.github.io/index.html</link>
 <atom:link href="https://www.the-kids-biostats.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description>Biostats R solutions</description>
-<generator>quarto-1.4.553</generator>
+<generator>quarto-1.3.450</generator>
 <lastBuildDate>Mon, 17 Jun 2024 16:00:00 GMT</lastBuildDate>
 <item>
   <title>Parallel Computing in R</title>
   <dc:creator>Zac Dempsey</dc:creator>
-  <link>https://www.the-kids-biostats.github.io/posts/parallel/</link>
+  <link>https://www.the-kids-biostats.github.io/posts/parallel/index.html</link>
   <description><![CDATA[ 
 
 
 
 
-
-<p><br></p>
-<section id="overview" class="level2">
-<h2 class="anchored" data-anchor-id="overview">Overview</h2>
-<p>While most of the datasets we work wtih are of a manageable size here at Telethon Kids Institute, occasionally we are presented with data containing <em>millions</em> of rows and/or <em>thousands</em> of columns. Performing almost any operation on these large datasets can take hours to execute – a real test of patience for exploratory work!</p>
-<p>Parallel computing is one relatively simple way to reduce computation time on large datasets – leveraging our computer’s processing capabilities by simultaneously distributing tasks “in parallel” across multiple processors (without too much extra code). This is particularly useful for loop-based computations/simulations, where multiple parameters/conditions must be swept over and explored to appropriately tune a model or output.</p>
-<p>That being said, parallel computing is not the “magical general solution” to all computationally intensive tasks – it is still worth investing the time to make sure the packages and/or functions being used are compatible in a parallel workflow. There are still circumstances where the always handy <code>purrr::map</code> function, or basic for-loops can be equally or more efficient than initialising a parallel environment.</p>
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<p>While most of the datasets we work with are of a manageable size here at Telethon Kids, occasionally we are presented with data containing <em>millions</em> of rows and/or <em>thousands</em> of columns. Performing almost any operation on these large datasets can take hours to execute – a real test of patience for exploratory work!</p>
+<p>Parallel computing is one relatively simple way to reduce computation time on large datasets – leveraging our computer’s processing capabilities by simultaneously distributing tasks “in parallel” across multiple processors (without too much extra code). This is particularly useful for loop-based computations/simulations, where multiple parameters/conditions must be swept over whether that as part of variable creation/curation, model execution/tuning, or some other task.</p>
+<p>That being said, while parallel computing is not a “magical general solution” to all computationally intensive tasks – it is worth investing some time to understand how it works, and become familiar with the packages and/or functions used within a parallel framework. There are still circumstances where the always handy <code>purrr::map</code> function, or basic for-loops can be equally or more efficient than initialising parallel computing.</p>
 <p>
 </p></section>
-<section id="what-is-parallel-computing" class="level2">
-<h2 class="anchored" data-anchor-id="what-is-parallel-computing">What is Parallel Computing?</h2>
-<p>Parallel computing refers to allocating multiple operations in “parallel” across a machine’s multiple cores/processors. Most modern computers have at least four cores, and often many more. By default, R uses only one core, running iterative operations sequentially; not starting the next until the previous is complete. However, under a parallel framework, multiple iterations/calculations can be allocated across multiple cores and completed at the same time, thus saving time.</p>
+<section id="what-is-parallel-computing" class="level1">
+<h1>What is Parallel Computing?</h1>
+<p>Parallel computing refers to executing multiple operations in “parallel” (i.e.&nbsp;at the same time) across a machine’s multiple cores/processors. Most modern computers have at least four cores, and often many more. By default, R uses only one core, running iterative operations sequentially; not starting the next until the previous is complete. However, under a parallel framework, multiple iterations/calculations can be allocated across multiple cores so they can be executed at the same time, thus saving time.</p>
 <p>In this post, we will have a look at a couple of examples using <code>R</code>. We provide some simple examples and use-cases, in addition to some further resources if you would like to learn more.</p>
 <p>The <code>doParallel</code> and <code>foreach</code> packages of <code>R</code> are one set of packages, intended to be used together, to facilitate a syntactically simple parallel computing environment in <code>R</code> – by use of the <code>%dopar%</code> operator. Additionally the base <code>parallel</code> package is used for some basic set-up and detection.</p>
-<p>These examples are run using R version 4.3.1 (2023-06-16 ucrt) on Windows 10 x64.</p>
+<p>These examples are run using R version 4.3.3 (2024-02-29) on Darwin 23.4.0.</p>
 <p><br></p>
-<section id="setup" class="level3">
-<h3 class="anchored" data-anchor-id="setup">Setup</h3>
+<section id="setup" class="level2">
+<h2 class="anchored" data-anchor-id="setup">Setup</h2>
 <ul>
 <li>Let’s check the number of cores available on our machine.</li>
 </ul>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1">parallel<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -60,7 +58,7 @@ font-style: inherit;">detectCores</span>()</span></code></pre></div>
 <li>Let’s use 6 cores for our examples.</li>
 </ul>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">doParallel<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -78,7 +76,7 @@ font-style: inherit;">6</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/parallel/parallel_comps.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/parallel/parallel_comps.png" class="img-fluid figure-img" width="700"></p>
 </figure>
 </div>
 </div>
@@ -87,7 +85,7 @@ font-style: inherit;">6</span>)</span></code></pre></div>
 <li>When we no longer require a parallel environment, we must shut down and de-register the parallel cluster – otherwise they will remain active.</li>
 </ul>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">doParallel<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -100,7 +98,7 @@ font-style: inherit;">stopImplicitCluster</span>()</span></code></pre></div>
 <li>Let’s also set a random seed for sample reproducibility</li>
 </ul>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -112,9 +110,9 @@ font-style: inherit;">2024</span>)</span></code></pre></div>
 <p><br></p>
 </section>
 </section>
-<section id="example-1-bootstrapping" class="level2">
-<h2 class="anchored" data-anchor-id="example-1-bootstrapping">Example 1: Bootstrapping</h2>
-<p>Bootstrapping is a relatively simple method that uses random sampling with replacement to mimic random sampling of a population. This allows us to estimate the sampling distribution for a statistic (mean, variance, etc.) and assess its stability/reliability, without making strong assumptions about the underlying population. This especially useful when the data is problematic in some fundamental way (small sample sizes, insufficient variation, violation of model assumptions).</p>
+<section id="example-1-bootstrapping" class="level1">
+<h1>Example 1: Bootstrapping</h1>
+<p>Bootstrapping is a relatively simple method that uses random sampling with replacement to mimic random sampling of a population. This allows us to estimate the sampling distribution for a statistic (mean, variance, etc.) and assess its stability/reliability, without making strong assumptions about the underlying population. This can be useful when the data are problematic in some fundamental way (small sample sizes, insufficient variation, violation of model assumptions).</p>
 <p>In <code>R</code>, for-loops can be used to derive a set of bootstrap samples. As we will see, parallel environments can much more efficiently handle operations like these of a repeated nature.</p>
 <ul>
 <li>Let’s use the <code>mtcars</code> data set to run a basic linear regression.
@@ -124,7 +122,7 @@ font-style: inherit;">2024</span>)</span></code></pre></div>
 <li>We suspect some of the assumptions of standard linear regression may be violated (normality of errors) because of the small sample size. By bootstrapping, we can explore the stability of the regression coefficients by calculating a confidence interval about the bootstrapped coefficient estimates.</li>
 </ul>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
@@ -159,7 +157,7 @@ font-style: inherit;">head</span>(mtcars)</span></code></pre></div>
 <li>Let’s set the number of bootstrap trials.</li>
 </ul>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1">trials <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -171,8 +169,8 @@ font-style: inherit;"># Number of bootstrap samples</span></span></code></pre></
 </details>
 </div>
 <p>
-</p><section id="for-loop" class="level3">
-<h3 class="anchored" data-anchor-id="for-loop">For-loop</h3>
+</p><section id="for-loop" class="level2">
+<h2 class="anchored" data-anchor-id="for-loop">For-loop</h2>
 <ul>
 <li>Let’s begin by using the “tried and true” for-loop. For each of the 10^{4} bootstrap samples, we:
 <ul>
@@ -183,7 +181,7 @@ font-style: inherit;"># Number of bootstrap samples</span></span></code></pre></
 <li>Subsequently, we can calculate a 95% confidence interval for each of our parameter estimates by taking the 2.5th and 97.5th percentiles from the bootstrap distribution.</li>
 </ul>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">start <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -313,19 +311,19 @@ font-style: inherit;">print</span>(time1)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   7.83    0.15    7.97 </code></pre>
+  4.306   0.013   4.333 </code></pre>
 </div>
 </div>
 <p>
 </p></section>
-<section id="do-loop-not-parallel" class="level3">
-<h3 class="anchored" data-anchor-id="do-loop-not-parallel"><code>%do%</code> loop (not parallel)</h3>
+<section id="do-loop-not-parallel" class="level2">
+<h2 class="anchored" data-anchor-id="do-loop-not-parallel"><code>%do%</code> loop (not parallel)</h2>
 <ul>
 <li>As an alternative, let’s also use the <code>%do%</code> operator from the <code>foreach</code> package. Similar to a for-loop, the loop is sequentially executed.</li>
 <li>This is similar in execution time to the for-loop operation..</li>
 </ul>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">start <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -418,20 +416,20 @@ font-style: inherit;">print</span>(time2)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   6.98    0.04    7.05 </code></pre>
+  3.832   0.011   3.861 </code></pre>
 </div>
 </div>
 <p>
 </p></section>
-<section id="dopar-parallelisation" class="level3">
-<h3 class="anchored" data-anchor-id="dopar-parallelisation"><code>%dopar%</code> parallelisation</h3>
+<section id="dopar-parallelisation" class="level2">
+<h2 class="anchored" data-anchor-id="dopar-parallelisation"><code>%dopar%</code> parallelisation</h2>
 <ul>
 <li>Now, let’s run this in parallel across 6 cores.</li>
 <li>The execution time is significantly reduced relative to the above two cases.</li>
 <li>The <code>%dopar%</code> operator defines the for-loop in the parallel environment.</li>
 </ul>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">doParallel<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -535,9 +533,9 @@ font-style: inherit;">print</span>(time3)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.97    0.26    3.30 </code></pre>
+  5.625   0.407   1.740 </code></pre>
 </div>
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1">doParallel<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -546,19 +544,19 @@ background-color: null;
 font-style: inherit;">stopImplicitCluster</span>()</span></code></pre></div>
 </details>
 </div>
-<p>We can see that the parallel initialisation is significantly faster than traditional for-loop methods— about 59% so! For datasets greater in size, or with more bootstrap samples, these time savings certainly add up.</p>
+<p>We can see that the parallel initialisation is significantly faster than traditional for-loop methods— about 60% so! For datasets greater in size, or with more bootstrap samples, these time savings certainly add up.</p>
 <p><br></p>
 </section>
 </section>
-<section id="example-2-parallel-regressions-with-different-outcomes" class="level2">
-<h2 class="anchored" data-anchor-id="example-2-parallel-regressions-with-different-outcomes">Example 2: Parallel regressions with different outcomes</h2>
+<section id="example-2-parallel-regressions-with-different-outcomes" class="level1">
+<h1>Example 2: Parallel regressions with different outcomes</h1>
 <ul>
 <li>Now let’s apply this to a different situation – where we have different model specifications we would like to run on the same “large” data set.</li>
 <li>Let’s use <code>nycflights13::flights</code> dataset – a set of over 300,000 flight records that departed from all NYC airports in 2013.</li>
 <li>We would like to explore how arrival delay (as a continuous and dichotomous outcome variable) may be influenced by a set of independent variables. We would like to stratify this by month.</li>
 </ul>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1">flights <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -637,9 +635,9 @@ font-style: inherit;">0</span>)))</span>
 </ul></li>
 </ul>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1">outcome_vars <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1">indep_vars <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -650,7 +648,7 @@ background-color: null;
 font-style: inherit;">"air_time"</span>, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"dep_delay"</span>)</span>
-<span id="cb18-2">input_vars <span class="ot" style="color: #003B4F;
+<span id="cb18-2">outcome_vars <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -666,14 +664,14 @@ font-style: inherit;">#formulas &lt;- map(output_vars, ~paste(.x, "~", paste(inp
 </details>
 </div>
 <p>
-</p><section id="for-loop-1" class="level3">
-<h3 class="anchored" data-anchor-id="for-loop-1">For-loop</h3>
+</p><section id="for-loop-1" class="level2">
+<h2 class="anchored" data-anchor-id="for-loop-1">For-loop</h2>
 <ul>
 <li><p>For each “month”, we extract the subset of data</p></li>
 <li><p>For each outcome variable, we run a model. If the outcome variable is continuous, we run a simple linear model; otherwise we run a basic logistic regression.</p></li>
 </ul>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1">start <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -702,7 +700,7 @@ font-style: inherit;">==</span> i)</span>
 background-color: null;
 font-style: inherit;">for</span> (j <span class="cf" style="color: #003B4F;
 background-color: null;
-font-style: inherit;">in</span> input_vars){</span>
+font-style: inherit;">in</span> outcome_vars){</span>
 <span id="cb19-5">    <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">if</span> (j <span class="sc" style="color: #5E5E5E;
@@ -722,7 +720,7 @@ font-style: inherit;">paste</span>(j,<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"~"</span>,<span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">paste</span>(outcome_vars, <span class="at" style="color: #657422;
+font-style: inherit;">paste</span>(indep_vars, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">collapse =</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -751,7 +749,7 @@ font-style: inherit;">paste</span>(j,<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"~"</span>,<span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">paste</span>(outcome_vars, <span class="at" style="color: #657422;
+font-style: inherit;">paste</span>(indep_vars, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">collapse =</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -781,19 +779,19 @@ font-style: inherit;">print</span>(time4)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.06    0.28    1.35 </code></pre>
+  0.577   0.049   0.629 </code></pre>
 </div>
 </div>
 <p>
 </p></section>
-<section id="dopar-parallelisation-1" class="level3">
-<h3 class="anchored" data-anchor-id="dopar-parallelisation-1"><code>%dopar%</code> parallelisation</h3>
+<section id="dopar-parallelisation-1" class="level2">
+<h2 class="anchored" data-anchor-id="dopar-parallelisation-1"><code>%dopar%</code> parallelisation</h2>
 <ul>
 <li><p>Similar situation to before. We use the <code>%:%</code> operator from the <code>foreach</code> package to nest a for-loop within a parallel environment.</p></li>
 <li><p>The syntax does not differ too dramatically.</p></li>
 </ul>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1">doParallel<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -860,7 +858,7 @@ font-style: inherit;">paste</span>(j,<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"~"</span>,<span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">paste</span>(outcome_vars, <span class="at" style="color: #657422;
+font-style: inherit;">paste</span>(indep_vars, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">collapse =</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -889,7 +887,7 @@ font-style: inherit;">paste</span>(j,<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"~"</span>,<span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">paste</span>(outcome_vars, <span class="at" style="color: #657422;
+font-style: inherit;">paste</span>(indep_vars, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">collapse =</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -918,9 +916,9 @@ font-style: inherit;">print</span>(time5)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   0.09    0.09    0.83 </code></pre>
+  3.413   2.812   8.793 </code></pre>
 </div>
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1">doParallel<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -929,23 +927,24 @@ background-color: null;
 font-style: inherit;">stopImplicitCluster</span>()</span></code></pre></div>
 </details>
 </div>
-<p>Again, this simple example represents a 39% time saving relative to a standard for-loop implementation.</p>
+<p>Again, this simple example represents a -1298% time saving relative to a standard for-loop implementation.</p>
 <p><br></p>
 </section>
 </section>
-<section id="conclusion" class="level2">
-<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
-<p>Using just a few relatively simple examples, we have demonstrated that a parallel computing environment, in some circumstances, is a relatively easy and quick way to improve the runtime of iteration/loop-based code. While not appropriate in all circumstances (depending on the exact use-case), it warrants further investigation, particularly as datasets grow increasingly large and analytical methodologies increasingly complex.</p>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>Using just a few relatively simple examples, we have demonstrated that a parallel computing environment, can be a relatively easy and quick way to improve the runtime of iteration/loop-based operations - with little modification to your code!</p>
+<p>While not appropriate in all circumstances (depending on the exact use-case), it is worth being across the relevant packages and commands used in <code>R</code> for parallel computing, particularly as datasets grow increasingly large and analytical methodologies increasingly complex.</p>
 <p><br></p>
-</section>
 <section id="acknowledgements" class="level2">
-<h2 class="anchored" data-anchor-id="acknowledgements"><strong>Acknowledgements</strong></h2>
+<h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
 <p>Thanks to Wesley Billingham, Matt Cooper and Elizabeth McKinnon for providing feedback on and reviewing this post.</p>
 <p>You can look forward to seeing posts from these other team members here in the coming weeks and months.</p>
 <p><br></p>
 </section>
-<section id="further-resources" class="level2">
-<h2 class="anchored" data-anchor-id="further-resources">Further Resources</h2>
+</section>
+<section id="further-resources" class="level1">
+<h1>Further Resources</h1>
 <ul>
 <li>Vignettes
 <ul>
@@ -957,28 +956,29 @@ font-style: inherit;">stopImplicitCluster</span>()</span></code></pre></div>
 </ul></li>
 </ul>
 <p><br></p>
-</section>
-<section id="session-info" class="level2">
-<h2 class="anchored" data-anchor-id="session-info">Session Info</h2>
+<section id="reproducibility-information" class="level2">
+<h2 class="anchored" data-anchor-id="reproducibility-information">Reproducibility Information</h2>
+<p>To access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:</p>
+<p><a href="https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/parallel" class="uri">https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/parallel</a></p>
+<p>The session information can also be seen below.</p>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">sessionInfo</span>()</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>R version 4.3.1 (2023-06-16 ucrt)
-Platform: x86_64-w64-mingw32/x64 (64-bit)
-Running under: Windows 10 x64 (build 19044)
+<pre><code>R version 4.3.3 (2024-02-29)
+Platform: aarch64-apple-darwin20 (64-bit)
+Running under: macOS Sonoma 14.4.1
 
 Matrix products: default
-
+BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
 
 locale:
-[1] LC_COLLATE=English_Australia.utf8  LC_CTYPE=English_Australia.utf8   
-[3] LC_MONETARY=English_Australia.utf8 LC_NUMERIC=C                      
-[5] LC_TIME=English_Australia.utf8    
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 
 time zone: Australia/Perth
 tzcode source: internal
@@ -994,34 +994,40 @@ other attached packages:
 [13] tidyverse_2.0.0  
 
 loaded via a namespace (and not attached):
- [1] gtable_0.3.5       jsonlite_1.8.8     compiler_4.3.1     tidyselect_1.2.1  
- [5] nycflights13_1.0.2 scales_1.3.0       yaml_2.3.8         fastmap_1.1.1     
- [9] R6_2.5.1           generics_0.1.3     knitr_1.47         htmlwidgets_1.6.4 
-[13] munsell_0.5.1      pillar_1.9.0       tzdb_0.4.0         rlang_1.1.4       
+ [1] gtable_0.3.5       jsonlite_1.8.8     compiler_4.3.3     tidyselect_1.2.1  
+ [5] nycflights13_1.0.2 scales_1.3.0       yaml_2.3.8         fastmap_1.2.0     
+ [9] R6_2.5.1           generics_0.1.3     knitr_1.45         htmlwidgets_1.6.4 
+[13] munsell_0.5.1      pillar_1.9.0       tzdb_0.4.0         rlang_1.1.3       
 [17] utf8_1.2.4         stringi_1.8.4      xfun_0.44          timechange_0.3.0  
 [21] cli_3.6.2          withr_3.0.0        magrittr_2.0.3     digest_0.6.35     
-[25] grid_4.3.1         rstudioapi_0.16.0  hms_1.1.3          lifecycle_1.0.4   
-[29] vctrs_0.6.5        evaluate_0.23      glue_1.7.0         codetools_0.2-19  
-[33] fansi_1.0.6        colorspace_2.1-0   rmarkdown_2.26.2   tools_4.3.1       
+[25] grid_4.3.3         rstudioapi_0.16.0  hms_1.1.3          lifecycle_1.0.4   
+[29] vctrs_0.6.5        evaluate_0.23      glue_1.7.0         codetools_0.2-20  
+[33] fansi_1.0.6        colorspace_2.1-0   rmarkdown_2.27     tools_4.3.3       
 [37] pkgconfig_2.0.3    htmltools_0.5.8.1 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in rm(time1, time2, time3, time4, time5, trials, results, i, j, :
+object 'input_vars' not found</code></pre>
 </div>
 </div>
 
 
 </section>
+</section>
 
  ]]></description>
   <category>R</category>
   <category>Parallel</category>
-  <guid>https://www.the-kids-biostats.github.io/posts/parallel/</guid>
+  <guid>https://www.the-kids-biostats.github.io/posts/parallel/index.html</guid>
   <pubDate>Mon, 17 Jun 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Handling Missing Data with LMER</title>
   <dc:creator>Dr Matthew Cooper</dc:creator>
-  <link>https://www.the-kids-biostats.github.io/posts/lmer-missing/</link>
+  <link>https://www.the-kids-biostats.github.io/posts/lmer-missing/index.html</link>
   <description><![CDATA[ 
-
 
 
 
@@ -1054,7 +1060,7 @@ loaded via a namespace (and not attached):
 <h1>Data inspection</h1>
 <p>Let’s take an initial look at the data.</p>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1142,7 +1148,7 @@ font-style: inherit;">head</span>(dat)</span></code></pre></div>
 </div>
 <p>How much data do we have?</p>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">dat <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -1173,24 +1179,24 @@ background-color: null;
 font-style: inherit;">"{n}"</span>)</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div>
-<div id="rdofjtmuer" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#rdofjtmuer table {
+
+<div id="gqraeieeob" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#gqraeieeob table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#rdofjtmuer thead, #rdofjtmuer tbody, #rdofjtmuer tfoot, #rdofjtmuer tr, #rdofjtmuer td, #rdofjtmuer th {
+#gqraeieeob thead, #gqraeieeob tbody, #gqraeieeob tfoot, #gqraeieeob tr, #gqraeieeob td, #gqraeieeob th {
   border-style: none;
 }
 
-#rdofjtmuer p {
+#gqraeieeob p {
   margin: 0;
   padding: 0;
 }
 
-#rdofjtmuer .gt_table {
+#gqraeieeob .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1216,12 +1222,12 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-left-color: #D3D3D3;
 }
 
-#rdofjtmuer .gt_caption {
+#gqraeieeob .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#rdofjtmuer .gt_title {
+#gqraeieeob .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1233,7 +1239,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-bottom-width: 0;
 }
 
-#rdofjtmuer .gt_subtitle {
+#gqraeieeob .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1245,7 +1251,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-top-width: 0;
 }
 
-#rdofjtmuer .gt_heading {
+#gqraeieeob .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1257,13 +1263,13 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-right-color: #D3D3D3;
 }
 
-#rdofjtmuer .gt_bottom_border {
+#gqraeieeob .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#rdofjtmuer .gt_col_headings {
+#gqraeieeob .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1278,7 +1284,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-right-color: #D3D3D3;
 }
 
-#rdofjtmuer .gt_col_heading {
+#gqraeieeob .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1298,7 +1304,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   overflow-x: hidden;
 }
 
-#rdofjtmuer .gt_column_spanner_outer {
+#gqraeieeob .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1310,15 +1316,15 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   padding-right: 4px;
 }
 
-#rdofjtmuer .gt_column_spanner_outer:first-child {
+#gqraeieeob .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#rdofjtmuer .gt_column_spanner_outer:last-child {
+#gqraeieeob .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#rdofjtmuer .gt_column_spanner {
+#gqraeieeob .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1330,11 +1336,11 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   width: 100%;
 }
 
-#rdofjtmuer .gt_spanner_row {
+#gqraeieeob .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#rdofjtmuer .gt_group_heading {
+#gqraeieeob .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1360,7 +1366,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   text-align: left;
 }
 
-#rdofjtmuer .gt_empty_group_heading {
+#gqraeieeob .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1375,15 +1381,15 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   vertical-align: middle;
 }
 
-#rdofjtmuer .gt_from_md > :first-child {
+#gqraeieeob .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#rdofjtmuer .gt_from_md > :last-child {
+#gqraeieeob .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#rdofjtmuer .gt_row {
+#gqraeieeob .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1402,7 +1408,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   overflow-x: hidden;
 }
 
-#rdofjtmuer .gt_stub {
+#gqraeieeob .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1415,7 +1421,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   padding-right: 5px;
 }
 
-#rdofjtmuer .gt_stub_row_group {
+#gqraeieeob .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1429,15 +1435,15 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   vertical-align: top;
 }
 
-#rdofjtmuer .gt_row_group_first td {
+#gqraeieeob .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#rdofjtmuer .gt_row_group_first th {
+#gqraeieeob .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#rdofjtmuer .gt_summary_row {
+#gqraeieeob .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1447,16 +1453,16 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   padding-right: 5px;
 }
 
-#rdofjtmuer .gt_first_summary_row {
+#gqraeieeob .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#rdofjtmuer .gt_first_summary_row.thick {
+#gqraeieeob .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#rdofjtmuer .gt_last_summary_row {
+#gqraeieeob .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1466,7 +1472,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-bottom-color: #D3D3D3;
 }
 
-#rdofjtmuer .gt_grand_summary_row {
+#gqraeieeob .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1476,7 +1482,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   padding-right: 5px;
 }
 
-#rdofjtmuer .gt_first_grand_summary_row {
+#gqraeieeob .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1486,7 +1492,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-top-color: #D3D3D3;
 }
 
-#rdofjtmuer .gt_last_grand_summary_row_top {
+#gqraeieeob .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1496,11 +1502,11 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-bottom-color: #D3D3D3;
 }
 
-#rdofjtmuer .gt_striped {
+#gqraeieeob .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#rdofjtmuer .gt_table_body {
+#gqraeieeob .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1509,7 +1515,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-bottom-color: #D3D3D3;
 }
 
-#rdofjtmuer .gt_footnotes {
+#gqraeieeob .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1523,7 +1529,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-right-color: #D3D3D3;
 }
 
-#rdofjtmuer .gt_footnote {
+#gqraeieeob .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1532,7 +1538,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   padding-right: 5px;
 }
 
-#rdofjtmuer .gt_sourcenotes {
+#gqraeieeob .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1546,7 +1552,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-right-color: #D3D3D3;
 }
 
-#rdofjtmuer .gt_sourcenote {
+#gqraeieeob .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1554,139 +1560,114 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   padding-right: 5px;
 }
 
-#rdofjtmuer .gt_left {
+#gqraeieeob .gt_left {
   text-align: left;
 }
 
-#rdofjtmuer .gt_center {
+#gqraeieeob .gt_center {
   text-align: center;
 }
 
-#rdofjtmuer .gt_right {
+#gqraeieeob .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#rdofjtmuer .gt_font_normal {
+#gqraeieeob .gt_font_normal {
   font-weight: normal;
 }
 
-#rdofjtmuer .gt_font_bold {
+#gqraeieeob .gt_font_bold {
   font-weight: bold;
 }
 
-#rdofjtmuer .gt_font_italic {
+#gqraeieeob .gt_font_italic {
   font-style: italic;
 }
 
-#rdofjtmuer .gt_super {
+#gqraeieeob .gt_super {
   font-size: 65%;
 }
 
-#rdofjtmuer .gt_footnote_marks {
+#gqraeieeob .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#rdofjtmuer .gt_asterisk {
+#gqraeieeob .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#rdofjtmuer .gt_indent_1 {
+#gqraeieeob .gt_indent_1 {
   text-indent: 5px;
 }
 
-#rdofjtmuer .gt_indent_2 {
+#gqraeieeob .gt_indent_2 {
   text-indent: 10px;
 }
 
-#rdofjtmuer .gt_indent_3 {
+#gqraeieeob .gt_indent_3 {
   text-indent: 15px;
 }
 
-#rdofjtmuer .gt_indent_4 {
+#gqraeieeob .gt_indent_4 {
   text-indent: 20px;
 }
 
-#rdofjtmuer .gt_indent_5 {
+#gqraeieeob .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
-
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
-<thead>
-<tr class="header gt_col_headings">
-<th id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
-<th id="<strong>Male</strong>, N = 3,696<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Male</strong>, N = 3,696<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
-<th id="<strong>Female</strong>, N = 469<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Female</strong>, N = 469<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
-</tr>
-</thead>
-<tbody class="gt_table_body">
-<tr class="odd">
-<td class="gt_row gt_left" headers="label">t</td>
-<td class="gt_row gt_center" headers="stat_1"><br>
-</td>
-<td class="gt_row gt_center" headers="stat_2"><br>
-</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;1</td>
-<td class="gt_row gt_center" headers="stat_1">528</td>
-<td class="gt_row gt_center" headers="stat_2">67</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;2</td>
-<td class="gt_row gt_center" headers="stat_1">528</td>
-<td class="gt_row gt_center" headers="stat_2">67</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;3</td>
-<td class="gt_row gt_center" headers="stat_1">528</td>
-<td class="gt_row gt_center" headers="stat_2">67</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;4</td>
-<td class="gt_row gt_center" headers="stat_1">528</td>
-<td class="gt_row gt_center" headers="stat_2">67</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;5</td>
-<td class="gt_row gt_center" headers="stat_1">528</td>
-<td class="gt_row gt_center" headers="stat_2">67</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;6</td>
-<td class="gt_row gt_center" headers="stat_1">528</td>
-<td class="gt_row gt_center" headers="stat_2">67</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;7</td>
-<td class="gt_row gt_center" headers="stat_1">528</td>
-<td class="gt_row gt_center" headers="stat_2">67</td>
-</tr>
-</tbody><tfoot class="gt_footnotes">
-<tr class="odd">
-<td colspan="3" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> n</td>
-</tr>
-</tfoot>
-
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="<strong>Characteristic</strong>"><strong>Characteristic</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Male</strong>, N = 3,696<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>Male</strong>, N = 3,696<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Female</strong>, N = 469<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>Female</strong>, N = 469<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="label" class="gt_row gt_left">t</td>
+<td headers="stat_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2" class="gt_row gt_center"><br></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;1</td>
+<td headers="stat_1" class="gt_row gt_center">528</td>
+<td headers="stat_2" class="gt_row gt_center">67</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;2</td>
+<td headers="stat_1" class="gt_row gt_center">528</td>
+<td headers="stat_2" class="gt_row gt_center">67</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;3</td>
+<td headers="stat_1" class="gt_row gt_center">528</td>
+<td headers="stat_2" class="gt_row gt_center">67</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;4</td>
+<td headers="stat_1" class="gt_row gt_center">528</td>
+<td headers="stat_2" class="gt_row gt_center">67</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;5</td>
+<td headers="stat_1" class="gt_row gt_center">528</td>
+<td headers="stat_2" class="gt_row gt_center">67</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;6</td>
+<td headers="stat_1" class="gt_row gt_center">528</td>
+<td headers="stat_2" class="gt_row gt_center">67</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;7</td>
+<td headers="stat_1" class="gt_row gt_center">528</td>
+<td headers="stat_2" class="gt_row gt_center">67</td></tr>
+  </tbody>
+  
+  <tfoot class="gt_footnotes">
+    <tr>
+      <td class="gt_footnote" colspan="3"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> n</td>
+    </tr>
+  </tfoot>
 </table>
-
-</div>
 </div>
 </div>
 </div>
 <p>Data for 595 individuals across 7 time points - as expected.</p>
 <p>And, what does the wage data look like?</p>
 <div class="cell" data-layout-align="center">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">dat <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -1771,7 +1752,7 @@ font-style: inherit;">"Wage"</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -1779,7 +1760,7 @@ font-style: inherit;">"Wage"</span>)</span></code></pre></div>
 <p>We can see that, generally the wage goes up at a fairly steady rate for most individuals across the 7 years of follow-up. We can also see some characteristics (upper skew, heteroskedasticity) that are likely to invalidate some modeling assumptions.</p>
 <p>Let’s look at the log of wage.</p>
 <div class="cell" data-layout-align="center">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">dat <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -1886,7 +1867,7 @@ font-style: inherit;">9</span>))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -1899,7 +1880,7 @@ font-style: inherit;">9</span>))</span></code></pre></div>
 <h2 class="anchored" data-anchor-id="erroneous-basic-linear-regression-model">Erroneous basic linear regression model</h2>
 <p>To address the question of <strong>“are there differences between genders in the rate of wage growth”</strong>, we are going to fit a gender by time interaction term which will give us an indication of if ‘as time changes’ whether the outcome (logged wage) changes at a different rate for each gender.</p>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">mod1 <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -1939,6 +1920,7 @@ background-color: null;
 font-style: inherit;">"nobs"</span>))</span></code></pre></div>
 </details>
 <div class="cell-output-display">
+
 <table class="huxtable" data-quarto-disable-processing="true" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  ">
 <colgroup><col><col><col></colgroup><tbody><tr>
 <th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><th colspan="2" style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Model 1</th></tr>
@@ -1962,7 +1944,7 @@ font-style: inherit;">"nobs"</span>))</span></code></pre></div>
 <p>To view this, we’re not going to use <code>geom_smooth</code> or <code>stat_summary</code> as we might do when graphing on-the-fly, rather we will use the predict() function to create data for our line of best fit.</p>
 <p>To set a coding framework which we’ll use again later in the post, we’ll create a new dataset and use predictions to draw our (straight) line.</p>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">newdat <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -2019,7 +2001,7 @@ font-style: inherit;">"prediction"</span>))</span></code></pre></div>
 </details>
 </div>
 <div class="cell" data-layout-align="center">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1">dat <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -2145,7 +2127,7 @@ font-style: inherit;">9</span>))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -2153,7 +2135,7 @@ font-style: inherit;">9</span>))</span></code></pre></div>
 <p>Okay, these red fitted lines look like quite good as a ‘line of best fit’; they pass the eye test of broadly representing the trends of the data well.</p>
 <p>Fitted with a prediction confidence interval, we see.</p>
 <div class="cell" data-layout-align="center">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">p_mod1 <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -2267,7 +2249,7 @@ font-style: inherit;">-&gt;</span> p1</span>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -2279,7 +2261,7 @@ font-style: inherit;">-&gt;</span> p1</span>
 <h2 class="anchored" data-anchor-id="mixed-effects-model">Mixed effects model</h2>
 <p>Here we run a fairly basic linear mixed effects model, the model has the same fixed effects terms as above (the interaction term we are curious about) but also includes a random effect, that is, the intercept is allowed to varied for each individual.</p>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">mod2 <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -2325,6 +2307,7 @@ background-color: null;
 font-style: inherit;">"nobs"</span>))</span></code></pre></div>
 </details>
 <div class="cell-output-display">
+
 <table class="huxtable" data-quarto-disable-processing="true" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  ">
 <colgroup><col><col><col></colgroup><tbody><tr>
 <th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><th colspan="2" style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Model 1</th></tr>
@@ -2346,7 +2329,7 @@ font-style: inherit;">"nobs"</span>))</span></code></pre></div>
 </div>
 <p>Lets also fit the predicted values from this model.</p>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">newdat <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -2488,7 +2471,7 @@ font-style: inherit;">select</span>(fit, lwr, upr))</span></code></pre></div>
 <section id="back-to-our-mixed-effects-model" class="level2">
 <h2 class="anchored" data-anchor-id="back-to-our-mixed-effects-model">Back to our Mixed effects model</h2>
 <div class="cell" data-layout-align="center">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">p_mod2 <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -2602,14 +2585,14 @@ font-style: inherit;">-&gt;</span> p2</span>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>When we compare the output of this model with the earlier (erroneous) model, we see two expected things.</p>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -2648,6 +2631,7 @@ background-color: null;
 font-style: inherit;">"Mixed efects model"</span>))</span></code></pre></div>
 </details>
 <div class="cell-output-display">
+
 <table class="huxtable" data-quarto-disable-processing="true" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  ">
 <colgroup><col><col><col><col><col></colgroup><tbody><tr>
 <th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><th colspan="2" style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Erroneous model</th><th colspan="2" style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Mixed efects model</th></tr>
@@ -2673,7 +2657,7 @@ font-style: inherit;">"Mixed efects model"</span>))</span></code></pre></div>
 </ul>
 <p>We can see this when we plot the predicted values side by side.</p>
 <div class="cell" data-layout-align="center">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1">(p1 <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -2698,7 +2682,7 @@ font-style: inherit;">"Mixed effects model"</span>))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -2710,7 +2694,7 @@ font-style: inherit;">"Mixed effects model"</span>))</span></code></pre></div>
 <p>We now create a modified copy of the dataset whereby <strong><em>wage data is missing as a function of the previous wage value</em></strong>.</p>
 <p>That is, as a person’s wage gets higher, their probability of not completing the following years survey is increased. I was unable to implement the exact same missing data function as the <a href="https://statisticalhorizons.com/wp-content/uploads/MissingDataByML.pdf">inspiring example</a>, but the below is similar and serves the same purpose. Without diving too far down the missing data hole (intended), this is an example of data [missing at random](https://www.ncbi.nlm.nih.gov/books/NBK493614/#:~:text=Missing%20completely%20at%20random%20(MCAR,and%20those%20with%20complete%20data), in the fact that the data missing is related to <u>something observed</u> (by design), that being, the previous years wage value.</p>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1">mdat <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -2816,7 +2800,7 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
 <p>What impact has this had on the data? We can see a significant loss of data, especially across the latter years.</p>
 <p>This also looks to have impacted males more than females.</p>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1">mdat <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -2911,7 +2895,7 @@ font-style: inherit;">"{n}"</span>)</span>
 <span id="cb16-15">  )</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div>
+
 <div id="tgjctjomfb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#tgjctjomfb table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -3352,104 +3336,79 @@ font-style: inherit;">"{n}"</span>)</span>
   text-indent: 25px;
 }
 </style>
-
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<colgroup>
-<col style="width: 20%">
-<col style="width: 20%">
-<col style="width: 20%">
-<col style="width: 20%">
-<col style="width: 20%">
-</colgroup>
-<thead>
-<tr class="header gt_col_headings gt_spanner_row">
-<th rowspan="2" id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
-<th colspan="2" id="<strong>Before</strong>" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><span class="gt_column_spanner"><strong>Before</strong></span></th>
-<th colspan="2" id="<strong>After</strong>" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><span class="gt_column_spanner"><strong>After</strong></span></th>
-</tr>
-<tr class="odd gt_col_headings">
-<th id="<strong>Male</strong>, N = 3,696<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Male</strong>, N = 3,696<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
-<th id="<strong>Female</strong>, N = 469<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Female</strong>, N = 469<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
-<th id="<strong>Male</strong>, N = 2,651<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Male</strong>, N = 2,651<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
-<th id="<strong>Female</strong>, N = 450<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Female</strong>, N = 450<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
-</tr>
-</thead>
-<tbody class="gt_table_body">
-<tr class="odd">
-<td class="gt_row gt_left" headers="label">t</td>
-<td class="gt_row gt_center" headers="stat_1_1"><br>
-</td>
-<td class="gt_row gt_center" headers="stat_2_1"><br>
-</td>
-<td class="gt_row gt_center" headers="stat_1_2"><br>
-</td>
-<td class="gt_row gt_center" headers="stat_2_2"><br>
-</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;1</td>
-<td class="gt_row gt_center" headers="stat_1_1">528</td>
-<td class="gt_row gt_center" headers="stat_2_1">67</td>
-<td class="gt_row gt_center" headers="stat_1_2">528</td>
-<td class="gt_row gt_center" headers="stat_2_2">67</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;2</td>
-<td class="gt_row gt_center" headers="stat_1_1">528</td>
-<td class="gt_row gt_center" headers="stat_2_1">67</td>
-<td class="gt_row gt_center" headers="stat_1_2">447</td>
-<td class="gt_row gt_center" headers="stat_2_2">67</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;3</td>
-<td class="gt_row gt_center" headers="stat_1_1">528</td>
-<td class="gt_row gt_center" headers="stat_2_1">67</td>
-<td class="gt_row gt_center" headers="stat_1_2">426</td>
-<td class="gt_row gt_center" headers="stat_2_2">67</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;4</td>
-<td class="gt_row gt_center" headers="stat_1_1">528</td>
-<td class="gt_row gt_center" headers="stat_2_1">67</td>
-<td class="gt_row gt_center" headers="stat_1_2">398</td>
-<td class="gt_row gt_center" headers="stat_2_2">67</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;5</td>
-<td class="gt_row gt_center" headers="stat_1_1">528</td>
-<td class="gt_row gt_center" headers="stat_2_1">67</td>
-<td class="gt_row gt_center" headers="stat_1_2">353</td>
-<td class="gt_row gt_center" headers="stat_2_2">64</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;6</td>
-<td class="gt_row gt_center" headers="stat_1_1">528</td>
-<td class="gt_row gt_center" headers="stat_2_1">67</td>
-<td class="gt_row gt_center" headers="stat_1_2">283</td>
-<td class="gt_row gt_center" headers="stat_2_2">62</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;7</td>
-<td class="gt_row gt_center" headers="stat_1_1">528</td>
-<td class="gt_row gt_center" headers="stat_2_1">67</td>
-<td class="gt_row gt_center" headers="stat_1_2">216</td>
-<td class="gt_row gt_center" headers="stat_2_2">56</td>
-</tr>
-</tbody><tfoot class="gt_footnotes">
-<tr class="even">
-<td colspan="5" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> n</td>
-</tr>
-</tfoot>
-
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_col_headings gt_spanner_row">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="2" colspan="1" scope="col" id="<strong>Characteristic</strong>"><strong>Characteristic</strong></th>
+      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="2" scope="colgroup" id="<strong>Before</strong>">
+        <span class="gt_column_spanner"><strong>Before</strong></span>
+      </th>
+      <th class="gt_center gt_columns_top_border gt_column_spanner_outer" rowspan="1" colspan="2" scope="colgroup" id="<strong>After</strong>">
+        <span class="gt_column_spanner"><strong>After</strong></span>
+      </th>
+    </tr>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Male</strong>, N = 3,696<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>Male</strong>, N = 3,696<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Female</strong>, N = 469<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>Female</strong>, N = 469<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Male</strong>, N = 2,651<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>Male</strong>, N = 2,651<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Female</strong>, N = 450<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>Female</strong>, N = 450<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="label" class="gt_row gt_left">t</td>
+<td headers="stat_1_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2_1" class="gt_row gt_center"><br></td>
+<td headers="stat_1_2" class="gt_row gt_center"><br></td>
+<td headers="stat_2_2" class="gt_row gt_center"><br></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;1</td>
+<td headers="stat_1_1" class="gt_row gt_center">528</td>
+<td headers="stat_2_1" class="gt_row gt_center">67</td>
+<td headers="stat_1_2" class="gt_row gt_center">528</td>
+<td headers="stat_2_2" class="gt_row gt_center">67</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;2</td>
+<td headers="stat_1_1" class="gt_row gt_center">528</td>
+<td headers="stat_2_1" class="gt_row gt_center">67</td>
+<td headers="stat_1_2" class="gt_row gt_center">447</td>
+<td headers="stat_2_2" class="gt_row gt_center">67</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;3</td>
+<td headers="stat_1_1" class="gt_row gt_center">528</td>
+<td headers="stat_2_1" class="gt_row gt_center">67</td>
+<td headers="stat_1_2" class="gt_row gt_center">426</td>
+<td headers="stat_2_2" class="gt_row gt_center">67</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;4</td>
+<td headers="stat_1_1" class="gt_row gt_center">528</td>
+<td headers="stat_2_1" class="gt_row gt_center">67</td>
+<td headers="stat_1_2" class="gt_row gt_center">398</td>
+<td headers="stat_2_2" class="gt_row gt_center">67</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;5</td>
+<td headers="stat_1_1" class="gt_row gt_center">528</td>
+<td headers="stat_2_1" class="gt_row gt_center">67</td>
+<td headers="stat_1_2" class="gt_row gt_center">353</td>
+<td headers="stat_2_2" class="gt_row gt_center">64</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;6</td>
+<td headers="stat_1_1" class="gt_row gt_center">528</td>
+<td headers="stat_2_1" class="gt_row gt_center">67</td>
+<td headers="stat_1_2" class="gt_row gt_center">283</td>
+<td headers="stat_2_2" class="gt_row gt_center">62</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;7</td>
+<td headers="stat_1_1" class="gt_row gt_center">528</td>
+<td headers="stat_2_1" class="gt_row gt_center">67</td>
+<td headers="stat_1_2" class="gt_row gt_center">216</td>
+<td headers="stat_2_2" class="gt_row gt_center">56</td></tr>
+  </tbody>
+  
+  <tfoot class="gt_footnotes">
+    <tr>
+      <td class="gt_footnote" colspan="5"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> n</td>
+    </tr>
+  </tfoot>
 </table>
-
-</div>
 </div>
 </div>
 </div>
 <p>Visually, our data now looks like this:</p>
 <div class="cell" data-layout-align="center">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1">mdat <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -3556,14 +3515,14 @@ font-style: inherit;">9</span>)) </span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>What is missing?</p>
 <div class="cell" data-layout-align="center">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1">mdat <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -3744,7 +3703,7 @@ font-style: inherit;">9</span>))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -3752,7 +3711,7 @@ font-style: inherit;">9</span>))</span></code></pre></div>
 <section id="missing---erroneous-basic-linear-regression-model" class="level2">
 <h2 class="anchored" data-anchor-id="missing---erroneous-basic-linear-regression-model">Missing - Erroneous basic linear regression model</h2>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1">mod3 <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -3792,6 +3751,7 @@ background-color: null;
 font-style: inherit;">"nobs"</span>))</span></code></pre></div>
 </details>
 <div class="cell-output-display">
+
 <table class="huxtable" data-quarto-disable-processing="true" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  ">
 <colgroup><col><col><col></colgroup><tbody><tr>
 <th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><th colspan="2" style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Model 1</th></tr>
@@ -3814,7 +3774,7 @@ font-style: inherit;">"nobs"</span>))</span></code></pre></div>
 <p>Now the model is indicating that there is a strong interaction effect for gender by time. The coefficient of the interaction term implies that (logged) wages increase at a faster rate (over time) for females than they do for males.</p>
 <p>Let’s visual this alongside our modified dataset.</p>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1">newdat <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -3875,7 +3835,7 @@ font-style: inherit;">"prediction"</span>))</span></code></pre></div>
 </details>
 </div>
 <div class="cell" data-layout-align="center">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1">mdat <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -4095,7 +4055,7 @@ font-style: inherit;">-&gt;</span> p4</span>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -4105,7 +4065,7 @@ font-style: inherit;">-&gt;</span> p4</span>
 <section id="missing---mixed-effects-model" class="level2">
 <h2 class="anchored" data-anchor-id="missing---mixed-effects-model">Missing - Mixed effects model</h2>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1">mod4 <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -4151,6 +4111,7 @@ background-color: null;
 font-style: inherit;">"nobs"</span>))</span></code></pre></div>
 </details>
 <div class="cell-output-display">
+
 <table class="huxtable" data-quarto-disable-processing="true" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  ">
 <colgroup><col><col><col></colgroup><tbody><tr>
 <th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><th colspan="2" style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Model 1</th></tr>
@@ -4173,7 +4134,7 @@ font-style: inherit;">"nobs"</span>))</span></code></pre></div>
 <p>When we run the mixed effects model on the dataset with missing data, we (correctly) <em>do not</em> see a significant interaction effect.</p>
 <p>In fact:</p>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -4212,6 +4173,7 @@ background-color: null;
 font-style: inherit;">"nobs"</span>))</span></code></pre></div>
 </details>
 <div class="cell-output-display">
+
 <table class="huxtable" data-quarto-disable-processing="true" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  ">
 <colgroup><col><col><col><col><col></colgroup><tbody><tr>
 <th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><th colspan="2" style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">ME - Missing</th><th colspan="2" style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">ME - Complete</th></tr>
@@ -4234,7 +4196,7 @@ font-style: inherit;">"nobs"</span>))</span></code></pre></div>
 <p>Our mixed effects model on the dataset with a lot of missing data (ME - Missing) generates quite similar estimates to what we know the ‘truth’ to be from the model on the complete data (ME - Complete).</p>
 <p>To comparatively visualise this.</p>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1">newdat <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -4368,7 +4330,7 @@ font-style: inherit;">select</span>(fit, lwr, upr))</span></code></pre></div>
 </details>
 </div>
 <div class="cell" data-layout-align="center">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1">mdat <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -4588,7 +4550,7 @@ font-style: inherit;">-&gt;</span> p4</span>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -4596,7 +4558,7 @@ font-style: inherit;">-&gt;</span> p4</span>
 <p>These lines (predicted lines; by gender) look parallel (as they should). Notably with the Males, we see the predicted line “pulled up” in the direction of the missing data even though that data was not available to the model - this is because the model has leveraged the slope of the data it did have access to, at the individual (person) level, when converging on its estimates.</p>
 <p>If the erroneous interaction effect (non-parallel lines) was not obvious in the plot separated by gender, here we see the predicted lines on the same plot for each model.</p>
 <div class="cell" data-layout-align="center">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1">p_mod3 <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -4825,7 +4787,7 @@ font-style: inherit;">'bottom'</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -4838,7 +4800,7 @@ font-style: inherit;">'bottom'</span>)</span></code></pre></div>
 <h2 class="anchored" data-anchor-id="less-aggressive-missingness">Less aggressive missingness</h2>
 <p>What if we whip through the same process and comparison, in a setting that ‘less aggressively’ has drop out with increasing wage and also some additional random missingness throughout.</p>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1">mdat <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -4991,7 +4953,7 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<div>
+
 <div id="bahldkstyb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#bahldkstyb table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -5432,77 +5394,52 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
   text-indent: 25px;
 }
 </style>
-
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
-<thead>
-<tr class="header gt_col_headings">
-<th id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
-<th id="<strong>Male</strong>, N = 2,804<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Male</strong>, N = 2,804<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
-<th id="<strong>Female</strong>, N = 352<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Female</strong>, N = 352<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
-</tr>
-</thead>
-<tbody class="gt_table_body">
-<tr class="odd">
-<td class="gt_row gt_left" headers="label">t</td>
-<td class="gt_row gt_center" headers="stat_1"><br>
-</td>
-<td class="gt_row gt_center" headers="stat_2"><br>
-</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;1</td>
-<td class="gt_row gt_center" headers="stat_1">528</td>
-<td class="gt_row gt_center" headers="stat_2">67</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;2</td>
-<td class="gt_row gt_center" headers="stat_1">528</td>
-<td class="gt_row gt_center" headers="stat_2">67</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;3</td>
-<td class="gt_row gt_center" headers="stat_1">478</td>
-<td class="gt_row gt_center" headers="stat_2">57</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;4</td>
-<td class="gt_row gt_center" headers="stat_1">396</td>
-<td class="gt_row gt_center" headers="stat_2">49</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;5</td>
-<td class="gt_row gt_center" headers="stat_1">338</td>
-<td class="gt_row gt_center" headers="stat_2">43</td>
-</tr>
-<tr class="odd">
-<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;6</td>
-<td class="gt_row gt_center" headers="stat_1">290</td>
-<td class="gt_row gt_center" headers="stat_2">38</td>
-</tr>
-<tr class="even">
-<td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;7</td>
-<td class="gt_row gt_center" headers="stat_1">246</td>
-<td class="gt_row gt_center" headers="stat_2">31</td>
-</tr>
-</tbody><tfoot class="gt_footnotes">
-<tr class="odd">
-<td colspan="3" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> n</td>
-</tr>
-</tfoot>
-
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_left" rowspan="1" colspan="1" scope="col" id="<strong>Characteristic</strong>"><strong>Characteristic</strong></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Male</strong>, N = 2,804<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>Male</strong>, N = 2,804<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_center" rowspan="1" colspan="1" scope="col" id="<strong>Female</strong>, N = 352<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>"><strong>Female</strong>, N = 352<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="label" class="gt_row gt_left">t</td>
+<td headers="stat_1" class="gt_row gt_center"><br></td>
+<td headers="stat_2" class="gt_row gt_center"><br></td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;1</td>
+<td headers="stat_1" class="gt_row gt_center">528</td>
+<td headers="stat_2" class="gt_row gt_center">67</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;2</td>
+<td headers="stat_1" class="gt_row gt_center">528</td>
+<td headers="stat_2" class="gt_row gt_center">67</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;3</td>
+<td headers="stat_1" class="gt_row gt_center">478</td>
+<td headers="stat_2" class="gt_row gt_center">57</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;4</td>
+<td headers="stat_1" class="gt_row gt_center">396</td>
+<td headers="stat_2" class="gt_row gt_center">49</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;5</td>
+<td headers="stat_1" class="gt_row gt_center">338</td>
+<td headers="stat_2" class="gt_row gt_center">43</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;6</td>
+<td headers="stat_1" class="gt_row gt_center">290</td>
+<td headers="stat_2" class="gt_row gt_center">38</td></tr>
+    <tr><td headers="label" class="gt_row gt_left">&nbsp;&nbsp;&nbsp;&nbsp;7</td>
+<td headers="stat_1" class="gt_row gt_center">246</td>
+<td headers="stat_2" class="gt_row gt_center">31</td></tr>
+  </tbody>
+  
+  <tfoot class="gt_footnotes">
+    <tr>
+      <td class="gt_footnote" colspan="3"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> n</td>
+    </tr>
+  </tfoot>
 </table>
-
-</div>
 </div>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1">mdat <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -5669,13 +5606,13 @@ font-style: inherit;">9</span>))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
 </div>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1">b1_mod1 <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -5745,6 +5682,7 @@ background-color: null;
 font-style: inherit;">"nobs"</span>))</span></code></pre></div>
 </details>
 <div class="cell-output-display">
+
 <table class="huxtable" data-quarto-disable-processing="true" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  ">
 <colgroup><col><col><col><col><col><col><col></colgroup><tbody><tr>
 <th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><th colspan="2" style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">ME - Complete</th><th colspan="2" style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Basic - Missing</th><th colspan="2" style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">ME - Missing</th></tr>
@@ -5771,7 +5709,7 @@ font-style: inherit;">"nobs"</span>))</span></code></pre></div>
 <p>What if the dropout is completely at random?</p>
 <p>Note, this is <u><strong>dropout</strong></u> at random, not <u><strong>sporadic missingness</strong></u>, these are two different things.</p>
 <div class="cell">
-<details class="code-fold">
+<details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1">mdat <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -5887,13 +5825,14 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="960"></p>
 </figure>
 </div>
 </div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
+
 <table class="huxtable" data-quarto-disable-processing="true" style="border-collapse: collapse; border: 0px; margin-bottom: 2em; margin-top: 2em; ; margin-left: auto; margin-right: auto;  ">
 <colgroup><col><col><col><col><col><col><col></colgroup><tbody><tr>
 <th style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;"></th><th colspan="2" style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">ME - Complete</th><th colspan="2" style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">Basic - Missing</th><th colspan="2" style="vertical-align: top; text-align: center; white-space: normal; border-style: solid solid solid solid; border-width: 0.8pt 0pt 0.4pt 0pt;    padding: 6pt 6pt 6pt 6pt; font-weight: normal;">ME - Missing</th></tr>
@@ -5927,21 +5866,20 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
 <section id="reproducibility-information" class="level2">
 <h2 class="anchored" data-anchor-id="reproducibility-information">Reproducibility Information</h2>
 <p>To access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:</p>
-<p><a href="https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io" class="uri">https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io</a></p>
+<p><a href="https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/lmer-missingx" class="uri">https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/lmer-missingx</a></p>
 <p>The session information can also be seen below.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>R version 4.3.1 (2023-06-16 ucrt)
-Platform: x86_64-w64-mingw32/x64 (64-bit)
-Running under: Windows 10 x64 (build 19044)
+<pre><code>R version 4.3.3 (2024-02-29)
+Platform: aarch64-apple-darwin20 (64-bit)
+Running under: macOS Sonoma 14.4.1
 
 Matrix products: default
-
+BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
 
 locale:
-[1] LC_COLLATE=English_Australia.utf8  LC_CTYPE=English_Australia.utf8   
-[3] LC_MONETARY=English_Australia.utf8 LC_NUMERIC=C                      
-[5] LC_TIME=English_Australia.utf8    
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 
 time zone: Australia/Perth
 tzcode source: internal
@@ -5952,43 +5890,43 @@ attached base packages:
 other attached packages:
  [1] lubridate_1.9.3   forcats_1.0.0     stringr_1.5.1     dplyr_1.1.4      
  [5] purrr_1.0.2       readr_2.1.5       tidyr_1.3.1       tibble_3.2.1     
- [9] ggplot2_3.5.1     tidyverse_2.0.0   patchwork_1.2.0   parameters_0.21.3
-[13] jtools_2.2.2      gtsummary_1.7.2   AER_1.2-12        survival_3.5-7   
+ [9] ggplot2_3.5.1     tidyverse_2.0.0   patchwork_1.2.0   parameters_0.21.7
+[13] jtools_2.2.2      gtsummary_1.7.2   AER_1.2-12        survival_3.6-4   
 [17] sandwich_3.1-0    lmtest_0.9-40     zoo_1.8-12        car_3.1-2        
-[21] carData_3.0-5     merTools_0.6.1    arm_1.13-1        MASS_7.3-60.0.1  
-[25] lme4_1.1-35.1     Matrix_1.6-5     
+[21] carData_3.0-5     merTools_0.6.2    arm_1.14-4        MASS_7.3-60.0.1  
+[25] lme4_1.1-35.3     Matrix_1.6-5     
 
 loaded via a namespace (and not attached):
- [1] rlang_1.1.4          magrittr_2.0.3       multcomp_1.4-25     
- [4] furrr_0.3.1          compiler_4.3.1       vctrs_0.6.5         
- [7] pkgconfig_2.0.3      crayon_1.5.2         fastmap_1.1.1       
-[10] ellipsis_0.3.2       backports_1.5.0      labeling_0.4.3      
-[13] pander_0.6.5         utf8_1.2.4           promises_1.3.0      
-[16] rmarkdown_2.26.2     markdown_1.12        tzdb_0.4.0          
-[19] nloptr_2.0.3         xfun_0.44            jsonlite_1.8.8      
-[22] later_1.3.2          broom_1.0.5          parallel_4.3.1      
-[25] R6_2.5.1             stringi_1.8.4        parallelly_1.37.1   
-[28] boot_1.3-28.1        numDeriv_2016.8-1.1  estimability_1.4.1  
-[31] assertthat_0.2.1     Rcpp_1.0.12          iterators_1.0.14    
-[34] knitr_1.47           httpuv_1.6.15        splines_4.3.1       
-[37] timechange_0.3.0     tidyselect_1.2.1     rstudioapi_0.16.0   
-[40] abind_1.4-5          yaml_2.3.8           codetools_0.2-19    
-[43] listenv_0.9.1        lmerTest_3.1-3       lattice_0.22-5      
-[46] shiny_1.8.1.1        withr_3.0.0          bayestestR_0.13.1   
-[49] coda_0.19-4.1        evaluate_0.23        future_1.33.2       
-[52] huxtable_5.5.6       xml2_1.3.6           pillar_1.9.0        
-[55] foreach_1.5.2        insight_0.19.7       generics_0.1.3      
-[58] hms_1.1.3            munsell_0.5.1        commonmark_1.9.1    
-[61] scales_1.3.0         minqa_1.2.6          globals_0.16.3      
-[64] xtable_1.8-4         glue_1.7.0           emmeans_1.10.0      
-[67] tools_4.3.1          mvtnorm_1.2-4        grid_4.3.1          
-[70] datawizard_0.9.1     colorspace_2.1-0     nlme_3.1-164        
-[73] Formula_1.2-5        cli_3.6.2            fansi_1.0.6         
-[76] viridisLite_0.4.2    broom.helpers_1.15.0 gt_0.10.1           
-[79] gtable_0.3.5         broom.mixed_0.2.9.5  sass_0.4.9          
-[82] digest_0.6.35        TH.data_1.1-2        farver_2.1.2        
-[85] htmlwidgets_1.6.4    htmltools_0.5.8.1    lifecycle_1.0.4     
-[88] mime_0.12            blme_1.0-5          </code></pre>
+ [1] rlang_1.1.3          magrittr_2.0.3       multcomp_1.4-25     
+ [4] furrr_0.3.1          compiler_4.3.3       vctrs_0.6.5         
+ [7] pkgconfig_2.0.3      crayon_1.5.2         fastmap_1.2.0       
+[10] backports_1.5.0      labeling_0.4.3       pander_0.6.5        
+[13] utf8_1.2.4           promises_1.3.0       rmarkdown_2.27      
+[16] markdown_1.12        tzdb_0.4.0           nloptr_2.0.3        
+[19] xfun_0.44            jsonlite_1.8.8       later_1.3.2         
+[22] broom_1.0.6          parallel_4.3.3       R6_2.5.1            
+[25] stringi_1.8.4        parallelly_1.37.1    boot_1.3-30         
+[28] numDeriv_2016.8-1.1  estimability_1.5.1   assertthat_0.2.1    
+[31] Rcpp_1.0.12          iterators_1.0.14     knitr_1.45          
+[34] httpuv_1.6.15        splines_4.3.3        timechange_0.3.0    
+[37] tidyselect_1.2.1     rstudioapi_0.16.0    abind_1.4-5         
+[40] yaml_2.3.8           codetools_0.2-20     listenv_0.9.1       
+[43] lmerTest_3.1-3       lattice_0.22-6       shiny_1.8.1.1       
+[46] withr_3.0.0          bayestestR_0.13.2    coda_0.19-4.1       
+[49] evaluate_0.23        future_1.33.2        huxtable_5.5.6      
+[52] xml2_1.3.6           pillar_1.9.0         foreach_1.5.2       
+[55] insight_0.19.11      generics_0.1.3       hms_1.1.3           
+[58] munsell_0.5.1        commonmark_1.9.1     scales_1.3.0        
+[61] minqa_1.2.7          globals_0.16.3       xtable_1.8-4        
+[64] glue_1.7.0           emmeans_1.10.2       tools_4.3.3         
+[67] mvtnorm_1.2-5        grid_4.3.3           datawizard_0.10.0   
+[70] colorspace_2.1-0     nlme_3.1-164         Formula_1.2-5       
+[73] cli_3.6.2            fansi_1.0.6          viridisLite_0.4.2   
+[76] broom.helpers_1.15.0 gt_0.10.1            gtable_0.3.5        
+[79] broom.mixed_0.2.9.5  sass_0.4.9           digest_0.6.35       
+[82] TH.data_1.1-2        farver_2.1.2         htmlwidgets_1.6.4   
+[85] htmltools_0.5.8.1    lifecycle_1.0.4      mime_0.12           
+[88] blme_1.0-5          </code></pre>
 </div>
 </div>
 
@@ -6000,7 +5938,7 @@ loaded via a namespace (and not attached):
   <category>Missing Data</category>
   <category>Mixed Models</category>
   <category>R</category>
-  <guid>https://www.the-kids-biostats.github.io/posts/lmer-missing/</guid>
+  <guid>https://www.the-kids-biostats.github.io/posts/lmer-missing/index.html</guid>
   <pubDate>Thu, 06 Jun 2024 16:00:00 GMT</pubDate>
 </item>
 </channel>

@@ -10,7 +10,7 @@ date: "2024-06-18"
 categories:
   - R
   - Parallel
-draft: false
+draft: true
 ---
 
 ```{r setup, include=FALSE}
@@ -24,13 +24,13 @@ library(foreach)    # For looping
 library(doParallel) # Parallel back-end for the `foreach` package
 ```
 
-## Overview
+# Overview
 
-While most of the datasets we work wtih are of a manageable size here at Telethon Kids Institute, occasionally we are presented with data containing *millions* of rows and/or *thousands* of columns. Performing almost any operation on these large datasets can take hours to execute -- a real test of patience for exploratory work!
+While most of the datasets we work with are of a manageable size here at Telethon Kids, occasionally we are presented with data containing *millions* of rows and/or *thousands* of columns. Performing almost any operation on these large datasets can take hours to execute -- a real test of patience for exploratory work!
 
-Parallel computing is one relatively simple way to reduce computation time on large datasets – leveraging our computer's processing capabilities by simultaneously distributing tasks "in parallel" across multiple processors (without too much extra code). This is particularly useful for loop-based computations/simulations, where multiple parameters/conditions must be swept over and explored to appropriately tune a model or output.
+Parallel computing is one relatively simple way to reduce computation time on large datasets – leveraging our computer's processing capabilities by simultaneously distributing tasks "in parallel" across multiple processors (without too much extra code). This is particularly useful for loop-based computations/simulations, where multiple parameters/conditions must be swept over whether that as part of variable creation/curation, model execution/tuning, or some other task.
 
-That being said, parallel computing is not the "magical general solution" to all computationally intensive tasks – it is still worth investing the time to make sure the packages and/or functions being used are compatible in a parallel workflow. There are still circumstances where the always handy `purrr::map` function, or basic for-loops can be equally or more efficient than initialising a parallel environment.
+That being said, while parallel computing is not a "magical general solution" to all computationally intensive tasks – it is worth investing some time to understand how it works, and become familiar with the packages and/or functions used within a parallel framework. There are still circumstances where the always handy `purrr::map` function, or basic for-loops can be equally or more efficient than initialising parallel computing.
 
 ```{r echo = F}
 #Parallel computing is a way to use more of your computer's resources to get these operations done quicker, and hopefully with not too much extra code. (That being said, with particularly large datasets, its worth investing the time to make sure there aren't functions and/or packages that significantly speed things up even without parallel computing.)
@@ -38,9 +38,9 @@ That being said, parallel computing is not the "magical general solution" to all
 
 <p>
 
-## What is Parallel Computing?
+# What is Parallel Computing?
 
-Parallel computing refers to allocating multiple operations in "parallel" across a machine's multiple cores/processors. Most modern computers have at least four cores, and often many more. By default, R uses only one core, running iterative operations sequentially; not starting the next until the previous is complete. However, under a parallel framework, multiple iterations/calculations can be allocated across multiple cores and completed at the same time, thus saving time.
+Parallel computing refers to executing multiple operations in "parallel" (i.e. at the same time) across a machine's multiple cores/processors. Most modern computers have at least four cores, and often many more. By default, R uses only one core, running iterative operations sequentially; not starting the next until the previous is complete. However, under a parallel framework, multiple iterations/calculations can be allocated across multiple cores so they can be executed at the same time, thus saving time.
 
 In this post, we will have a look at a couple of examples using `R`. We provide some simple examples and use-cases, in addition to some further resources if you would like to learn more.
 
@@ -50,7 +50,7 @@ These examples are run using `r R.version$version.string` on `r Sys.info()["sysn
 
 <br>
 
-### Setup
+## Setup
 
 -   Let's check the number of cores available on our machine.
 
@@ -87,9 +87,9 @@ set.seed(2024)
 
 <br>
 
-## Example 1: Bootstrapping
+# Example 1: Bootstrapping
 
-Bootstrapping is a relatively simple method that uses random sampling with replacement to mimic random sampling of a population. This allows us to estimate the sampling distribution for a statistic (mean, variance, etc.) and assess its stability/reliability, without making strong assumptions about the underlying population. This especially useful when the data is problematic in some fundamental way (small sample sizes, insufficient variation, violation of model assumptions).
+Bootstrapping is a relatively simple method that uses random sampling with replacement to mimic random sampling of a population. This allows us to estimate the sampling distribution for a statistic (mean, variance, etc.) and assess its stability/reliability, without making strong assumptions about the underlying population. This can be useful when the data are problematic in some fundamental way (small sample sizes, insufficient variation, violation of model assumptions).
 
 In `R`, for-loops can be used to derive a set of bootstrap samples. As we will see, parallel environments can much more efficiently handle operations like these of a repeated nature.
 
@@ -115,7 +115,7 @@ trials <- 10000 # Number of bootstrap samples
 
 <p>
 
-### For-loop
+## For-loop
 
 -   Let's begin by using the "tried and true" for-loop. For each of the `r trials` bootstrap samples, we:
     -   Initialise a bootstrap sample, `ind`.
@@ -147,7 +147,7 @@ print(time1)
 
 <p>
 
-### `%do%` loop (not parallel)
+## `%do%` loop (not parallel)
 
 -   As an alternative, let's also use the `%do%` operator from the `foreach` package. Similar to a for-loop, the loop is sequentially executed.
 -   This is similar in execution time to the for-loop operation..
@@ -171,7 +171,7 @@ print(time2)
 
 <p>
 
-### `%dopar%` parallelisation
+## `%dopar%` parallelisation
 
 -   Now, let's run this in parallel across 6 cores.
 -   The execution time is significantly reduced relative to the above two cases.
@@ -201,7 +201,7 @@ We can see that the parallel initialisation is significantly faster than traditi
 
 <br>
 
-## Example 2: Parallel regressions with different outcomes
+# Example 2: Parallel regressions with different outcomes
 
 -   Now let's apply this to a different situation – where we have different model specifications we would like to run on the same "large" data set.
 -   Let's use `nycflights13::flights` dataset – a set of over 300,000 flight records that departed from all NYC airports in 2013.
@@ -239,15 +239,15 @@ We would like to specify a set of models to explore flight delay
     -   Month (`month`)
 
 ```{r echo = T}
-outcome_vars <- c("distance", "air_time", "dep_delay")
-input_vars <- c("arr_delay", "arr_delay_bin")
+indep_vars <- c("distance", "air_time", "dep_delay")
+outcome_vars <- c("arr_delay", "arr_delay_bin")
 
 #formulas <- map(output_vars, ~paste(.x, "~", paste(input_vars, collapse = " + ")))
 ```
 
 <p>
 
-### For-loop
+## For-loop
 
 -   For each "month", we extract the subset of data
 
@@ -257,12 +257,12 @@ input_vars <- c("arr_delay", "arr_delay_bin")
 start <- proc.time()
 for (i in unique(flights$month)){
   month_dat <- flights %>% filter(month == i)
-  for (j in input_vars){
+  for (j in outcome_vars){
     if (j == "arr_delay"){
-      model <- lm(as.formula(paste(j,"~",paste(outcome_vars, collapse = "+"))),
+      model <- lm(as.formula(paste(j,"~",paste(indep_vars, collapse = "+"))),
                   data = month_dat)
     } else if (j == "arr_delay_bin"){
-      model <- glm(as.formula(paste(j,"~",paste(outcome_vars, collapse = "+"))),
+      model <- glm(as.formula(paste(j,"~",paste(indep_vars, collapse = "+"))),
                    family = binomial,
                    data = month_dat)
     }
@@ -275,7 +275,7 @@ print(time4)
 
 <p>
 
-### `%dopar%` parallelisation
+## `%dopar%` parallelisation
 
 -   Similar situation to before. We use the `%:%` operator from the `foreach` package to nest a for-loop within a parallel environment.
 
@@ -289,10 +289,10 @@ results <- foreach(i = unique(flights$month), .packages = "stats") %:%
   foreach(j = outcome_vars) %dopar% {
     month_dat <- subset(flights, month = i)
     if (j == "arr_delay"){
-      model <- lm(as.formula(paste(j,"~",paste(outcome_vars, collapse = "+"))),
+      model <- lm(as.formula(paste(j,"~",paste(indep_vars, collapse = "+"))),
                   data = month_dat)
     } else if (j == "arr_delay_bin"){
-      model <- glm(as.formula(paste(j,"~",paste(outcome_vars, collapse = "+"))),
+      model <- glm(as.formula(paste(j,"~",paste(indep_vars, collapse = "+"))),
                    family = binomial,
                    data = month_dat)
     }
@@ -308,13 +308,15 @@ Again, this simple example represents a `r paste0(round(100*(time4[3]-time5[3])/
 
 <br>
 
-## Conclusion
+# Conclusion
 
-Using just a few relatively simple examples, we have demonstrated that a parallel computing environment, in some circumstances, is a relatively easy and quick way to improve the runtime of iteration/loop-based code. While not appropriate in all circumstances (depending on the exact use-case), it warrants further investigation, particularly as datasets grow increasingly large and analytical methodologies increasingly complex.
+Using just a few relatively simple examples, we have demonstrated that a parallel computing environment, can be a relatively easy and quick way to improve the runtime of iteration/loop-based operations - with little modification to your code!
+
+While not appropriate in all circumstances (depending on the exact use-case), it is worth being across the relevant packages and commands used in `R` for parallel computing, particularly as datasets grow increasingly large and analytical methodologies increasingly complex.
 
 <br>
 
-## **Acknowledgements**
+## Acknowledgements
 
 Thanks to Wesley Billingham, Matt Cooper and Elizabeth McKinnon for providing feedback on and reviewing this post.
 
@@ -322,7 +324,7 @@ You can look forward to seeing posts from these other team members here in the c
 
 <br>
 
-## Further Resources
+# Further Resources
 
 -   Vignettes
     -   <https://cran.r-project.org/web/packages/doParallel/vignettes/gettingstartedParallel.pdf>
@@ -331,7 +333,13 @@ You can look forward to seeing posts from these other team members here in the c
 
 <br>
 
-## Session Info
+## Reproducibility Information
+
+To access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:
+
+<https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/parallel>
+
+The session information can also be seen below.
 
 ```{r echo = T}
 sessionInfo()
