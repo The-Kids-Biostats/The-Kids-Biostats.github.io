@@ -2,7 +2,6 @@
   {
     "listing": "/index.html",
     "items": [
-      "/posts/parallel/index.html",
       "/posts/lmer-missing/index.html"
     ]
   }

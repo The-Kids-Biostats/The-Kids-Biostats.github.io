@@ -375,7 +375,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  4.306   0.013   4.333 </code></pre>
+  4.176   0.012   4.207 </code></pre>
 </div>
 </div>
 <p>
@@ -406,7 +406,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  3.832   0.011   3.861 </code></pre>
+  3.736   0.011   3.809 </code></pre>
 </div>
 </div>
 <p>
@@ -439,14 +439,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  5.625   0.407   1.740 </code></pre>
+  4.889   0.285   1.318 </code></pre>
 </div>
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">stopImplicitCluster</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>We can see that the parallel initialisation is significantly faster than traditional for-loop methods— about 60% so! For datasets greater in size, or with more bootstrap samples, these time savings certainly add up.</p>
+<p>We can see that the parallel initialisation is significantly faster than traditional for-loop methods— about 69% so! For datasets greater in size, or with more bootstrap samples, these time savings certainly add up.</p>
 <p><br></p>
 </section>
 </section>
@@ -541,7 +541,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  0.577   0.049   0.629 </code></pre>
+  0.643   0.056   0.738 </code></pre>
 </div>
 </div>
 <p>
@@ -576,14 +576,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  3.413   2.812   8.793 </code></pre>
+  4.386   2.852   7.454 </code></pre>
 </div>
 <details>
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">stopImplicitCluster</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Again, this simple example represents a -1298% time saving relative to a standard for-loop implementation.</p>
+<p>Again, this simple example represents a -910% time saving relative to a standard for-loop implementation.</p>
 <p><br></p>
 </section>
 </section>
