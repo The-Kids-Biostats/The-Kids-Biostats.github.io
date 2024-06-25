@@ -48,6 +48,18 @@ The [`doParallel`](#0) and [`foreach`](#0) packages of `R` are one set of packag
 
 These examples are run using `r R.version$version.string` on `r Sys.info()["sysname"]` `r Sys.info()["release"]`.
 
+# When should we consider Parallel Computing?
+
+Potentially, it is easier to think about when we should not consider parallel computing. For parallel computing to be workable, your overall job needs to be something that can be broken down into [independent]{.underline} tasks, that is, into tasks that can each be completed with [no dependence on the input or output from another task]{.underline}. So, any job where the tasks must completed in sequential order can not be executed (or sped up) with parallel computing - this might be sequential (dependent) steps of data processing (need to standardise the variables BEFORE we identify (and tag) the extreme values) or sequential steps of computation (matrix algebra within a regression model).
+
+A quick analogy - you can not complete the job of making a pizza for a customer in a parallel way *\[you can not cook the pizza at the same time as you're preparing the dough at the same time as you're putting the toppings on the pizza\]* but you can complete the job of 'preparing all the pizza dough for tonight' in parallel *\[by getting 10 people with 10 bowls and 10 bags of flour to all mix at the same time\]*.
+
+As it relates to data analysis, parallel computing requires that we can divvy up tasks in a standalone way, and (generally) assemble the output from those tasks in a sensible way. An examples
+
+-   Six months of minutely data for 100 patients, where you need to calculate a range of summary statistics (including from some advanced modeling) for each patient. The data can be subset into '100' chunks as the summary statistics for each 'chunk' do not require access to (or knowledge of) the raw data or output (summary statistics) from any other chunk. The resulting summary statistics can then be compiled into a table or list for later use.
+
+Of course, there is some overhead to the allocating out of tasks to different cores and the compiling of results which one may want to consider. It is generally worthwhile to pilot your code on a subset of tasks to understand the potential overhead relative to the potential decrease in overall computation time that may be achieved.
+
 <br>
 
 ## Setup
