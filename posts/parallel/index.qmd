@@ -28,9 +28,9 @@ library(doParallel) # Parallel back-end for the `foreach` package
 
 While most of the datasets we work with are of a manageable size here at Telethon Kids, occasionally we are presented with data containing *millions* of rows and/or *thousands* of columns. Performing almost any operation on these large datasets can take hours to execute -- a real test of patience for exploratory work!
 
-Parallel computing is one relatively simple way to reduce computation time on large datasets – leveraging our computer's processing capabilities by simultaneously distributing tasks "in parallel" across multiple processors (without too much extra code). This is particularly useful for loop-based computations/simulations, where multiple parameters/conditions must be swept over whether that as part of variable creation/curation, model execution/tuning, or some other task.
+Parallel computing is one relatively simple way to reduce computation time on large datasets – leveraging our computer's full processing capabilities by simultaneously distributing tasks "in parallel" across multiple processors (without too much extra code). This is particularly useful for loop-based computations/simulations, where multiple parameters/conditions must be swept over whether that as part of variable creation/curation, model execution/tuning, or some other task.
 
-That being said, while parallel computing is not a "magical general solution" to all computationally intensive tasks – it is worth investing some time to understand how it works, and become familiar with the packages and/or functions used within a parallel framework. There are still circumstances where the always handy `purrr::map` function, or basic for-loops can be equally or more efficient than initialising parallel computing.
+That being said, while parallel computing is not a "magical general solution" to all computationally intensive tasks – it is worth investing some time to understand how it works, and become familiar with the packages and/or functions used within a parallel framework. There are still circumstances where the always handy `purrr::map` function (or the like) can be just as, or more, efficient than a parallel distribution.
 
 ```{r echo = F}
 #Parallel computing is a way to use more of your computer's resources to get these operations done quicker, and hopefully with not too much extra code. (That being said, with particularly large datasets, its worth investing the time to make sure there aren't functions and/or packages that significantly speed things up even without parallel computing.)
@@ -40,31 +40,31 @@ That being said, while parallel computing is not a "magical general solution" to
 
 # What is Parallel Computing?
 
-Parallel computing refers to executing multiple operations in "parallel" (i.e. at the same time) across a machine's multiple cores/processors. Most modern computers have at least four cores, and often many more. By default, R uses only one core, running iterative operations sequentially; not starting the next until the previous is complete. However, under a parallel framework, multiple iterations/calculations can be allocated across multiple cores so they can be executed at the same time, thus saving time. These time savings accumulate particuarly with large underlying tasks (as opposed to running many small tasks in parallel — something that often ends up slower!).
+Parallel computing refers to executing multiple operations in "parallel" (i.e., at the same time) across a machine's multiple cores/processors. Most modern computers have at least four cores, and often many more. By default, R uses only one core, running iterative operations sequentially; not starting the next until the previous is complete. Under a parallel framework, however, multiple iterations/calculations can be allocated across multiple cores so they can be executed at the same time — saving time. These time savings accumulate particularly with large underlying tasks (as opposed to running many small tasks in parallel — a situation that often ultimately ends up slower!).
 
-In this post, we will have a look at a couple of examples using `R`. We provide some simple examples and use-cases, in addition to some further resources if you would like to learn more.
+In this post, we will have a look at a couple of examples using `R`. We provide some simple examples and use-cases, in addition to some additional resources to continue learning.
 
-The [`doParallel`](#0) and [`foreach`](#0) packages of `R` are one set of packages, intended to be used together, to facilitate a syntactically simple parallel computing environment in `R` – by use of the `%dopar%` operator. Additionally the base `parallel` package is used for some basic set-up and detection.
+The [`doParallel`](#0) and [`foreach`](#0) packages of `R` are one set of packages, intended to be used together, to facilitate parallel computing in a syntactically simple way `R`. Additionally, the base `parallel` package is used for some basic set-up and detection.
 
 These examples are run using `r R.version$version.string` on `r Sys.info()["sysname"]` `r Sys.info()["release"]`.
 
 # When should we consider Parallel Computing?
 
-It is potentially easier to think about when we should *not* consider parallel computing. For parallel computing to be workable, the overall job needs to be something that can be broken down into [independent]{.underline} tasks, that is, into tasks that can each be completed with [no dependence on the input or output from another task]{.underline}. So, any job where the tasks must completed in sequential order can not be executed (or sped up) with parallel computing— this might be sequential (time dependent) processing of data (e.g., need to standardise variables *before* extreme values are identified and tagged) or computation (matrix algebra within a regression model).
+It is potentially easier to think about when we should *not* consider parallel computing. For parallel computing to be workable, the overall job needs to be something that can be broken down into [independent]{.underline} tasks — tasks that do not depend on the input/output of previous tasks to fully run. So, any job where tasks must completed in sequential order can not be executed (or sped up) with parallel computing. Such jobs may be the sequential (time dependent) processing of data (e.g., need to standardise variables *before* extreme values are identified and tagged) or ordered computation tasks (matrix algebra within a regression model), for example.
 
-A quick analogy: you can not complete the job of making a pizza for a customer in a parallel way *\[you can not cook the pizza at the same time as you're preparing the dough at the same time as you're putting the toppings on the pizza\]* but you can complete the job of 'preparing all the pizza dough for tonight' in parallel *\[by getting 10 people with 10 bowls and 10 bags of flour to all mix at the same time\]*.
+A quick analogy: you can not complete the job of making 10 pizzas for a customer in a parallel way *\[you can not cook the pizza at the same time as you're preparing the dough at the same time as you're putting the toppings on the pizza\]* but you can complete the job of 'preparing all the pizza dough for tonight' in parallel *\[by getting 10 people with 10 bowls and 10 bags of flour to all mix at the same time\]*.
 
 As it relates to data analysis, parallel computing requires us to divvy up tasks in a standalone way, and (generally) assemble the output from those tasks in a sensible way. An example:
 
--   Six months of minutely data for 100 patients, where you need to calculate a range of summary statistics (including from some advanced modeling) for each patient. The data can be subset into '100' chunks as the summary statistics for each 'chunk' do not require access to (or knowledge of) the raw data or output (summary statistics) from any other chunk. The resulting summary statistics can then be compiled into a table or list for later use.
+-   Six months of minute-level data for 100 patients, where you need to calculate a range of summary statistics (including from some advanced modelling) for each patient. The data can be subset into '100' chunks as the summary statistics for each 'chunk' do not require access to (or knowledge of) the raw data or output (summary statistics) from any other chunk. The resulting summary statistics can then be compiled into a table or list for later use.
 
-Of course, there is some overhead to the allocating out of tasks to different cores and the compiling of results which one may want to consider. It is generally worthwhile to pilot your code on a subset of tasks to understand the potential overhead relative to the potential decrease in overall computation time that may be achieved.
+Of course, there is some overhead to allocating tasks and compiling results to different cores that one may want to consider before proceeding. Generally, it is worthwhile to pilot your code on a subset of the full set of computations to see if the code does truly benefit from parallelisation, as it does introduce some computational overhead.
 
 <br>
 
 # Setup
 
--   Let's check the number of cores available on our machine.
+Let's check the number of cores available on our machine.
 
 ```{r echo = T}
 parallel::detectCores()
@@ -72,26 +72,27 @@ parallel::detectCores()
 
 <p>
 
--   We should not allocate all of our machine's available cores to parallel computations – this will consume all of the available resources!
--   Let's use 6 cores for our examples.
+We should not allocate all of our machine's available cores to parallel computations – this will consume all of the available resources!\
+\
+Let's use 6 cores for our examples.
 
 ```{r echo = T}
 doParallel::registerDoParallel(6)
 ```
 
--   Below is a screenshot from the Windows task manager. R "front-end" instances are initialised for each of the 6 initialised cores.
+When we go to the Windows task manager, we see there are now 6 R front-end instances initialised for each of the 6 cores.
 
 ```{r out.width="700px", fig.align='center', echo = F}
 knitr::include_graphics(path = "parallel_comps.png")
 ```
 
--   When we no longer require a parallel environment, we must shut down and de-register the parallel cluster – otherwise they will remain active.
+When we no longer require a parallel environment, we must shut down and de-register the parallel cluster. Otherwise they will remain active!
 
 ```{r echo = T}
 doParallel::stopImplicitCluster()
 ```
 
--   Let's also set a random seed for sample reproducibility
+Let's also set a random seed for sample reproducibility
 
 ```{r echo = T}
 set.seed(2024)
@@ -101,31 +102,25 @@ set.seed(2024)
 
 # Example 1: Bootstrapping
 
-Bootstrapping is a relatively simple method that uses random sampling with replacement to mimic random sampling of a population. This allows us to estimate the sampling distribution for a statistic (mean, variance, etc.) and assess its stability/reliability, without making strong assumptions about the underlying population. This can be useful when the data are problematic in some fundamental way (small sample sizes, insufficient variation, violation of model assumptions).
+Bootstrapping is a method that uses simple random sampling with replacement to mimic random sampling of a population. This allows us to estimate the sampling distribution for a statistic (mean, variance, etc.) and assess its stability/reliability, without making strong assumptions about the underlying population. This can be useful when the data are problematic in some fundamental way (small sample sizes, insufficient variation, violation of model assumptions).
 
 In `R`, for-loops can be used to derive a set of bootstrap samples. As we will see, parallel environments can much more efficiently handle repeated independent operations like these.
 
--   Let's use the `mtcars` data set to run a basic linear regression.
-    -   We would like to explore the association between a vehicle's fuel efficiency (`mpg`) and horsepower (`hp`), weight (`wt`) and transmission type (automatic/manual, `am`).
--   We suspect some of the assumptions of standard linear regression may be violated (normality of errors) because of the small sample size. By bootstrapping, we can explore the stability of the regression coefficients by calculating a confidence interval about the bootstrapped coefficient estimates.
+Let's use the `mtcars` data set to run a basic bootstrapped linear regression.
+
+-   We would like to explore the association between a vehicle's fuel efficiency (`mpg`) and horsepower (`hp`), weight (`wt`) and transmission type (automatic/manual, `am`).
+
+We suspect – perhaps due to the small sample size – that some of the assumptions of standard linear regression may be violated (normality of errors). With bootstrapping, we can explore the stability of the regression coefficients by calculating a confidence interval about the bootstrapped coefficient estimates.
+
+<p>
+
+We will present 3 ways to bootstrap data – two using for-loop structures, and one using a parallel computing environment. In each instance, we will compare how the output is structured and results returned.
 
 ```{r echo = T}
 # Let's set up the data and number of bootstrap samples
 data(mtcars)
 mtcars <- as_tibble(mtcars)
 
-head(mtcars)
-```
-
-<p>
-
-We will present 3 ways to bootstrap data – two using for-loop structures, and one using a parallel computing environment. In each instance, we will compare how the output is structured and results returned.
-
-<p>
-
-Now, let's set the number of bootstrap trials.
-
-```{r echo = T}
 trials <- 10000 # Number of bootstrap samples
 ```
 
@@ -133,11 +128,11 @@ trials <- 10000 # Number of bootstrap samples
 
 ## For-loop
 
--   Let's begin by using the "tried and true" for-loop. For each of the `r trials` bootstrap samples, we:
+-   Let's begin by using a traditional for-loop. For each bootstrap sample, we:
     -   Initialise a bootstrap sample, `ind`.
     -   Run our linear regression on the bootstrap sample, `results`
     -   Extract the coefficients from `results`, and append this to an overall coefficient matrix `bootstrap_coefs`.
--   Subsequently, we can calculate a 95% confidence interval for each of our parameter estimates by taking the 2.5th and 97.5th percentiles from the bootstrap distribution.
+-   Subsequently, we calculate a 95% confidence interval for each of our parameter estimates by taking the 2.5th and 97.5th percentiles from the bootstrap distribution and calling this `bootstrap_cis`.
 
 ```{r echo = T}
 start <- proc.time() # Start our timer!
@@ -147,9 +142,17 @@ bootstrap_coefs <- matrix(NA, nrow = trials, ncol = 4)
 colnames(bootstrap_coefs) <- names(coef(lm(mpg ~ hp + wt + am, data = mtcars)))
 
 for (i in 1:trials){
-  ind <- mtcars[sample(nrow(mtcars), replace = TRUE),]
-  result <- lm(mpg ~ hp + wt + as_factor(am), data = ind)
   
+  # Take bootstrap sample
+  ind <- mtcars[sample(nrow(mtcars), 
+                       replace = TRUE),
+                ]
+  
+  # Construct linear regression
+  result <- lm(mpg ~ hp + wt + as_factor(am), 
+               data = ind)
+  
+  # Extract coefficients and store to `bootstrap_coefs`
   bootstrap_coefs[i, ] <- coef(result)
 }
 
@@ -160,7 +163,6 @@ bootstrap_cis <- apply(bootstrap_coefs,
 
 end <- proc.time() # End our timer!
 time1 <- end-start
-print(time1)
 ```
 
 <p>
@@ -179,10 +181,17 @@ bootstrap_cis
 
 <p>
 
+This had the following run-time (seconds):
+
+```{r}
+print(time1)
+```
+
+<p>
+
 ## `%do%` loop (not parallel)
 
--   As an alternative, let's also use the `%do%` operator from the `foreach` package. Similar to a for-loop, the loop is sequentially executed.
--   Similar in execution time to the for-loop operation..
+As an alternative, let's also use the `%do%` operator from the `foreach` package. Similar to a for-loop, each bootstrap sample is executed sequentially.
 
 ```{r echo = T}
 start <- proc.time()
@@ -200,7 +209,6 @@ bootstrap_cis <- apply(bootstrap_coefs,
 
 end <- proc.time()
 time2 <- end-start
-print(time2)
 ```
 
 <p>
@@ -219,14 +227,20 @@ bootstrap_cis
 
 <p>
 
+This had the following run-time (seconds):
+
+```{r}
+print(time2)
+```
+
+<p>
+
 ## `%dopar%` parallelisation
 
--   Now, let's run this in parallel across 6 cores.
--   The execution time is significantly reduced relative to the above two cases.
--   The `%dopar%` operator defines the for-loop in the parallel environment.
+Now, let's run this in parallel across 6 cores. The `%dopar%` operator defines the for-loop in the parallel environment.
 
 ```{r echo = T}
-doParallel::registerDoParallel(cores = 6)
+doParallel::registerDoParallel(cores = 6) # Initialise parallel cluster
 
 start <- proc.time()
 bootstrap_coefs <- foreach(i = 1:trials, .combine = rbind, .packages = 'stats') %dopar% {
@@ -242,58 +256,53 @@ bootstrap_cis <- apply(bootstrap_coefs,
 
 end <- proc.time()
 time3 <- end-start
-print(time3)
 
-doParallel::stopImplicitCluster()
+doParallel::stopImplicitCluster() # De-register parallel cluster
 ```
 
-Similarly, let's visualise the first few lines of the bootstrapped results
+As expected, the output of the bootstrapped coefficient distribution are identical before
 
 ```{r}
 head(bootstrap_coefs)
 ```
 
-and associated 95% confidence interval
+as are the associated 95% confidence intervals.
 
 ```{r}
 bootstrap_cis
+```
+
+Lastly, this had the following run-time (seconds)
+
+```{r}
+print(time3)
 ```
 
 <p>
 
 ## Discussion
 
-We have presented three ways to generate bootstrapped confidence intervals for coefficient estimates of a multiple linear regression.
+Immediately, the syntax of the alternative for-loop structures are **more readable** and **easier to construct** than the traditional for-loop. Because the `foreach::foreach` function easily combines output in a list, we need not define an empty matrix to append output to.
 
-1\) Traditional for-loop\
-2) Non-parallelised loop using the `foreach` package\
-3) Parallelised computation
-
-Immediately, the syntax of the alternative for-loop structures are no less readable or more difficult to construct than the traditional for-loop. The output is structured similarly and combines easily into a list using the `foreach::foreach`.
-
-Computation time, however, is sped up significantly – particularly in the parallel environment. In fact, the parallel instance is approximately `r paste0(round(100*(time1[3]-time3[3])/time1[3],0),"%")` faster than the traditional for-loop. Across multiple analyses and data sets, these time savings certainly add up!
+Computation time in the parallel environment is significantly faster — approximately `r paste0(round(100*(time1[3]-time3[3])/time1[3],0),"%")` faster than the traditional for-loop! Across multiple analyses and data sets, these time savings certainly add up!
 
 <br>
 
 # Example 2: Random forest model
 
--   Let's say we would like a model that predicts the distribution of a plant species based on various environmental factors (temperature, precipitation, elevation, vegetation type).
-
--   We would like to use a random forest (using the `randomForest` package of `R`) model for this – a popular model for classification based on combining the output of multiple decision trees.
-
--   This example is inspired by the example from the [vignette of the `foreach` package](https://cran.r-project.org/web/packages/foreach/vignettes/foreach.html).
+Let's say we would like a model that predicts the distribution of a plant species based on various environmental factors (temperature, precipitation, elevation, vegetation type). We would like to use a random forest model (using the `randomForest` package of `R`) — a popular model for classification which combines the output across multiple decision trees.\
+\
+This example is inspired by the example from the [vignette of the `foreach` package](https://cran.r-project.org/web/packages/foreach/vignettes/foreach.html).
 
 ## Data
 
--   First, let's simulate our data set and set some parameters
+First, let's simulate our data set and set some parameters:
 
--   Data specification
+-   100,00 observations.
 
-    -   100,000 observations.
+-   Independent variables temperature, precipitation and elevation sampled from a random normal distribution and vegetation type (categorical factor) randomly prescribed.
 
-    -   Independent variables temperature, precipitation and elevation sampled from a random normal distribution and vegetation type (categorical factor) randomly prescribed.
-
-    -   Categorical factor variable randomly prescribed.
+-   Species presence (dichotomous) outcome variable is randomly prescribed.
 
 ```{r}
 n <- 10000 # Sample size
@@ -317,19 +326,15 @@ data <- data.frame(temperature = rnorm(n,
                                                          "absent"), 
                                                        n, 
                                                        replace = T)))
-
-head(data)
 ```
 
--   Now, let's assign 70% of the data to our training set, and the remaining 30% to our test data set.
-
--   Initialise a random forest model with 1000 trees.
+Let's assign 70% of the data to our training set, and the remaining 30% to test data set and initialise a random forest model with 1000 trees.
 
 ```{r}
-train_index <- sample(1:n, 0.8*n)
+train_index <- sample(1:n, 0.7*n)
+
 train_data <- data[train_index, ]
 test_data <- data[-train_index, ]
-rm(train_index)
 
 num_trees <- 1000
 ```
@@ -338,7 +343,7 @@ num_trees <- 1000
 
 ## For-loop
 
--   Let's split up the computation of a 1000 tree random forest model by sequentially 4 random forest models comprising 250 trees.
+Let's split up the computation of a 1000 tree random forest model by sequentially running 4 random forest models comprising 250 trees.
 
 ```{r warning = F, error = F}
 start <- proc.time()
@@ -357,7 +362,6 @@ predictions <- predict(combined_output, test_data %>% select(-species_presence))
 
 end <- proc.time()
 time1 <- end - start
-print(time1)
 ```
 
 Let's print the confusion matrix of this output. Because this data was relatively simply simulated, we don't expect the predictive power to be too great.
@@ -366,11 +370,17 @@ Let's print the confusion matrix of this output. Because this data was relativel
 table(predictions, test_data$species_presence)
 ```
 
+This has the following run-time (seconds):
+
+```{r}
+print(time1)
+```
+
+<p>
+
 ## %do% loop (not parallel)
 
--   Similar to the traditional for-loop, we can sequentially execute this code using the `%do%` operator.
-
--   As expected, the run-time is somewhat similar to before.
+Similar to the traditional for-loop, we can sequentially execute this code using the `%do%` operator.
 
 ```{r warning = F, error = F, message=F}
 start <- proc.time()
@@ -385,7 +395,6 @@ predictions <- predict(rf, test_data %>% select(-species_presence))
 
 end <- proc.time()
 time2 <- end - start
-print(time2)
 ```
 
 Let's print the confusion matrix of this output. Because this data was relatively simply simulated, we don't expect the predictive power to be too great.
@@ -394,13 +403,17 @@ Let's print the confusion matrix of this output. Because this data was relativel
 table(predictions, test_data$species_presence)
 ```
 
+This has the following run-time (seconds):
+
+```{r}
+print(time2)
+```
+
 <p>
 
 ## %dopar% parallelisation
 
--   Let's now run this model in parallel.
-
--   For simplicity, let's allocate 4 cores to the computation so one core processes each of the 4 random forest models comprising 250 trees simultaneously.
+For simplicity, let's allocate 4 cores to the computation and imagine that one core is responsible for processing one of the four random forest models simultaneously.
 
 ```{r warning=F, error=F}
 doParallel::registerDoParallel(cores = 4)
@@ -416,10 +429,9 @@ rf <- foreach::foreach(ntree = rep(num_trees/4, 4),
 predictions <- predict(rf, test_data %>% select(-species_presence))
 
 end <- proc.time()
-time3 <- end-start
-print(time3)
-
 doParallel::stopImplicitCluster()
+
+time3 <- end-start
 ```
 
 Let's print the confusion matrix of this output. Because this data was relatively simply simulated, we don't expect the predictive power to be too great.
@@ -428,39 +440,47 @@ Let's print the confusion matrix of this output. Because this data was relativel
 table(predictions, test_data$species_presence)
 ```
 
+This now has the following run-time (seconds):
+
+```{r}
+print(time3)
+```
+
 <p>
 
 ## Discussion
 
-Using [easily adaptable and readable syntax]{.underline}, again we can leverage a parallel environment to significantly hasten the computation time of our large model. Relative to a standard for-loop, the parallelised computation is approximately `r paste0(round(as.numeric(100*(time1[3]-time3[3])/time1[3]), 0), "%")` faster.
+Again, using [easily adaptable and readable syntax]{.underline}, we leverage a parallel environment to significantly lessen the computation time of our large model. Relative to a standard for-loop, the parallelised computation is approximately `r paste0(round(as.numeric(100*(time1[3]-time3[3])/time1[3]), 0), "%")` faster.
 
 <br>
 
 # Example 3: Parallel regressions with different outcomes
 
-As hinted in the overview to this blog, parallel computing is not the general solution to running loop-based code more quickly. Instances which are intrinsically "fast" to run will not benefit from a parallel environment and may in fact run *slower* in parallel, after accounting for the overhead in setting up the parallel processing.\
+As hinted to in the overview to this blog, parallel computing is not the general solution to running loop-based code more quickly. Instances which run intrinsically "fast" will not benefit from a parallel environment and may in fact run *slower* in parallel, after accounting for the overhead in setting up the parallel environment.\
 \
 There are other packages which may be useful in these circumstances, such as the always handy `purrr:map` or `furrr::future_map`.
 
+Let's apply this to a different situation where we have different model specifications we would like to run on the same data set.
+
+<p>
+
 ## Data
 
--   Now let's apply this to a different situation – where we have different model specifications we would like to run on the same "large" data set.
--   Let's use `nycflights13::flights` dataset – a set of over 300,000 flight records that departed from all NYC airports in 2013.
+-   Let's use `nycflights13::flights` — a set of over 300,000 flight records that departed from all NYC airports in 2013.
 -   We would like to explore how arrival delay (as a continuous and dichotomous (delayed = 1, not delayed = 0) outcome variable) may be influenced by a set of independent variables. We would like to stratify this by month.
 
 ```{r echo = T}
 flights <- nycflights13::flights
 flights <- flights %>%
-  select(year, month, day, dep_delay, arr_delay, air_time, distance) %>%
-  mutate(arr_delay_bin = as.factor(case_when(arr_delay >  15 ~ 1, TRUE ~ 0)),
-         month = month.name[month])
+  select(year, day, dep_delay, arr_delay, air_time, distance) %>%
+  mutate(arr_delay_bin = as.factor(case_when(arr_delay >  15 ~ 1, TRUE ~ 0)))
 
 flights
 ```
 
 <p>
 
-We would like to specify a set of models to explore flight delay
+We would like to specify a set of models which predict overall flight delay, as both continuous (arrival delay time) and dichotomous (delayed yes/no) outcomes.
 
 -   Outcome variables
 
@@ -476,128 +496,125 @@ We would like to specify a set of models to explore flight delay
 
     -   Departure delay (`dep_delay`)
 
--   Stratification variable
-
-    -   Month (`month`)
-
 ```{r}
 indep_vars <- c("distance", "air_time", "dep_delay")
 outcome_vars <- c("arr_delay", "arr_delay_bin")
 ```
 
+For each outcome variable, we run a model. If the outcome variable is continuous, we run a simple linear model; otherwise we run a basic logistic regression.
+
 <p>
 
 ## For-loop
 
--   For each "month", we extract the subset of data
-
--   For each outcome variable, we run a model. If the outcome variable is continuous, we run a simple linear model; otherwise we run a basic logistic regression.
-
 ```{r echo = T, warning=F, message=F}
 start <- proc.time()
-models <- list()
-for (i in unique(flights$month)){
-  month_dat <- flights %>% filter(month == i)
-  sub_models <- list()
-  for (j in outcome_vars){
-    if (j == "arr_delay"){
-      model <- lm(as.formula(paste(j,"~",paste(indep_vars, collapse = "+"))),
-                  data = month_dat)
-      
-    } else if (j == "arr_delay_bin"){
-      model <- glm(as.formula(paste(j,"~",paste(indep_vars, collapse = "+"))),
-                   family = binomial,
-                   data = month_dat)
-    }
-    sub_models[[j]] <- summary(model)
+models <- list() # To store our model output
+
+for (i in outcome_vars){
+  if (i == "arr_delay"){
+    model <- lm(as.formula(paste(i,"~",paste(indep_vars, collapse = "+"))),
+                data = flights)
+    
+  } else if (i == "arr_delay_bin"){
+    model <- glm(as.formula(paste(i,"~",paste(indep_vars, collapse = "+"))),
+                 family = binomial,
+                 data = flights)
   }
-  models[[i]] <- sub_models
+  models[[i]] <- summary(model)
 }
-names(models) <- unique(flights$month)
 
 end <- proc.time()
 time1 <- end-start
+```
+
+This returns a list with the model output summary for each of our models.
+
+The for-loop has the following run-time (seconds):
+
+```{r}
 print(time1)
 ```
 
 <p>
 
-<p>
-
 ## `purrr:map`
+
+Map functions apply a function each element of a list/vector and return an object. In cases relying on multiple computations across different values, they always come in handy!
 
 ```{r warning = F, message = F, error = F}
 start <- proc.time()
-models <- map(unique(flights$month), ~{
-  month_dat <- flights %>% filter(month == .x)
-  
-  models <- map(outcome_vars, 
-      ~ if (.x == "arr_delay") {
-        lm(as.formula(paste("arr_delay ~ ", 
+
+
+models <- map(outcome_vars, 
+      ~ if (.x == "arr_delay"){
+        lm(as.formula(paste(.x, "~", 
                             paste(indep_vars, collapse = " + "))),
-           data = month_dat) %>%
+           data = flights) %>%
           summary()
         
         } else if (.x == "arr_delay_bin"){
-          glm(as.formula(paste("arr_delay_bin ~",
+          glm(as.formula(paste(.x, "~",
                                paste(indep_vars, collapse = " + "))),
               family = binomial,
-              data = month_dat) %>%
+              data = flights) %>%
             summary()
-        })
-  names(models) <- outcome_vars
-  models
-})
-
-names(models) <- unique(flights$month)
+        }
+      )
+names(models) <- outcome_vars
 
 end <- proc.time()
-time1 <- end-start
-print(time1)
+time2 <- end-start
+```
+
+This has the following run-time (seconds):
+
+```{r}
+print(time2)
 ```
 
 <p>
 
 ## `furrr::future_map`
 
--   <span style = "color:red">Preamble about what this function actually does!</span>
-
-The syntax is identical to `purrr::map`.
+There are also parallel versions of the `purrr::map` function offered by the `furrr` package. The syntax is (nicely) identical to above, but importantly relies on specifying a parallel (multisession) "plan" ahead of executing the code.
 
 ```{r message = F, warning = F, error = F}
 library(furrr)
 
-plan(multisession) # Initialise parallel environment using furrr
+plan(multisession, workers = 6) # Initialise parallel environment using furrr
 
 start <- proc.time()
-models <- furrr::future_map(unique(flights$month), ~{
-  month_dat <- flights %>% filter(month == .x)
-  
-  models <- furrr::future_map(outcome_vars, 
-      ~ if (.x == "arr_delay") {
-        lm(as.formula(paste("arr_delay ~ ", 
+models <- furrr::future_map(outcome_vars, 
+      ~ if (.x == "arr_delay"){
+        lm(as.formula(paste(.x, "~", 
                             paste(indep_vars, collapse = " + "))),
-           data = month_dat) %>%
+           data = flights) %>%
           summary()
         
         } else if (.x == "arr_delay_bin"){
-          glm(as.formula(paste("arr_delay_bin ~", 
+          glm(as.formula(paste(.x, "~",
                                paste(indep_vars, collapse = " + "))),
               family = binomial,
-              data = month_dat) %>%
+              data = flights) %>%
             summary()
-        })
-  names(models) <- outcome_vars
-  models
-})
-names(models) <- unique(flights$month)
+        }
+      )
+names(models) <- outcome_vars
 
 end <- proc.time()
-time1 <- end-start
+time3 <- end-start
 
 plan(sequential) # Revert to sequential processing
-print(time1)
 ```
+
+This has the following run-time (seconds):
+
+```{r}
+print(time3)
+```
+
+<p>
 
 ## `%dopar%` parallelisation
 
@@ -606,47 +623,58 @@ print(time1)
 -   The syntax does not differ too dramatically.
 
 ```{r echo = T}
-#doParallel::registerDoParallel(cores = 6)
-#
-#start <- proc.time()
-#results <- foreach(i = unique(flights$month), 
-#                   .packages = "stats", 
-#                   .combine = "list") %dopar% {
-#  month_results <- foreach(j = outcome_vars, .combine = "list", .multicombine = #TRUE) %dopar% {
-#    month <- i
-#    month_dat <- subset(flights, month = month)
-#    
-#    if (j == "arr_delay"){
-#      model <- lm(as.formula(paste(j,"~",paste(indep_vars, collapse = "+"))),
-#                  data = month_dat)
-#      list(j = summary(model))
-#    } else if (j == "arr_delay_bin"){
-#      model <- glm(as.formula(paste(j,"~",paste(indep_vars, collapse = "+"))),
-#                   family = binomial,
-#                   data = month_dat)
-#      list(j = summary(model))
-#    }
-#  }
-#  names(month_results) <- outcome_vars
-#  list(i = month_results)
-#  }
-#
-#end <- proc.time()
-#time2 <- end - start
-#print(time2)
-#
-#doParallel::stopImplicitCluster()
+doParallel::registerDoParallel(cores = 6)
+
+start <- proc.time()
+models <- foreach(j = outcome_vars, .combine = "list") %dopar% {
+  if (j == "arr_delay"){
+    model <- lm(as.formula(paste(j,"~",paste(indep_vars, collapse = "+"))),
+                data = flights)
+    #list(j = summary(model))
+  } else if (j == "arr_delay_bin"){
+    model <- glm(as.formula(paste(j,"~",paste(indep_vars, collapse = "+"))),
+                 family = binomial,
+                 data = flights)
+    #list(j = summary(model))
+  }
+}
+names(models) <- outcome_vars
+
+end <- proc.time()
+
+time4 <- end - start
+doParallel::stopImplicitCluster()
 ```
 
-We now see that the parallel environment is Again, this simple example represents a `r paste0(round(100*(time1[3]-time2[3])/time1[3],0),"%")` time saving relative to a standard for-loop implementation.
+This has the following run-time (seconds):
+
+```{r}
+print(time4)
+```
+
+<p>
+
+## Discussion
+
+We now see that the parallel processing of these tasks takes far longer – about `r paste0(round(100*(time4[3]-time1[3])/time4[3],0),"%")` so! The total time comprised of the overhead in setting up and structuring a parallel environment for what are already small and relatively fast underlying operations — running a series of linear models — is far in excess of what we can easily spin up using a for-loop (or `purrr::map`).
 
 <br>
 
 # Conclusion
 
-Using just a few relatively simple examples, we have demonstrated that a parallel computing environment, can be a relatively easy and quick way to improve the runtime of iteration/loop-based operations - with little modification to your code!
+Using just a few relatively simple examples, we have demonstrated that a parallel computing environment, can be a relatively easy and quick way to improve the runtime of iteration/loop-based operations, under the right circumstances. Importantly, this does not compromise the code complexity nor readability!
 
-While not appropriate in all circumstances (depending on the exact use-case), it is worth being across the relevant packages and commands used in `R` for parallel computing, particularly as datasets grow increasingly large and analytical methodologies increasingly complex.
+While not *always* appropriate, it is worth staying across the parallel implementations as they become available on `R`, particularly as datasets and/or the complexity of analytical workflows grow.
+
+<br>
+
+# Further Resources
+
+-   Vignettes
+    -   <https://cran.r-project.org/web/packages/doParallel/vignettes/gettingstartedParallel.pdf>
+    -   <https://cran.r-project.org/web/packages/foreach/vignettes/foreach.html>
+-   Tutorials
+    -   <https://unc-libraries-data.github.io/R-Open-Labs/Extras/Parallel/foreach.html>
 
 <br>
 
@@ -655,15 +683,6 @@ While not appropriate in all circumstances (depending on the exact use-case), it
 Thanks to Wesley Billingham, Matt Cooper and Elizabeth McKinnon for providing feedback on and reviewing this post.
 
 You can look forward to seeing posts from these other team members here in the coming weeks and months.
-
-<br>
-
-# Further Resources
-
--   Vignettes
-    -   <https://cran.r-project.org/web/packages/doParallel/vignettes/gettingstartedParallel.pdf>
--   Tutorials
-    -   <https://unc-libraries-data.github.io/R-Open-Labs/Extras/Parallel/foreach.html>
 
 <br>
 
@@ -679,6 +698,6 @@ The session information can also be seen below.
 sessionInfo()
 ```
 
-```{r echo = F}
+```{r echo = F , warning = F, message = F, error = F}
 rm(trials, results, i, j, model, outcome_vars, input_vars, start, end, ind, bootstrap_results, bootstrap_coefs, bootstrap_cis, mtcars, result, month_dat, flights)
 ```
