@@ -1,17 +1,17 @@
 [
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "The Kids Biostats",
-    "section": "",
-    "text": "Handling Missing Data with LMER\n\n\n\n\n\n\nMissing Data\n\n\nMixed Models\n\n\nR\n\n\n\n\n\n\n\n\n\nJun 7, 2024\n\n\nDr Matthew Cooper\n\n\n\n\n\n\nNo matching items"
-  },
-  {
     "objectID": "about.html",
     "href": "about.html",
     "title": "About",
     "section": "",
     "text": "We are members of the biostatistics team at Telethon Kids Institute in Perth, Western Australia. Our work involves providing statistical consultation and collaboration to child health researchers at all stages of the scientific pipeline, from design to analysis to publication.\n\nPrimarily R users, we encounter particular coding, methodology, or analysis challenges - often that have recurring or related themes. The idea of this site is to be a centralised repository of our solutions to or narration of these recurrent challenges, for both our reference and yours!\nWe hope you’ll find something useful here, and are always open to feedback and conversation on these topics."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "The Kids Biostats",
+    "section": "",
+    "text": "Handling Missing Data with LMER\n\n\n\n\n\n\nMissing Data\n\n\nMixed Models\n\n\nR\n\n\n\n\n\n\n\n\n\nJun 7, 2024\n\n\nDr Matthew Cooper\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/lmer-missing/index.html",

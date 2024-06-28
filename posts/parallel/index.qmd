@@ -28,7 +28,7 @@ library(doParallel) # Parallel back-end for the `foreach` package
 
 While most of the datasets we work with are of a manageable size here at Telethon Kids, occasionally we are presented with data containing *millions* of rows and/or *thousands* of columns. Performing almost any operation on these large datasets can take hours to execute -- a real test of patience for exploratory work!
 
-Parallel computing is one relatively simple way to reduce computation time on large datasets – leveraging our computer's full processing capabilities by simultaneously distributing tasks "in parallel" across multiple processors (without too much extra code). This is particularly useful for loop-based computations/simulations, where multiple parameters/conditions must be swept over whether that as part of variable creation/curation, model execution/tuning, or some other task.
+Parallel computing is one relatively simple way to reduce computation time on large datasets – leveraging our computer's full processing capabilities by simultaneously distributing tasks "in parallel" across multiple processors (without too much extra code). This is particularly useful for loop-based computations, where multiple parameters or conditions must be swept over whether that as part of variable creation, model tuning/execution, or some other task.
 
 That being said, while parallel computing is not a "magical general solution" to all computationally intensive tasks – it is worth investing some time to understand how it works, and become familiar with the packages and/or functions used within a parallel framework. There are still circumstances where the always handy `purrr::map` function (or the like) can be just as, or more, efficient than a parallel distribution.
 
@@ -56,7 +56,9 @@ A quick analogy: you can not complete the job of making 10 pizzas for a customer
 
 As it relates to data analysis, parallel computing requires us to divvy up tasks in a standalone way, and (generally) assemble the output from those tasks in a sensible way. An example:
 
--   Six months of minute-level data for 100 patients, where you need to calculate a range of summary statistics (including from some advanced modelling) for each patient. The data can be subset into '100' chunks as the summary statistics for each 'chunk' do not require access to (or knowledge of) the raw data or output (summary statistics) from any other chunk. The resulting summary statistics can then be compiled into a table or list for later use.
+-   Six months of minute-level data for 100 patients, where you need to calculate a range of summary statistics (including from some advanced modelling) for each patient.
+-   The data can be subset into '100' chunks as the summary statistics for each 'chunk' do not require access to (or knowledge of) the raw data or output (summary statistics) from any other chunk.
+-   The resulting summary statistics can then be compiled into a table or list for later use.
 
 Of course, there is some overhead to allocating tasks and compiling results to different cores that one may want to consider before proceeding. Generally, it is worthwhile to pilot your code on a subset of the full set of computations to see if the code does truly benefit from parallelisation, as it does introduce some computational overhead.
 
@@ -108,7 +110,7 @@ In `R`, for-loops can be used to derive a set of bootstrap samples. As we will s
 
 Let's use the `mtcars` data set to run a basic bootstrapped linear regression.
 
--   We would like to explore the association between a vehicle's fuel efficiency (`mpg`) and horsepower (`hp`), weight (`wt`) and transmission type (automatic/manual, `am`).
+We would like to explore the association between a vehicle's fuel efficiency (`mpg`) and horsepower (`hp`), weight (`wt`) and transmission type (automatic/manual, `am`).
 
 We suspect – perhaps due to the small sample size – that some of the assumptions of standard linear regression may be violated (normality of errors). With bootstrapping, we can explore the stability of the regression coefficients by calculating a confidence interval about the bootstrapped coefficient estimates.
 
@@ -458,7 +460,7 @@ Again, using [easily adaptable and readable syntax]{.underline}, we leverage a p
 
 As hinted to in the overview to this blog, parallel computing is not the general solution to running loop-based code more quickly. Instances which run intrinsically "fast" will not benefit from a parallel environment and may in fact run *slower* in parallel, after accounting for the overhead in setting up the parallel environment.\
 \
-There are other packages which may be useful in these circumstances, such as the always handy `purrr:map` or `furrr::future_map`.
+There are other packages which may be useful in these circumstances, such as the always handy `purrr:map` which we examine below.
 
 Let's apply this to a different situation where we have different model specifications we would like to run on the same data set.
 
