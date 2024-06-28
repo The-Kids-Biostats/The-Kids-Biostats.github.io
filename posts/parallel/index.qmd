@@ -632,12 +632,10 @@ models <- foreach(j = outcome_vars, .combine = "list") %dopar% {
   if (j == "arr_delay"){
     model <- lm(as.formula(paste(j,"~",paste(indep_vars, collapse = "+"))),
                 data = flights)
-    #list(j = summary(model))
   } else if (j == "arr_delay_bin"){
     model <- glm(as.formula(paste(j,"~",paste(indep_vars, collapse = "+"))),
                  family = binomial,
                  data = flights)
-    #list(j = summary(model))
   }
 }
 names(models) <- outcome_vars
