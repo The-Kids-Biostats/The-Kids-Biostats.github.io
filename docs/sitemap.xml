@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://www.the-kids-biostats.github.io/posts/parallel/index.html</loc>
+    <lastmod>2024-06-28T07:00:33.290Z</lastmod>
+  </url>
+  <url>
     <loc>https://www.the-kids-biostats.github.io/about.html</loc>
-    <lastmod>2024-06-05T04:09:44.254Z</lastmod>
+    <lastmod>2024-06-06T23:18:11.018Z</lastmod>
   </url>
   <url>
     <loc>https://www.the-kids-biostats.github.io/index.html</loc>
-    <lastmod>2024-06-07T06:09:14.992Z</lastmod>
+    <lastmod>2024-06-06T23:18:11.296Z</lastmod>
   </url>
   <url>
     <loc>https://www.the-kids-biostats.github.io/posts/lmer-missing/index.html</loc>
-    <lastmod>2024-06-21T00:52:17.126Z</lastmod>
+    <lastmod>2024-06-20T00:20:05.203Z</lastmod>
   </url>
 </urlset>

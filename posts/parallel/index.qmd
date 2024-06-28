@@ -10,7 +10,7 @@ date: "2024-06-18"
 categories:
   - R
   - Parallel
-draft: true
+draft: false
 ---
 
 ```{r setup, include=FALSE}
@@ -26,7 +26,7 @@ library(doParallel) # Parallel back-end for the `foreach` package
 
 # Overview
 
-While most of the datasets we work with are of a manageable size here at Telethon Kids, occasionally we are presented with data containing *millions* of rows and/or *thousands* of columns. Performing almost any operation on these large datasets can take hours to execute -- a real test of patience for exploratory work!
+While most of the datasets we work with are of a manageable size here at the Telethon Kids Institute, occasionally we are presented with data containing *millions* of rows and/or *thousands* of columns. Performing almost any operation on these large datasets can take hours to execute -- a real test of patience for exploratory work!
 
 Parallel computing is one relatively simple way to reduce computation time on large datasets – leveraging our computer's full processing capabilities by simultaneously distributing tasks "in parallel" across multiple processors (without too much extra code). This is particularly useful for loop-based computations, where multiple parameters or conditions must be swept over whether that as part of variable creation, model tuning/execution, or some other task.
 

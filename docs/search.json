@@ -1,5 +1,131 @@
 [
   {
+    "objectID": "posts/parallel/index.html",
+    "href": "posts/parallel/index.html",
+    "title": "Parallel Computing in R",
+    "section": "",
+    "text": "While most of the datasets we work with are of a manageable size here at the Telethon Kids Institute, occasionally we are presented with data containing millions of rows and/or thousands of columns. Performing almost any operation on these large datasets can take hours to execute – a real test of patience for exploratory work!\nParallel computing is one relatively simple way to reduce computation time on large datasets – leveraging our computer’s full processing capabilities by simultaneously distributing tasks “in parallel” across multiple processors (without too much extra code). This is particularly useful for loop-based computations, where multiple parameters or conditions must be swept over whether that as part of variable creation, model tuning/execution, or some other task.\nThat being said, while parallel computing is not a “magical general solution” to all computationally intensive tasks – it is worth investing some time to understand how it works, and become familiar with the packages and/or functions used within a parallel framework. There are still circumstances where the always handy purrr::map function (or the like) can be just as, or more, efficient than a parallel distribution."
+  },
+  {
+    "objectID": "posts/parallel/index.html#for-loop",
+    "href": "posts/parallel/index.html#for-loop",
+    "title": "Parallel Computing in R",
+    "section": "For-loop",
+    "text": "For-loop\n\nLet’s begin by using a traditional for-loop. For each bootstrap sample, we:\n\nInitialise a bootstrap sample, ind.\nRun our linear regression on the bootstrap sample, results\nExtract the coefficients from results, and append this to an overall coefficient matrix bootstrap_coefs.\n\nSubsequently, we calculate a 95% confidence interval for each of our parameter estimates by taking the 2.5th and 97.5th percentiles from the bootstrap distribution and calling this bootstrap_cis.\n\n\n\nCode\nstart &lt;- proc.time() # Start our timer!\n\n# Initialise a matrix to store the coefficients from each bootstrap sample\nbootstrap_coefs &lt;- matrix(NA, nrow = trials, ncol = 4)\ncolnames(bootstrap_coefs) &lt;- names(coef(lm(mpg ~ hp + wt + am, data = mtcars)))\n\nfor (i in 1:trials){\n  \n  # Take bootstrap sample\n  ind &lt;- mtcars[sample(nrow(mtcars), \n                       replace = TRUE),\n                ]\n  \n  # Construct linear regression\n  result &lt;- lm(mpg ~ hp + wt + as_factor(am), \n               data = ind)\n  \n  # Extract coefficients and store to `bootstrap_coefs`\n  bootstrap_coefs[i, ] &lt;- coef(result)\n}\n\n# Calculate the 2.5th and 97.5th percentile for each variable's coefficient estimates from the bootstrap distribution.\nbootstrap_cis &lt;- apply(bootstrap_coefs, \n                       2, \n                       function(coefs){quantile(coefs, probs = c(0.025, 0.975))})\n\nend &lt;- proc.time() # End our timer!\ntime1 &lt;- end-start\n\n\n\nLet’s visualise the first few lines of the bootstrapped results\n\n\nCode\nhead(bootstrap_coefs)\n\n\n     (Intercept)          hp        wt         am\n[1,]    34.04596 -0.02741585 -3.158154  0.6330600\n[2,]    31.46670 -0.03097903 -2.375727  5.8142235\n[3,]    35.98084 -0.02535775 -3.763464 -0.2485866\n[4,]    33.47330 -0.04410244 -2.343210  2.6890689\n[5,]    32.21798 -0.04138935 -2.222471  1.2289610\n[6,]    32.78747 -0.02758182 -2.989311  1.1744731\n\n\nand associated 95% confidence interval\n\n\nCode\nbootstrap_cis\n\n\n      (Intercept)          hp        wt         am\n2.5%     29.07843 -0.05539954 -5.134682 -0.7627477\n97.5%    40.74463 -0.02161861 -1.057830  4.9428501\n\n\n\nThis had the following run-time (seconds):\n\n\nCode\nprint(time1)\n\n\n   user  system elapsed \n  10.80    0.17   11.00"
+  },
+  {
+    "objectID": "posts/parallel/index.html#do-loop-not-parallel",
+    "href": "posts/parallel/index.html#do-loop-not-parallel",
+    "title": "Parallel Computing in R",
+    "section": "%do% loop (not parallel)",
+    "text": "%do% loop (not parallel)\nAs an alternative, let’s also use the %do% operator from the foreach package. Similar to a for-loop, each bootstrap sample is executed sequentially.\n\n\nCode\nstart &lt;- proc.time()\n\nbootstrap_coefs &lt;- foreach::foreach(i = 1:trials, .combine = rbind) %do% {\n  ind &lt;- mtcars[sample(nrow(mtcars), replace = TRUE), ]\n  result &lt;- lm(mpg ~ hp + wt + am, data = ind)\n  coef(result)\n}\n\n# Calculate the 2.5th and 97.5th percentile for each variable's coefficient estimates from the bootstrap distribution.\nbootstrap_cis &lt;- apply(bootstrap_coefs, \n                       2, \n                       function(coefs) {quantile(coefs, probs = c(0.025, 0.975))})\n\nend &lt;- proc.time()\ntime2 &lt;- end-start\n\n\n\nSimilarly, let’s visualise the first few lines of the bootstrapped results\n\n\nCode\nhead(bootstrap_coefs)\n\n\n         (Intercept)          hp        wt       am\nresult.1    32.28476 -0.02807558 -2.989010 2.404865\nresult.2    38.19523 -0.02740136 -4.576854 1.082726\nresult.3    32.87519 -0.06693216 -1.172027 3.879952\nresult.4    29.54068 -0.03806135 -1.468158 1.933494\nresult.5    31.54392 -0.02793433 -2.756060 1.347816\nresult.6    34.42623 -0.03900395 -2.865725 1.167583\n\n\nand associated 95% confidence interval\n\n\nCode\nbootstrap_cis\n\n\n      (Intercept)          hp        wt         am\n2.5%     29.03455 -0.05615444 -5.286909 -0.8228096\n97.5%    41.09610 -0.02124169 -1.055386  4.9293286\n\n\n\nThis had the following run-time (seconds):\n\n\nCode\nprint(time2)\n\n\n   user  system elapsed \n   8.46    0.11    8.61"
+  },
+  {
+    "objectID": "posts/parallel/index.html#dopar-parallelisation",
+    "href": "posts/parallel/index.html#dopar-parallelisation",
+    "title": "Parallel Computing in R",
+    "section": "%dopar% parallelisation",
+    "text": "%dopar% parallelisation\nNow, let’s run this in parallel across 6 cores. The %dopar% operator defines the for-loop in the parallel environment.\n\n\nCode\ndoParallel::registerDoParallel(cores = 6) # Initialise parallel cluster\n\nstart &lt;- proc.time()\nbootstrap_coefs &lt;- foreach(i = 1:trials, .combine = rbind, .packages = 'stats') %dopar% {\n  ind &lt;- mtcars[sample(nrow(mtcars), replace = TRUE), ]\n  result &lt;- lm(mpg ~ hp + wt + am, data = ind)\n  coef(result)\n}\n\n# Calculate the 2.5th and 97.5th percentile for each variable's coefficient estimates from the bootstrap distribution.\nbootstrap_cis &lt;- apply(bootstrap_coefs, \n                       2, \n                       function(coefs) {quantile(coefs, probs = c(0.025, 0.975))})\n\nend &lt;- proc.time()\ntime3 &lt;- end-start\n\ndoParallel::stopImplicitCluster() # De-register parallel cluster\n\n\nAs expected, the output of the bootstrapped coefficient distribution are identical before\n\n\nCode\nhead(bootstrap_coefs)\n\n\n         (Intercept)          hp         wt         am\nresult.1    34.66300 -0.03114032 -3.3370076  1.4134299\nresult.2    32.57938 -0.04438242 -2.2120672  3.3355079\nresult.3    30.47420 -0.05256793 -0.9731553  1.4754352\nresult.4    29.75589 -0.03325999 -2.0722247  2.5919228\nresult.5    32.58145 -0.04291096 -2.3041124  2.2133379\nresult.6    42.39934 -0.01721344 -6.4009481 -0.1058223\n\n\nas are the associated 95% confidence intervals.\n\n\nCode\nbootstrap_cis\n\n\n      (Intercept)          hp        wt         am\n2.5%     29.04379 -0.05548878 -5.160200 -0.7509542\n97.5%    40.72820 -0.02139785 -1.027478  4.8516891\n\n\nLastly, this had the following run-time (seconds)\n\n\nCode\nprint(time3)\n\n\n   user  system elapsed \n   3.09    0.54    5.35"
+  },
+  {
+    "objectID": "posts/parallel/index.html#discussion",
+    "href": "posts/parallel/index.html#discussion",
+    "title": "Parallel Computing in R",
+    "section": "Discussion",
+    "text": "Discussion\nImmediately, the syntax of the alternative for-loop structures are more readable and easier to construct than the traditional for-loop. Because the foreach::foreach function easily combines output in a list, we need not define an empty matrix to append output to.\nComputation time in the parallel environment is significantly faster — approximately 51% faster than the traditional for-loop! Across multiple analyses and data sets, these time savings certainly add up!"
+  },
+  {
+    "objectID": "posts/parallel/index.html#data",
+    "href": "posts/parallel/index.html#data",
+    "title": "Parallel Computing in R",
+    "section": "Data",
+    "text": "Data\nFirst, let’s simulate our data set and set some parameters:\n\n100,00 observations.\nIndependent variables temperature, precipitation and elevation sampled from a random normal distribution and vegetation type (categorical factor) randomly prescribed.\nSpecies presence (dichotomous) outcome variable is randomly prescribed.\n\n\n\nCode\nn &lt;- 10000 # Sample size\n\ndata &lt;- data.frame(temperature = rnorm(n, \n                                       mean = 15, \n                                       sd   = 40),\n                   precipitation = rnorm(n, \n                                         mean = 1000, \n                                         sd   = 300),\n                   elevation = rnorm(n, \n                                     mean = 500, \n                                     sd   = 200),\n                   vegetation_type = as_factor(sample(c(\"forest\", \n                                                        \"grassland\", \n                                                        \"wetland\", \n                                                        \"desert\"), \n                                                      n, \n                                                      replace = T)),\n                   species_presence = as_factor(sample(c(\"present\", \n                                                         \"absent\"), \n                                                       n, \n                                                       replace = T)))\n\n\nLet’s assign 70% of the data to our training set, and the remaining 30% to test data set and initialise a random forest model with 1000 trees.\n\n\nCode\ntrain_index &lt;- sample(1:n, 0.7*n)\n\ntrain_data &lt;- data[train_index, ]\ntest_data &lt;- data[-train_index, ]\n\nnum_trees &lt;- 1000"
+  },
+  {
+    "objectID": "posts/parallel/index.html#for-loop-1",
+    "href": "posts/parallel/index.html#for-loop-1",
+    "title": "Parallel Computing in R",
+    "section": "For-loop",
+    "text": "For-loop\nLet’s split up the computation of a 1000 tree random forest model by sequentially running 4 random forest models comprising 250 trees.\n\n\nCode\nstart &lt;- proc.time()\nrf &lt;- list()\nfor (i in 1:(num_trees/250)){\n  sampled_data &lt;- train_data[sample(nrow(train_data), replace = TRUE),]\n\n  rf[[i]] &lt;- randomForest::randomForest(species_presence ~ ., \n                                        data = sampled_data, \n                                        ntree = num_trees/4)\n}\n\ncombined_output &lt;- do.call(randomForest::combine, rf)\n\npredictions &lt;- predict(combined_output, test_data %&gt;% select(-species_presence))\n\nend &lt;- proc.time()\ntime1 &lt;- end - start\n\n\nLet’s print the confusion matrix of this output. Because this data was relatively simply simulated, we don’t expect the predictive power to be too great.\n\n\nCode\ntable(predictions, test_data$species_presence)\n\n\n           \npredictions absent present\n    absent     682     742\n    present    804     772\n\n\nThis has the following run-time (seconds):\n\n\nCode\nprint(time1)\n\n\n   user  system elapsed \n   6.36    0.53    6.92"
+  },
+  {
+    "objectID": "posts/parallel/index.html#do-loop-not-parallel-1",
+    "href": "posts/parallel/index.html#do-loop-not-parallel-1",
+    "title": "Parallel Computing in R",
+    "section": "%do% loop (not parallel)",
+    "text": "%do% loop (not parallel)\nSimilar to the traditional for-loop, we can sequentially execute this code using the %do% operator.\n\n\nCode\nstart &lt;- proc.time()\nrf &lt;- foreach::foreach(ntree = rep(num_trees/4, 4), \n                       .combine = randomForest::combine, \n                       .packages = 'randomForest') %do%\n  randomForest::randomForest(species_presence ~ ., \n                             data = train_data,\n                             ntree = ntree)\n\npredictions &lt;- predict(rf, test_data %&gt;% select(-species_presence))\n\nend &lt;- proc.time()\ntime2 &lt;- end - start\n\n\nLet’s print the confusion matrix of this output. Because this data was relatively simply simulated, we don’t expect the predictive power to be too great.\n\n\nCode\ntable(predictions, test_data$species_presence)\n\n\n           \npredictions absent present\n    absent     710     775\n    present    776     739\n\n\nThis has the following run-time (seconds):\n\n\nCode\nprint(time2)\n\n\n   user  system elapsed \n   6.83    0.73    7.68"
+  },
+  {
+    "objectID": "posts/parallel/index.html#dopar-parallelisation-1",
+    "href": "posts/parallel/index.html#dopar-parallelisation-1",
+    "title": "Parallel Computing in R",
+    "section": "%dopar% parallelisation",
+    "text": "%dopar% parallelisation\nFor simplicity, let’s allocate 4 cores to the computation and imagine that one core is responsible for processing one of the four random forest models simultaneously.\n\n\nCode\ndoParallel::registerDoParallel(cores = 4)\n\nstart &lt;- proc.time()\nrf &lt;- foreach::foreach(ntree = rep(num_trees/4, 4), \n                       .combine = randomForest::combine, \n                       .packages = 'randomForest') %dopar%\n  randomForest::randomForest(species_presence ~ ., \n                             data = train_data,\n                             ntree = ntree)\n\npredictions &lt;- predict(rf, test_data %&gt;% select(-species_presence))\n\nend &lt;- proc.time()\ndoParallel::stopImplicitCluster()\n\ntime3 &lt;- end-start\n\n\nLet’s print the confusion matrix of this output. Because this data was relatively simply simulated, we don’t expect the predictive power to be too great.\n\n\nCode\ntable(predictions, test_data$species_presence)\n\n\n           \npredictions absent present\n    absent     696     771\n    present    790     743\n\n\nThis now has the following run-time (seconds):\n\n\nCode\nprint(time3)\n\n\n   user  system elapsed \n   1.38    0.45    4.50"
+  },
+  {
+    "objectID": "posts/parallel/index.html#discussion-1",
+    "href": "posts/parallel/index.html#discussion-1",
+    "title": "Parallel Computing in R",
+    "section": "Discussion",
+    "text": "Discussion\nAgain, using easily adaptable and readable syntax, we leverage a parallel environment to significantly lessen the computation time of our large model. Relative to a standard for-loop, the parallelised computation is approximately 35% faster."
+  },
+  {
+    "objectID": "posts/parallel/index.html#data-1",
+    "href": "posts/parallel/index.html#data-1",
+    "title": "Parallel Computing in R",
+    "section": "Data",
+    "text": "Data\n\nLet’s use nycflights13::flights — a set of over 300,000 flight records that departed from all NYC airports in 2013.\nWe would like to explore how arrival delay (as a continuous and dichotomous (delayed = 1, not delayed = 0) outcome variable) may be influenced by a set of independent variables. We would like to stratify this by month.\n\n\n\nCode\nflights &lt;- nycflights13::flights\nflights &lt;- flights %&gt;%\n  select(year, day, dep_delay, arr_delay, air_time, distance) %&gt;%\n  mutate(arr_delay_bin = as.factor(case_when(arr_delay &gt;  15 ~ 1, TRUE ~ 0)))\n\nflights\n\n\n# A tibble: 336,776 × 7\n    year   day dep_delay arr_delay air_time distance arr_delay_bin\n   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;fct&gt;        \n 1  2013     1         2        11      227     1400 0            \n 2  2013     1         4        20      227     1416 1            \n 3  2013     1         2        33      160     1089 1            \n 4  2013     1        -1       -18      183     1576 0            \n 5  2013     1        -6       -25      116      762 0            \n 6  2013     1        -4        12      150      719 0            \n 7  2013     1        -5        19      158     1065 1            \n 8  2013     1        -3       -14       53      229 0            \n 9  2013     1        -3        -8      140      944 0            \n10  2013     1        -2         8      138      733 0            \n# ℹ 336,766 more rows\n\n\n\nWe would like to specify a set of models which predict overall flight delay, as both continuous (arrival delay time) and dichotomous (delayed yes/no) outcomes.\n\nOutcome variables\n\nArrival delay (continuous)\nArrival delayed (dichotomous)\n\nIndependent variables\n\nFlight distance (distance)\nAir time (air_time)\nDeparture delay (dep_delay)\n\n\n\n\nCode\nindep_vars &lt;- c(\"distance\", \"air_time\", \"dep_delay\")\noutcome_vars &lt;- c(\"arr_delay\", \"arr_delay_bin\")\n\n\nFor each outcome variable, we run a model. If the outcome variable is continuous, we run a simple linear model; otherwise we run a basic logistic regression."
+  },
+  {
+    "objectID": "posts/parallel/index.html#for-loop-2",
+    "href": "posts/parallel/index.html#for-loop-2",
+    "title": "Parallel Computing in R",
+    "section": "For-loop",
+    "text": "For-loop\n\n\nCode\nstart &lt;- proc.time()\nmodels &lt;- list() # To store our model output\n\nfor (i in outcome_vars){\n  if (i == \"arr_delay\"){\n    model &lt;- lm(as.formula(paste(i,\"~\",paste(indep_vars, collapse = \"+\"))),\n                data = flights)\n    \n  } else if (i == \"arr_delay_bin\"){\n    model &lt;- glm(as.formula(paste(i,\"~\",paste(indep_vars, collapse = \"+\"))),\n                 family = binomial,\n                 data = flights)\n  }\n  models[[i]] &lt;- summary(model)\n}\n\nend &lt;- proc.time()\ntime1 &lt;- end-start\n\n\nThis returns a list with the model output summary for each of our models.\nThe for-loop has the following run-time (seconds):\n\n\nCode\nprint(time1)\n\n\n   user  system elapsed \n   1.24    0.19    1.43"
+  },
+  {
+    "objectID": "posts/parallel/index.html#purrrmap",
+    "href": "posts/parallel/index.html#purrrmap",
+    "title": "Parallel Computing in R",
+    "section": "purrr:map",
+    "text": "purrr:map\nMap functions apply a function each element of a list/vector and return an object. In cases relying on multiple computations across different values, they always come in handy!\n\n\nCode\nstart &lt;- proc.time()\n\n\nmodels &lt;- map(outcome_vars, \n      ~ if (.x == \"arr_delay\"){\n        lm(as.formula(paste(.x, \"~\", \n                            paste(indep_vars, collapse = \" + \"))),\n           data = flights) %&gt;%\n          summary()\n        \n        } else if (.x == \"arr_delay_bin\"){\n          glm(as.formula(paste(.x, \"~\",\n                               paste(indep_vars, collapse = \" + \"))),\n              family = binomial,\n              data = flights) %&gt;%\n            summary()\n        }\n      )\nnames(models) &lt;- outcome_vars\n\nend &lt;- proc.time()\ntime2 &lt;- end-start\n\n\nThis has the following run-time (seconds):\n\n\nCode\nprint(time2)\n\n\n   user  system elapsed \n   1.04    0.19    1.23"
+  },
+  {
+    "objectID": "posts/parallel/index.html#furrrfuture_map",
+    "href": "posts/parallel/index.html#furrrfuture_map",
+    "title": "Parallel Computing in R",
+    "section": "furrr::future_map",
+    "text": "furrr::future_map\nThere are also parallel versions of the purrr::map function offered by the furrr package. The syntax is (nicely) identical to above, but importantly relies on specifying a parallel (multisession) “plan” ahead of executing the code.\n\n\nCode\nlibrary(furrr)\n\nplan(multisession, workers = 6) # Initialise parallel environment using furrr\n\nstart &lt;- proc.time()\nmodels &lt;- furrr::future_map(outcome_vars, \n      ~ if (.x == \"arr_delay\"){\n        lm(as.formula(paste(.x, \"~\", \n                            paste(indep_vars, collapse = \" + \"))),\n           data = flights) %&gt;%\n          summary()\n        \n        } else if (.x == \"arr_delay_bin\"){\n          glm(as.formula(paste(.x, \"~\",\n                               paste(indep_vars, collapse = \" + \"))),\n              family = binomial,\n              data = flights) %&gt;%\n            summary()\n        }\n      )\nnames(models) &lt;- outcome_vars\n\nend &lt;- proc.time()\ntime3 &lt;- end-start\n\nplan(sequential) # Revert to sequential processing\n\n\nThis has the following run-time (seconds):\n\n\nCode\nprint(time3)\n\n\n   user  system elapsed \n   0.10    0.04    2.43"
+  },
+  {
+    "objectID": "posts/parallel/index.html#dopar-parallelisation-2",
+    "href": "posts/parallel/index.html#dopar-parallelisation-2",
+    "title": "Parallel Computing in R",
+    "section": "%dopar% parallelisation",
+    "text": "%dopar% parallelisation\n\nWe use the %:% operator from the foreach package to nest a for-loop within a parallel environment.\nThe syntax does not differ too dramatically.\n\n\n\nCode\ndoParallel::registerDoParallel(cores = 6)\n\nstart &lt;- proc.time()\nmodels &lt;- foreach(j = outcome_vars, .combine = \"list\") %dopar% {\n  if (j == \"arr_delay\"){\n    model &lt;- lm(as.formula(paste(j,\"~\",paste(indep_vars, collapse = \"+\"))),\n                data = flights)\n    #list(j = summary(model))\n  } else if (j == \"arr_delay_bin\"){\n    model &lt;- glm(as.formula(paste(j,\"~\",paste(indep_vars, collapse = \"+\"))),\n                 family = binomial,\n                 data = flights)\n    #list(j = summary(model))\n  }\n}\nnames(models) &lt;- outcome_vars\n\nend &lt;- proc.time()\n\ntime4 &lt;- end - start\ndoParallel::stopImplicitCluster()\n\n\nThis has the following run-time (seconds):\n\n\nCode\nprint(time4)\n\n\n   user  system elapsed \n   1.09    0.78    4.50"
+  },
+  {
+    "objectID": "posts/parallel/index.html#discussion-2",
+    "href": "posts/parallel/index.html#discussion-2",
+    "title": "Parallel Computing in R",
+    "section": "Discussion",
+    "text": "Discussion\nWe now see that the parallel processing of these tasks takes far longer – about 68% so! The total time comprised of the overhead in setting up and structuring a parallel environment for what are already small and relatively fast underlying operations — running a series of linear models — is far in excess of what we can easily spin up using a for-loop (or purrr::map)."
+  },
+  {
+    "objectID": "posts/parallel/index.html#acknowledgements",
+    "href": "posts/parallel/index.html#acknowledgements",
+    "title": "Parallel Computing in R",
+    "section": "Acknowledgements",
+    "text": "Acknowledgements\nThanks to Wesley Billingham, Matt Cooper and Elizabeth McKinnon for providing feedback on and reviewing this post.\nYou can look forward to seeing posts from these other team members here in the coming weeks and months."
+  },
+  {
+    "objectID": "posts/parallel/index.html#reproducibility-information",
+    "href": "posts/parallel/index.html#reproducibility-information",
+    "title": "Parallel Computing in R",
+    "section": "Reproducibility Information",
+    "text": "Reproducibility Information\nTo access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:\nhttps://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/parallel\nThe session information can also be seen below.\n\n\nCode\nsessionInfo()\n\n\nR version 4.3.2 (2023-10-31 ucrt)\nPlatform: x86_64-w64-mingw32/x64 (64-bit)\nRunning under: Windows 10 x64 (build 19045)\n\nMatrix products: default\n\n\nlocale:\n[1] LC_COLLATE=English_Australia.utf8  LC_CTYPE=English_Australia.utf8   \n[3] LC_MONETARY=English_Australia.utf8 LC_NUMERIC=C                      \n[5] LC_TIME=English_Australia.utf8    \n\ntime zone: Australia/Perth\ntzcode source: internal\n\nattached base packages:\n[1] parallel  stats     graphics  grDevices utils     datasets  methods  \n[8] base     \n\nother attached packages:\n [1] furrr_0.3.1          future_1.33.2        randomForest_4.7-1.1\n [4] doParallel_1.0.17    iterators_1.0.14     foreach_1.5.2       \n [7] lubridate_1.9.3      forcats_1.0.0        stringr_1.5.1       \n[10] dplyr_1.1.4          purrr_1.0.2          readr_2.1.5         \n[13] tidyr_1.3.1          tibble_3.2.1         ggplot2_3.5.1       \n[16] tidyverse_2.0.0     \n\nloaded via a namespace (and not attached):\n [1] utf8_1.2.4         generics_0.1.3     stringi_1.8.3      listenv_0.9.1     \n [5] hms_1.1.3          digest_0.6.35      magrittr_2.0.3     evaluate_0.23     \n [9] grid_4.3.2         timechange_0.3.0   fastmap_1.1.1      jsonlite_1.8.8    \n[13] fansi_1.0.6        scales_1.3.0       codetools_0.2-20   cli_3.6.2         \n[17] rlang_1.1.3        parallelly_1.37.1  munsell_0.5.1      withr_3.0.0       \n[21] yaml_2.3.8         tools_4.3.2        tzdb_0.4.0         colorspace_2.1-0  \n[25] globals_0.16.3     vctrs_0.6.5        R6_2.5.1           lifecycle_1.0.4   \n[29] htmlwidgets_1.6.4  pkgconfig_2.0.3    pillar_1.9.0       gtable_0.3.5      \n[33] glue_1.7.0         xfun_0.43          tidyselect_1.2.1   rstudioapi_0.16.0 \n[37] knitr_1.46         htmltools_0.5.8.1  rmarkdown_2.26     nycflights13_1.0.2\n[41] compiler_4.3.2"
+  },
+  {
     "objectID": "about.html",
     "href": "about.html",
     "title": "About",
@@ -11,7 +137,7 @@
     "href": "index.html",
     "title": "The Kids Biostats",
     "section": "",
-    "text": "Handling Missing Data with LMER\n\n\n\n\n\n\nMissing Data\n\n\nMixed Models\n\n\nR\n\n\n\n\n\n\n\n\n\nJun 7, 2024\n\n\nDr Matthew Cooper\n\n\n\n\n\n\nNo matching items"
+    "text": "Parallel Computing in R\n\n\n\n\n\n\nR\n\n\nParallel\n\n\n\n\n\n\n\n\n\nJun 18, 2024\n\n\nZac Dempsey\n\n\n\n\n\n\n\n\n\n\n\n\nHandling Missing Data with LMER\n\n\n\n\n\n\nMissing Data\n\n\nMixed Models\n\n\nR\n\n\n\n\n\n\n\n\n\nJun 7, 2024\n\n\nDr Matthew Cooper\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "posts/lmer-missing/index.html",

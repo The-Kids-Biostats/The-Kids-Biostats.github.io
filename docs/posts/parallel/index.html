@@ -244,7 +244,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="overview" class="level1">
 <h1>Overview</h1>
-<p>While most of the datasets we work with are of a manageable size here at Telethon Kids, occasionally we are presented with data containing <em>millions</em> of rows and/or <em>thousands</em> of columns. Performing almost any operation on these large datasets can take hours to execute – a real test of patience for exploratory work!</p>
+<p>While most of the datasets we work with are of a manageable size here at the Telethon Kids Institute, occasionally we are presented with data containing <em>millions</em> of rows and/or <em>thousands</em> of columns. Performing almost any operation on these large datasets can take hours to execute – a real test of patience for exploratory work!</p>
 <p>Parallel computing is one relatively simple way to reduce computation time on large datasets – leveraging our computer’s full processing capabilities by simultaneously distributing tasks “in parallel” across multiple processors (without too much extra code). This is particularly useful for loop-based computations, where multiple parameters or conditions must be swept over whether that as part of variable creation, model tuning/execution, or some other task.</p>
 <p>That being said, while parallel computing is not a “magical general solution” to all computationally intensive tasks – it is worth investing some time to understand how it works, and become familiar with the packages and/or functions used within a parallel framework. There are still circumstances where the always handy <code>purrr::map</code> function (or the like) can be just as, or more, efficient than a parallel distribution.</p>
 <p>
@@ -254,7 +254,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Parallel computing refers to executing multiple operations in “parallel” (i.e., at the same time) across a machine’s multiple cores/processors. Most modern computers have at least four cores, and often many more. By default, R uses only one core, running iterative operations sequentially; not starting the next until the previous is complete. Under a parallel framework, however, multiple iterations/calculations can be allocated across multiple cores so they can be executed at the same time — saving time. These time savings accumulate particularly with large underlying tasks (as opposed to running many small tasks in parallel — a situation that often ultimately ends up slower!).</p>
 <p>In this post, we will have a look at a couple of examples using <code>R</code>. We provide some simple examples and use-cases, in addition to some additional resources to continue learning.</p>
 <p>The <a href="#0"><code>doParallel</code></a> and <a href="#0"><code>foreach</code></a> packages of <code>R</code> are one set of packages, intended to be used together, to facilitate parallel computing in a syntactically simple way <code>R</code>. Additionally, the base <code>parallel</code> package is used for some basic set-up and detection.</p>
-<p>These examples are run using R version 4.3.1 (2023-06-16 ucrt) on Windows 10 x64.</p>
+<p>These examples are run using R version 4.3.2 (2023-10-31 ucrt) on Windows 10 x64.</p>
 </section>
 <section id="when-should-we-consider-parallel-computing" class="level1">
 <h1>When should we consider Parallel Computing?</h1>
@@ -419,7 +419,7 @@ Let’s use 6 cores for our examples.</p>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  10.65    0.17   11.06 </code></pre>
+  10.80    0.17   11.00 </code></pre>
 </div>
 </div>
 <p>
@@ -485,7 +485,7 @@ result.6    34.42623 -0.03900395 -2.865725 1.167583</code></pre>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   8.75    0.11    8.90 </code></pre>
+   8.46    0.11    8.61 </code></pre>
 </div>
 </div>
 <p>
@@ -523,13 +523,13 @@ result.6    34.42623 -0.03900395 -2.865725 1.167583</code></pre>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(bootstrap_coefs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>         (Intercept)          hp        wt        am
-result.1    33.80606 -0.03674610 -2.939482 3.3641066
-result.2    33.52421 -0.04283688 -2.457788 2.4560259
-result.3    36.49227 -0.02934038 -3.903272 1.9272868
-result.4    36.06817 -0.02979171 -3.831734 0.6752367
-result.5    33.45679 -0.04006336 -2.701647 3.6630002
-result.6    32.07899 -0.03310255 -2.595843 2.4601543</code></pre>
+<pre><code>         (Intercept)          hp         wt         am
+result.1    34.66300 -0.03114032 -3.3370076  1.4134299
+result.2    32.57938 -0.04438242 -2.2120672  3.3355079
+result.3    30.47420 -0.05256793 -0.9731553  1.4754352
+result.4    29.75589 -0.03325999 -2.0722247  2.5919228
+result.5    32.58145 -0.04291096 -2.3041124  2.2133379
+result.6    42.39934 -0.01721344 -6.4009481 -0.1058223</code></pre>
 </div>
 </div>
 <p>as are the associated 95% confidence intervals.</p>
@@ -540,8 +540,8 @@ result.6    32.07899 -0.03310255 -2.595843 2.4601543</code></pre>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>      (Intercept)          hp        wt         am
-2.5%     28.95245 -0.05581184 -5.150871 -0.7385812
-97.5%    40.78286 -0.02167859 -1.052253  4.9211982</code></pre>
+2.5%     29.04379 -0.05548878 -5.160200 -0.7509542
+97.5%    40.72820 -0.02139785 -1.027478  4.8516891</code></pre>
 </div>
 </div>
 <p>Lastly, this had the following run-time (seconds)</p>
@@ -552,7 +552,7 @@ result.6    32.07899 -0.03310255 -2.595843 2.4601543</code></pre>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.95    0.39    3.40 </code></pre>
+   3.09    0.54    5.35 </code></pre>
 </div>
 </div>
 <p>
@@ -560,7 +560,7 @@ result.6    32.07899 -0.03310255 -2.595843 2.4601543</code></pre>
 <section id="discussion" class="level2">
 <h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
 <p>Immediately, the syntax of the alternative for-loop structures are <strong>more readable</strong> and <strong>easier to construct</strong> than the traditional for-loop. Because the <code>foreach::foreach</code> function easily combines output in a list, we need not define an empty matrix to append output to.</p>
-<p>Computation time in the parallel environment is significantly faster — approximately 69% faster than the traditional for-loop! Across multiple analyses and data sets, these time savings certainly add up!</p>
+<p>Computation time in the parallel environment is significantly faster — approximately 51% faster than the traditional for-loop! Across multiple analyses and data sets, these time savings certainly add up!</p>
 <p><br></p>
 </section>
 </section>
@@ -662,7 +662,7 @@ predictions absent present
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   5.91    0.45    6.40 </code></pre>
+   6.36    0.53    6.92 </code></pre>
 </div>
 </div>
 <p>
@@ -708,7 +708,7 @@ predictions absent present
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   6.37    0.59    7.06 </code></pre>
+   6.83    0.73    7.68 </code></pre>
 </div>
 </div>
 <p>
@@ -746,8 +746,8 @@ predictions absent present
 <div class="cell-output cell-output-stdout">
 <pre><code>           
 predictions absent present
-    absent     701     777
-    present    785     737</code></pre>
+    absent     696     771
+    present    790     743</code></pre>
 </div>
 </div>
 <p>This now has the following run-time (seconds):</p>
@@ -758,14 +758,14 @@ predictions absent present
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.11    0.50    3.50 </code></pre>
+   1.38    0.45    4.50 </code></pre>
 </div>
 </div>
 <p>
 </p></section>
 <section id="discussion-1" class="level2">
 <h2 class="anchored" data-anchor-id="discussion-1">Discussion</h2>
-<p>Again, using <u>easily adaptable and readable syntax</u>, we leverage a parallel environment to significantly lessen the computation time of our large model. Relative to a standard for-loop, the parallelised computation is approximately 45% faster.</p>
+<p>Again, using <u>easily adaptable and readable syntax</u>, we leverage a parallel environment to significantly lessen the computation time of our large model. Relative to a standard for-loop, the parallelised computation is approximately 35% faster.</p>
 <p><br></p>
 </section>
 </section>
@@ -868,7 +868,7 @@ There are other packages which may be useful in these circumstances, such as the
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.28    0.26    1.80 </code></pre>
+   1.24    0.19    1.43 </code></pre>
 </div>
 </div>
 <p>
@@ -911,7 +911,7 @@ There are other packages which may be useful in these circumstances, such as the
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.08    0.19    1.29 </code></pre>
+   1.04    0.19    1.23 </code></pre>
 </div>
 </div>
 <p>
@@ -958,7 +958,7 @@ There are other packages which may be useful in these circumstances, such as the
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   0.17    0.02    2.57 </code></pre>
+   0.10    0.04    2.43 </code></pre>
 </div>
 </div>
 <p>
@@ -1003,7 +1003,7 @@ There are other packages which may be useful in these circumstances, such as the
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.48    0.73    5.57 </code></pre>
+   1.09    0.78    4.50 </code></pre>
 </div>
 </div>
 <p>
@@ -1051,9 +1051,9 @@ There are other packages which may be useful in these circumstances, such as the
 <div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>R version 4.3.1 (2023-06-16 ucrt)
+<pre><code>R version 4.3.2 (2023-10-31 ucrt)
 Platform: x86_64-w64-mingw32/x64 (64-bit)
-Running under: Windows 10 x64 (build 19044)
+Running under: Windows 10 x64 (build 19045)
 
 Matrix products: default
 
@@ -1079,17 +1079,17 @@ other attached packages:
 [16] tidyverse_2.0.0     
 
 loaded via a namespace (and not attached):
- [1] utf8_1.2.4         generics_0.1.3     stringi_1.8.4      listenv_0.9.1     
+ [1] utf8_1.2.4         generics_0.1.3     stringi_1.8.3      listenv_0.9.1     
  [5] hms_1.1.3          digest_0.6.35      magrittr_2.0.3     evaluate_0.23     
- [9] grid_4.3.1         timechange_0.3.0   fastmap_1.1.1      jsonlite_1.8.8    
-[13] fansi_1.0.6        scales_1.3.0       codetools_0.2-19   cli_3.6.2         
-[17] rlang_1.1.4        parallelly_1.37.1  munsell_0.5.1      withr_3.0.0       
-[21] yaml_2.3.8         tools_4.3.1        tzdb_0.4.0         colorspace_2.1-0  
+ [9] grid_4.3.2         timechange_0.3.0   fastmap_1.1.1      jsonlite_1.8.8    
+[13] fansi_1.0.6        scales_1.3.0       codetools_0.2-20   cli_3.6.2         
+[17] rlang_1.1.3        parallelly_1.37.1  munsell_0.5.1      withr_3.0.0       
+[21] yaml_2.3.8         tools_4.3.2        tzdb_0.4.0         colorspace_2.1-0  
 [25] globals_0.16.3     vctrs_0.6.5        R6_2.5.1           lifecycle_1.0.4   
 [29] htmlwidgets_1.6.4  pkgconfig_2.0.3    pillar_1.9.0       gtable_0.3.5      
-[33] glue_1.7.0         xfun_0.45          tidyselect_1.2.1   rstudioapi_0.16.0 
-[37] knitr_1.47         htmltools_0.5.8.1  rmarkdown_2.27     nycflights13_1.0.2
-[41] compiler_4.3.1    </code></pre>
+[33] glue_1.7.0         xfun_0.43          tidyselect_1.2.1   rstudioapi_0.16.0 
+[37] knitr_1.46         htmltools_0.5.8.1  rmarkdown_2.26     nycflights13_1.0.2
+[41] compiler_4.3.2    </code></pre>
 </div>
 </div>
 

@@ -10,7 +10,1918 @@
 <atom:link href="https://www.the-kids-biostats.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description>Biostats R solutions</description>
 <generator>quarto-1.4.553</generator>
-<lastBuildDate>Thu, 06 Jun 2024 16:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 17 Jun 2024 16:00:00 GMT</lastBuildDate>
+<item>
+  <title>Parallel Computing in R</title>
+  <dc:creator>Zac Dempsey</dc:creator>
+  <link>https://www.the-kids-biostats.github.io/posts/parallel/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<p>While most of the datasets we work with are of a manageable size here at the Telethon Kids Institute, occasionally we are presented with data containing <em>millions</em> of rows and/or <em>thousands</em> of columns. Performing almost any operation on these large datasets can take hours to execute – a real test of patience for exploratory work!</p>
+<p>Parallel computing is one relatively simple way to reduce computation time on large datasets – leveraging our computer’s full processing capabilities by simultaneously distributing tasks “in parallel” across multiple processors (without too much extra code). This is particularly useful for loop-based computations, where multiple parameters or conditions must be swept over whether that as part of variable creation, model tuning/execution, or some other task.</p>
+<p>That being said, while parallel computing is not a “magical general solution” to all computationally intensive tasks – it is worth investing some time to understand how it works, and become familiar with the packages and/or functions used within a parallel framework. There are still circumstances where the always handy <code>purrr::map</code> function (or the like) can be just as, or more, efficient than a parallel distribution.</p>
+<p>
+</p></section>
+<section id="what-is-parallel-computing" class="level1">
+<h1>What is Parallel Computing?</h1>
+<p>Parallel computing refers to executing multiple operations in “parallel” (i.e., at the same time) across a machine’s multiple cores/processors. Most modern computers have at least four cores, and often many more. By default, R uses only one core, running iterative operations sequentially; not starting the next until the previous is complete. Under a parallel framework, however, multiple iterations/calculations can be allocated across multiple cores so they can be executed at the same time — saving time. These time savings accumulate particularly with large underlying tasks (as opposed to running many small tasks in parallel — a situation that often ultimately ends up slower!).</p>
+<p>In this post, we will have a look at a couple of examples using <code>R</code>. We provide some simple examples and use-cases, in addition to some additional resources to continue learning.</p>
+<p>The <code>doParallel</code> and <code>foreach</code> packages of <code>R</code> are one set of packages, intended to be used together, to facilitate parallel computing in a syntactically simple way <code>R</code>. Additionally, the base <code>parallel</code> package is used for some basic set-up and detection.</p>
+<p>These examples are run using R version 4.3.2 (2023-10-31 ucrt) on Windows 10 x64.</p>
+</section>
+<section id="when-should-we-consider-parallel-computing" class="level1">
+<h1>When should we consider Parallel Computing?</h1>
+<p>It is potentially easier to think about when we should <em>not</em> consider parallel computing. For parallel computing to be workable, the overall job needs to be something that can be broken down into <u>independent</u> tasks — tasks that do not depend on the input/output of previous tasks to fully run. So, any job where tasks must completed in sequential order can not be executed (or sped up) with parallel computing. Such jobs may be the sequential (time dependent) processing of data (e.g., need to standardise variables <em>before</em> extreme values are identified and tagged) or ordered computation tasks (matrix algebra within a regression model), for example.</p>
+<p>A quick analogy: you can not complete the job of making 10 pizzas for a customer in a parallel way <em>[you can not cook the pizza at the same time as you’re preparing the dough at the same time as you’re putting the toppings on the pizza]</em> but you can complete the job of ‘preparing all the pizza dough for tonight’ in parallel <em>[by getting 10 people with 10 bowls and 10 bags of flour to all mix at the same time]</em>.</p>
+<p>As it relates to data analysis, parallel computing requires us to divvy up tasks in a standalone way, and (generally) assemble the output from those tasks in a sensible way. An example:</p>
+<ul>
+<li>Six months of minute-level data for 100 patients, where you need to calculate a range of summary statistics (including from some advanced modelling) for each patient.</li>
+<li>The data can be subset into ‘100’ chunks as the summary statistics for each ‘chunk’ do not require access to (or knowledge of) the raw data or output (summary statistics) from any other chunk.</li>
+<li>The resulting summary statistics can then be compiled into a table or list for later use.</li>
+</ul>
+<p>Of course, there is some overhead to allocating tasks and compiling results to different cores that one may want to consider before proceeding. Generally, it is worthwhile to pilot your code on a subset of the full set of computations to see if the code does truly benefit from parallelisation, as it does introduce some computational overhead.</p>
+<p><br></p>
+</section>
+<section id="setup" class="level1">
+<h1>Setup</h1>
+<p>Let’s check the number of cores available on our machine.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1">parallel<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">detectCores</span>()</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 8</code></pre>
+</div>
+</div>
+<p>
+</p><p>We should not allocate all of our machine’s available cores to parallel computations – this will consume all of the available resources!<br>
+<br>
+Let’s use 6 cores for our examples.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">doParallel<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">registerDoParallel</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>)</span></code></pre></div>
+</details>
+</div>
+<p>When we go to the Windows task manager, we see there are now 6 R front-end instances initialised for each of the 6 cores.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://www.the-kids-biostats.github.io/posts/parallel/parallel_comps.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>When we no longer require a parallel environment, we must shut down and de-register the parallel cluster. Otherwise they will remain active!</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">doParallel<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">stopImplicitCluster</span>()</span></code></pre></div>
+</details>
+</div>
+<p>Let’s also set a random seed for sample reproducibility</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">set.seed</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2024</span>)</span></code></pre></div>
+</details>
+</div>
+<p><br></p>
+</section>
+<section id="example-1-bootstrapping" class="level1">
+<h1>Example 1: Bootstrapping</h1>
+<p>Bootstrapping is a method that uses simple random sampling with replacement to mimic random sampling of a population. This allows us to estimate the sampling distribution for a statistic (mean, variance, etc.) and assess its stability/reliability, without making strong assumptions about the underlying population. This can be useful when the data are problematic in some fundamental way (small sample sizes, insufficient variation, violation of model assumptions).</p>
+<p>In <code>R</code>, for-loops can be used to derive a set of bootstrap samples. As we will see, parallel environments can much more efficiently handle repeated independent operations like these.</p>
+<p>Let’s use the <code>mtcars</code> data set to run a basic bootstrapped linear regression.</p>
+<p>We would like to explore the association between a vehicle’s fuel efficiency (<code>mpg</code>) and horsepower (<code>hp</code>), weight (<code>wt</code>) and transmission type (automatic/manual, <code>am</code>).</p>
+<p>We suspect – perhaps due to the small sample size – that some of the assumptions of standard linear regression may be violated (normality of errors). With bootstrapping, we can explore the stability of the regression coefficients by calculating a confidence interval about the bootstrapped coefficient estimates.</p>
+<p>
+</p><p>We will present 3 ways to bootstrap data – two using for-loop structures, and one using a parallel computing environment. In each instance, we will compare how the output is structured and results returned.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Let's set up the data and number of bootstrap samples</span></span>
+<span id="cb6-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">data</span>(mtcars)</span>
+<span id="cb6-3">mtcars <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as_tibble</span>(mtcars)</span>
+<span id="cb6-4"></span>
+<span id="cb6-5">trials <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10000</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Number of bootstrap samples</span></span></code></pre></div>
+</details>
+</div>
+<p>
+</p><section id="for-loop" class="level2">
+<h2 class="anchored" data-anchor-id="for-loop">For-loop</h2>
+<ul>
+<li>Let’s begin by using a traditional for-loop. For each bootstrap sample, we:
+<ul>
+<li>Initialise a bootstrap sample, <code>ind</code>.</li>
+<li>Run our linear regression on the bootstrap sample, <code>results</code></li>
+<li>Extract the coefficients from <code>results</code>, and append this to an overall coefficient matrix <code>bootstrap_coefs</code>.</li>
+</ul></li>
+<li>Subsequently, we calculate a 95% confidence interval for each of our parameter estimates by taking the 2.5th and 97.5th percentiles from the bootstrap distribution and calling this <code>bootstrap_cis</code>.</li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">start <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">proc.time</span>() <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Start our timer!</span></span>
+<span id="cb7-2"></span>
+<span id="cb7-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Initialise a matrix to store the coefficients from each bootstrap sample</span></span>
+<span id="cb7-4">bootstrap_coefs <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">matrix</span>(<span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NA</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">nrow =</span> trials, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ncol =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>)</span>
+<span id="cb7-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">colnames</span>(bootstrap_coefs) <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">names</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">coef</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lm</span>(mpg <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> hp <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> wt <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> am, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> mtcars)))</span>
+<span id="cb7-6"></span>
+<span id="cb7-7"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span>trials){</span>
+<span id="cb7-8">  </span>
+<span id="cb7-9">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Take bootstrap sample</span></span>
+<span id="cb7-10">  ind <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> mtcars[<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sample</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">nrow</span>(mtcars), </span>
+<span id="cb7-11">                       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">replace =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>),</span>
+<span id="cb7-12">                ]</span>
+<span id="cb7-13">  </span>
+<span id="cb7-14">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Construct linear regression</span></span>
+<span id="cb7-15">  result <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lm</span>(mpg <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> hp <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> wt <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as_factor</span>(am), </span>
+<span id="cb7-16">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> ind)</span>
+<span id="cb7-17">  </span>
+<span id="cb7-18">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Extract coefficients and store to `bootstrap_coefs`</span></span>
+<span id="cb7-19">  bootstrap_coefs[i, ] <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">coef</span>(result)</span>
+<span id="cb7-20">}</span>
+<span id="cb7-21"></span>
+<span id="cb7-22"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Calculate the 2.5th and 97.5th percentile for each variable's coefficient estimates from the bootstrap distribution.</span></span>
+<span id="cb7-23">bootstrap_cis <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">apply</span>(bootstrap_coefs, </span>
+<span id="cb7-24">                       <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, </span>
+<span id="cb7-25">                       <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>(coefs){<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">quantile</span>(coefs, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">probs =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.025</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.975</span>))})</span>
+<span id="cb7-26"></span>
+<span id="cb7-27">end <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">proc.time</span>() <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># End our timer!</span></span>
+<span id="cb7-28">time1 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> end<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>start</span></code></pre></div>
+</details>
+</div>
+<p>
+</p><p>Let’s visualise the first few lines of the bootstrapped results</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">head</span>(bootstrap_coefs)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>     (Intercept)          hp        wt         am
+[1,]    34.04596 -0.02741585 -3.158154  0.6330600
+[2,]    31.46670 -0.03097903 -2.375727  5.8142235
+[3,]    35.98084 -0.02535775 -3.763464 -0.2485866
+[4,]    33.47330 -0.04410244 -2.343210  2.6890689
+[5,]    32.21798 -0.04138935 -2.222471  1.2289610
+[6,]    32.78747 -0.02758182 -2.989311  1.1744731</code></pre>
+</div>
+</div>
+<p>and associated 95% confidence interval</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">bootstrap_cis</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>      (Intercept)          hp        wt         am
+2.5%     29.07843 -0.05539954 -5.134682 -0.7627477
+97.5%    40.74463 -0.02161861 -1.057830  4.9428501</code></pre>
+</div>
+</div>
+<p>
+</p><p>This had the following run-time (seconds):</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(time1)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   user  system elapsed 
+  10.80    0.17   11.00 </code></pre>
+</div>
+</div>
+<p>
+</p></section>
+<section id="do-loop-not-parallel" class="level2">
+<h2 class="anchored" data-anchor-id="do-loop-not-parallel"><code>%do%</code> loop (not parallel)</h2>
+<p>As an alternative, let’s also use the <code>%do%</code> operator from the <code>foreach</code> package. Similar to a for-loop, each bootstrap sample is executed sequentially.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1">start <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">proc.time</span>()</span>
+<span id="cb14-2"></span>
+<span id="cb14-3">bootstrap_coefs <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> foreach<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">foreach</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">i =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span>trials, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.combine =</span> rbind) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%do%</span> {</span>
+<span id="cb14-4">  ind <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> mtcars[<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sample</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">nrow</span>(mtcars), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">replace =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>), ]</span>
+<span id="cb14-5">  result <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lm</span>(mpg <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> hp <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> wt <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> am, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> ind)</span>
+<span id="cb14-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">coef</span>(result)</span>
+<span id="cb14-7">}</span>
+<span id="cb14-8"></span>
+<span id="cb14-9"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Calculate the 2.5th and 97.5th percentile for each variable's coefficient estimates from the bootstrap distribution.</span></span>
+<span id="cb14-10">bootstrap_cis <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">apply</span>(bootstrap_coefs, </span>
+<span id="cb14-11">                       <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, </span>
+<span id="cb14-12">                       <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>(coefs) {<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">quantile</span>(coefs, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">probs =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.025</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.975</span>))})</span>
+<span id="cb14-13"></span>
+<span id="cb14-14">end <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">proc.time</span>()</span>
+<span id="cb14-15">time2 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> end<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>start</span></code></pre></div>
+</details>
+</div>
+<p>
+</p><p>Similarly, let’s visualise the first few lines of the bootstrapped results</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">head</span>(bootstrap_coefs)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>         (Intercept)          hp        wt       am
+result.1    32.28476 -0.02807558 -2.989010 2.404865
+result.2    38.19523 -0.02740136 -4.576854 1.082726
+result.3    32.87519 -0.06693216 -1.172027 3.879952
+result.4    29.54068 -0.03806135 -1.468158 1.933494
+result.5    31.54392 -0.02793433 -2.756060 1.347816
+result.6    34.42623 -0.03900395 -2.865725 1.167583</code></pre>
+</div>
+</div>
+<p>and associated 95% confidence interval</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1">bootstrap_cis</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>      (Intercept)          hp        wt         am
+2.5%     29.03455 -0.05615444 -5.286909 -0.8228096
+97.5%    41.09610 -0.02124169 -1.055386  4.9293286</code></pre>
+</div>
+</div>
+<p>
+</p><p>This had the following run-time (seconds):</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(time2)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   user  system elapsed 
+   8.46    0.11    8.61 </code></pre>
+</div>
+</div>
+<p>
+</p></section>
+<section id="dopar-parallelisation" class="level2">
+<h2 class="anchored" data-anchor-id="dopar-parallelisation"><code>%dopar%</code> parallelisation</h2>
+<p>Now, let’s run this in parallel across 6 cores. The <code>%dopar%</code> operator defines the for-loop in the parallel environment.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1">doParallel<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">registerDoParallel</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">cores =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Initialise parallel cluster</span></span>
+<span id="cb21-2"></span>
+<span id="cb21-3">start <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">proc.time</span>()</span>
+<span id="cb21-4">bootstrap_coefs <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">foreach</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">i =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span>trials, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.combine =</span> rbind, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.packages =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'stats'</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%dopar%</span> {</span>
+<span id="cb21-5">  ind <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> mtcars[<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sample</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">nrow</span>(mtcars), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">replace =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>), ]</span>
+<span id="cb21-6">  result <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lm</span>(mpg <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> hp <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> wt <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> am, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> ind)</span>
+<span id="cb21-7">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">coef</span>(result)</span>
+<span id="cb21-8">}</span>
+<span id="cb21-9"></span>
+<span id="cb21-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Calculate the 2.5th and 97.5th percentile for each variable's coefficient estimates from the bootstrap distribution.</span></span>
+<span id="cb21-11">bootstrap_cis <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">apply</span>(bootstrap_coefs, </span>
+<span id="cb21-12">                       <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, </span>
+<span id="cb21-13">                       <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>(coefs) {<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">quantile</span>(coefs, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">probs =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.025</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.975</span>))})</span>
+<span id="cb21-14"></span>
+<span id="cb21-15">end <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">proc.time</span>()</span>
+<span id="cb21-16">time3 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> end<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>start</span>
+<span id="cb21-17"></span>
+<span id="cb21-18">doParallel<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">stopImplicitCluster</span>() <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># De-register parallel cluster</span></span></code></pre></div>
+</details>
+</div>
+<p>As expected, the output of the bootstrapped coefficient distribution are identical before</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">head</span>(bootstrap_coefs)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>         (Intercept)          hp         wt         am
+result.1    34.66300 -0.03114032 -3.3370076  1.4134299
+result.2    32.57938 -0.04438242 -2.2120672  3.3355079
+result.3    30.47420 -0.05256793 -0.9731553  1.4754352
+result.4    29.75589 -0.03325999 -2.0722247  2.5919228
+result.5    32.58145 -0.04291096 -2.3041124  2.2133379
+result.6    42.39934 -0.01721344 -6.4009481 -0.1058223</code></pre>
+</div>
+</div>
+<p>as are the associated 95% confidence intervals.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1">bootstrap_cis</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>      (Intercept)          hp        wt         am
+2.5%     29.04379 -0.05548878 -5.160200 -0.7509542
+97.5%    40.72820 -0.02139785 -1.027478  4.8516891</code></pre>
+</div>
+</div>
+<p>Lastly, this had the following run-time (seconds)</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(time3)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   user  system elapsed 
+   3.09    0.54    5.35 </code></pre>
+</div>
+</div>
+<p>
+</p></section>
+<section id="discussion" class="level2">
+<h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
+<p>Immediately, the syntax of the alternative for-loop structures are <strong>more readable</strong> and <strong>easier to construct</strong> than the traditional for-loop. Because the <code>foreach::foreach</code> function easily combines output in a list, we need not define an empty matrix to append output to.</p>
+<p>Computation time in the parallel environment is significantly faster — approximately 51% faster than the traditional for-loop! Across multiple analyses and data sets, these time savings certainly add up!</p>
+<p><br></p>
+</section>
+</section>
+<section id="example-2-random-forest-model" class="level1">
+<h1>Example 2: Random forest model</h1>
+<p>Let’s say we would like a model that predicts the distribution of a plant species based on various environmental factors (temperature, precipitation, elevation, vegetation type). We would like to use a random forest model (using the <code>randomForest</code> package of <code>R</code>) — a popular model for classification which combines the output across multiple decision trees.<br>
+<br>
+This example is inspired by the example from the <a href="https://cran.r-project.org/web/packages/foreach/vignettes/foreach.html">vignette of the <code>foreach</code> package</a>.</p>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<p>First, let’s simulate our data set and set some parameters:</p>
+<ul>
+<li><p>100,00 observations.</p></li>
+<li><p>Independent variables temperature, precipitation and elevation sampled from a random normal distribution and vegetation type (categorical factor) randomly prescribed.</p></li>
+<li><p>Species presence (dichotomous) outcome variable is randomly prescribed.</p></li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1">n <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10000</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Sample size</span></span>
+<span id="cb28-2"></span>
+<span id="cb28-3">data <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">data.frame</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">temperature =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rnorm</span>(n, </span>
+<span id="cb28-4">                                       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">mean =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">15</span>, </span>
+<span id="cb28-5">                                       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sd   =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">40</span>),</span>
+<span id="cb28-6">                   <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">precipitation =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rnorm</span>(n, </span>
+<span id="cb28-7">                                         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">mean =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1000</span>, </span>
+<span id="cb28-8">                                         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sd   =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">300</span>),</span>
+<span id="cb28-9">                   <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">elevation =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rnorm</span>(n, </span>
+<span id="cb28-10">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">mean =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">500</span>, </span>
+<span id="cb28-11">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sd   =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">200</span>),</span>
+<span id="cb28-12">                   <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">vegetation_type =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as_factor</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sample</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"forest"</span>, </span>
+<span id="cb28-13">                                                        <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"grassland"</span>, </span>
+<span id="cb28-14">                                                        <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"wetland"</span>, </span>
+<span id="cb28-15">                                                        <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"desert"</span>), </span>
+<span id="cb28-16">                                                      n, </span>
+<span id="cb28-17">                                                      <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">replace =</span> T)),</span>
+<span id="cb28-18">                   <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">species_presence =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as_factor</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sample</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"present"</span>, </span>
+<span id="cb28-19">                                                         <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"absent"</span>), </span>
+<span id="cb28-20">                                                       n, </span>
+<span id="cb28-21">                                                       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">replace =</span> T)))</span></code></pre></div>
+</details>
+</div>
+<p>Let’s assign 70% of the data to our training set, and the remaining 30% to test data set and initialise a random forest model with 1000 trees.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1">train_index <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sample</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span>n, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.7</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>n)</span>
+<span id="cb29-2"></span>
+<span id="cb29-3">train_data <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> data[train_index, ]</span>
+<span id="cb29-4">test_data <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> data[<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>train_index, ]</span>
+<span id="cb29-5"></span>
+<span id="cb29-6">num_trees <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1000</span></span></code></pre></div>
+</details>
+</div>
+<p>
+</p></section>
+<section id="for-loop-1" class="level2">
+<h2 class="anchored" data-anchor-id="for-loop-1">For-loop</h2>
+<p>Let’s split up the computation of a 1000 tree random forest model by sequentially running 4 random forest models comprising 250 trees.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1">start <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">proc.time</span>()</span>
+<span id="cb30-2">rf <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">list</span>()</span>
+<span id="cb30-3"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span>(num_trees<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">250</span>)){</span>
+<span id="cb30-4">  sampled_data <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> train_data[<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sample</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">nrow</span>(train_data), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">replace =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>),]</span>
+<span id="cb30-5"></span>
+<span id="cb30-6">  rf[[i]] <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> randomForest<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">randomForest</span>(species_presence <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> ., </span>
+<span id="cb30-7">                                        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> sampled_data, </span>
+<span id="cb30-8">                                        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ntree =</span> num_trees<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>)</span>
+<span id="cb30-9">}</span>
+<span id="cb30-10"></span>
+<span id="cb30-11">combined_output <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">do.call</span>(randomForest<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span>combine, rf)</span>
+<span id="cb30-12"></span>
+<span id="cb30-13">predictions <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">predict</span>(combined_output, test_data <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>species_presence))</span>
+<span id="cb30-14"></span>
+<span id="cb30-15">end <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">proc.time</span>()</span>
+<span id="cb30-16">time1 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> end <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> start</span></code></pre></div>
+</details>
+</div>
+<p>Let’s print the confusion matrix of this output. Because this data was relatively simply simulated, we don’t expect the predictive power to be too great.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">table</span>(predictions, test_data<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>species_presence)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>           
+predictions absent present
+    absent     682     742
+    present    804     772</code></pre>
+</div>
+</div>
+<p>This has the following run-time (seconds):</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(time1)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   user  system elapsed 
+   6.36    0.53    6.92 </code></pre>
+</div>
+</div>
+<p>
+</p></section>
+<section id="do-loop-not-parallel-1" class="level2">
+<h2 class="anchored" data-anchor-id="do-loop-not-parallel-1">%do% loop (not parallel)</h2>
+<p>Similar to the traditional for-loop, we can sequentially execute this code using the <code>%do%</code> operator.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1">start <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">proc.time</span>()</span>
+<span id="cb35-2">rf <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> foreach<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">foreach</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ntree =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rep</span>(num_trees<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>), </span>
+<span id="cb35-3">                       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.combine =</span> randomForest<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span>combine, </span>
+<span id="cb35-4">                       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.packages =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'randomForest'</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%do%</span></span>
+<span id="cb35-5">  randomForest<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">randomForest</span>(species_presence <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> ., </span>
+<span id="cb35-6">                             <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> train_data,</span>
+<span id="cb35-7">                             <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ntree =</span> ntree)</span>
+<span id="cb35-8"></span>
+<span id="cb35-9">predictions <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">predict</span>(rf, test_data <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>species_presence))</span>
+<span id="cb35-10"></span>
+<span id="cb35-11">end <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">proc.time</span>()</span>
+<span id="cb35-12">time2 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> end <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> start</span></code></pre></div>
+</details>
+</div>
+<p>Let’s print the confusion matrix of this output. Because this data was relatively simply simulated, we don’t expect the predictive power to be too great.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb36" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">table</span>(predictions, test_data<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>species_presence)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>           
+predictions absent present
+    absent     710     775
+    present    776     739</code></pre>
+</div>
+</div>
+<p>This has the following run-time (seconds):</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb38" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(time2)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   user  system elapsed 
+   6.83    0.73    7.68 </code></pre>
+</div>
+</div>
+<p>
+</p></section>
+<section id="dopar-parallelisation-1" class="level2">
+<h2 class="anchored" data-anchor-id="dopar-parallelisation-1">%dopar% parallelisation</h2>
+<p>For simplicity, let’s allocate 4 cores to the computation and imagine that one core is responsible for processing one of the four random forest models simultaneously.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb40" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1">doParallel<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">registerDoParallel</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">cores =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>)</span>
+<span id="cb40-2"></span>
+<span id="cb40-3">start <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">proc.time</span>()</span>
+<span id="cb40-4">rf <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> foreach<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">foreach</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ntree =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rep</span>(num_trees<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>), </span>
+<span id="cb40-5">                       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.combine =</span> randomForest<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span>combine, </span>
+<span id="cb40-6">                       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.packages =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'randomForest'</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%dopar%</span></span>
+<span id="cb40-7">  randomForest<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">randomForest</span>(species_presence <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> ., </span>
+<span id="cb40-8">                             <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> train_data,</span>
+<span id="cb40-9">                             <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ntree =</span> ntree)</span>
+<span id="cb40-10"></span>
+<span id="cb40-11">predictions <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">predict</span>(rf, test_data <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>species_presence))</span>
+<span id="cb40-12"></span>
+<span id="cb40-13">end <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">proc.time</span>()</span>
+<span id="cb40-14">doParallel<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">stopImplicitCluster</span>()</span>
+<span id="cb40-15"></span>
+<span id="cb40-16">time3 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> end<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>start</span></code></pre></div>
+</details>
+</div>
+<p>Let’s print the confusion matrix of this output. Because this data was relatively simply simulated, we don’t expect the predictive power to be too great.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb41" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">table</span>(predictions, test_data<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>species_presence)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>           
+predictions absent present
+    absent     696     771
+    present    790     743</code></pre>
+</div>
+</div>
+<p>This now has the following run-time (seconds):</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb43" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(time3)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   user  system elapsed 
+   1.38    0.45    4.50 </code></pre>
+</div>
+</div>
+<p>
+</p></section>
+<section id="discussion-1" class="level2">
+<h2 class="anchored" data-anchor-id="discussion-1">Discussion</h2>
+<p>Again, using <u>easily adaptable and readable syntax</u>, we leverage a parallel environment to significantly lessen the computation time of our large model. Relative to a standard for-loop, the parallelised computation is approximately 35% faster.</p>
+<p><br></p>
+</section>
+</section>
+<section id="example-3-parallel-regressions-with-different-outcomes" class="level1">
+<h1>Example 3: Parallel regressions with different outcomes</h1>
+<p>As hinted to in the overview to this blog, parallel computing is not the general solution to running loop-based code more quickly. Instances which run intrinsically “fast” will not benefit from a parallel environment and may in fact run <em>slower</em> in parallel, after accounting for the overhead in setting up the parallel environment.<br>
+<br>
+There are other packages which may be useful in these circumstances, such as the always handy <code>purrr:map</code> which we examine below.</p>
+<p>Let’s apply this to a different situation where we have different model specifications we would like to run on the same data set.</p>
+<p>
+</p><section id="data-1" class="level2">
+<h2 class="anchored" data-anchor-id="data-1">Data</h2>
+<ul>
+<li>Let’s use <code>nycflights13::flights</code> — a set of over 300,000 flight records that departed from all NYC airports in 2013.</li>
+<li>We would like to explore how arrival delay (as a continuous and dichotomous (delayed = 1, not delayed = 0) outcome variable) may be influenced by a set of independent variables. We would like to stratify this by month.</li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb45" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1">flights <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> nycflights13<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span>flights</span>
+<span id="cb45-2">flights <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> flights <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb45-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(year, day, dep_delay, arr_delay, air_time, distance) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb45-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">arr_delay_bin =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.factor</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">case_when</span>(arr_delay <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span>  <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">15</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>)))</span>
+<span id="cb45-5"></span>
+<span id="cb45-6">flights</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 336,776 × 7
+    year   day dep_delay arr_delay air_time distance arr_delay_bin
+   &lt;int&gt; &lt;int&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt; &lt;fct&gt;        
+ 1  2013     1         2        11      227     1400 0            
+ 2  2013     1         4        20      227     1416 1            
+ 3  2013     1         2        33      160     1089 1            
+ 4  2013     1        -1       -18      183     1576 0            
+ 5  2013     1        -6       -25      116      762 0            
+ 6  2013     1        -4        12      150      719 0            
+ 7  2013     1        -5        19      158     1065 1            
+ 8  2013     1        -3       -14       53      229 0            
+ 9  2013     1        -3        -8      140      944 0            
+10  2013     1        -2         8      138      733 0            
+# ℹ 336,766 more rows</code></pre>
+</div>
+</div>
+<p>
+</p><p>We would like to specify a set of models which predict overall flight delay, as both continuous (arrival delay time) and dichotomous (delayed yes/no) outcomes.</p>
+<ul>
+<li><p>Outcome variables</p>
+<ul>
+<li><p>Arrival delay (continuous)</p></li>
+<li><p>Arrival delayed (dichotomous)</p></li>
+</ul></li>
+<li><p>Independent variables</p>
+<ul>
+<li><p>Flight distance (<code>distance</code>)</p></li>
+<li><p>Air time (<code>air_time</code>)</p></li>
+<li><p>Departure delay (<code>dep_delay</code>)</p></li>
+</ul></li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb47" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1">indep_vars <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"distance"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"air_time"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"dep_delay"</span>)</span>
+<span id="cb47-2">outcome_vars <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"arr_delay"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"arr_delay_bin"</span>)</span></code></pre></div>
+</details>
+</div>
+<p>For each outcome variable, we run a model. If the outcome variable is continuous, we run a simple linear model; otherwise we run a basic logistic regression.</p>
+<p>
+</p></section>
+<section id="for-loop-2" class="level2">
+<h2 class="anchored" data-anchor-id="for-loop-2">For-loop</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb48" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1">start <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">proc.time</span>()</span>
+<span id="cb48-2">models <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">list</span>() <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># To store our model output</span></span>
+<span id="cb48-3"></span>
+<span id="cb48-4"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> outcome_vars){</span>
+<span id="cb48-5">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> (i <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"arr_delay"</span>){</span>
+<span id="cb48-6">    model <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lm</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.formula</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(i,<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"~"</span>,<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(indep_vars, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">collapse =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"+"</span>))),</span>
+<span id="cb48-7">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> flights)</span>
+<span id="cb48-8">    </span>
+<span id="cb48-9">  } <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> (i <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"arr_delay_bin"</span>){</span>
+<span id="cb48-10">    model <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glm</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.formula</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(i,<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"~"</span>,<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(indep_vars, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">collapse =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"+"</span>))),</span>
+<span id="cb48-11">                 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">family =</span> binomial,</span>
+<span id="cb48-12">                 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> flights)</span>
+<span id="cb48-13">  }</span>
+<span id="cb48-14">  models[[i]] <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summary</span>(model)</span>
+<span id="cb48-15">}</span>
+<span id="cb48-16"></span>
+<span id="cb48-17">end <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">proc.time</span>()</span>
+<span id="cb48-18">time1 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> end<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>start</span></code></pre></div>
+</details>
+</div>
+<p>This returns a list with the model output summary for each of our models.</p>
+<p>The for-loop has the following run-time (seconds):</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb49" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(time1)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   user  system elapsed 
+   1.24    0.19    1.43 </code></pre>
+</div>
+</div>
+<p>
+</p></section>
+<section id="purrrmap" class="level2">
+<h2 class="anchored" data-anchor-id="purrrmap"><code>purrr:map</code></h2>
+<p>Map functions apply a function each element of a list/vector and return an object. In cases relying on multiple computations across different values, they always come in handy!</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb51" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1">start <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">proc.time</span>()</span>
+<span id="cb51-2"></span>
+<span id="cb51-3"></span>
+<span id="cb51-4">models <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">map</span>(outcome_vars, </span>
+<span id="cb51-5">      <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"arr_delay"</span>){</span>
+<span id="cb51-6">        <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lm</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.formula</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(.x, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"~"</span>, </span>
+<span id="cb51-7">                            <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(indep_vars, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">collapse =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">" + "</span>))),</span>
+<span id="cb51-8">           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> flights) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb51-9">          <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summary</span>()</span>
+<span id="cb51-10">        </span>
+<span id="cb51-11">        } <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"arr_delay_bin"</span>){</span>
+<span id="cb51-12">          <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glm</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.formula</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(.x, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"~"</span>,</span>
+<span id="cb51-13">                               <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(indep_vars, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">collapse =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">" + "</span>))),</span>
+<span id="cb51-14">              <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">family =</span> binomial,</span>
+<span id="cb51-15">              <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> flights) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb51-16">            <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summary</span>()</span>
+<span id="cb51-17">        }</span>
+<span id="cb51-18">      )</span>
+<span id="cb51-19"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">names</span>(models) <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> outcome_vars</span>
+<span id="cb51-20"></span>
+<span id="cb51-21">end <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">proc.time</span>()</span>
+<span id="cb51-22">time2 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> end<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>start</span></code></pre></div>
+</details>
+</div>
+<p>This has the following run-time (seconds):</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb52" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(time2)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   user  system elapsed 
+   1.04    0.19    1.23 </code></pre>
+</div>
+</div>
+<p>
+</p></section>
+<section id="furrrfuture_map" class="level2">
+<h2 class="anchored" data-anchor-id="furrrfuture_map"><code>furrr::future_map</code></h2>
+<p>There are also parallel versions of the <code>purrr::map</code> function offered by the <code>furrr</code> package. The syntax is (nicely) identical to above, but importantly relies on specifying a parallel (multisession) “plan” ahead of executing the code.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb54" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(furrr)</span>
+<span id="cb54-2"></span>
+<span id="cb54-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plan</span>(multisession, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">workers =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Initialise parallel environment using furrr</span></span>
+<span id="cb54-4"></span>
+<span id="cb54-5">start <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">proc.time</span>()</span>
+<span id="cb54-6">models <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> furrr<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">future_map</span>(outcome_vars, </span>
+<span id="cb54-7">      <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"arr_delay"</span>){</span>
+<span id="cb54-8">        <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lm</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.formula</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(.x, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"~"</span>, </span>
+<span id="cb54-9">                            <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(indep_vars, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">collapse =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">" + "</span>))),</span>
+<span id="cb54-10">           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> flights) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb54-11">          <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summary</span>()</span>
+<span id="cb54-12">        </span>
+<span id="cb54-13">        } <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"arr_delay_bin"</span>){</span>
+<span id="cb54-14">          <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glm</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.formula</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(.x, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"~"</span>,</span>
+<span id="cb54-15">                               <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(indep_vars, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">collapse =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">" + "</span>))),</span>
+<span id="cb54-16">              <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">family =</span> binomial,</span>
+<span id="cb54-17">              <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> flights) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb54-18">            <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summary</span>()</span>
+<span id="cb54-19">        }</span>
+<span id="cb54-20">      )</span>
+<span id="cb54-21"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">names</span>(models) <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> outcome_vars</span>
+<span id="cb54-22"></span>
+<span id="cb54-23">end <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">proc.time</span>()</span>
+<span id="cb54-24">time3 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> end<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>start</span>
+<span id="cb54-25"></span>
+<span id="cb54-26"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plan</span>(sequential) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Revert to sequential processing</span></span></code></pre></div>
+</details>
+</div>
+<p>This has the following run-time (seconds):</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb55" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(time3)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   user  system elapsed 
+   0.10    0.04    2.43 </code></pre>
+</div>
+</div>
+<p>
+</p></section>
+<section id="dopar-parallelisation-2" class="level2">
+<h2 class="anchored" data-anchor-id="dopar-parallelisation-2"><code>%dopar%</code> parallelisation</h2>
+<ul>
+<li><p>We use the <code>%:%</code> operator from the <code>foreach</code> package to nest a for-loop within a parallel environment.</p></li>
+<li><p>The syntax does not differ too dramatically.</p></li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb57" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1">doParallel<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">registerDoParallel</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">cores =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>)</span>
+<span id="cb57-2"></span>
+<span id="cb57-3">start <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">proc.time</span>()</span>
+<span id="cb57-4">models <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">foreach</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">j =</span> outcome_vars, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.combine =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"list"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%dopar%</span> {</span>
+<span id="cb57-5">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> (j <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"arr_delay"</span>){</span>
+<span id="cb57-6">    model <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lm</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.formula</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(j,<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"~"</span>,<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(indep_vars, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">collapse =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"+"</span>))),</span>
+<span id="cb57-7">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> flights)</span>
+<span id="cb57-8">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#list(j = summary(model))</span></span>
+<span id="cb57-9">  } <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> (j <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"arr_delay_bin"</span>){</span>
+<span id="cb57-10">    model <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glm</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.formula</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(j,<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"~"</span>,<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(indep_vars, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">collapse =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"+"</span>))),</span>
+<span id="cb57-11">                 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">family =</span> binomial,</span>
+<span id="cb57-12">                 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> flights)</span>
+<span id="cb57-13">    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#list(j = summary(model))</span></span>
+<span id="cb57-14">  }</span>
+<span id="cb57-15">}</span>
+<span id="cb57-16"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">names</span>(models) <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> outcome_vars</span>
+<span id="cb57-17"></span>
+<span id="cb57-18">end <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">proc.time</span>()</span>
+<span id="cb57-19"></span>
+<span id="cb57-20">time4 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> end <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> start</span>
+<span id="cb57-21">doParallel<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">stopImplicitCluster</span>()</span></code></pre></div>
+</details>
+</div>
+<p>This has the following run-time (seconds):</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb58" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(time4)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   user  system elapsed 
+   1.09    0.78    4.50 </code></pre>
+</div>
+</div>
+<p>
+</p></section>
+<section id="discussion-2" class="level2">
+<h2 class="anchored" data-anchor-id="discussion-2">Discussion</h2>
+<p>We now see that the parallel processing of these tasks takes far longer – about 68% so! The total time comprised of the overhead in setting up and structuring a parallel environment for what are already small and relatively fast underlying operations — running a series of linear models — is far in excess of what we can easily spin up using a for-loop (or <code>purrr::map</code>).</p>
+<p><br></p>
+</section>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>Using just a few relatively simple examples, we have demonstrated that a parallel computing environment, can be a relatively easy and quick way to improve the runtime of iteration/loop-based operations, under the right circumstances. Importantly, this does not compromise the code complexity nor readability!</p>
+<p>While not <em>always</em> appropriate, it is worth staying across the parallel implementations as they become available on <code>R</code>, particularly as datasets and/or the complexity of analytical workflows grow.</p>
+<p><br></p>
+</section>
+<section id="further-resources" class="level1">
+<h1>Further Resources</h1>
+<ul>
+<li>Vignettes
+<ul>
+<li><a href="https://cran.r-project.org/web/packages/doParallel/vignettes/gettingstartedParallel.pdf" class="uri">https://cran.r-project.org/web/packages/doParallel/vignettes/gettingstartedParallel.pdf</a></li>
+<li><a href="https://cran.r-project.org/web/packages/foreach/vignettes/foreach.html" class="uri">https://cran.r-project.org/web/packages/foreach/vignettes/foreach.html</a></li>
+</ul></li>
+<li>Tutorials
+<ul>
+<li><a href="https://unc-libraries-data.github.io/R-Open-Labs/Extras/Parallel/foreach.html" class="uri">https://unc-libraries-data.github.io/R-Open-Labs/Extras/Parallel/foreach.html</a></li>
+</ul></li>
+</ul>
+<p><br></p>
+<section id="acknowledgements" class="level2">
+<h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
+<p>Thanks to Wesley Billingham, Matt Cooper and Elizabeth McKinnon for providing feedback on and reviewing this post.</p>
+<p>You can look forward to seeing posts from these other team members here in the coming weeks and months.</p>
+<p><br></p>
+</section>
+<section id="reproducibility-information" class="level2">
+<h2 class="anchored" data-anchor-id="reproducibility-information">Reproducibility Information</h2>
+<p>To access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:</p>
+<p><a href="https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/parallel" class="uri">https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/parallel</a></p>
+<p>The session information can also be seen below.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb60" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sessionInfo</span>()</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.3.2 (2023-10-31 ucrt)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+Running under: Windows 10 x64 (build 19045)
+
+Matrix products: default
+
+
+locale:
+[1] LC_COLLATE=English_Australia.utf8  LC_CTYPE=English_Australia.utf8   
+[3] LC_MONETARY=English_Australia.utf8 LC_NUMERIC=C                      
+[5] LC_TIME=English_Australia.utf8    
+
+time zone: Australia/Perth
+tzcode source: internal
+
+attached base packages:
+[1] parallel  stats     graphics  grDevices utils     datasets  methods  
+[8] base     
+
+other attached packages:
+ [1] furrr_0.3.1          future_1.33.2        randomForest_4.7-1.1
+ [4] doParallel_1.0.17    iterators_1.0.14     foreach_1.5.2       
+ [7] lubridate_1.9.3      forcats_1.0.0        stringr_1.5.1       
+[10] dplyr_1.1.4          purrr_1.0.2          readr_2.1.5         
+[13] tidyr_1.3.1          tibble_3.2.1         ggplot2_3.5.1       
+[16] tidyverse_2.0.0     
+
+loaded via a namespace (and not attached):
+ [1] utf8_1.2.4         generics_0.1.3     stringi_1.8.3      listenv_0.9.1     
+ [5] hms_1.1.3          digest_0.6.35      magrittr_2.0.3     evaluate_0.23     
+ [9] grid_4.3.2         timechange_0.3.0   fastmap_1.1.1      jsonlite_1.8.8    
+[13] fansi_1.0.6        scales_1.3.0       codetools_0.2-20   cli_3.6.2         
+[17] rlang_1.1.3        parallelly_1.37.1  munsell_0.5.1      withr_3.0.0       
+[21] yaml_2.3.8         tools_4.3.2        tzdb_0.4.0         colorspace_2.1-0  
+[25] globals_0.16.3     vctrs_0.6.5        R6_2.5.1           lifecycle_1.0.4   
+[29] htmlwidgets_1.6.4  pkgconfig_2.0.3    pillar_1.9.0       gtable_0.3.5      
+[33] glue_1.7.0         xfun_0.43          tidyselect_1.2.1   rstudioapi_0.16.0 
+[37] knitr_1.46         htmltools_0.5.8.1  rmarkdown_2.26     nycflights13_1.0.2
+[41] compiler_4.3.2    </code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <category>R</category>
+  <category>Parallel</category>
+  <guid>https://www.the-kids-biostats.github.io/posts/parallel/</guid>
+  <pubDate>Mon, 17 Jun 2024 16:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Handling Missing Data with LMER</title>
   <dc:creator>Dr Matthew Cooper</dc:creator>
