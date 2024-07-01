@@ -344,7 +344,7 @@ font-style: inherit;">print</span>(time1)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   8.89    0.09    9.09 </code></pre>
+   9.80    0.06    9.99 </code></pre>
 </div>
 </div>
 <p>
@@ -486,7 +486,7 @@ font-style: inherit;">print</span>(time2)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   7.39    0.11    7.55 </code></pre>
+   9.30    0.12    9.99 </code></pre>
 </div>
 </div>
 <p>
@@ -616,13 +616,13 @@ background-color: null;
 font-style: inherit;">head</span>(bootstrap_coefs)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>         (Intercept)          hp        wt        am
-result.1    37.04250 -0.01979953 -4.600930 0.4244456
-result.2    31.89931 -0.04262264 -2.152178 2.5721098
-result.3    35.99319 -0.03175581 -3.789165 1.7092922
-result.4    34.40210 -0.03925959 -2.708555 1.7750092
-result.5    31.84015 -0.04301317 -2.157444 3.5550986
-result.6    35.57001 -0.03342962 -3.416107 1.3911288</code></pre>
+<pre><code>         (Intercept)          hp        wt         am
+result.1    29.77207 -0.05288730 -1.058038  3.9123258
+result.2    33.58996 -0.04755404 -2.197781  2.3569617
+result.3    35.98690 -0.03708263 -3.266833  1.4526964
+result.4    42.25028 -0.01822239 -5.825143 -2.8374742
+result.5    33.29648 -0.04161578 -2.510220  2.7786428
+result.6    35.12179 -0.03283584 -3.369380  0.8513454</code></pre>
 </div>
 </div>
 <p>as are the associated 95% confidence intervals.</p>
@@ -632,9 +632,9 @@ result.6    35.57001 -0.03342962 -3.416107 1.3911288</code></pre>
 <div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1">bootstrap_cis</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>      (Intercept)          hp        wt        am
-2.5%     28.95716 -0.05568232 -5.198860 -0.839145
-97.5%    40.83209 -0.02146855 -1.006958  4.913628</code></pre>
+<pre><code>      (Intercept)          hp        wt         am
+2.5%     29.00207 -0.05509635 -5.216696 -0.7757867
+97.5%    40.88382 -0.02141655 -1.078642  4.8896085</code></pre>
 </div>
 </div>
 <p>Lastly, this had the following run-time (seconds)</p>
@@ -647,7 +647,7 @@ font-style: inherit;">print</span>(time3)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   2.43    0.50    4.23 </code></pre>
+   2.71    0.40    5.16 </code></pre>
 </div>
 </div>
 <p>
@@ -655,7 +655,7 @@ font-style: inherit;">print</span>(time3)</span></code></pre></div>
 <section id="discussion" class="level2">
 <h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
 <p>Immediately, the syntax of the alternative for-loop structures are <strong>more readable</strong> and <strong>easier to construct</strong> than the traditional for-loop. Because the <code>foreach::foreach</code> function easily combines output in a list, we need not define an empty matrix to append output to.</p>
-<p>Computation time in the parallel environment is significantly faster — approximately 53% faster than the traditional for-loop! Across multiple analyses and data sets, these time savings certainly add up!</p>
+<p>Computation time in the parallel environment is significantly faster — approximately 48% faster than the traditional for-loop! Across multiple analyses and data sets, these time savings certainly add up!</p>
 <p><br></p>
 </section>
 </section>
@@ -811,7 +811,7 @@ font-style: inherit;">1000</span></span></code></pre></div>
 </details>
 </div>
 <p>
-</p><p>Instead of running one random forest model comprising 1000 trees, let’s combine the results of 4 smaller random forest models models each comprising 250 trees. By doing this, we can return more reliable outputs (other initialisations can counteract instances of poor model fit or predictions) and can better manage working memory (smaller models require less memory to train and store).</p>
+</p><p>Instead of running one random forest model comprising 1000 trees, let’s combine the results of 4 smaller random forest models models each comprising 250 trees. By doing this, we can return more reliable and robust output (smaller random forest models are less prone to overfitting) and better manage working memory (smaller models require less memory to train and store).</p>
 <p>
 </p></section>
 <section id="for-loop-1" class="level2">
@@ -923,7 +923,7 @@ font-style: inherit;">print</span>(time1)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   5.54    0.52    6.10 </code></pre>
+   6.14    0.47    6.69 </code></pre>
 </div>
 </div>
 <p>
@@ -1033,7 +1033,7 @@ font-style: inherit;">print</span>(time2)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   5.37    0.51    5.92 </code></pre>
+   5.76    0.64    6.44 </code></pre>
 </div>
 </div>
 <p>
@@ -1145,8 +1145,8 @@ font-style: inherit;">$</span>species_presence)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>           
 predictions absent present
-    absent     710     771
-    present    776     743</code></pre>
+    absent     705     774
+    present    781     740</code></pre>
 </div>
 </div>
 <p>This now has the following run-time (seconds):</p>
@@ -1159,14 +1159,14 @@ font-style: inherit;">print</span>(time3)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.09    0.52    3.65 </code></pre>
+   1.20    0.55    4.14 </code></pre>
 </div>
 </div>
 <p>
 </p></section>
 <section id="discussion-1" class="level2">
 <h2 class="anchored" data-anchor-id="discussion-1">Discussion</h2>
-<p>Again, using <u>easily adaptable and readable syntax</u>, we leverage a parallel environment to significantly lessen the computation time of our large model. Relative to a standard for-loop, the parallelised computation is approximately 40% faster.</p>
+<p>Again, using <u>easily adaptable and readable syntax</u>, we leverage a parallel environment to significantly lessen the computation time of our large model. Relative to a standard for-loop, the parallelised computation is approximately 38% faster.</p>
 <p><br></p>
 </section>
 </section>
@@ -1401,7 +1401,7 @@ font-style: inherit;">print</span>(time1)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.22    0.20    1.42 </code></pre>
+   1.27    0.30    1.61 </code></pre>
 </div>
 </div>
 <p>
@@ -1524,7 +1524,7 @@ font-style: inherit;">print</span>(time2)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.13    0.15    1.27 </code></pre>
+   1.22    0.17    1.39 </code></pre>
 </div>
 </div>
 <p>
@@ -1667,7 +1667,7 @@ font-style: inherit;">print</span>(time3)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   0.11    0.05    2.29 </code></pre>
+   0.09    0.05    2.53 </code></pre>
 </div>
 </div>
 <p>
@@ -1805,7 +1805,7 @@ font-style: inherit;">print</span>(time4)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.09    0.83    4.53 </code></pre>
+   1.42    0.77    5.22 </code></pre>
 </div>
 </div>
 <p>

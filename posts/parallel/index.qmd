@@ -343,7 +343,7 @@ num_trees <- 1000
 
 <p>
 
-Instead of running one random forest model comprising 1000 trees, let's combine the results of 4 smaller random forest models models each comprising 250 trees. By doing this, we can return more reliable outputs (other initialisations can counteract instances of poor model fit or predictions) and can better manage working memory (smaller models require less memory to train and store).
+Instead of running one random forest model comprising 1000 trees, let's combine the results of 4 smaller random forest models models each comprising 250 trees. By doing this, we can return more reliable and robust output (smaller random forest models are less prone to overfitting) and better manage working memory (smaller models require less memory to train and store).
 
 <p>
 
