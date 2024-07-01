@@ -11,6 +11,7 @@ categories:
   - Missing Data
   - Mixed Models
   - R
+draft: true
 ---
 
 ```{r setup, include=FALSE}
@@ -18,7 +19,7 @@ knitr::opts_chunk$set(echo = F, warning = F)
 
 library(lme4); library(merTools); library(AER)
 library(gtsummary); library(jtools); library(parameters)
-library(patchwork); library(tidyverse)
+library(patchwork); library(tidyverse); library(data.table)
 
 theme_clean <- function() {
   theme_minimal(base_family = "Barlow Semi Condensed") +
@@ -113,19 +114,18 @@ dtCombined %>%
 ### Some visuals of our data
 
 ```{r echo=T, fig.align='center', fig.width=10, fig.height=5}
-dat %>% 
-  ggplot(aes(t, lwage, colour = gender)) +
-  geom_point(alpha = 0.15) +
-  geom_line(aes(group = id), alpha = 0.15) + 
-  facet_wrap(~ gender) +
-  scale_colour_viridis_d(option = "viridis", end = 0.4) +
-  theme_clean() +
-  theme(legend.position="none") +
-  labs(x = "Time (years)", y = "Wage (logged)") +
-  coord_cartesian(xlim = c(0,7),
-                  ylim = c(4.5,9))
+#dat %>% 
+#  ggplot(aes(t, lwage, colour = gender)) +
+#  geom_point(alpha = 0.15) +
+#  geom_line(aes(group = id), alpha = 0.15) + 
+#  facet_wrap(~ gender) +
+#  scale_colour_viridis_d(option = "viridis", end = 0.4) +
+#  theme_clean() +
+#  theme(legend.position="none") +
+#  labs(x = "Time (years)", y = "Wage (logged)") +
+#  coord_cartesian(xlim = c(0,7),
+#                  ylim = c(4.5,9))
 ```
-
 
 ## Research question
 

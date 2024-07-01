@@ -353,7 +353,6 @@ Instead of running one random forest model comprising 1000 trees, let's combine 
 start <- proc.time()
 rf <- list()
 for (i in 1:(num_trees/250)){
-  #sampled_data <- train_data[sample(nrow(train_data), replace = TRUE),]
 
   rf[[i]] <- randomForest::randomForest(species_presence ~ ., 
                                         data = train_data, 
