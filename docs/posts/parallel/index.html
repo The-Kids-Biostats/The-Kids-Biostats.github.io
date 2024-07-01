@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Zac Dempsey">
-<meta name="dcterms.date" content="2024-06-18">
+<meta name="dcterms.date" content="2024-07-01">
 
 <title>The Kids Biostats - Parallel Computing in R</title>
 <style>
@@ -179,7 +179,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">June 18, 2024</p>
+        <p class="date">July 1, 2024</p>
       </div>
     </div>
     
@@ -246,27 +246,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Overview</h1>
 <p>While most of the datasets we work with are of a manageable size here at the Telethon Kids Institute, occasionally we are presented with data containing <em>millions</em> of rows and/or <em>thousands</em> of columns. Performing almost any operation on these large datasets can take hours to execute – a real test of patience for exploratory work!</p>
 <p>Parallel computing is one relatively simple way to reduce computation time on large datasets – leveraging our computer’s full processing capabilities by simultaneously distributing tasks “in parallel” across multiple processors (without too much extra code). This is particularly useful for loop-based computations, where multiple parameters or conditions must be swept over whether that as part of variable creation, model tuning/execution, or some other task.</p>
-<p>That being said, while parallel computing is not a “magical general solution” to all computationally intensive tasks – it is worth investing some time to understand how it works, and become familiar with the packages and/or functions used within a parallel framework. There are still circumstances where the always handy <code>purrr::map</code> function (or the like) can be just as, or more, efficient than a parallel distribution.</p>
+<p>That being said, while parallel computing is not a “magical general solution” to all computationally intensive tasks – it is worth investing some time to understand how it works, and become familiar with the packages and/or functions used within a parallel framework. There are still circumstances where the handy <code>purrr::map</code> function (or the like) can be just as, or more, efficient than a parallel distribution.</p>
 <p>
 </p></section>
 <section id="what-is-parallel-computing" class="level1">
 <h1>What is Parallel Computing?</h1>
-<p>Parallel computing refers to executing multiple operations in “parallel” (i.e., at the same time) across a machine’s multiple cores/processors. Most modern computers have at least four cores, and often many more. By default, R uses only one core, running iterative operations sequentially; not starting the next until the previous is complete. Under a parallel framework, however, multiple iterations/calculations can be allocated across multiple cores so they can be executed at the same time — saving time. These time savings accumulate particularly with large underlying tasks (as opposed to running many small tasks in parallel — a situation that often ultimately ends up slower!).</p>
+<p>Parallel computing refers to executing multiple operations in “parallel” (i.e., at the same time) across a machine’s multiple cores/processors. Most modern computers have at least four cores, and often many more. By default, R uses only one core, running iterative operations sequentially; not starting the next until the previous is complete. Under a parallel framework, however, multiple iterations/calculations can be allocated across multiple cores so they can be executed at the same time — thus saving (overall) time. These time savings accumulate particularly with large underlying tasks <em>(as opposed to running many small tasks in parallel — a situation that often ultimately ends up slower!)</em>.</p>
 <p>In this post, we will have a look at a couple of examples using <code>R</code>. We provide some simple examples and use-cases, in addition to some additional resources to continue learning.</p>
 <p>The <a href="#0"><code>doParallel</code></a> and <a href="#0"><code>foreach</code></a> packages of <code>R</code> are one set of packages, intended to be used together, to facilitate parallel computing in a syntactically simple way <code>R</code>. Additionally, the base <code>parallel</code> package is used for some basic set-up and detection.</p>
 <p>These examples are run using R version 4.3.2 (2023-10-31 ucrt) on Windows 10 x64.</p>
 </section>
 <section id="when-should-we-consider-parallel-computing" class="level1">
 <h1>When should we consider Parallel Computing?</h1>
-<p>It is potentially easier to think about when we should <em>not</em> consider parallel computing. For parallel computing to be workable, the overall job needs to be something that can be broken down into <u>independent</u> tasks — tasks that do not depend on the input/output of previous tasks to fully run. So, any job where tasks must completed in sequential order can not be executed (or sped up) with parallel computing. Such jobs may be the sequential (time dependent) processing of data (e.g., need to standardise variables <em>before</em> extreme values are identified and tagged) or ordered computation tasks (matrix algebra within a regression model), for example.</p>
-<p>A quick analogy: you can not complete the job of making 10 pizzas for a customer in a parallel way <em>[you can not cook the pizza at the same time as you’re preparing the dough at the same time as you’re putting the toppings on the pizza]</em> but you can complete the job of ‘preparing all the pizza dough for tonight’ in parallel <em>[by getting 10 people with 10 bowls and 10 bags of flour to all mix at the same time]</em>.</p>
+<p>It is potentially easier to think about when we should <em>not</em> consider parallel computing. For parallel computing to be workable, the overall job needs to be something that can be broken down into <u>independent</u> tasks — tasks that do not depend on the input/output of previous tasks to fully run. So, any piece of computational work - where the underlying tasks must be completed in sequential order - can not be executed (or sped up) with parallel computing. Such jobs may be the sequential (time dependent) processing of data (e.g., need to standardise variables <em>before</em> extreme values are identified and tagged) or ordered computation tasks (e.g., matrix algebra within a regression model).</p>
+<p>A quick analogy: you can not complete the job of ‘making a pizza’ in a parallel way <em>[you can not cook the pizza at the same time as you are preparing the dough at the same time as you are putting the toppings on the pizza].</em> But, if are making 10 pizzas for a customer, you can complete parts of this job in parallel, for example ‘preparing all the pizza dough’ <em>[by getting 10 people with 10 bowls and 10 bags of flour to all mix a serve of dough at the same time]</em>.</p>
 <p>As it relates to data analysis, parallel computing requires us to divvy up tasks in a standalone way, and (generally) assemble the output from those tasks in a sensible way. An example:</p>
 <ul>
 <li>Six months of minute-level data for 100 patients, where you need to calculate a range of summary statistics (including from some advanced modelling) for each patient.</li>
 <li>The data can be subset into ‘100’ chunks as the summary statistics for each ‘chunk’ do not require access to (or knowledge of) the raw data or output (summary statistics) from any other chunk.</li>
 <li>The resulting summary statistics can then be compiled into a table or list for later use.</li>
 </ul>
-<p>Of course, there is some overhead to allocating tasks and compiling results to different cores that one may want to consider before proceeding. Generally, it is worthwhile to pilot your code on a subset of the full set of computations to see if the code does truly benefit from parallelisation, as it does introduce some computational overhead.</p>
+<p>Of course, there is some overhead to allocating tasks and compiling results to different cores that one may want to consider before proceeding. Generally, it is worthwhile to pilot your code on a subset of the job to see if the code does truly benefit from parallelisation.</p>
 <p><br></p>
 </section>
 <section id="setup" class="level1">
@@ -282,7 +282,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>
-</p><p>We should not allocate all of our machine’s available cores to parallel computations – this will consume all of the available resources!<br>
+</p><p>We should not allocate all of our machine’s available cores to parallel computations – this will consume all of the available resources (and everything might grind to a halt)!<br>
 <br>
 Let’s use 6 cores for our examples.</p>
 <div class="cell">
@@ -291,7 +291,7 @@ Let’s use 6 cores for our examples.</p>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">registerDoParallel</span>(<span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>When we go to the Windows task manager, we see there are now 6 R front-end instances initialised for each of the 6 cores.</p>
+<p>When we go to the Windows task manager, we see there are now 6 R front-end instances initialised, one for each of the 6 cores.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -301,14 +301,14 @@ Let’s use 6 cores for our examples.</p>
 </div>
 </div>
 </div>
-<p>When we no longer require a parallel environment, we must shut down and de-register the parallel cluster. Otherwise they will remain active!</p>
+<p>When we no longer require a parallel environment, we must shut down and de-register the parallel cores. Otherwise they will remain active (allocated/‘in-use’)!</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">stopImplicitCluster</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Let’s also set a random seed for sample reproducibility</p>
+<p>Let’s also set a random seed for sample reproducibility.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -419,7 +419,7 @@ Let’s use 6 cores for our examples.</p>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  10.80    0.17   11.00 </code></pre>
+   8.47    0.02    8.52 </code></pre>
 </div>
 </div>
 <p>
@@ -485,7 +485,7 @@ result.6    34.42623 -0.03900395 -2.865725 1.167583</code></pre>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   8.46    0.11    8.61 </code></pre>
+   7.38    0.11    7.50 </code></pre>
 </div>
 </div>
 <p>
@@ -523,13 +523,13 @@ result.6    34.42623 -0.03900395 -2.865725 1.167583</code></pre>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(bootstrap_coefs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>         (Intercept)          hp         wt         am
-result.1    34.66300 -0.03114032 -3.3370076  1.4134299
-result.2    32.57938 -0.04438242 -2.2120672  3.3355079
-result.3    30.47420 -0.05256793 -0.9731553  1.4754352
-result.4    29.75589 -0.03325999 -2.0722247  2.5919228
-result.5    32.58145 -0.04291096 -2.3041124  2.2133379
-result.6    42.39934 -0.01721344 -6.4009481 -0.1058223</code></pre>
+<pre><code>         (Intercept)          hp        wt        am
+result.1    31.39027 -0.04143370 -1.962527 2.4855237
+result.2    36.82344 -0.03811231 -3.334265 1.1028412
+result.3    35.54784 -0.03616435 -3.460803 0.9630958
+result.4    40.21177 -0.01999787 -5.819533 1.0052786
+result.5    35.49965 -0.03701771 -3.457138 3.0594697
+result.6    36.76386 -0.03807379 -3.597995 0.9942734</code></pre>
 </div>
 </div>
 <p>as are the associated 95% confidence intervals.</p>
@@ -540,8 +540,8 @@ result.6    42.39934 -0.01721344 -6.4009481 -0.1058223</code></pre>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>      (Intercept)          hp        wt         am
-2.5%     29.04379 -0.05548878 -5.160200 -0.7509542
-97.5%    40.72820 -0.02139785 -1.027478  4.8516891</code></pre>
+2.5%     28.93500 -0.05552475 -5.143484 -0.8187245
+97.5%    40.78369 -0.02149650 -1.019254  4.9483930</code></pre>
 </div>
 </div>
 <p>Lastly, this had the following run-time (seconds)</p>
@@ -552,7 +552,7 @@ result.6    42.39934 -0.01721344 -6.4009481 -0.1058223</code></pre>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   3.09    0.54    5.35 </code></pre>
+   2.51    0.45    4.23 </code></pre>
 </div>
 </div>
 <p>
@@ -560,7 +560,7 @@ result.6    42.39934 -0.01721344 -6.4009481 -0.1058223</code></pre>
 <section id="discussion" class="level2">
 <h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
 <p>Immediately, the syntax of the alternative for-loop structures are <strong>more readable</strong> and <strong>easier to construct</strong> than the traditional for-loop. Because the <code>foreach::foreach</code> function easily combines output in a list, we need not define an empty matrix to append output to.</p>
-<p>Computation time in the parallel environment is significantly faster — approximately 51% faster than the traditional for-loop! Across multiple analyses and data sets, these time savings certainly add up!</p>
+<p>Computation time in the parallel environment is significantly faster — approximately 50% faster than the traditional for-loop! Across multiple analyses and data sets, these time savings certainly add up!</p>
 <p><br></p>
 </section>
 </section>
@@ -573,7 +573,7 @@ This example is inspired by the example from the <a href="https://cran.r-project
 <h2 class="anchored" data-anchor-id="data">Data</h2>
 <p>First, let’s simulate our data set and set some parameters:</p>
 <ul>
-<li><p>100,00 observations.</p></li>
+<li><p>10,000 observations.</p></li>
 <li><p>Independent variables temperature, precipitation and elevation sampled from a random normal distribution and vegetation type (categorical factor) randomly prescribed.</p></li>
 <li><p>Species presence (dichotomous) outcome variable is randomly prescribed.</p></li>
 </ul>
@@ -616,20 +616,21 @@ This example is inspired by the example from the <a href="https://cran.r-project
 </details>
 </div>
 <p>
+</p><p>Instead of running one random forest model comprising 1000 trees, let’s combine the results of 4 smaller random forest models models each comprising 250 trees. By doing this, we can return more reliable outputs (other initialisations can counteract instances of poor model fit or predictions) and can better manage working memory (smaller models require less memory to train and store).</p>
+<p>
 </p></section>
 <section id="for-loop-1" class="level2">
 <h2 class="anchored" data-anchor-id="for-loop-1">For-loop</h2>
-<p>Let’s split up the computation of a 1000 tree random forest model by sequentially running 4 random forest models comprising 250 trees.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>rf <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(num_trees<span class="sc">/</span><span class="dv">250</span>)){</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  sampled_data <span class="ot">&lt;-</span> train_data[<span class="fu">sample</span>(<span class="fu">nrow</span>(train_data), <span class="at">replace =</span> <span class="cn">TRUE</span>),]</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#sampled_data &lt;- train_data[sample(nrow(train_data), replace = TRUE),]</span></span>
 <span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  rf[[i]] <span class="ot">&lt;-</span> randomForest<span class="sc">::</span><span class="fu">randomForest</span>(species_presence <span class="sc">~</span> ., </span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">data =</span> sampled_data, </span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">data =</span> train_data, </span>
 <span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">ntree =</span> num_trees<span class="sc">/</span><span class="dv">4</span>)</span>
 <span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a></span>
@@ -650,8 +651,8 @@ This example is inspired by the example from the <a href="https://cran.r-project
 <div class="cell-output cell-output-stdout">
 <pre><code>           
 predictions absent present
-    absent     682     742
-    present    804     772</code></pre>
+    absent     705     777
+    present    781     737</code></pre>
 </div>
 </div>
 <p>This has the following run-time (seconds):</p>
@@ -662,7 +663,7 @@ predictions absent present
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   6.36    0.53    6.92 </code></pre>
+   5.81    0.31    6.13 </code></pre>
 </div>
 </div>
 <p>
@@ -696,8 +697,8 @@ predictions absent present
 <div class="cell-output cell-output-stdout">
 <pre><code>           
 predictions absent present
-    absent     710     775
-    present    776     739</code></pre>
+    absent     706     778
+    present    780     736</code></pre>
 </div>
 </div>
 <p>This has the following run-time (seconds):</p>
@@ -708,7 +709,7 @@ predictions absent present
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   6.83    0.73    7.68 </code></pre>
+   5.65    0.45    6.19 </code></pre>
 </div>
 </div>
 <p>
@@ -746,8 +747,8 @@ predictions absent present
 <div class="cell-output cell-output-stdout">
 <pre><code>           
 predictions absent present
-    absent     696     771
-    present    790     743</code></pre>
+    absent     701     765
+    present    785     749</code></pre>
 </div>
 </div>
 <p>This now has the following run-time (seconds):</p>
@@ -758,23 +759,23 @@ predictions absent present
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.38    0.45    4.50 </code></pre>
+   1.00    0.59    3.81 </code></pre>
 </div>
 </div>
 <p>
 </p></section>
 <section id="discussion-1" class="level2">
 <h2 class="anchored" data-anchor-id="discussion-1">Discussion</h2>
-<p>Again, using <u>easily adaptable and readable syntax</u>, we leverage a parallel environment to significantly lessen the computation time of our large model. Relative to a standard for-loop, the parallelised computation is approximately 35% faster.</p>
+<p>Again, using <u>easily adaptable and readable syntax</u>, we leverage a parallel environment to significantly lessen the computation time of our large model. Relative to a standard for-loop, the parallelised computation is approximately 38% faster.</p>
 <p><br></p>
 </section>
 </section>
 <section id="example-3-parallel-regressions-with-different-outcomes" class="level1">
 <h1>Example 3: Parallel regressions with different outcomes</h1>
-<p>As hinted to in the overview to this blog, parallel computing is not the general solution to running loop-based code more quickly. Instances which run intrinsically “fast” will not benefit from a parallel environment and may in fact run <em>slower</em> in parallel, after accounting for the overhead in setting up the parallel environment.<br>
+<p>As hinted to in the overview to this blog, parallel computing is not the general solution to running loop-based code more quickly. Instances which run intrinsically “fast” will not benefit from a parallel environment and may in fact run <em>slower</em> in parallel, after accounting for the overhead in ‘managing’ the task division and result assembly.<br>
 <br>
-There are other packages which may be useful in these circumstances, such as the always handy <code>purrr:map</code> which we examine below.</p>
-<p>Let’s apply this to a different situation where we have different model specifications we would like to run on the same data set.</p>
+There are other packages which may be useful in these circumstances, such as the often handy <code>purrr:map</code> which we examine below.</p>
+<p>Let’s apply this to a situation where we have different model specifications we would like to run on the same data set.</p>
 <p>
 </p><section id="data-1" class="level2">
 <h2 class="anchored" data-anchor-id="data-1">Data</h2>
@@ -814,8 +815,8 @@ There are other packages which may be useful in these circumstances, such as the
 <ul>
 <li><p>Outcome variables</p>
 <ul>
-<li><p>Arrival delay (continuous)</p></li>
-<li><p>Arrival delayed (dichotomous)</p></li>
+<li>Arrival delay (continuous)</li>
+<li>Arrival delayed (dichotomous)</li>
 </ul></li>
 <li><p>Independent variables</p>
 <ul>
@@ -868,14 +869,14 @@ There are other packages which may be useful in these circumstances, such as the
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.24    0.19    1.43 </code></pre>
+   1.12    0.22    1.34 </code></pre>
 </div>
 </div>
 <p>
 </p></section>
 <section id="purrrmap" class="level2">
 <h2 class="anchored" data-anchor-id="purrrmap"><code>purrr:map</code></h2>
-<p>Map functions apply a function each element of a list/vector and return an object. In cases relying on multiple computations across different values, they always come in handy!</p>
+<p>Map functions apply a function to each element of a list/vector and return an object. In cases relying on multiple computations across different values, they often come in handy.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -911,14 +912,14 @@ There are other packages which may be useful in these circumstances, such as the
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.04    0.19    1.23 </code></pre>
+   1.05    0.20    1.25 </code></pre>
 </div>
 </div>
 <p>
 </p></section>
 <section id="furrrfuture_map" class="level2">
 <h2 class="anchored" data-anchor-id="furrrfuture_map"><code>furrr::future_map</code></h2>
-<p>There are also parallel versions of the <code>purrr::map</code> function offered by the <code>furrr</code> package. The syntax is (nicely) identical to above, but importantly relies on specifying a parallel (multisession) “plan” ahead of executing the code.</p>
+<p>There is also a parallel implementation of the <code>purrr::map</code> function, offered by the <code>furrr</code> package. The syntax is (nicely) identical to above, but importantly relies on specifying a parallel (<code>multisession</code>) “plan” ahead of executing the code (similar to what we did in Example 1 and 2).</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -958,13 +959,14 @@ There are other packages which may be useful in these circumstances, such as the
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   0.10    0.04    2.43 </code></pre>
+   0.13    0.01    2.28 </code></pre>
 </div>
 </div>
 <p>
 </p></section>
 <section id="dopar-parallelisation-2" class="level2">
 <h2 class="anchored" data-anchor-id="dopar-parallelisation-2"><code>%dopar%</code> parallelisation</h2>
+<p>Alternatively, as done earlier, we can turn our non-parallel <code>%do%</code> code into parallel <code>%dopar%</code> code.</p>
 <ul>
 <li><p>We use the <code>%:%</code> operator from the <code>foreach</code> package to nest a for-loop within a parallel environment.</p></li>
 <li><p>The syntax does not differ too dramatically.</p></li>
@@ -979,20 +981,18 @@ There are other packages which may be useful in these circumstances, such as the
 <span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (j <span class="sc">==</span> <span class="st">"arr_delay"</span>){</span>
 <span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(j,<span class="st">"~"</span>,<span class="fu">paste</span>(indep_vars, <span class="at">collapse =</span> <span class="st">"+"</span>))),</span>
 <span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> flights)</span>
-<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">#list(j = summary(model))</span></span>
-<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (j <span class="sc">==</span> <span class="st">"arr_delay_bin"</span>){</span>
-<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(j,<span class="st">"~"</span>,<span class="fu">paste</span>(indep_vars, <span class="at">collapse =</span> <span class="st">"+"</span>))),</span>
-<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">family =</span> binomial,</span>
-<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> flights)</span>
-<span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">#list(j = summary(model))</span></span>
-<span id="cb57-14"><a href="#cb57-14" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb57-15"><a href="#cb57-15" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb57-16"><a href="#cb57-16" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(models) <span class="ot">&lt;-</span> outcome_vars</span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (j <span class="sc">==</span> <span class="st">"arr_delay_bin"</span>){</span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(j,<span class="st">"~"</span>,<span class="fu">paste</span>(indep_vars, <span class="at">collapse =</span> <span class="st">"+"</span>))),</span>
+<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">family =</span> binomial,</span>
+<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> flights)</span>
+<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb57-14"><a href="#cb57-14" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(models) <span class="ot">&lt;-</span> outcome_vars</span>
+<span id="cb57-15"><a href="#cb57-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-16"><a href="#cb57-16" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
 <span id="cb57-17"><a href="#cb57-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-18"><a href="#cb57-18" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
-<span id="cb57-19"><a href="#cb57-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-20"><a href="#cb57-20" aria-hidden="true" tabindex="-1"></a>time4 <span class="ot">&lt;-</span> end <span class="sc">-</span> start</span>
-<span id="cb57-21"><a href="#cb57-21" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">stopImplicitCluster</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb57-18"><a href="#cb57-18" aria-hidden="true" tabindex="-1"></a>time4 <span class="ot">&lt;-</span> end <span class="sc">-</span> start</span>
+<span id="cb57-19"><a href="#cb57-19" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">stopImplicitCluster</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>This has the following run-time (seconds):</p>
@@ -1003,21 +1003,21 @@ There are other packages which may be useful in these circumstances, such as the
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.09    0.78    4.50 </code></pre>
+   1.19    0.76    4.62 </code></pre>
 </div>
 </div>
 <p>
 </p></section>
 <section id="discussion-2" class="level2">
 <h2 class="anchored" data-anchor-id="discussion-2">Discussion</h2>
-<p>We now see that the parallel processing of these tasks takes far longer – about 68% so! The total time comprised of the overhead in setting up and structuring a parallel environment for what are already small and relatively fast underlying operations — running a series of linear models — is far in excess of what we can easily spin up using a for-loop (or <code>purrr::map</code>).</p>
+<p>We now see that the parallel processing of these tasks takes far longer – about 71% so! The total time comprised of the overhead in setting up and structuring a parallel environment for what are already small and relatively fast underlying operations — running a series of linear models — is far in excess of what we can easily spin up using a for-loop (or <code>purrr::map</code>).</p>
 <p><br></p>
 </section>
 </section>
 <section id="conclusion" class="level1">
 <h1>Conclusion</h1>
-<p>Using just a few relatively simple examples, we have demonstrated that a parallel computing environment, can be a relatively easy and quick way to improve the runtime of iteration/loop-based operations, under the right circumstances. Importantly, this does not compromise the code complexity nor readability!</p>
-<p>While not <em>always</em> appropriate, it is worth staying across the parallel implementations as they become available on <code>R</code>, particularly as datasets and/or the complexity of analytical workflows grow.</p>
+<p>Using just a few relatively simple examples, we have demonstrated that a parallel computing environment can be a relatively easy and quick way to improve the runtime of iteration/loop-based operations - under the right circumstances. Importantly, this does not increase the code complexity nor decrease the code readability!</p>
+<p>While not <em>always</em> appropriate, it is worth staying across the parallel implementations as they become available on <code>R</code>, particularly as the size of datasets and/or the complexity of analytical workflows increase.</p>
 <p><br></p>
 </section>
 <section id="further-resources" class="level1">
@@ -1036,7 +1036,7 @@ There are other packages which may be useful in these circumstances, such as the
 <p><br></p>
 <section id="acknowledgements" class="level2">
 <h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
-<p>Thanks to Wesley Billingham, Matt Cooper and Elizabeth McKinnon for providing feedback on and reviewing this post.</p>
+<p>Thanks to Wesley Billingham, Matt Cooper, and Elizabeth McKinnon for providing feedback on and reviewing this post.</p>
 <p>You can look forward to seeing posts from these other team members here in the coming weeks and months.</p>
 <p><br></p>
 </section>

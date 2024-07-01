@@ -343,18 +343,20 @@ num_trees <- 1000
 
 <p>
 
-## For-loop
+Instead of running one random forest model comprising 1000 trees, let's combine the results of 4 smaller random forest models models each comprising 250 trees. By doing this, we can return more reliable outputs (other initialisations can counteract instances of poor model fit or predictions) and can better manage working memory (smaller models require less memory to train and store).
 
-Let's split up the computation of a 1000 tree random forest model by sequentially running 4 random forest models comprising 250 trees.
+<p>
+
+## For-loop
 
 ```{r warning = F, error = F}
 start <- proc.time()
 rf <- list()
 for (i in 1:(num_trees/250)){
-  sampled_data <- train_data[sample(nrow(train_data), replace = TRUE),]
+  #sampled_data <- train_data[sample(nrow(train_data), replace = TRUE),]
 
   rf[[i]] <- randomForest::randomForest(species_presence ~ ., 
-                                        data = sampled_data, 
+                                        data = train_data, 
                                         ntree = num_trees/4)
 }
 
@@ -657,13 +659,13 @@ print(time4)
 
 ## Discussion
 
-We now see that the parallel processing of these tasks takes far longer – about `r paste0(round(100*(time4[3]-time1[3])/time4[3],0),"%")` so! The total time comprised of the overhead in setting up and structuring a parallel environment for what are already small and relatively fast underlying operations — running a series of linear models — is far in excess of what we can easily spin up using a for-loop (or `purrr::map`).
+We now see that the parallel processing of these tasks takes far *longer* – about `r paste0(round(100*(time4[3]-time1[3])/time4[3],0),"%")` so! The underlying set of operations — running a series of linear models — are already small and relatively fast, so the overhead of managing the task (splitting, computing and combining results) in a parallel environment far exceeds what what can easily be spun up using a for-loop (or `purrr::map`).
 
 <br>
 
 # Conclusion
 
-Using just a few relatively simple examples, we have demonstrated that a parallel computing environment can be a relatively easy and quick way to improve the runtime of iteration/loop-based operations - under the right circumstances. Importantly, this does not increase the code complexity nor decrease the code readability!
+Using just a few relatively simple examples, we have demonstrated that a parallel computing environment can be a relatively easy and quick way to improve the runtime of iteration/loop-based operations (under the right circumstances). Importantly, this does not increase the code complexity nor decrease the code readability!
 
 While not *always* appropriate, it is worth staying across the parallel implementations as they become available on `R`, particularly as the size of datasets and/or the complexity of analytical workflows increase.
 
