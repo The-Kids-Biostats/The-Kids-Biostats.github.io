@@ -217,7 +217,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#data-1" id="toc-data-1" class="nav-link" data-scroll-target="#data-1">Data</a></li>
   <li><a href="#for-loop-2" id="toc-for-loop-2" class="nav-link" data-scroll-target="#for-loop-2">For-loop</a></li>
-  <li><a href="#purrrmap" id="toc-purrrmap" class="nav-link" data-scroll-target="#purrrmap"><code>purrr:map</code></a></li>
+  <li><a href="#purrrmap" id="toc-purrrmap" class="nav-link" data-scroll-target="#purrrmap"><code>purrr::map</code></a></li>
   <li><a href="#furrrfuture_map" id="toc-furrrfuture_map" class="nav-link" data-scroll-target="#furrrfuture_map"><code>furrr::future_map</code></a></li>
   <li><a href="#dopar-parallelisation-2" id="toc-dopar-parallelisation-2" class="nav-link" data-scroll-target="#dopar-parallelisation-2"><code>%dopar%</code> parallelisation</a></li>
   <li><a href="#discussion-2" id="toc-discussion-2" class="nav-link" data-scroll-target="#discussion-2">Discussion</a></li>
@@ -242,10 +242,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
+<pre><code></code></pre>
 <section id="overview" class="level1">
 <h1>Overview</h1>
 <p>While most of the datasets we work with are of a manageable size here at the Telethon Kids Institute, occasionally we are presented with data containing <em>millions</em> of rows and/or <em>thousands</em> of columns. Performing almost any operation on these large datasets can take hours to execute – a real test of patience for exploratory work!</p>
-<p>Parallel computing is one relatively simple way to reduce computation time on large datasets – leveraging our computer’s full processing capabilities by simultaneously distributing tasks “in parallel” across multiple processors (without too much extra code). This is particularly useful for loop-based computations, where multiple parameters or conditions must be swept over whether that as part of variable creation, model tuning/execution, or some other task.</p>
+<p>Parallel computing is one relatively simple way to reduce computation time on large datasets – leveraging our computer’s full processing capabilities by simultaneously distributing tasks “in parallel” across multiple processors (without too much extra code). This is particularly useful for loop-based computations, where multiple parameters or conditions must be swept over whether that be as part of variable creation, model tuning/execution, or some other task.</p>
 <p>That being said, while parallel computing is not a “magical general solution” to all computationally intensive tasks – it is worth investing some time to understand how it works, and become familiar with the packages and/or functions used within a parallel framework. There are still circumstances where the handy <code>purrr::map</code> function (or the like) can be just as, or more, efficient than a parallel distribution.</p>
 <p>
 </p></section>
@@ -253,7 +254,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>What is Parallel Computing?</h1>
 <p>Parallel computing refers to executing multiple operations in “parallel” (i.e., at the same time) across a machine’s multiple cores/processors. Most modern computers have at least four cores, and often many more. By default, R uses only one core, running iterative operations sequentially; not starting the next until the previous is complete. Under a parallel framework, however, multiple iterations/calculations can be allocated across multiple cores so they can be executed at the same time — thus saving (overall) time. These time savings accumulate particularly with large underlying tasks <em>(as opposed to running many small tasks in parallel — a situation that often ultimately ends up slower!)</em>.</p>
 <p>In this post, we will have a look at a couple of examples using <code>R</code>. We provide some simple examples and use-cases, in addition to some additional resources to continue learning.</p>
-<p>The <a href="#0"><code>doParallel</code></a> and <a href="#0"><code>foreach</code></a> packages of <code>R</code> are one set of packages, intended to be used together, to facilitate parallel computing in a syntactically simple way <code>R</code>. Additionally, the base <code>parallel</code> package is used for some basic set-up and detection.</p>
+<p>The <a href="#0"><code>doParallel</code></a> and <a href="#0"><code>foreach</code></a> packages of <code>R</code> are one set of packages, intended to be used together, to facilitate parallel computing in a syntactically simple way. Additionally, the base <code>parallel</code> package is used for some basic set-up and detection.</p>
 <p>These examples are run using R version 4.3.2 (2023-10-31 ucrt) on Windows 10 x64.</p>
 </section>
 <section id="when-should-we-consider-parallel-computing" class="level1">
@@ -271,11 +272,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="setup" class="level1">
 <h1>Setup</h1>
+<p>Let’s first load the packages we will use to render our examples</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)  <span class="co"># For general "tidyverse" style manipulations &amp; operations</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(parallel)   <span class="co"># base R package for parallel processing</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreach)    <span class="co"># For looping</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doParallel) <span class="co"># Parallel back-end for the `foreach` package</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 <p>Let’s check the number of cores available on our machine.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>parallel<span class="sc">::</span><span class="fu">detectCores</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>parallel<span class="sc">::</span><span class="fu">detectCores</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 8</code></pre>
@@ -288,7 +299,7 @@ Let’s use 6 cores for our examples.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">registerDoParallel</span>(<span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">registerDoParallel</span>(<span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>When we go to the Windows task manager, we see there are now 6 R front-end instances initialised, one for each of the 6 cores.</p>
@@ -305,14 +316,14 @@ Let’s use 6 cores for our examples.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">stopImplicitCluster</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">stopImplicitCluster</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Let’s also set a random seed for sample reproducibility.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p><br></p>
@@ -329,11 +340,11 @@ Let’s use 6 cores for our examples.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's set up the data and number of bootstrap samples</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(mtcars)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>mtcars <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(mtcars)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>trials <span class="ot">&lt;-</span> <span class="dv">10000</span> <span class="co"># Number of bootstrap samples</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's set up the data and number of bootstrap samples</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(mtcars)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>mtcars <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(mtcars)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>trials <span class="ot">&lt;-</span> <span class="dv">10000</span> <span class="co"># Number of bootstrap samples</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>
@@ -351,34 +362,34 @@ Let’s use 6 cores for our examples.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">proc.time</span>() <span class="co"># Start our timer!</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialise a matrix to store the coefficients from each bootstrap sample</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>bootstrap_coefs <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">nrow =</span> trials, <span class="at">ncol =</span> <span class="dv">4</span>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(bootstrap_coefs) <span class="ot">&lt;-</span> <span class="fu">names</span>(<span class="fu">coef</span>(<span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> wt <span class="sc">+</span> am, <span class="at">data =</span> mtcars)))</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>trials){</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Take bootstrap sample</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  ind <span class="ot">&lt;-</span> mtcars[<span class="fu">sample</span>(<span class="fu">nrow</span>(mtcars), </span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>                       <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>                ]</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Construct linear regression</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  result <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> wt <span class="sc">+</span> <span class="fu">as_factor</span>(am), </span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> ind)</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Extract coefficients and store to `bootstrap_coefs`</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  bootstrap_coefs[i, ] <span class="ot">&lt;-</span> <span class="fu">coef</span>(result)</span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the 2.5th and 97.5th percentile for each variable's coefficient estimates from the bootstrap distribution.</span></span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>bootstrap_cis <span class="ot">&lt;-</span> <span class="fu">apply</span>(bootstrap_coefs, </span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>                       <span class="dv">2</span>, </span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>                       <span class="cf">function</span>(coefs){<span class="fu">quantile</span>(coefs, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))})</span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">proc.time</span>() <span class="co"># End our timer!</span></span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>time1 <span class="ot">&lt;-</span> end<span class="sc">-</span>start</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">proc.time</span>() <span class="co"># Start our timer!</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialise a matrix to store the coefficients from each bootstrap sample</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>bootstrap_coefs <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">nrow =</span> trials, <span class="at">ncol =</span> <span class="dv">4</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(bootstrap_coefs) <span class="ot">&lt;-</span> <span class="fu">names</span>(<span class="fu">coef</span>(<span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> wt <span class="sc">+</span> am, <span class="at">data =</span> mtcars)))</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>trials){</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Take bootstrap sample</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  ind <span class="ot">&lt;-</span> mtcars[<span class="fu">sample</span>(<span class="fu">nrow</span>(mtcars), </span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>                       <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>                ]</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Construct linear regression</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  result <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> wt <span class="sc">+</span> <span class="fu">as_factor</span>(am), </span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>               <span class="at">data =</span> ind)</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Extract coefficients and store to `bootstrap_coefs`</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  bootstrap_coefs[i, ] <span class="ot">&lt;-</span> <span class="fu">coef</span>(result)</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the 2.5th and 97.5th percentile for each variable's coefficient estimates from the bootstrap distribution.</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>bootstrap_cis <span class="ot">&lt;-</span> <span class="fu">apply</span>(bootstrap_coefs, </span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>                       <span class="dv">2</span>, </span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>                       <span class="cf">function</span>(coefs){<span class="fu">quantile</span>(coefs, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))})</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">proc.time</span>() <span class="co"># End our timer!</span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>time1 <span class="ot">&lt;-</span> end<span class="sc">-</span>start</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>
@@ -386,7 +397,7 @@ Let’s use 6 cores for our examples.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(bootstrap_coefs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(bootstrap_coefs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>     (Intercept)          hp        wt         am
@@ -402,7 +413,7 @@ Let’s use 6 cores for our examples.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>bootstrap_cis</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>bootstrap_cis</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>      (Intercept)          hp        wt         am
@@ -415,11 +426,28 @@ Let’s use 6 cores for our examples.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   9.80    0.06    9.99 </code></pre>
+   8.13    0.11    8.25 </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<code>proc.time</code> components
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><p><em>user</em> = time the CPU has spent executing the R process.</p></li>
+<li><p><em>system</em> = time the CPU has spent on system-level operations that facilitate the R process (e.g., memory management, system calls).</p></li>
+<li><p><em>elapsed</em> = real-world time that has elapsed.</p></li>
+</ul>
 </div>
 </div>
 <p>
@@ -430,21 +458,21 @@ Let’s use 6 cores for our examples.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>bootstrap_coefs <span class="ot">&lt;-</span> foreach<span class="sc">::</span><span class="fu">foreach</span>(<span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>trials, <span class="at">.combine =</span> rbind) <span class="sc">%do%</span> {</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  ind <span class="ot">&lt;-</span> mtcars[<span class="fu">sample</span>(<span class="fu">nrow</span>(mtcars), <span class="at">replace =</span> <span class="cn">TRUE</span>), ]</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  result <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> wt <span class="sc">+</span> am, <span class="at">data =</span> ind)</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coef</span>(result)</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the 2.5th and 97.5th percentile for each variable's coefficient estimates from the bootstrap distribution.</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>bootstrap_cis <span class="ot">&lt;-</span> <span class="fu">apply</span>(bootstrap_coefs, </span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>                       <span class="dv">2</span>, </span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>                       <span class="cf">function</span>(coefs) {<span class="fu">quantile</span>(coefs, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))})</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>time2 <span class="ot">&lt;-</span> end<span class="sc">-</span>start</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>bootstrap_coefs <span class="ot">&lt;-</span> foreach<span class="sc">::</span><span class="fu">foreach</span>(<span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>trials, <span class="at">.combine =</span> rbind) <span class="sc">%do%</span> {</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  ind <span class="ot">&lt;-</span> mtcars[<span class="fu">sample</span>(<span class="fu">nrow</span>(mtcars), <span class="at">replace =</span> <span class="cn">TRUE</span>), ]</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  result <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> wt <span class="sc">+</span> am, <span class="at">data =</span> ind)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coef</span>(result)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the 2.5th and 97.5th percentile for each variable's coefficient estimates from the bootstrap distribution.</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>bootstrap_cis <span class="ot">&lt;-</span> <span class="fu">apply</span>(bootstrap_coefs, </span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>                       <span class="dv">2</span>, </span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>                       <span class="cf">function</span>(coefs) {<span class="fu">quantile</span>(coefs, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))})</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>time2 <span class="ot">&lt;-</span> end<span class="sc">-</span>start</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>
@@ -452,7 +480,7 @@ Let’s use 6 cores for our examples.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(bootstrap_coefs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(bootstrap_coefs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>         (Intercept)          hp        wt       am
@@ -468,7 +496,7 @@ result.6    34.42623 -0.03900395 -2.865725 1.167583</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>bootstrap_cis</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>bootstrap_cis</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>      (Intercept)          hp        wt         am
@@ -481,11 +509,11 @@ result.6    34.42623 -0.03900395 -2.865725 1.167583</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   9.30    0.12    9.99 </code></pre>
+   7.33    0.09    7.46 </code></pre>
 </div>
 </div>
 <p>
@@ -496,63 +524,63 @@ result.6    34.42623 -0.03900395 -2.865725 1.167583</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">registerDoParallel</span>(<span class="at">cores =</span> <span class="dv">6</span>) <span class="co"># Initialise parallel cluster</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>bootstrap_coefs <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>trials, <span class="at">.combine =</span> rbind, <span class="at">.packages =</span> <span class="st">'stats'</span>) <span class="sc">%dopar%</span> {</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  ind <span class="ot">&lt;-</span> mtcars[<span class="fu">sample</span>(<span class="fu">nrow</span>(mtcars), <span class="at">replace =</span> <span class="cn">TRUE</span>), ]</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  result <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> wt <span class="sc">+</span> am, <span class="at">data =</span> ind)</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coef</span>(result)</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the 2.5th and 97.5th percentile for each variable's coefficient estimates from the bootstrap distribution.</span></span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>bootstrap_cis <span class="ot">&lt;-</span> <span class="fu">apply</span>(bootstrap_coefs, </span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>                       <span class="dv">2</span>, </span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>                       <span class="cf">function</span>(coefs) {<span class="fu">quantile</span>(coefs, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))})</span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>time3 <span class="ot">&lt;-</span> end<span class="sc">-</span>start</span>
-<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">stopImplicitCluster</span>() <span class="co"># De-register parallel cluster</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">registerDoParallel</span>(<span class="at">cores =</span> <span class="dv">6</span>) <span class="co"># Initialise parallel cluster</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>bootstrap_coefs <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>trials, <span class="at">.combine =</span> rbind, <span class="at">.packages =</span> <span class="st">'stats'</span>) <span class="sc">%dopar%</span> {</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  ind <span class="ot">&lt;-</span> mtcars[<span class="fu">sample</span>(<span class="fu">nrow</span>(mtcars), <span class="at">replace =</span> <span class="cn">TRUE</span>), ]</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  result <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> wt <span class="sc">+</span> am, <span class="at">data =</span> ind)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coef</span>(result)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate the 2.5th and 97.5th percentile for each variable's coefficient estimates from the bootstrap distribution.</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>bootstrap_cis <span class="ot">&lt;-</span> <span class="fu">apply</span>(bootstrap_coefs, </span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>                       <span class="dv">2</span>, </span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>                       <span class="cf">function</span>(coefs) {<span class="fu">quantile</span>(coefs, <span class="at">probs =</span> <span class="fu">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))})</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>time3 <span class="ot">&lt;-</span> end<span class="sc">-</span>start</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">stopImplicitCluster</span>() <span class="co"># De-register parallel cluster</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>As expected, the output of the bootstrapped coefficient distribution are identical before</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(bootstrap_coefs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(bootstrap_coefs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>         (Intercept)          hp        wt         am
-result.1    29.77207 -0.05288730 -1.058038  3.9123258
-result.2    33.58996 -0.04755404 -2.197781  2.3569617
-result.3    35.98690 -0.03708263 -3.266833  1.4526964
-result.4    42.25028 -0.01822239 -5.825143 -2.8374742
-result.5    33.29648 -0.04161578 -2.510220  2.7786428
-result.6    35.12179 -0.03283584 -3.369380  0.8513454</code></pre>
+<pre><code>         (Intercept)          hp         wt        am
+result.1    29.01023 -0.03144924 -1.7011668 1.9710101
+result.2    34.64419 -0.02981554 -3.3686345 2.2630996
+result.3    29.30763 -0.05186821 -0.7765918 5.3702237
+result.4    32.78371 -0.05571083 -1.8368810 4.7410181
+result.5    34.58447 -0.02907062 -3.3133915 0.1025598
+result.6    33.63623 -0.03984186 -2.6517603 2.7519106</code></pre>
 </div>
 </div>
 <p>as are the associated 95% confidence intervals.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>bootstrap_cis</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>bootstrap_cis</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>      (Intercept)          hp        wt         am
-2.5%     29.00207 -0.05509635 -5.216696 -0.7757867
-97.5%    40.88382 -0.02141655 -1.078642  4.8896085</code></pre>
+2.5%     29.00517 -0.05536575 -5.181523 -0.7919252
+97.5%    40.89882 -0.02190769 -1.076947  4.9375445</code></pre>
 </div>
 </div>
 <p>Lastly, this had the following run-time (seconds)</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   2.71    0.40    5.16 </code></pre>
+   2.81    0.45    4.63 </code></pre>
 </div>
 </div>
 <p>
@@ -560,7 +588,7 @@ result.6    35.12179 -0.03283584 -3.369380  0.8513454</code></pre>
 <section id="discussion" class="level2">
 <h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
 <p>Immediately, the syntax of the alternative for-loop structures are <strong>more readable</strong> and <strong>easier to construct</strong> than the traditional for-loop. Because the <code>foreach::foreach</code> function easily combines output in a list, we need not define an empty matrix to append output to.</p>
-<p>Computation time in the parallel environment is significantly faster — approximately 48% faster than the traditional for-loop! Across multiple analyses and data sets, these time savings certainly add up!</p>
+<p>Computation time in the parallel environment is significantly faster — approximately 44% faster than the traditional for-loop! Across multiple analyses and data sets, these time savings certainly add up!</p>
 <p><br></p>
 </section>
 </section>
@@ -580,39 +608,39 @@ This example is inspired by the example from the <a href="https://cran.r-project
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10000</span> <span class="co"># Sample size</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">temperature =</span> <span class="fu">rnorm</span>(n, </span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">mean =</span> <span class="dv">15</span>, </span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">sd   =</span> <span class="dv">40</span>),</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">precipitation =</span> <span class="fu">rnorm</span>(n, </span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">mean =</span> <span class="dv">1000</span>, </span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">sd   =</span> <span class="dv">300</span>),</span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>                   <span class="at">elevation =</span> <span class="fu">rnorm</span>(n, </span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">mean =</span> <span class="dv">500</span>, </span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">sd   =</span> <span class="dv">200</span>),</span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>                   <span class="at">vegetation_type =</span> <span class="fu">as_factor</span>(<span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"forest"</span>, </span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>                                                        <span class="st">"grassland"</span>, </span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>                                                        <span class="st">"wetland"</span>, </span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>                                                        <span class="st">"desert"</span>), </span>
-<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>                                                      n, </span>
-<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>                                                      <span class="at">replace =</span> T)),</span>
-<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>                   <span class="at">species_presence =</span> <span class="fu">as_factor</span>(<span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"present"</span>, </span>
-<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>                                                         <span class="st">"absent"</span>), </span>
-<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>                                                       n, </span>
-<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>                                                       <span class="at">replace =</span> T)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">10000</span> <span class="co"># Sample size</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">temperature =</span> <span class="fu">rnorm</span>(n, </span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">mean =</span> <span class="dv">15</span>, </span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">sd   =</span> <span class="dv">40</span>),</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">precipitation =</span> <span class="fu">rnorm</span>(n, </span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">mean =</span> <span class="dv">1000</span>, </span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>                                         <span class="at">sd   =</span> <span class="dv">300</span>),</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>                   <span class="at">elevation =</span> <span class="fu">rnorm</span>(n, </span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">mean =</span> <span class="dv">500</span>, </span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">sd   =</span> <span class="dv">200</span>),</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>                   <span class="at">vegetation_type =</span> <span class="fu">as_factor</span>(<span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"forest"</span>, </span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>                                                        <span class="st">"grassland"</span>, </span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>                                                        <span class="st">"wetland"</span>, </span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>                                                        <span class="st">"desert"</span>), </span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>                                                      n, </span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>                                                      <span class="at">replace =</span> T)),</span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>                   <span class="at">species_presence =</span> <span class="fu">as_factor</span>(<span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"present"</span>, </span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>                                                         <span class="st">"absent"</span>), </span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>                                                       n, </span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>                                                       <span class="at">replace =</span> T)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Let’s assign 70% of the data to our training set, and the remaining 30% to test data set and initialise a random forest model with 1000 trees.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>train_index <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n, <span class="fl">0.7</span><span class="sc">*</span>n)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> data[train_index, ]</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> data[<span class="sc">-</span>train_index, ]</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>num_trees <span class="ot">&lt;-</span> <span class="dv">1000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>train_index <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span>n, <span class="fl">0.7</span><span class="sc">*</span>n)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> data[train_index, ]</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>test_data <span class="ot">&lt;-</span> data[<span class="sc">-</span>train_index, ]</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>num_trees <span class="ot">&lt;-</span> <span class="dv">1000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>
@@ -624,28 +652,28 @@ This example is inspired by the example from the <a href="https://cran.r-project
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>rf <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(num_trees<span class="sc">/</span><span class="dv">250</span>)){</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  rf[[i]] <span class="ot">&lt;-</span> randomForest<span class="sc">::</span><span class="fu">randomForest</span>(species_presence <span class="sc">~</span> ., </span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">data =</span> train_data, </span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">ntree =</span> num_trees<span class="sc">/</span><span class="dv">4</span>)</span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>combined_output <span class="ot">&lt;-</span> <span class="fu">do.call</span>(randomForest<span class="sc">::</span>combine, rf)</span>
-<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(combined_output, test_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>species_presence))</span>
-<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
-<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>time1 <span class="ot">&lt;-</span> end <span class="sc">-</span> start</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>rf <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>(num_trees<span class="sc">/</span><span class="dv">250</span>)){</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  rf[[i]] <span class="ot">&lt;-</span> randomForest<span class="sc">::</span><span class="fu">randomForest</span>(species_presence <span class="sc">~</span> ., </span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">data =</span> train_data, </span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>                                        <span class="at">ntree =</span> num_trees<span class="sc">/</span><span class="dv">4</span>)</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>combined_output <span class="ot">&lt;-</span> <span class="fu">do.call</span>(randomForest<span class="sc">::</span>combine, rf)</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(combined_output, test_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>species_presence))</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>time1 <span class="ot">&lt;-</span> end <span class="sc">-</span> start</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Let’s print the confusion matrix of this output. Because this data was relatively simply simulated, we don’t expect the predictive power to be too great.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(predictions, test_data<span class="sc">$</span>species_presence)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(predictions, test_data<span class="sc">$</span>species_presence)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>           
@@ -658,11 +686,11 @@ predictions absent present
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   6.14    0.47    6.69 </code></pre>
+   5.47    0.26    5.77 </code></pre>
 </div>
 </div>
 <p>
@@ -673,25 +701,25 @@ predictions absent present
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>rf <span class="ot">&lt;-</span> foreach<span class="sc">::</span><span class="fu">foreach</span>(<span class="at">ntree =</span> <span class="fu">rep</span>(num_trees<span class="sc">/</span><span class="dv">4</span>, <span class="dv">4</span>), </span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">.combine =</span> randomForest<span class="sc">::</span>combine, </span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">.packages =</span> <span class="st">'randomForest'</span>) <span class="sc">%do%</span></span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  randomForest<span class="sc">::</span><span class="fu">randomForest</span>(species_presence <span class="sc">~</span> ., </span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>                             <span class="at">data =</span> train_data,</span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>                             <span class="at">ntree =</span> ntree)</span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf, test_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>species_presence))</span>
-<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
-<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>time2 <span class="ot">&lt;-</span> end <span class="sc">-</span> start</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>rf <span class="ot">&lt;-</span> foreach<span class="sc">::</span><span class="fu">foreach</span>(<span class="at">ntree =</span> <span class="fu">rep</span>(num_trees<span class="sc">/</span><span class="dv">4</span>, <span class="dv">4</span>), </span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">.combine =</span> randomForest<span class="sc">::</span>combine, </span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">.packages =</span> <span class="st">'randomForest'</span>) <span class="sc">%do%</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  randomForest<span class="sc">::</span><span class="fu">randomForest</span>(species_presence <span class="sc">~</span> ., </span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>                             <span class="at">data =</span> train_data,</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>                             <span class="at">ntree =</span> ntree)</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf, test_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>species_presence))</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>time2 <span class="ot">&lt;-</span> end <span class="sc">-</span> start</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Let’s print the confusion matrix of this output. Because this data was relatively simply simulated, we don’t expect the predictive power to be too great.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(predictions, test_data<span class="sc">$</span>species_presence)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(predictions, test_data<span class="sc">$</span>species_presence)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>           
@@ -704,11 +732,11 @@ predictions absent present
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   5.76    0.64    6.44 </code></pre>
+   5.31    0.48    5.81 </code></pre>
 </div>
 </div>
 <p>
@@ -719,53 +747,53 @@ predictions absent present
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">registerDoParallel</span>(<span class="at">cores =</span> <span class="dv">4</span>)</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>rf <span class="ot">&lt;-</span> foreach<span class="sc">::</span><span class="fu">foreach</span>(<span class="at">ntree =</span> <span class="fu">rep</span>(num_trees<span class="sc">/</span><span class="dv">4</span>, <span class="dv">4</span>), </span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">.combine =</span> randomForest<span class="sc">::</span>combine, </span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">.packages =</span> <span class="st">'randomForest'</span>) <span class="sc">%dopar%</span></span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>  randomForest<span class="sc">::</span><span class="fu">randomForest</span>(species_presence <span class="sc">~</span> ., </span>
-<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>                             <span class="at">data =</span> train_data,</span>
-<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>                             <span class="at">ntree =</span> ntree)</span>
-<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf, test_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>species_presence))</span>
-<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
-<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">stopImplicitCluster</span>()</span>
-<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>time3 <span class="ot">&lt;-</span> end<span class="sc">-</span>start</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">registerDoParallel</span>(<span class="at">cores =</span> <span class="dv">4</span>)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>rf <span class="ot">&lt;-</span> foreach<span class="sc">::</span><span class="fu">foreach</span>(<span class="at">ntree =</span> <span class="fu">rep</span>(num_trees<span class="sc">/</span><span class="dv">4</span>, <span class="dv">4</span>), </span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">.combine =</span> randomForest<span class="sc">::</span>combine, </span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>                       <span class="at">.packages =</span> <span class="st">'randomForest'</span>) <span class="sc">%dopar%</span></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>  randomForest<span class="sc">::</span><span class="fu">randomForest</span>(species_presence <span class="sc">~</span> ., </span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>                             <span class="at">data =</span> train_data,</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>                             <span class="at">ntree =</span> ntree)</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(rf, test_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>species_presence))</span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">stopImplicitCluster</span>()</span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>time3 <span class="ot">&lt;-</span> end<span class="sc">-</span>start</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Let’s print the confusion matrix of this output. Because this data was relatively simply simulated, we don’t expect the predictive power to be too great.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(predictions, test_data<span class="sc">$</span>species_presence)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(predictions, test_data<span class="sc">$</span>species_presence)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>           
 predictions absent present
-    absent     705     774
-    present    781     740</code></pre>
+    absent     704     767
+    present    782     747</code></pre>
 </div>
 </div>
 <p>This now has the following run-time (seconds):</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.20    0.55    4.14 </code></pre>
+   1.08    0.55    3.81 </code></pre>
 </div>
 </div>
 <p>
 </p></section>
 <section id="discussion-1" class="level2">
 <h2 class="anchored" data-anchor-id="discussion-1">Discussion</h2>
-<p>Again, using <u>easily adaptable and readable syntax</u>, we leverage a parallel environment to significantly lessen the computation time of our large model. Relative to a standard for-loop, the parallelised computation is approximately 38% faster.</p>
+<p>Again, using <u>easily adaptable and readable syntax</u>, we leverage a parallel environment to significantly lessen the computation time of our large model. Relative to a standard for-loop, the parallelised computation is approximately 34% faster.</p>
 <p><br></p>
 </section>
 </section>
@@ -773,7 +801,7 @@ predictions absent present
 <h1>Example 3: Parallel regressions with different outcomes</h1>
 <p>As hinted to in the overview to this blog, parallel computing is not the general solution to running loop-based code more quickly. Instances which run intrinsically “fast” will not benefit from a parallel environment and may in fact run <em>slower</em> in parallel, after accounting for the overhead in ‘managing’ the task division and result assembly.<br>
 <br>
-There are other packages which may be useful in these circumstances, such as the often handy <code>purrr:map</code> which we examine below.</p>
+There are other packages which may be useful in these circumstances, such as the often handy <code>purrr::map</code> which we examine below.</p>
 <p>Let’s apply this to a situation where we have different model specifications we would like to run on the same data set.</p>
 <p>
 </p><section id="data-1" class="level2">
@@ -785,12 +813,12 @@ There are other packages which may be useful in these circumstances, such as the
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>flights <span class="ot">&lt;-</span> nycflights13<span class="sc">::</span>flights</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>flights <span class="ot">&lt;-</span> flights <span class="sc">%&gt;%</span></span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(year, day, dep_delay, arr_delay, air_time, distance) <span class="sc">%&gt;%</span></span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">arr_delay_bin =</span> <span class="fu">as.factor</span>(<span class="fu">case_when</span>(arr_delay <span class="sc">&gt;</span>  <span class="dv">15</span> <span class="sc">~</span> <span class="dv">1</span>, <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span>)))</span>
-<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>flights</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>flights <span class="ot">&lt;-</span> nycflights13<span class="sc">::</span>flights</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>flights <span class="ot">&lt;-</span> flights <span class="sc">%&gt;%</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(year, day, dep_delay, arr_delay, air_time, distance) <span class="sc">%&gt;%</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">arr_delay_bin =</span> <span class="fu">as.factor</span>(<span class="fu">case_when</span>(arr_delay <span class="sc">&gt;</span>  <span class="dv">15</span> <span class="sc">~</span> <span class="dv">1</span>, <span class="cn">TRUE</span> <span class="sc">~</span> <span class="dv">0</span>)))</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>flights</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 336,776 × 7
@@ -827,8 +855,8 @@ There are other packages which may be useful in these circumstances, such as the
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>indep_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"distance"</span>, <span class="st">"air_time"</span>, <span class="st">"dep_delay"</span>)</span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>outcome_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"arr_delay"</span>, <span class="st">"arr_delay_bin"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>indep_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"distance"</span>, <span class="st">"air_time"</span>, <span class="st">"dep_delay"</span>)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>outcome_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"arr_delay"</span>, <span class="st">"arr_delay_bin"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>For each outcome variable, we run a model. If the outcome variable is continuous, we run a simple linear model; otherwise we run a basic logistic regression.</p>
@@ -839,24 +867,24 @@ There are other packages which may be useful in these circumstances, such as the
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>models <span class="ot">&lt;-</span> <span class="fu">list</span>() <span class="co"># To store our model output</span></span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> outcome_vars){</span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (i <span class="sc">==</span> <span class="st">"arr_delay"</span>){</span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(i,<span class="st">"~"</span>,<span class="fu">paste</span>(indep_vars, <span class="at">collapse =</span> <span class="st">"+"</span>))),</span>
-<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> flights)</span>
-<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (i <span class="sc">==</span> <span class="st">"arr_delay_bin"</span>){</span>
-<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(i,<span class="st">"~"</span>,<span class="fu">paste</span>(indep_vars, <span class="at">collapse =</span> <span class="st">"+"</span>))),</span>
-<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">family =</span> binomial,</span>
-<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> flights)</span>
-<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>  models[[i]] <span class="ot">&lt;-</span> <span class="fu">summary</span>(model)</span>
-<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-17"><a href="#cb48-17" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
-<span id="cb48-18"><a href="#cb48-18" aria-hidden="true" tabindex="-1"></a>time1 <span class="ot">&lt;-</span> end<span class="sc">-</span>start</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>models <span class="ot">&lt;-</span> <span class="fu">list</span>() <span class="co"># To store our model output</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> outcome_vars){</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (i <span class="sc">==</span> <span class="st">"arr_delay"</span>){</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(i,<span class="st">"~"</span>,<span class="fu">paste</span>(indep_vars, <span class="at">collapse =</span> <span class="st">"+"</span>))),</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> flights)</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (i <span class="sc">==</span> <span class="st">"arr_delay_bin"</span>){</span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(i,<span class="st">"~"</span>,<span class="fu">paste</span>(indep_vars, <span class="at">collapse =</span> <span class="st">"+"</span>))),</span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">family =</span> binomial,</span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> flights)</span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>  models[[i]] <span class="ot">&lt;-</span> <span class="fu">summary</span>(model)</span>
+<span id="cb50-15"><a href="#cb50-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb50-16"><a href="#cb50-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-17"><a href="#cb50-17" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb50-18"><a href="#cb50-18" aria-hidden="true" tabindex="-1"></a>time1 <span class="ot">&lt;-</span> end<span class="sc">-</span>start</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>This returns a list with the model output summary for each of our models.</p>
@@ -864,54 +892,54 @@ There are other packages which may be useful in these circumstances, such as the
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.27    0.30    1.61 </code></pre>
+   1.00    0.23    1.25 </code></pre>
 </div>
 </div>
 <p>
 </p></section>
 <section id="purrrmap" class="level2">
-<h2 class="anchored" data-anchor-id="purrrmap"><code>purrr:map</code></h2>
+<h2 class="anchored" data-anchor-id="purrrmap"><code>purrr::map</code></h2>
 <p>Map functions apply a function to each element of a list/vector and return an object. In cases relying on multiple computations across different values, they often come in handy.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>models <span class="ot">&lt;-</span> <span class="fu">map</span>(outcome_vars, </span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>      <span class="sc">~</span> <span class="cf">if</span> (.x <span class="sc">==</span> <span class="st">"arr_delay"</span>){</span>
-<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">lm</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(.x, <span class="st">"~"</span>, </span>
-<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">paste</span>(indep_vars, <span class="at">collapse =</span> <span class="st">" + "</span>))),</span>
-<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> flights) <span class="sc">%&gt;%</span></span>
-<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>          <span class="fu">summary</span>()</span>
-<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb51-11"><a href="#cb51-11" aria-hidden="true" tabindex="-1"></a>        } <span class="cf">else</span> <span class="cf">if</span> (.x <span class="sc">==</span> <span class="st">"arr_delay_bin"</span>){</span>
-<span id="cb51-12"><a href="#cb51-12" aria-hidden="true" tabindex="-1"></a>          <span class="fu">glm</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(.x, <span class="st">"~"</span>,</span>
-<span id="cb51-13"><a href="#cb51-13" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">paste</span>(indep_vars, <span class="at">collapse =</span> <span class="st">" + "</span>))),</span>
-<span id="cb51-14"><a href="#cb51-14" aria-hidden="true" tabindex="-1"></a>              <span class="at">family =</span> binomial,</span>
-<span id="cb51-15"><a href="#cb51-15" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> flights) <span class="sc">%&gt;%</span></span>
-<span id="cb51-16"><a href="#cb51-16" aria-hidden="true" tabindex="-1"></a>            <span class="fu">summary</span>()</span>
-<span id="cb51-17"><a href="#cb51-17" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb51-18"><a href="#cb51-18" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb51-19"><a href="#cb51-19" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(models) <span class="ot">&lt;-</span> outcome_vars</span>
-<span id="cb51-20"><a href="#cb51-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb51-21"><a href="#cb51-21" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
-<span id="cb51-22"><a href="#cb51-22" aria-hidden="true" tabindex="-1"></a>time2 <span class="ot">&lt;-</span> end<span class="sc">-</span>start</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>models <span class="ot">&lt;-</span> <span class="fu">map</span>(outcome_vars, </span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>      <span class="sc">~</span> <span class="cf">if</span> (.x <span class="sc">==</span> <span class="st">"arr_delay"</span>){</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">lm</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(.x, <span class="st">"~"</span>, </span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">paste</span>(indep_vars, <span class="at">collapse =</span> <span class="st">" + "</span>))),</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> flights) <span class="sc">%&gt;%</span></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>          <span class="fu">summary</span>()</span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>        } <span class="cf">else</span> <span class="cf">if</span> (.x <span class="sc">==</span> <span class="st">"arr_delay_bin"</span>){</span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>          <span class="fu">glm</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(.x, <span class="st">"~"</span>,</span>
+<span id="cb53-13"><a href="#cb53-13" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">paste</span>(indep_vars, <span class="at">collapse =</span> <span class="st">" + "</span>))),</span>
+<span id="cb53-14"><a href="#cb53-14" aria-hidden="true" tabindex="-1"></a>              <span class="at">family =</span> binomial,</span>
+<span id="cb53-15"><a href="#cb53-15" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> flights) <span class="sc">%&gt;%</span></span>
+<span id="cb53-16"><a href="#cb53-16" aria-hidden="true" tabindex="-1"></a>            <span class="fu">summary</span>()</span>
+<span id="cb53-17"><a href="#cb53-17" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb53-18"><a href="#cb53-18" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb53-19"><a href="#cb53-19" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(models) <span class="ot">&lt;-</span> outcome_vars</span>
+<span id="cb53-20"><a href="#cb53-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb53-21"><a href="#cb53-21" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb53-22"><a href="#cb53-22" aria-hidden="true" tabindex="-1"></a>time2 <span class="ot">&lt;-</span> end<span class="sc">-</span>start</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>This has the following run-time (seconds):</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.22    0.17    1.39 </code></pre>
+   1.11    0.15    1.28 </code></pre>
 </div>
 </div>
 <p>
@@ -922,43 +950,43 @@ There are other packages which may be useful in these circumstances, such as the
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(furrr)</span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>(multisession, <span class="at">workers =</span> <span class="dv">6</span>) <span class="co"># Initialise parallel environment using furrr</span></span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
-<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>models <span class="ot">&lt;-</span> furrr<span class="sc">::</span><span class="fu">future_map</span>(outcome_vars, </span>
-<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>      <span class="sc">~</span> <span class="cf">if</span> (.x <span class="sc">==</span> <span class="st">"arr_delay"</span>){</span>
-<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">lm</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(.x, <span class="st">"~"</span>, </span>
-<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">paste</span>(indep_vars, <span class="at">collapse =</span> <span class="st">" + "</span>))),</span>
-<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> flights) <span class="sc">%&gt;%</span></span>
-<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>          <span class="fu">summary</span>()</span>
-<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>        } <span class="cf">else</span> <span class="cf">if</span> (.x <span class="sc">==</span> <span class="st">"arr_delay_bin"</span>){</span>
-<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a>          <span class="fu">glm</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(.x, <span class="st">"~"</span>,</span>
-<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">paste</span>(indep_vars, <span class="at">collapse =</span> <span class="st">" + "</span>))),</span>
-<span id="cb54-16"><a href="#cb54-16" aria-hidden="true" tabindex="-1"></a>              <span class="at">family =</span> binomial,</span>
-<span id="cb54-17"><a href="#cb54-17" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> flights) <span class="sc">%&gt;%</span></span>
-<span id="cb54-18"><a href="#cb54-18" aria-hidden="true" tabindex="-1"></a>            <span class="fu">summary</span>()</span>
-<span id="cb54-19"><a href="#cb54-19" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb54-20"><a href="#cb54-20" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb54-21"><a href="#cb54-21" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(models) <span class="ot">&lt;-</span> outcome_vars</span>
-<span id="cb54-22"><a href="#cb54-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-23"><a href="#cb54-23" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
-<span id="cb54-24"><a href="#cb54-24" aria-hidden="true" tabindex="-1"></a>time3 <span class="ot">&lt;-</span> end<span class="sc">-</span>start</span>
-<span id="cb54-25"><a href="#cb54-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-26"><a href="#cb54-26" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>(sequential) <span class="co"># Revert to sequential processing</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(furrr)</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>(multisession, <span class="at">workers =</span> <span class="dv">6</span>) <span class="co"># Initialise parallel environment using furrr</span></span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>models <span class="ot">&lt;-</span> furrr<span class="sc">::</span><span class="fu">future_map</span>(outcome_vars, </span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>      <span class="sc">~</span> <span class="cf">if</span> (.x <span class="sc">==</span> <span class="st">"arr_delay"</span>){</span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">lm</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(.x, <span class="st">"~"</span>, </span>
+<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a>                            <span class="fu">paste</span>(indep_vars, <span class="at">collapse =</span> <span class="st">" + "</span>))),</span>
+<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a>           <span class="at">data =</span> flights) <span class="sc">%&gt;%</span></span>
+<span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a>          <span class="fu">summary</span>()</span>
+<span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb56-13"><a href="#cb56-13" aria-hidden="true" tabindex="-1"></a>        } <span class="cf">else</span> <span class="cf">if</span> (.x <span class="sc">==</span> <span class="st">"arr_delay_bin"</span>){</span>
+<span id="cb56-14"><a href="#cb56-14" aria-hidden="true" tabindex="-1"></a>          <span class="fu">glm</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(.x, <span class="st">"~"</span>,</span>
+<span id="cb56-15"><a href="#cb56-15" aria-hidden="true" tabindex="-1"></a>                               <span class="fu">paste</span>(indep_vars, <span class="at">collapse =</span> <span class="st">" + "</span>))),</span>
+<span id="cb56-16"><a href="#cb56-16" aria-hidden="true" tabindex="-1"></a>              <span class="at">family =</span> binomial,</span>
+<span id="cb56-17"><a href="#cb56-17" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> flights) <span class="sc">%&gt;%</span></span>
+<span id="cb56-18"><a href="#cb56-18" aria-hidden="true" tabindex="-1"></a>            <span class="fu">summary</span>()</span>
+<span id="cb56-19"><a href="#cb56-19" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb56-20"><a href="#cb56-20" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb56-21"><a href="#cb56-21" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(models) <span class="ot">&lt;-</span> outcome_vars</span>
+<span id="cb56-22"><a href="#cb56-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-23"><a href="#cb56-23" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb56-24"><a href="#cb56-24" aria-hidden="true" tabindex="-1"></a>time3 <span class="ot">&lt;-</span> end<span class="sc">-</span>start</span>
+<span id="cb56-25"><a href="#cb56-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-26"><a href="#cb56-26" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>(sequential) <span class="co"># Revert to sequential processing</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>This has the following run-time (seconds):</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   0.09    0.05    2.53 </code></pre>
+   0.14    0.01    2.39 </code></pre>
 </div>
 </div>
 <p>
@@ -973,43 +1001,43 @@ There are other packages which may be useful in these circumstances, such as the
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">registerDoParallel</span>(<span class="at">cores =</span> <span class="dv">6</span>)</span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
-<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>models <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="at">j =</span> outcome_vars, <span class="at">.combine =</span> <span class="st">"list"</span>) <span class="sc">%dopar%</span> {</span>
-<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (j <span class="sc">==</span> <span class="st">"arr_delay"</span>){</span>
-<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(j,<span class="st">"~"</span>,<span class="fu">paste</span>(indep_vars, <span class="at">collapse =</span> <span class="st">"+"</span>))),</span>
-<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> flights)</span>
-<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (j <span class="sc">==</span> <span class="st">"arr_delay_bin"</span>){</span>
-<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(j,<span class="st">"~"</span>,<span class="fu">paste</span>(indep_vars, <span class="at">collapse =</span> <span class="st">"+"</span>))),</span>
-<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">family =</span> binomial,</span>
-<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> flights)</span>
-<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb57-14"><a href="#cb57-14" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(models) <span class="ot">&lt;-</span> outcome_vars</span>
-<span id="cb57-15"><a href="#cb57-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-16"><a href="#cb57-16" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
-<span id="cb57-17"><a href="#cb57-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-18"><a href="#cb57-18" aria-hidden="true" tabindex="-1"></a>time4 <span class="ot">&lt;-</span> end <span class="sc">-</span> start</span>
-<span id="cb57-19"><a href="#cb57-19" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">stopImplicitCluster</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">registerDoParallel</span>(<span class="at">cores =</span> <span class="dv">6</span>)</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>start <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>models <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="at">j =</span> outcome_vars, <span class="at">.combine =</span> <span class="st">"list"</span>) <span class="sc">%dopar%</span> {</span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (j <span class="sc">==</span> <span class="st">"arr_delay"</span>){</span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(j,<span class="st">"~"</span>,<span class="fu">paste</span>(indep_vars, <span class="at">collapse =</span> <span class="st">"+"</span>))),</span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">data =</span> flights)</span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> <span class="cf">if</span> (j <span class="sc">==</span> <span class="st">"arr_delay_bin"</span>){</span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a>    model <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">as.formula</span>(<span class="fu">paste</span>(j,<span class="st">"~"</span>,<span class="fu">paste</span>(indep_vars, <span class="at">collapse =</span> <span class="st">"+"</span>))),</span>
+<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a>                 <span class="at">family =</span> binomial,</span>
+<span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> flights)</span>
+<span id="cb59-12"><a href="#cb59-12" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb59-13"><a href="#cb59-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb59-14"><a href="#cb59-14" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(models) <span class="ot">&lt;-</span> outcome_vars</span>
+<span id="cb59-15"><a href="#cb59-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-16"><a href="#cb59-16" aria-hidden="true" tabindex="-1"></a>end <span class="ot">&lt;-</span> <span class="fu">proc.time</span>()</span>
+<span id="cb59-17"><a href="#cb59-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-18"><a href="#cb59-18" aria-hidden="true" tabindex="-1"></a>time4 <span class="ot">&lt;-</span> end <span class="sc">-</span> start</span>
+<span id="cb59-19"><a href="#cb59-19" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">stopImplicitCluster</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>This has the following run-time (seconds):</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(time4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.42    0.77    5.22 </code></pre>
+   1.23    0.68    4.80 </code></pre>
 </div>
 </div>
 <p>
 </p></section>
 <section id="discussion-2" class="level2">
 <h2 class="anchored" data-anchor-id="discussion-2">Discussion</h2>
-<p>We now see that the parallel processing of these tasks takes far <em>longer</em> – about 69% so! The underlying set of operations — running a series of linear models — are already small and relatively fast, so the overhead of managing the task (splitting, computing and combining results) in a parallel environment far exceeds what what can easily be spun up using a for-loop (or <code>purrr::map</code>).</p>
+<p>We now see that the parallel processing of these tasks takes far <em>longer</em> – about 74% so! The underlying set of operations — running a series of linear models — are already small and relatively fast, so the overhead of managing the task (splitting, computing and combining results) in a parallel environment far exceeds what what can easily be spun up using a for-loop (or <code>purrr::map</code>).</p>
 <p><br></p>
 </section>
 </section>
@@ -1047,7 +1075,7 @@ There are other packages which may be useful in these circumstances, such as the
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>R version 4.3.2 (2023-10-31 ucrt)

@@ -17,18 +17,14 @@ draft: false
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r echo = F, message = F, warning = F}
-library(tidyverse)  # For general "tidyverse" style manipulations
-library(parallel)   # base R
-library(foreach)    # For looping
-library(doParallel) # Parallel back-end for the `foreach` package
+```         
 ```
 
 # Overview
 
 While most of the datasets we work with are of a manageable size here at the Telethon Kids Institute, occasionally we are presented with data containing *millions* of rows and/or *thousands* of columns. Performing almost any operation on these large datasets can take hours to execute -- a real test of patience for exploratory work!
 
-Parallel computing is one relatively simple way to reduce computation time on large datasets – leveraging our computer's full processing capabilities by simultaneously distributing tasks "in parallel" across multiple processors (without too much extra code). This is particularly useful for loop-based computations, where multiple parameters or conditions must be swept over whether that as part of variable creation, model tuning/execution, or some other task.
+Parallel computing is one relatively simple way to reduce computation time on large datasets – leveraging our computer's full processing capabilities by simultaneously distributing tasks "in parallel" across multiple processors (without too much extra code). This is particularly useful for loop-based computations, where multiple parameters or conditions must be swept over whether that be as part of variable creation, model tuning/execution, or some other task.
 
 That being said, while parallel computing is not a "magical general solution" to all computationally intensive tasks – it is worth investing some time to understand how it works, and become familiar with the packages and/or functions used within a parallel framework. There are still circumstances where the handy `purrr::map` function (or the like) can be just as, or more, efficient than a parallel distribution.
 
@@ -44,7 +40,7 @@ Parallel computing refers to executing multiple operations in "parallel" (i.e., 
 
 In this post, we will have a look at a couple of examples using `R`. We provide some simple examples and use-cases, in addition to some additional resources to continue learning.
 
-The [`doParallel`](#0) and [`foreach`](#0) packages of `R` are one set of packages, intended to be used together, to facilitate parallel computing in a syntactically simple way `R`. Additionally, the base `parallel` package is used for some basic set-up and detection.
+The [`doParallel`](#0) and [`foreach`](#0) packages of `R` are one set of packages, intended to be used together, to facilitate parallel computing in a syntactically simple way. Additionally, the base `parallel` package is used for some basic set-up and detection.
 
 These examples are run using `r R.version$version.string` on `r Sys.info()["sysname"]` `r Sys.info()["release"]`.
 
@@ -65,6 +61,15 @@ Of course, there is some overhead to allocating tasks and compiling results to d
 <br>
 
 # Setup
+
+Let's first load the packages we will use to render our examples
+
+```{r message = F, warning = F}
+library(tidyverse)  # For general "tidyverse" style manipulations & operations
+library(parallel)   # base R package for parallel processing
+library(foreach)    # For looping
+library(doParallel) # Parallel back-end for the `foreach` package
+```
 
 Let's check the number of cores available on our machine.
 
@@ -188,6 +193,16 @@ This had the following run-time (seconds):
 ```{r}
 print(time1)
 ```
+
+::: callout-note
+## `proc.time` components
+
+-   *user* = time the CPU has spent executing the R process.
+
+-   *system* = time the CPU has spent on system-level operations that facilitate the R process (e.g., memory management, system calls).
+
+-   *elapsed* = real-world time that has elapsed.
+:::
 
 <p>
 
@@ -461,7 +476,7 @@ Again, using [easily adaptable and readable syntax]{.underline}, we leverage a p
 
 As hinted to in the overview to this blog, parallel computing is not the general solution to running loop-based code more quickly. Instances which run intrinsically "fast" will not benefit from a parallel environment and may in fact run *slower* in parallel, after accounting for the overhead in 'managing' the task division and result assembly.\
 \
-There are other packages which may be useful in these circumstances, such as the often handy `purrr:map` which we examine below.
+There are other packages which may be useful in these circumstances, such as the often handy `purrr::map` which we examine below.
 
 Let's apply this to a situation where we have different model specifications we would like to run on the same data set.
 
@@ -540,7 +555,7 @@ print(time1)
 
 <p>
 
-## `purrr:map`
+## `purrr::map`
 
 Map functions apply a function to each element of a list/vector and return an object. In cases relying on multiple computations across different values, they often come in handy.
 

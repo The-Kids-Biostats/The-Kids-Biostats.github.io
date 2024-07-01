@@ -21,10 +21,11 @@
 
 
 
+<pre><code></code></pre>
 <section id="overview" class="level1">
 <h1>Overview</h1>
 <p>While most of the datasets we work with are of a manageable size here at the Telethon Kids Institute, occasionally we are presented with data containing <em>millions</em> of rows and/or <em>thousands</em> of columns. Performing almost any operation on these large datasets can take hours to execute – a real test of patience for exploratory work!</p>
-<p>Parallel computing is one relatively simple way to reduce computation time on large datasets – leveraging our computer’s full processing capabilities by simultaneously distributing tasks “in parallel” across multiple processors (without too much extra code). This is particularly useful for loop-based computations, where multiple parameters or conditions must be swept over whether that as part of variable creation, model tuning/execution, or some other task.</p>
+<p>Parallel computing is one relatively simple way to reduce computation time on large datasets – leveraging our computer’s full processing capabilities by simultaneously distributing tasks “in parallel” across multiple processors (without too much extra code). This is particularly useful for loop-based computations, where multiple parameters or conditions must be swept over whether that be as part of variable creation, model tuning/execution, or some other task.</p>
 <p>That being said, while parallel computing is not a “magical general solution” to all computationally intensive tasks – it is worth investing some time to understand how it works, and become familiar with the packages and/or functions used within a parallel framework. There are still circumstances where the handy <code>purrr::map</code> function (or the like) can be just as, or more, efficient than a parallel distribution.</p>
 <p>
 </p></section>
@@ -32,7 +33,7 @@
 <h1>What is Parallel Computing?</h1>
 <p>Parallel computing refers to executing multiple operations in “parallel” (i.e., at the same time) across a machine’s multiple cores/processors. Most modern computers have at least four cores, and often many more. By default, R uses only one core, running iterative operations sequentially; not starting the next until the previous is complete. Under a parallel framework, however, multiple iterations/calculations can be allocated across multiple cores so they can be executed at the same time — thus saving (overall) time. These time savings accumulate particularly with large underlying tasks <em>(as opposed to running many small tasks in parallel — a situation that often ultimately ends up slower!)</em>.</p>
 <p>In this post, we will have a look at a couple of examples using <code>R</code>. We provide some simple examples and use-cases, in addition to some additional resources to continue learning.</p>
-<p>The <code>doParallel</code> and <code>foreach</code> packages of <code>R</code> are one set of packages, intended to be used together, to facilitate parallel computing in a syntactically simple way <code>R</code>. Additionally, the base <code>parallel</code> package is used for some basic set-up and detection.</p>
+<p>The <code>doParallel</code> and <code>foreach</code> packages of <code>R</code> are one set of packages, intended to be used together, to facilitate parallel computing in a syntactically simple way. Additionally, the base <code>parallel</code> package is used for some basic set-up and detection.</p>
 <p>These examples are run using R version 4.3.2 (2023-10-31 ucrt) on Windows 10 x64.</p>
 </section>
 <section id="when-should-we-consider-parallel-computing" class="level1">
@@ -50,11 +51,37 @@
 </section>
 <section id="setup" class="level1">
 <h1>Setup</h1>
+<p>Let’s first load the packages we will use to render our examples</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyverse)  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># For general "tidyverse" style manipulations &amp; operations</span></span>
+<span id="cb2-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(parallel)   <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># base R package for parallel processing</span></span>
+<span id="cb2-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(foreach)    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># For looping</span></span>
+<span id="cb2-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(doParallel) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Parallel back-end for the `foreach` package</span></span></code></pre></div>
+</details>
+</div>
 <p>Let’s check the number of cores available on our machine.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1">parallel<span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">parallel<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -71,7 +98,7 @@ Let’s use 6 cores for our examples.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">doParallel<span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">doParallel<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -94,7 +121,7 @@ font-style: inherit;">6</span>)</span></code></pre></div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">doParallel<span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">doParallel<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -105,7 +132,7 @@ font-style: inherit;">stopImplicitCluster</span>()</span></code></pre></div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">set.seed</span>(<span class="dv" style="color: #AD0000;
 background-color: null;
@@ -126,19 +153,19 @@ font-style: inherit;">2024</span>)</span></code></pre></div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="co" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Let's set up the data and number of bootstrap samples</span></span>
-<span id="cb6-2"><span class="fu" style="color: #4758AB;
+<span id="cb8-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">data</span>(mtcars)</span>
-<span id="cb6-3">mtcars <span class="ot" style="color: #003B4F;
+<span id="cb8-3">mtcars <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">as_tibble</span>(mtcars)</span>
-<span id="cb6-4"></span>
-<span id="cb6-5">trials <span class="ot" style="color: #003B4F;
+<span id="cb8-4"></span>
+<span id="cb8-5">trials <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
 background-color: null;
@@ -162,18 +189,18 @@ font-style: inherit;"># Number of bootstrap samples</span></span></code></pre></
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">start <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">start <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">proc.time</span>() <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Start our timer!</span></span>
-<span id="cb7-2"></span>
-<span id="cb7-3"><span class="co" style="color: #5E5E5E;
+<span id="cb9-2"></span>
+<span id="cb9-3"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Initialise a matrix to store the coefficients from each bootstrap sample</span></span>
-<span id="cb7-4">bootstrap_coefs <span class="ot" style="color: #003B4F;
+<span id="cb9-4">bootstrap_coefs <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -186,7 +213,7 @@ background-color: null;
 font-style: inherit;">ncol =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">4</span>)</span>
-<span id="cb7-5"><span class="fu" style="color: #4758AB;
+<span id="cb9-5"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">colnames</span>(bootstrap_coefs) <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -205,8 +232,8 @@ background-color: null;
 font-style: inherit;">+</span> am, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">data =</span> mtcars)))</span>
-<span id="cb7-6"></span>
-<span id="cb7-7"><span class="cf" style="color: #003B4F;
+<span id="cb9-6"></span>
+<span id="cb9-7"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
@@ -215,28 +242,28 @@ background-color: null;
 font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">:</span>trials){</span>
-<span id="cb7-8">  </span>
-<span id="cb7-9">  <span class="co" style="color: #5E5E5E;
+<span id="cb9-8">  </span>
+<span id="cb9-9">  <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Take bootstrap sample</span></span>
-<span id="cb7-10">  ind <span class="ot" style="color: #003B4F;
+<span id="cb9-10">  ind <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> mtcars[<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">sample</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">nrow</span>(mtcars), </span>
-<span id="cb7-11">                       <span class="at" style="color: #657422;
+<span id="cb9-11">                       <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">replace =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
 font-style: inherit;">TRUE</span>),</span>
-<span id="cb7-12">                ]</span>
-<span id="cb7-13">  </span>
-<span id="cb7-14">  <span class="co" style="color: #5E5E5E;
+<span id="cb9-12">                ]</span>
+<span id="cb9-13">  </span>
+<span id="cb9-14">  <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Construct linear regression</span></span>
-<span id="cb7-15">  result <span class="ot" style="color: #003B4F;
+<span id="cb9-15">  result <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -249,32 +276,32 @@ background-color: null;
 font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">as_factor</span>(am), </span>
-<span id="cb7-16">               <span class="at" style="color: #657422;
+<span id="cb9-16">               <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">data =</span> ind)</span>
-<span id="cb7-17">  </span>
-<span id="cb7-18">  <span class="co" style="color: #5E5E5E;
+<span id="cb9-17">  </span>
+<span id="cb9-18">  <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Extract coefficients and store to `bootstrap_coefs`</span></span>
-<span id="cb7-19">  bootstrap_coefs[i, ] <span class="ot" style="color: #003B4F;
+<span id="cb9-19">  bootstrap_coefs[i, ] <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">coef</span>(result)</span>
-<span id="cb7-20">}</span>
-<span id="cb7-21"></span>
-<span id="cb7-22"><span class="co" style="color: #5E5E5E;
+<span id="cb9-20">}</span>
+<span id="cb9-21"></span>
+<span id="cb9-22"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Calculate the 2.5th and 97.5th percentile for each variable's coefficient estimates from the bootstrap distribution.</span></span>
-<span id="cb7-23">bootstrap_cis <span class="ot" style="color: #003B4F;
+<span id="cb9-23">bootstrap_cis <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">apply</span>(bootstrap_coefs, </span>
-<span id="cb7-24">                       <span class="dv" style="color: #AD0000;
+<span id="cb9-24">                       <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">2</span>, </span>
-<span id="cb7-25">                       <span class="cf" style="color: #003B4F;
+<span id="cb9-25">                       <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">function</span>(coefs){<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -287,15 +314,15 @@ background-color: null;
 font-style: inherit;">0.025</span>, <span class="fl" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">0.975</span>))})</span>
-<span id="cb7-26"></span>
-<span id="cb7-27">end <span class="ot" style="color: #003B4F;
+<span id="cb9-26"></span>
+<span id="cb9-27">end <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">proc.time</span>() <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># End our timer!</span></span>
-<span id="cb7-28">time1 <span class="ot" style="color: #003B4F;
+<span id="cb9-28">time1 <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> end<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -307,7 +334,7 @@ font-style: inherit;">-</span>start</span></code></pre></div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">head</span>(bootstrap_coefs)</span></code></pre></div>
 </details>
@@ -325,7 +352,7 @@ font-style: inherit;">head</span>(bootstrap_coefs)</span></code></pre></div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">bootstrap_cis</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">bootstrap_cis</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>      (Intercept)          hp        wt         am
@@ -338,13 +365,30 @@ font-style: inherit;">head</span>(bootstrap_coefs)</span></code></pre></div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">print</span>(time1)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   9.80    0.06    9.99 </code></pre>
+   8.13    0.11    8.25 </code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<code>proc.time</code> components
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><p><em>user</em> = time the CPU has spent executing the R process.</p></li>
+<li><p><em>system</em> = time the CPU has spent on system-level operations that facilitate the R process (e.g., memory management, system calls).</p></li>
+<li><p><em>elapsed</em> = real-world time that has elapsed.</p></li>
+</ul>
 </div>
 </div>
 <p>
@@ -355,13 +399,13 @@ font-style: inherit;">print</span>(time1)</span></code></pre></div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1">start <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1">start <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">proc.time</span>()</span>
-<span id="cb14-2"></span>
-<span id="cb14-3">bootstrap_coefs <span class="ot" style="color: #003B4F;
+<span id="cb16-2"></span>
+<span id="cb16-3">bootstrap_coefs <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> foreach<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -378,7 +422,7 @@ background-color: null;
 font-style: inherit;">.combine =</span> rbind) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%do%</span> {</span>
-<span id="cb14-4">  ind <span class="ot" style="color: #003B4F;
+<span id="cb16-4">  ind <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> mtcars[<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -389,7 +433,7 @@ background-color: null;
 font-style: inherit;">replace =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
 font-style: inherit;">TRUE</span>), ]</span>
-<span id="cb14-5">  result <span class="ot" style="color: #003B4F;
+<span id="cb16-5">  result <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -402,23 +446,23 @@ background-color: null;
 font-style: inherit;">+</span> am, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">data =</span> ind)</span>
-<span id="cb14-6">  <span class="fu" style="color: #4758AB;
+<span id="cb16-6">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">coef</span>(result)</span>
-<span id="cb14-7">}</span>
-<span id="cb14-8"></span>
-<span id="cb14-9"><span class="co" style="color: #5E5E5E;
+<span id="cb16-7">}</span>
+<span id="cb16-8"></span>
+<span id="cb16-9"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Calculate the 2.5th and 97.5th percentile for each variable's coefficient estimates from the bootstrap distribution.</span></span>
-<span id="cb14-10">bootstrap_cis <span class="ot" style="color: #003B4F;
+<span id="cb16-10">bootstrap_cis <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">apply</span>(bootstrap_coefs, </span>
-<span id="cb14-11">                       <span class="dv" style="color: #AD0000;
+<span id="cb16-11">                       <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">2</span>, </span>
-<span id="cb14-12">                       <span class="cf" style="color: #003B4F;
+<span id="cb16-12">                       <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">function</span>(coefs) {<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -431,13 +475,13 @@ background-color: null;
 font-style: inherit;">0.025</span>, <span class="fl" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">0.975</span>))})</span>
-<span id="cb14-13"></span>
-<span id="cb14-14">end <span class="ot" style="color: #003B4F;
+<span id="cb16-13"></span>
+<span id="cb16-14">end <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">proc.time</span>()</span>
-<span id="cb14-15">time2 <span class="ot" style="color: #003B4F;
+<span id="cb16-15">time2 <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> end<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -449,7 +493,7 @@ font-style: inherit;">-</span>start</span></code></pre></div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">head</span>(bootstrap_coefs)</span></code></pre></div>
 </details>
@@ -467,7 +511,7 @@ result.6    34.42623 -0.03900395 -2.865725 1.167583</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1">bootstrap_cis</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1">bootstrap_cis</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>      (Intercept)          hp        wt         am
@@ -480,13 +524,13 @@ result.6    34.42623 -0.03900395 -2.865725 1.167583</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">print</span>(time2)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   9.30    0.12    9.99 </code></pre>
+   7.33    0.09    7.46 </code></pre>
 </div>
 </div>
 <p>
@@ -497,7 +541,7 @@ font-style: inherit;">print</span>(time2)</span></code></pre></div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1">doParallel<span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1">doParallel<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -508,13 +552,13 @@ background-color: null;
 font-style: inherit;">6</span>) <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Initialise parallel cluster</span></span>
-<span id="cb21-2"></span>
-<span id="cb21-3">start <span class="ot" style="color: #003B4F;
+<span id="cb23-2"></span>
+<span id="cb23-3">start <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">proc.time</span>()</span>
-<span id="cb21-4">bootstrap_coefs <span class="ot" style="color: #003B4F;
+<span id="cb23-4">bootstrap_coefs <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -533,7 +577,7 @@ background-color: null;
 font-style: inherit;">'stats'</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%dopar%</span> {</span>
-<span id="cb21-5">  ind <span class="ot" style="color: #003B4F;
+<span id="cb23-5">  ind <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> mtcars[<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -544,7 +588,7 @@ background-color: null;
 font-style: inherit;">replace =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
 font-style: inherit;">TRUE</span>), ]</span>
-<span id="cb21-6">  result <span class="ot" style="color: #003B4F;
+<span id="cb23-6">  result <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -557,23 +601,23 @@ background-color: null;
 font-style: inherit;">+</span> am, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">data =</span> ind)</span>
-<span id="cb21-7">  <span class="fu" style="color: #4758AB;
+<span id="cb23-7">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">coef</span>(result)</span>
-<span id="cb21-8">}</span>
-<span id="cb21-9"></span>
-<span id="cb21-10"><span class="co" style="color: #5E5E5E;
+<span id="cb23-8">}</span>
+<span id="cb23-9"></span>
+<span id="cb23-10"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Calculate the 2.5th and 97.5th percentile for each variable's coefficient estimates from the bootstrap distribution.</span></span>
-<span id="cb21-11">bootstrap_cis <span class="ot" style="color: #003B4F;
+<span id="cb23-11">bootstrap_cis <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">apply</span>(bootstrap_coefs, </span>
-<span id="cb21-12">                       <span class="dv" style="color: #AD0000;
+<span id="cb23-12">                       <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">2</span>, </span>
-<span id="cb21-13">                       <span class="cf" style="color: #003B4F;
+<span id="cb23-13">                       <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">function</span>(coefs) {<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -586,19 +630,19 @@ background-color: null;
 font-style: inherit;">0.025</span>, <span class="fl" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">0.975</span>))})</span>
-<span id="cb21-14"></span>
-<span id="cb21-15">end <span class="ot" style="color: #003B4F;
+<span id="cb23-14"></span>
+<span id="cb23-15">end <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">proc.time</span>()</span>
-<span id="cb21-16">time3 <span class="ot" style="color: #003B4F;
+<span id="cb23-16">time3 <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> end<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>start</span>
-<span id="cb21-17"></span>
-<span id="cb21-18">doParallel<span class="sc" style="color: #5E5E5E;
+<span id="cb23-17"></span>
+<span id="cb23-18">doParallel<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -611,43 +655,43 @@ font-style: inherit;"># De-register parallel cluster</span></span></code></pre><
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">head</span>(bootstrap_coefs)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>         (Intercept)          hp        wt         am
-result.1    29.77207 -0.05288730 -1.058038  3.9123258
-result.2    33.58996 -0.04755404 -2.197781  2.3569617
-result.3    35.98690 -0.03708263 -3.266833  1.4526964
-result.4    42.25028 -0.01822239 -5.825143 -2.8374742
-result.5    33.29648 -0.04161578 -2.510220  2.7786428
-result.6    35.12179 -0.03283584 -3.369380  0.8513454</code></pre>
+<pre><code>         (Intercept)          hp         wt        am
+result.1    29.01023 -0.03144924 -1.7011668 1.9710101
+result.2    34.64419 -0.02981554 -3.3686345 2.2630996
+result.3    29.30763 -0.05186821 -0.7765918 5.3702237
+result.4    32.78371 -0.05571083 -1.8368810 4.7410181
+result.5    34.58447 -0.02907062 -3.3133915 0.1025598
+result.6    33.63623 -0.03984186 -2.6517603 2.7519106</code></pre>
 </div>
 </div>
 <p>as are the associated 95% confidence intervals.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1">bootstrap_cis</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1">bootstrap_cis</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>      (Intercept)          hp        wt         am
-2.5%     29.00207 -0.05509635 -5.216696 -0.7757867
-97.5%    40.88382 -0.02141655 -1.078642  4.8896085</code></pre>
+2.5%     29.00517 -0.05536575 -5.181523 -0.7919252
+97.5%    40.89882 -0.02190769 -1.076947  4.9375445</code></pre>
 </div>
 </div>
 <p>Lastly, this had the following run-time (seconds)</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">print</span>(time3)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   2.71    0.40    5.16 </code></pre>
+   2.81    0.45    4.63 </code></pre>
 </div>
 </div>
 <p>
@@ -655,7 +699,7 @@ font-style: inherit;">print</span>(time3)</span></code></pre></div>
 <section id="discussion" class="level2">
 <h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
 <p>Immediately, the syntax of the alternative for-loop structures are <strong>more readable</strong> and <strong>easier to construct</strong> than the traditional for-loop. Because the <code>foreach::foreach</code> function easily combines output in a list, we need not define an empty matrix to append output to.</p>
-<p>Computation time in the parallel environment is significantly faster — approximately 48% faster than the traditional for-loop! Across multiple analyses and data sets, these time savings certainly add up!</p>
+<p>Computation time in the parallel environment is significantly faster — approximately 44% faster than the traditional for-loop! Across multiple analyses and data sets, these time savings certainly add up!</p>
 <p><br></p>
 </section>
 </section>
@@ -675,15 +719,15 @@ This example is inspired by the example from the <a href="https://cran.r-project
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1">n <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1">n <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">10000</span> <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Sample size</span></span>
-<span id="cb28-2"></span>
-<span id="cb28-3">data <span class="ot" style="color: #003B4F;
+<span id="cb30-2"></span>
+<span id="cb30-3">data <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -692,47 +736,47 @@ background-color: null;
 font-style: inherit;">temperature =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">rnorm</span>(n, </span>
-<span id="cb28-4">                                       <span class="at" style="color: #657422;
+<span id="cb30-4">                                       <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">mean =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">15</span>, </span>
-<span id="cb28-5">                                       <span class="at" style="color: #657422;
+<span id="cb30-5">                                       <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">sd   =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">40</span>),</span>
-<span id="cb28-6">                   <span class="at" style="color: #657422;
+<span id="cb30-6">                   <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">precipitation =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">rnorm</span>(n, </span>
-<span id="cb28-7">                                         <span class="at" style="color: #657422;
+<span id="cb30-7">                                         <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">mean =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1000</span>, </span>
-<span id="cb28-8">                                         <span class="at" style="color: #657422;
+<span id="cb30-8">                                         <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">sd   =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">300</span>),</span>
-<span id="cb28-9">                   <span class="at" style="color: #657422;
+<span id="cb30-9">                   <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">elevation =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">rnorm</span>(n, </span>
-<span id="cb28-10">                                     <span class="at" style="color: #657422;
+<span id="cb30-10">                                     <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">mean =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">500</span>, </span>
-<span id="cb28-11">                                     <span class="at" style="color: #657422;
+<span id="cb30-11">                                     <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">sd   =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">200</span>),</span>
-<span id="cb28-12">                   <span class="at" style="color: #657422;
+<span id="cb30-12">                   <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">vegetation_type =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -743,20 +787,20 @@ background-color: null;
 font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"forest"</span>, </span>
-<span id="cb28-13">                                                        <span class="st" style="color: #20794D;
+<span id="cb30-13">                                                        <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"grassland"</span>, </span>
-<span id="cb28-14">                                                        <span class="st" style="color: #20794D;
+<span id="cb30-14">                                                        <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"wetland"</span>, </span>
-<span id="cb28-15">                                                        <span class="st" style="color: #20794D;
+<span id="cb30-15">                                                        <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"desert"</span>), </span>
-<span id="cb28-16">                                                      n, </span>
-<span id="cb28-17">                                                      <span class="at" style="color: #657422;
+<span id="cb30-16">                                                      n, </span>
+<span id="cb30-17">                                                      <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">replace =</span> T)),</span>
-<span id="cb28-18">                   <span class="at" style="color: #657422;
+<span id="cb30-18">                   <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">species_presence =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -767,11 +811,11 @@ background-color: null;
 font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"present"</span>, </span>
-<span id="cb28-19">                                                         <span class="st" style="color: #20794D;
+<span id="cb30-19">                                                         <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"absent"</span>), </span>
-<span id="cb28-20">                                                       n, </span>
-<span id="cb28-21">                                                       <span class="at" style="color: #657422;
+<span id="cb30-20">                                                       n, </span>
+<span id="cb30-21">                                                       <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">replace =</span> T)))</span></code></pre></div>
 </details>
@@ -780,7 +824,7 @@ font-style: inherit;">replace =</span> T)))</span></code></pre></div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1">train_index <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1">train_index <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -793,17 +837,17 @@ background-color: null;
 font-style: inherit;">0.7</span><span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">*</span>n)</span>
-<span id="cb29-2"></span>
-<span id="cb29-3">train_data <span class="ot" style="color: #003B4F;
+<span id="cb31-2"></span>
+<span id="cb31-3">train_data <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> data[train_index, ]</span>
-<span id="cb29-4">test_data <span class="ot" style="color: #003B4F;
+<span id="cb31-4">test_data <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> data[<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>train_index, ]</span>
-<span id="cb29-5"></span>
-<span id="cb29-6">num_trees <span class="ot" style="color: #003B4F;
+<span id="cb31-5"></span>
+<span id="cb31-6">num_trees <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
 background-color: null;
@@ -819,17 +863,17 @@ font-style: inherit;">1000</span></span></code></pre></div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1">start <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1">start <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">proc.time</span>()</span>
-<span id="cb30-2">rf <span class="ot" style="color: #003B4F;
+<span id="cb32-2">rf <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">list</span>()</span>
-<span id="cb30-3"><span class="cf" style="color: #003B4F;
+<span id="cb32-3"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
@@ -842,8 +886,8 @@ background-color: null;
 font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">250</span>)){</span>
-<span id="cb30-4"></span>
-<span id="cb30-5">  rf[[i]] <span class="ot" style="color: #003B4F;
+<span id="cb32-4"></span>
+<span id="cb32-5">  rf[[i]] <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> randomForest<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -852,27 +896,27 @@ background-color: null;
 font-style: inherit;">randomForest</span>(species_presence <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">~</span> ., </span>
-<span id="cb30-6">                                        <span class="at" style="color: #657422;
+<span id="cb32-6">                                        <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">data =</span> train_data, </span>
-<span id="cb30-7">                                        <span class="at" style="color: #657422;
+<span id="cb32-7">                                        <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">ntree =</span> num_trees<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">4</span>)</span>
-<span id="cb30-8">}</span>
-<span id="cb30-9"></span>
-<span id="cb30-10">combined_output <span class="ot" style="color: #003B4F;
+<span id="cb32-8">}</span>
+<span id="cb32-9"></span>
+<span id="cb32-10">combined_output <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">do.call</span>(randomForest<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span>combine, rf)</span>
-<span id="cb30-11"></span>
-<span id="cb30-12">predictions <span class="ot" style="color: #003B4F;
+<span id="cb32-11"></span>
+<span id="cb32-12">predictions <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -883,13 +927,13 @@ background-color: null;
 font-style: inherit;">select</span>(<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>species_presence))</span>
-<span id="cb30-13"></span>
-<span id="cb30-14">end <span class="ot" style="color: #003B4F;
+<span id="cb32-13"></span>
+<span id="cb32-14">end <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">proc.time</span>()</span>
-<span id="cb30-15">time1 <span class="ot" style="color: #003B4F;
+<span id="cb32-15">time1 <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> end <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -900,7 +944,7 @@ font-style: inherit;">-</span> start</span></code></pre></div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">table</span>(predictions, test_data<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -917,13 +961,13 @@ predictions absent present
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">print</span>(time1)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   6.14    0.47    6.69 </code></pre>
+   5.47    0.26    5.77 </code></pre>
 </div>
 </div>
 <p>
@@ -934,12 +978,12 @@ font-style: inherit;">print</span>(time1)</span></code></pre></div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1">start <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb37" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1">start <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">proc.time</span>()</span>
-<span id="cb35-2">rf <span class="ot" style="color: #003B4F;
+<span id="cb37-2">rf <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> foreach<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -956,33 +1000,33 @@ background-color: null;
 font-style: inherit;">4</span>, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">4</span>), </span>
-<span id="cb35-3">                       <span class="at" style="color: #657422;
+<span id="cb37-3">                       <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.combine =</span> randomForest<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span>combine, </span>
-<span id="cb35-4">                       <span class="at" style="color: #657422;
+<span id="cb37-4">                       <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.packages =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'randomForest'</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%do%</span></span>
-<span id="cb35-5">  randomForest<span class="sc" style="color: #5E5E5E;
+<span id="cb37-5">  randomForest<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">randomForest</span>(species_presence <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">~</span> ., </span>
-<span id="cb35-6">                             <span class="at" style="color: #657422;
+<span id="cb37-6">                             <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">data =</span> train_data,</span>
-<span id="cb35-7">                             <span class="at" style="color: #657422;
+<span id="cb37-7">                             <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">ntree =</span> ntree)</span>
-<span id="cb35-8"></span>
-<span id="cb35-9">predictions <span class="ot" style="color: #003B4F;
+<span id="cb37-8"></span>
+<span id="cb37-9">predictions <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -993,13 +1037,13 @@ background-color: null;
 font-style: inherit;">select</span>(<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>species_presence))</span>
-<span id="cb35-10"></span>
-<span id="cb35-11">end <span class="ot" style="color: #003B4F;
+<span id="cb37-10"></span>
+<span id="cb37-11">end <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">proc.time</span>()</span>
-<span id="cb35-12">time2 <span class="ot" style="color: #003B4F;
+<span id="cb37-12">time2 <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> end <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -1010,7 +1054,7 @@ font-style: inherit;">-</span> start</span></code></pre></div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb36" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb38" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">table</span>(predictions, test_data<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -1027,13 +1071,13 @@ predictions absent present
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb38" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb40" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">print</span>(time2)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   5.76    0.64    6.44 </code></pre>
+   5.31    0.48    5.81 </code></pre>
 </div>
 </div>
 <p>
@@ -1044,7 +1088,7 @@ font-style: inherit;">print</span>(time2)</span></code></pre></div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb40" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1">doParallel<span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb42" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1">doParallel<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1053,13 +1097,13 @@ background-color: null;
 font-style: inherit;">cores =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">4</span>)</span>
-<span id="cb40-2"></span>
-<span id="cb40-3">start <span class="ot" style="color: #003B4F;
+<span id="cb42-2"></span>
+<span id="cb42-3">start <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">proc.time</span>()</span>
-<span id="cb40-4">rf <span class="ot" style="color: #003B4F;
+<span id="cb42-4">rf <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> foreach<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -1076,33 +1120,33 @@ background-color: null;
 font-style: inherit;">4</span>, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">4</span>), </span>
-<span id="cb40-5">                       <span class="at" style="color: #657422;
+<span id="cb42-5">                       <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.combine =</span> randomForest<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span>combine, </span>
-<span id="cb40-6">                       <span class="at" style="color: #657422;
+<span id="cb42-6">                       <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.packages =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">'randomForest'</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%dopar%</span></span>
-<span id="cb40-7">  randomForest<span class="sc" style="color: #5E5E5E;
+<span id="cb42-7">  randomForest<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">randomForest</span>(species_presence <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">~</span> ., </span>
-<span id="cb40-8">                             <span class="at" style="color: #657422;
+<span id="cb42-8">                             <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">data =</span> train_data,</span>
-<span id="cb40-9">                             <span class="at" style="color: #657422;
+<span id="cb42-9">                             <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">ntree =</span> ntree)</span>
-<span id="cb40-10"></span>
-<span id="cb40-11">predictions <span class="ot" style="color: #003B4F;
+<span id="cb42-10"></span>
+<span id="cb42-11">predictions <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1113,19 +1157,19 @@ background-color: null;
 font-style: inherit;">select</span>(<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>species_presence))</span>
-<span id="cb40-12"></span>
-<span id="cb40-13">end <span class="ot" style="color: #003B4F;
+<span id="cb42-12"></span>
+<span id="cb42-13">end <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">proc.time</span>()</span>
-<span id="cb40-14">doParallel<span class="sc" style="color: #5E5E5E;
+<span id="cb42-14">doParallel<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">stopImplicitCluster</span>()</span>
-<span id="cb40-15"></span>
-<span id="cb40-16">time3 <span class="ot" style="color: #003B4F;
+<span id="cb42-15"></span>
+<span id="cb42-16">time3 <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> end<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -1136,7 +1180,7 @@ font-style: inherit;">-</span>start</span></code></pre></div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb41" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb43" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">table</span>(predictions, test_data<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -1145,28 +1189,28 @@ font-style: inherit;">$</span>species_presence)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>           
 predictions absent present
-    absent     705     774
-    present    781     740</code></pre>
+    absent     704     767
+    present    782     747</code></pre>
 </div>
 </div>
 <p>This now has the following run-time (seconds):</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb43" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb45" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">print</span>(time3)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.20    0.55    4.14 </code></pre>
+   1.08    0.55    3.81 </code></pre>
 </div>
 </div>
 <p>
 </p></section>
 <section id="discussion-1" class="level2">
 <h2 class="anchored" data-anchor-id="discussion-1">Discussion</h2>
-<p>Again, using <u>easily adaptable and readable syntax</u>, we leverage a parallel environment to significantly lessen the computation time of our large model. Relative to a standard for-loop, the parallelised computation is approximately 38% faster.</p>
+<p>Again, using <u>easily adaptable and readable syntax</u>, we leverage a parallel environment to significantly lessen the computation time of our large model. Relative to a standard for-loop, the parallelised computation is approximately 34% faster.</p>
 <p><br></p>
 </section>
 </section>
@@ -1174,7 +1218,7 @@ font-style: inherit;">print</span>(time3)</span></code></pre></div>
 <h1>Example 3: Parallel regressions with different outcomes</h1>
 <p>As hinted to in the overview to this blog, parallel computing is not the general solution to running loop-based code more quickly. Instances which run intrinsically “fast” will not benefit from a parallel environment and may in fact run <em>slower</em> in parallel, after accounting for the overhead in ‘managing’ the task division and result assembly.<br>
 <br>
-There are other packages which may be useful in these circumstances, such as the often handy <code>purrr:map</code> which we examine below.</p>
+There are other packages which may be useful in these circumstances, such as the often handy <code>purrr::map</code> which we examine below.</p>
 <p>Let’s apply this to a situation where we have different model specifications we would like to run on the same data set.</p>
 <p>
 </p><section id="data-1" class="level2">
@@ -1186,22 +1230,22 @@ There are other packages which may be useful in these circumstances, such as the
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb45" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1">flights <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb47" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1">flights <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> nycflights13<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span>flights</span>
-<span id="cb45-2">flights <span class="ot" style="color: #003B4F;
+<span id="cb47-2">flights <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> flights <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span></span>
-<span id="cb45-3">  <span class="fu" style="color: #4758AB;
+<span id="cb47-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">select</span>(year, day, dep_delay, arr_delay, air_time, distance) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span></span>
-<span id="cb45-4">  <span class="fu" style="color: #4758AB;
+<span id="cb47-4">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1224,8 +1268,8 @@ background-color: null;
 font-style: inherit;">~</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">0</span>)))</span>
-<span id="cb45-5"></span>
-<span id="cb45-6">flights</span></code></pre></div>
+<span id="cb47-5"></span>
+<span id="cb47-6">flights</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 336,776 × 7
@@ -1262,7 +1306,7 @@ font-style: inherit;">0</span>)))</span>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb47" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1">indep_vars <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb49" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1">indep_vars <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1273,7 +1317,7 @@ background-color: null;
 font-style: inherit;">"air_time"</span>, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"dep_delay"</span>)</span>
-<span id="cb47-2">outcome_vars <span class="ot" style="color: #003B4F;
+<span id="cb49-2">outcome_vars <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1292,32 +1336,32 @@ font-style: inherit;">"arr_delay_bin"</span>)</span></code></pre></div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb48" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1">start <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb50" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1">start <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">proc.time</span>()</span>
-<span id="cb48-2">models <span class="ot" style="color: #003B4F;
+<span id="cb50-2">models <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">list</span>() <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># To store our model output</span></span>
-<span id="cb48-3"></span>
-<span id="cb48-4"><span class="cf" style="color: #003B4F;
+<span id="cb50-3"></span>
+<span id="cb50-4"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">in</span> outcome_vars){</span>
-<span id="cb48-5">  <span class="cf" style="color: #003B4F;
+<span id="cb50-5">  <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">if</span> (i <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"arr_delay"</span>){</span>
-<span id="cb48-6">    model <span class="ot" style="color: #003B4F;
+<span id="cb50-6">    model <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1334,11 +1378,11 @@ background-color: null;
 font-style: inherit;">collapse =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"+"</span>))),</span>
-<span id="cb48-7">                <span class="at" style="color: #657422;
+<span id="cb50-7">                <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">data =</span> flights)</span>
-<span id="cb48-8">    </span>
-<span id="cb48-9">  } <span class="cf" style="color: #003B4F;
+<span id="cb50-8">    </span>
+<span id="cb50-9">  } <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
@@ -1347,7 +1391,7 @@ background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"arr_delay_bin"</span>){</span>
-<span id="cb48-10">    model <span class="ot" style="color: #003B4F;
+<span id="cb50-10">    model <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1364,26 +1408,26 @@ background-color: null;
 font-style: inherit;">collapse =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"+"</span>))),</span>
-<span id="cb48-11">                 <span class="at" style="color: #657422;
+<span id="cb50-11">                 <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">family =</span> binomial,</span>
-<span id="cb48-12">                 <span class="at" style="color: #657422;
+<span id="cb50-12">                 <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">data =</span> flights)</span>
-<span id="cb48-13">  }</span>
-<span id="cb48-14">  models[[i]] <span class="ot" style="color: #003B4F;
+<span id="cb50-13">  }</span>
+<span id="cb50-14">  models[[i]] <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">summary</span>(model)</span>
-<span id="cb48-15">}</span>
-<span id="cb48-16"></span>
-<span id="cb48-17">end <span class="ot" style="color: #003B4F;
+<span id="cb50-15">}</span>
+<span id="cb50-16"></span>
+<span id="cb50-17">end <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">proc.time</span>()</span>
-<span id="cb48-18">time1 <span class="ot" style="color: #003B4F;
+<span id="cb50-18">time1 <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> end<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -1395,36 +1439,36 @@ font-style: inherit;">-</span>start</span></code></pre></div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb49" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb51" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">print</span>(time1)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.27    0.30    1.61 </code></pre>
+   1.00    0.23    1.25 </code></pre>
 </div>
 </div>
 <p>
 </p></section>
 <section id="purrrmap" class="level2">
-<h2 class="anchored" data-anchor-id="purrrmap"><code>purrr:map</code></h2>
+<h2 class="anchored" data-anchor-id="purrrmap"><code>purrr::map</code></h2>
 <p>Map functions apply a function to each element of a list/vector and return an object. In cases relying on multiple computations across different values, they often come in handy.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb51" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1">start <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb53" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1">start <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">proc.time</span>()</span>
-<span id="cb51-2"></span>
-<span id="cb51-3"></span>
-<span id="cb51-4">models <span class="ot" style="color: #003B4F;
+<span id="cb53-2"></span>
+<span id="cb53-3"></span>
+<span id="cb53-4">models <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">map</span>(outcome_vars, </span>
-<span id="cb51-5">      <span class="sc" style="color: #5E5E5E;
+<span id="cb53-5">      <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">~</span> <span class="cf" style="color: #003B4F;
 background-color: null;
@@ -1433,7 +1477,7 @@ background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"arr_delay"</span>){</span>
-<span id="cb51-6">        <span class="fu" style="color: #4758AB;
+<span id="cb53-6">        <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">lm</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1442,23 +1486,23 @@ background-color: null;
 font-style: inherit;">paste</span>(.x, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"~"</span>, </span>
-<span id="cb51-7">                            <span class="fu" style="color: #4758AB;
+<span id="cb53-7">                            <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">paste</span>(indep_vars, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">collapse =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">" + "</span>))),</span>
-<span id="cb51-8">           <span class="at" style="color: #657422;
+<span id="cb53-8">           <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">data =</span> flights) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span></span>
-<span id="cb51-9">          <span class="fu" style="color: #4758AB;
+<span id="cb53-9">          <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">summary</span>()</span>
-<span id="cb51-10">        </span>
-<span id="cb51-11">        } <span class="cf" style="color: #003B4F;
+<span id="cb53-10">        </span>
+<span id="cb53-11">        } <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
@@ -1467,7 +1511,7 @@ background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"arr_delay_bin"</span>){</span>
-<span id="cb51-12">          <span class="fu" style="color: #4758AB;
+<span id="cb53-12">          <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">glm</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1476,38 +1520,38 @@ background-color: null;
 font-style: inherit;">paste</span>(.x, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"~"</span>,</span>
-<span id="cb51-13">                               <span class="fu" style="color: #4758AB;
+<span id="cb53-13">                               <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">paste</span>(indep_vars, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">collapse =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">" + "</span>))),</span>
-<span id="cb51-14">              <span class="at" style="color: #657422;
+<span id="cb53-14">              <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">family =</span> binomial,</span>
-<span id="cb51-15">              <span class="at" style="color: #657422;
+<span id="cb53-15">              <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">data =</span> flights) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span></span>
-<span id="cb51-16">            <span class="fu" style="color: #4758AB;
+<span id="cb53-16">            <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">summary</span>()</span>
-<span id="cb51-17">        }</span>
-<span id="cb51-18">      )</span>
-<span id="cb51-19"><span class="fu" style="color: #4758AB;
+<span id="cb53-17">        }</span>
+<span id="cb53-18">      )</span>
+<span id="cb53-19"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">names</span>(models) <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> outcome_vars</span>
-<span id="cb51-20"></span>
-<span id="cb51-21">end <span class="ot" style="color: #003B4F;
+<span id="cb53-20"></span>
+<span id="cb53-21">end <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">proc.time</span>()</span>
-<span id="cb51-22">time2 <span class="ot" style="color: #003B4F;
+<span id="cb53-22">time2 <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> end<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -1518,13 +1562,13 @@ font-style: inherit;">-</span>start</span></code></pre></div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb52" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb54" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">print</span>(time2)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.22    0.17    1.39 </code></pre>
+   1.11    0.15    1.28 </code></pre>
 </div>
 </div>
 <p>
@@ -1535,11 +1579,11 @@ font-style: inherit;">print</span>(time2)</span></code></pre></div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb54" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb56" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(furrr)</span>
-<span id="cb54-2"></span>
-<span id="cb54-3"><span class="fu" style="color: #4758AB;
+<span id="cb56-2"></span>
+<span id="cb56-3"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">plan</span>(multisession, <span class="at" style="color: #657422;
 background-color: null;
@@ -1548,20 +1592,20 @@ background-color: null;
 font-style: inherit;">6</span>) <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Initialise parallel environment using furrr</span></span>
-<span id="cb54-4"></span>
-<span id="cb54-5">start <span class="ot" style="color: #003B4F;
+<span id="cb56-4"></span>
+<span id="cb56-5">start <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">proc.time</span>()</span>
-<span id="cb54-6">models <span class="ot" style="color: #003B4F;
+<span id="cb56-6">models <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> furrr<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">future_map</span>(outcome_vars, </span>
-<span id="cb54-7">      <span class="sc" style="color: #5E5E5E;
+<span id="cb56-7">      <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">~</span> <span class="cf" style="color: #003B4F;
 background-color: null;
@@ -1570,7 +1614,7 @@ background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"arr_delay"</span>){</span>
-<span id="cb54-8">        <span class="fu" style="color: #4758AB;
+<span id="cb56-8">        <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">lm</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1579,23 +1623,23 @@ background-color: null;
 font-style: inherit;">paste</span>(.x, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"~"</span>, </span>
-<span id="cb54-9">                            <span class="fu" style="color: #4758AB;
+<span id="cb56-9">                            <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">paste</span>(indep_vars, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">collapse =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">" + "</span>))),</span>
-<span id="cb54-10">           <span class="at" style="color: #657422;
+<span id="cb56-10">           <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">data =</span> flights) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span></span>
-<span id="cb54-11">          <span class="fu" style="color: #4758AB;
+<span id="cb56-11">          <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">summary</span>()</span>
-<span id="cb54-12">        </span>
-<span id="cb54-13">        } <span class="cf" style="color: #003B4F;
+<span id="cb56-12">        </span>
+<span id="cb56-13">        } <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
@@ -1604,7 +1648,7 @@ background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"arr_delay_bin"</span>){</span>
-<span id="cb54-14">          <span class="fu" style="color: #4758AB;
+<span id="cb56-14">          <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">glm</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1613,44 +1657,44 @@ background-color: null;
 font-style: inherit;">paste</span>(.x, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"~"</span>,</span>
-<span id="cb54-15">                               <span class="fu" style="color: #4758AB;
+<span id="cb56-15">                               <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">paste</span>(indep_vars, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">collapse =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">" + "</span>))),</span>
-<span id="cb54-16">              <span class="at" style="color: #657422;
+<span id="cb56-16">              <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">family =</span> binomial,</span>
-<span id="cb54-17">              <span class="at" style="color: #657422;
+<span id="cb56-17">              <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">data =</span> flights) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span></span>
-<span id="cb54-18">            <span class="fu" style="color: #4758AB;
+<span id="cb56-18">            <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">summary</span>()</span>
-<span id="cb54-19">        }</span>
-<span id="cb54-20">      )</span>
-<span id="cb54-21"><span class="fu" style="color: #4758AB;
+<span id="cb56-19">        }</span>
+<span id="cb56-20">      )</span>
+<span id="cb56-21"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">names</span>(models) <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> outcome_vars</span>
-<span id="cb54-22"></span>
-<span id="cb54-23">end <span class="ot" style="color: #003B4F;
+<span id="cb56-22"></span>
+<span id="cb56-23">end <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">proc.time</span>()</span>
-<span id="cb54-24">time3 <span class="ot" style="color: #003B4F;
+<span id="cb56-24">time3 <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> end<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span>start</span>
-<span id="cb54-25"></span>
-<span id="cb54-26"><span class="fu" style="color: #4758AB;
+<span id="cb56-25"></span>
+<span id="cb56-26"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">plan</span>(sequential) <span class="co" style="color: #5E5E5E;
 background-color: null;
@@ -1661,13 +1705,13 @@ font-style: inherit;"># Revert to sequential processing</span></span></code></pr
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb55" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb57" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">print</span>(time3)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   0.09    0.05    2.53 </code></pre>
+   0.14    0.01    2.39 </code></pre>
 </div>
 </div>
 <p>
@@ -1682,7 +1726,7 @@ font-style: inherit;">print</span>(time3)</span></code></pre></div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb57" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1">doParallel<span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb59" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1">doParallel<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1691,13 +1735,13 @@ background-color: null;
 font-style: inherit;">cores =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">6</span>)</span>
-<span id="cb57-2"></span>
-<span id="cb57-3">start <span class="ot" style="color: #003B4F;
+<span id="cb59-2"></span>
+<span id="cb59-3">start <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">proc.time</span>()</span>
-<span id="cb57-4">models <span class="ot" style="color: #003B4F;
+<span id="cb59-4">models <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1710,14 +1754,14 @@ background-color: null;
 font-style: inherit;">"list"</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%dopar%</span> {</span>
-<span id="cb57-5">  <span class="cf" style="color: #003B4F;
+<span id="cb59-5">  <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">if</span> (j <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"arr_delay"</span>){</span>
-<span id="cb57-6">    model <span class="ot" style="color: #003B4F;
+<span id="cb59-6">    model <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1734,10 +1778,10 @@ background-color: null;
 font-style: inherit;">collapse =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"+"</span>))),</span>
-<span id="cb57-7">                <span class="at" style="color: #657422;
+<span id="cb59-7">                <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">data =</span> flights)</span>
-<span id="cb57-8">  } <span class="cf" style="color: #003B4F;
+<span id="cb59-8">  } <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
@@ -1746,7 +1790,7 @@ background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"arr_delay_bin"</span>){</span>
-<span id="cb57-9">    model <span class="ot" style="color: #003B4F;
+<span id="cb59-9">    model <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1763,32 +1807,32 @@ background-color: null;
 font-style: inherit;">collapse =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"+"</span>))),</span>
-<span id="cb57-10">                 <span class="at" style="color: #657422;
+<span id="cb59-10">                 <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">family =</span> binomial,</span>
-<span id="cb57-11">                 <span class="at" style="color: #657422;
+<span id="cb59-11">                 <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">data =</span> flights)</span>
-<span id="cb57-12">  }</span>
-<span id="cb57-13">}</span>
-<span id="cb57-14"><span class="fu" style="color: #4758AB;
+<span id="cb59-12">  }</span>
+<span id="cb59-13">}</span>
+<span id="cb59-14"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">names</span>(models) <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> outcome_vars</span>
-<span id="cb57-15"></span>
-<span id="cb57-16">end <span class="ot" style="color: #003B4F;
+<span id="cb59-15"></span>
+<span id="cb59-16">end <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">proc.time</span>()</span>
-<span id="cb57-17"></span>
-<span id="cb57-18">time4 <span class="ot" style="color: #003B4F;
+<span id="cb59-17"></span>
+<span id="cb59-18">time4 <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> end <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span> start</span>
-<span id="cb57-19">doParallel<span class="sc" style="color: #5E5E5E;
+<span id="cb59-19">doParallel<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1799,20 +1843,20 @@ font-style: inherit;">stopImplicitCluster</span>()</span></code></pre></div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb58" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb60" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">print</span>(time4)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.42    0.77    5.22 </code></pre>
+   1.23    0.68    4.80 </code></pre>
 </div>
 </div>
 <p>
 </p></section>
 <section id="discussion-2" class="level2">
 <h2 class="anchored" data-anchor-id="discussion-2">Discussion</h2>
-<p>We now see that the parallel processing of these tasks takes far <em>longer</em> – about 69% so! The underlying set of operations — running a series of linear models — are already small and relatively fast, so the overhead of managing the task (splitting, computing and combining results) in a parallel environment far exceeds what what can easily be spun up using a for-loop (or <code>purrr::map</code>).</p>
+<p>We now see that the parallel processing of these tasks takes far <em>longer</em> – about 74% so! The underlying set of operations — running a series of linear models — are already small and relatively fast, so the overhead of managing the task (splitting, computing and combining results) in a parallel environment far exceeds what what can easily be spun up using a for-loop (or <code>purrr::map</code>).</p>
 <p><br></p>
 </section>
 </section>
@@ -1850,7 +1894,7 @@ font-style: inherit;">print</span>(time4)</span></code></pre></div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb60" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb62" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">sessionInfo</span>()</span></code></pre></div>
 </details>
