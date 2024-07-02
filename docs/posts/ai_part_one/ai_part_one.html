@@ -170,8 +170,166 @@ ul.task-list li input[type="checkbox"] {
 <p>The term AI has many meanings depending on the context - in this article we are referring exclusively to (and use the term interchangeably with) large language models (LLMs) such as ChatGPT and Claude. These tools are useful not just for writing sentences and paragraphs of text, but also functioning code!</p>
 <p>Since first investigating the capabilities of ChatGPT at writing R code, our team has been working to utilise it safely and effectively in our everyday workflows.</p>
 <p>The summary of our message to the Institute staff was that we cannot ignore the massive increase in efficiency that AI <strong><em>can</em></strong> bring if used properly. However, we also need to stress its limitations and the need for human experts to validate any non-trivial output.</p>
+<p>This is part one in a two part series. This part will look at the capabilities of AI to benefit our workflows and increase efficiency. The next part will look at some limitations of the technology as it currently exists, including some practical recommendations to identify these issues.</p>
+<section id="format-of-this-post" class="level2">
+<h2 class="anchored" data-anchor-id="format-of-this-post">Format of this post</h2>
+<p>We will work through a couple of practical examples of how we might use AI in an everyday workflow:</p>
+<ol type="1">
+<li><p><strong>Data Visualisation</strong></p></li>
+<li><p><strong>Statistical Analysis</strong></p></li>
+<li><p><strong>Shiny App Development</strong></p></li>
+</ol>
+<p>In these examples, we will increasingly take out hands off the wheel and allow AI (in these examples, ChatGPT 4.0) to perform more and more of the task.</p>
+</section>
+</section>
+<section id="example-1---data-visualisation" class="level1">
+<h1>Example 1 - Data Visualisation</h1>
+<p>A couple of summers ago (2021/22) felt unusually hot in Perth, Australia. Specifically, it seemed that the maximum temperature was always somewhere in the realm of 35 to 40 degrees Celsius. My colleague, being a statistician, wished to compare this summer to previous summers to determine if this suspicion was justified.</p>
+<p>He whipped up a quick plot using ggplot2, attempting to show the number of days above a certain maximum, shown below updated up to January 2024:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="weather_p1.jpeg" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Here we can see the number of days over a certain maximum for each year since 2010. For example, in 2023, Perth had 0 days above 40°C and 4 above 38°C.</p>
+<p>The sweltering summer in question had a whopping 12 days over 40°C and 23 above 38°C. Since the next highest count since 2010 was 7 and 14 respectively, its fair to say this was quite the outlier!</p>
+<p>My colleague felt that the data visualisation could probably be cleaner and more clear, so enlisted ChatGPT for help (for one of the first times!).</p>
+<section id="providing-the-blueprint" class="level2">
+<h2 class="anchored" data-anchor-id="providing-the-blueprint">Providing the Blueprint</h2>
+<p>ChatGPT allows the user to provide images as a part of prompts. With that in mind, the image was uploaded first by itself. ChatGPT was able to successfully identify the key elements of the plot just from the image (!), and so the next step was to give some guidance to make the plot more visually appealing.</p>
+<p>With just one prompt: “can you facet wrap the min max data”, in addition to the original plot, it got to work. Once the original data was provided, it was able code a new plot using Python (R cannot be run within ChatGPT, though we certainly could have requested R code to run ourselves instead).</p>
+<p>Here is the entire prompt history, from beginning to end. One image, one command and some data was all the context required to understand approximately the desired output. We say approximately, since some key information such as the counts above certain levels, is absent from this first attempt.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="weather_p3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="weather_p4.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="end-result-and-discussion" class="level2">
+<h2 class="anchored" data-anchor-id="end-result-and-discussion">End Result and Discussion</h2>
+<p>After some further refinement and back-and-forth, we arrive at a much-improved plot which more closely captures the spirit of the original, while improving the colour scheme and facetting the data.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="weather_p8.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Plots are a great use-case of AI, since the nitty gritty of colours, panes, text, etc can be a time-consuming hassle to do manually. AI in our experience does a good job of translating our descriptive visual prompts into code that achieves the described vision. Furthermore, the output is instantly verifiable (keep this point in mind!) and easy to refine.</p>
+</section>
+</section>
+<section id="example-2---statistical-workflow" class="level1">
+<h1>Example 2 - Statistical Workflow</h1>
+<p>The following example was created specifically for our presentation. We wanted to mimic a researcher with a passing understanding in statistics, but no expertise, as they attempt to run through an entire statistical pipeline from design to analysis. This would involve more careful and lengthy prompting than the previous example.</p>
+<p>For the example, we downloaded a data set contacting simulated lung data for 8528 individuals. It can be found here:</p>
+<p>https://stats.idre.ucla.edu/stat/data/hdp.csv (NOTE clicking the link initiates a download of the data.)</p>
+<p>The data has the following variables of interest for our example:</p>
+<ul>
+<li><strong>Outcome</strong>
+<ul>
+<li>remission (0/1)</li>
+</ul></li>
+<li><strong>Patient-level variables</strong>
+<ul>
+<li>IL6 levels</li>
+<li>CRP levels</li>
+<li>Length of hospital stay</li>
+<li>Family history</li>
+<li>Cancer stage</li>
+</ul></li>
+<li><strong>Physician-level variables</strong>
+<ul>
+<li>Physician experience</li>
+<li>Physician ID</li>
+<li>Hospital ID</li>
+</ul></li>
+</ul>
+<p>We will be very careful to avoid statistical terminology as we prompt ChatGPT, but we can see that there is an implied nesting structure to our data, with patient inside physician inside hospital. With that in mind, and the fact that our outcome is binary, we are hoping that ChatGPT suggests a hierarchical logistic regression.</p>
+<section id="providing-the-problem" class="level2">
+<h2 class="anchored" data-anchor-id="providing-the-problem">Providing the Problem</h2>
+<p>In this example, we provided ChatGPT with a very high-level summary of our data and research question, as seen here:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="log_reg_1_v2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Again, we have tried to use prompts that anyone with some familiarity with stats and data analysis would be able to replicate and understand. Here, we simply mention to ChatGPT that there are patients, doctors and hospitals (highlighted above).</p>
+</section>
+<section id="the-response" class="level2">
+<h2 class="anchored" data-anchor-id="the-response">The Response</h2>
+<p>Amazingly, especially if you have had limited exposure to AI, these high-level, lay descriptions of our data and research questions were sufficient for ChatGPT to suggest a mixed-effects logistic regression model. It recognised the binary outcome and the hierarchical structure of the data, and proceeded to provide R code to perform the analysis.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="log_res_2_v2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Here is where we encounter a difference from our previous visualisation example, however. For someone unfamiliar with statistics, would they have known if this answer happened to be incorrect? (keep that in mind! #2).</p>
+<p>For now, we do recognise that it has selected an appropriate model to get started. An impressive feat!</p>
+</section>
+<section id="end-result-and-discussion-1" class="level2">
+<h2 class="anchored" data-anchor-id="end-result-and-discussion-1">End Result and Discussion</h2>
+<p>For brevity’s sake, we will not include the whole prompting process here. However, following the model specificiation, ChatGPT was able to successfully guide us through adding a random slope, summarising our model using the <em>broom.mixed</em> package (broom for mixed models, as the name suggests).</p>
+<p>It then gave us code to check the model fit, run model diagnostics, and perform sensitivity analysis. At each stage, it was able to give advice on interpretation and next steps that we could not fault. Here are some highlights before we move onto our third and final example:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="log_reg_6.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="log_reg_4.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="example-3---shiny-app" class="level1">
+<h1>Example 3 - Shiny App</h1>
+<section id="provide-the-idea" class="level2">
+<h2 class="anchored" data-anchor-id="provide-the-idea">Provide the Idea</h2>
+</section>
+<section id="refinement" class="level2">
+<h2 class="anchored" data-anchor-id="refinement">Refinement</h2>
+</section>
+<section id="end-result-and-discussion-2" class="level2">
+<h2 class="anchored" data-anchor-id="end-result-and-discussion-2">End Result and Discussion</h2>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
