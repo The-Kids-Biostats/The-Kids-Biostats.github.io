@@ -29,7 +29,7 @@ We will work through a couple of practical examples of how we might use AI in an
 
 2.  **Statistical Analysis**
 
-3.  **Shiny App Development**
+3.  **Bonus - Shiny App Development**
 
 In these examples, we will increasingly take out hands off the wheel and allow AI (in these examples, ChatGPT 4.0) to perform more and more of the task.
 
@@ -47,13 +47,13 @@ Here we can see the number of days over a certain maximum for each year since 20
 
 The sweltering summer in question had a whopping 12 days over 40°C and 23 above 38°C. Since the next highest count since 2010 was 7 and 14 respectively, its fair to say this was quite the outlier!
 
-My colleague felt that the data visualisation could probably be cleaner and more clear, so enlisted ChatGPT for help (for one of the first times!). 
+My colleague felt that the data visualisation could probably be cleaner and more clear, so enlisted ChatGPT for help (for one of the first times!).
 
 ## Providing the Blueprint
 
-ChatGPT allows the user to provide images as a part of prompts. With that in mind, the image was uploaded first by itself. ChatGPT was able to successfully identify the key elements of the plot just from the image (!), and so the next step was to give some guidance to make the plot more visually appealing. 
+ChatGPT allows the user to provide images as a part of prompts. With that in mind, the image was uploaded first by itself. ChatGPT was able to successfully identify the key elements of the plot just from the image (!), and so the next step was to give some guidance to make the plot more visually appealing.
 
-With just one prompt: "can you facet wrap the min max data", in addition to the original plot, it got to work. Once the original data was provided, it was able code a new plot using Python (R cannot be run within ChatGPT, though we certainly could have requested R code to run ourselves instead). 
+With just one prompt: "can you facet wrap the min max data", in addition to the original plot, it got to work. Once the original data was provided, it was able code a new plot using Python (R cannot be run within ChatGPT, though we certainly could have requested R code to run ourselves instead).
 
 Here is the entire prompt history, from beginning to end. One image, one command and some data was all the context required to understand approximately the desired output. We say approximately, since some key information such as the counts above certain levels, is absent from this first attempt.
 
@@ -67,17 +67,17 @@ knitr::include_graphics(path = "weather_p4.png")
 
 ## End Result and Discussion
 
-After some further refinement and back-and-forth, we arrive at a much-improved plot which more closely captures the spirit of the original, while improving the colour scheme and facetting the data. 
+After some further refinement and back-and-forth, we arrive at a much-improved plot which more closely captures the spirit of the original, while improving the colour scheme and facetting the data.
 
 ```{r out.width="700px", fig.align='center', echo = F}
 knitr::include_graphics(path = "weather_p8.png")
 ```
 
-Plots are a great use-case of AI, since the nitty gritty of colours, panes, text, etc can be a time-consuming hassle to do manually. AI in our experience does a good job of translating our descriptive visual prompts into code that achieves the described vision. Furthermore, the output is instantly verifiable (keep this point in mind!) and easy to refine. 
+Plots are a great use-case of AI, since the nitty gritty of colours, panes, text, etc can be a time-consuming hassle to do manually. AI in our experience does a good job of translating our descriptive visual prompts into code that achieves the described vision. Furthermore, the output is instantly verifiable (keep this point in mind!) and easy to refine.
 
 # Example 2 - Statistical Workflow
 
-The following example was created specifically for our presentation. We wanted to mimic a researcher with a passing understanding in statistics, but no expertise, as they attempt to run through an entire statistical pipeline from design to analysis. This would involve more careful and lengthy prompting than the previous example. 
+The following example was created specifically for our presentation. We wanted to mimic a researcher with a passing understanding in statistics, but no expertise, as they attempt to run through an entire statistical pipeline from design to analysis. This would involve more careful and lengthy prompting than the previous example.
 
 For the example, we downloaded a data set contacting simulated lung data for 8528 individuals. It can be found here:
 
@@ -85,20 +85,20 @@ https://stats.idre.ucla.edu/stat/data/hdp.csv (NOTE clicking the link initiates 
 
 The data has the following variables of interest for our example:
 
-* **Outcome**
-  * remission (0/1)
-* **Patient-level variables**
-  * IL6 levels
-  * CRP levels
-  * Length of hospital stay
-  * Family history
-  * Cancer stage
-* **Physician-level variables**
-  * Physician experience
-  * Physician ID
-  * Hospital ID
-  
-We will be very careful to avoid statistical terminology as we prompt ChatGPT, but we can see that there is an implied nesting structure to our data, with patient inside physician inside hospital. With that in mind, and the fact that our outcome is binary, we are hoping that ChatGPT suggests a hierarchical logistic regression.   
+-   **Outcome**
+    -   remission (0/1)
+-   **Patient-level variables**
+    -   IL6 levels
+    -   CRP levels
+    -   Length of hospital stay
+    -   Family history
+    -   Cancer stage
+-   **Physician-level variables**
+    -   Physician experience
+    -   Physician ID
+    -   Hospital ID
+
+We will be very careful to avoid statistical terminology as we prompt ChatGPT, but we can see that there is an implied nesting structure to our data, with patient inside physician inside hospital. With that in mind, and the fact that our outcome is binary, we are hoping that ChatGPT suggests a hierarchical logistic regression.
 
 ## Providing the Problem
 
@@ -108,25 +108,25 @@ In this example, we provided ChatGPT with a very high-level summary of our data 
 knitr::include_graphics(path = "log_reg_1_v2.png")
 ```
 
-Again, we have tried to use prompts that anyone with some familiarity with stats and data analysis would be able to replicate and understand. Here, we simply mention to ChatGPT that there are patients, doctors and hospitals (highlighted above). 
+Again, we have tried to use prompts that anyone with some familiarity with stats and data analysis would be able to replicate and understand. Here, we simply mention to ChatGPT that there are patients, doctors and hospitals (highlighted above).
 
 ## The Response
 
-Amazingly, especially if you have had limited exposure to AI, these high-level, lay descriptions of our data and research questions were sufficient for ChatGPT to suggest a mixed-effects logistic regression model. It recognised the binary outcome and the hierarchical structure of the data, and proceeded to provide R code to perform the analysis. 
+Amazingly, especially if you have had limited exposure to AI, these high-level, lay descriptions of our data and research questions were sufficient for ChatGPT to suggest a mixed-effects logistic regression model. It recognised the binary outcome and the hierarchical structure of the data, and proceeded to provide R code to perform the analysis.
 
 ```{r out.width="700px", fig.align='center', echo = F}
 knitr::include_graphics(path = "log_res_2_v2.png")
 ```
 
-Here is where we encounter a difference from our previous visualisation example, however. For someone unfamiliar with statistics, would they have known if this answer happened to be incorrect? (keep that in mind! #2). 
+Here is where we encounter a difference from our previous visualisation example, however. For someone unfamiliar with statistics, would they have known if this answer happened to be incorrect? (keep that in mind! #2).
 
 For now, we do recognise that it has selected an appropriate model to get started. An impressive feat!
 
 ## End Result and Discussion
 
-For brevity's sake, we will not include the whole prompting process here. However, following the model specificiation, ChatGPT was able to successfully guide us through adding a random slope, summarising our model using the *broom.mixed* package (broom for mixed models, as the name suggests). 
+For brevity's sake, we will not include the whole prompting process here. However, following the model specification, ChatGPT was able to successfully guide us through adding a random slope, and then summarising our model using the *broom.mixed* package (broom for mixed models, as the name suggests).
 
-It then gave us code to check the model fit, run model diagnostics, and perform sensitivity analysis. At each stage, it was able to give advice on interpretation and next steps that we could not fault. Here are some highlights before we move onto our third and final example:
+It then gave us code to check the model fit, run model diagnostics, and perform sensitivity analysis. At each stage, it was able to give advice on interpretation and next steps that we could not fault. Here are some highlights:
 
 ```{r out.width="700px", fig.align='center', echo = F}
 knitr::include_graphics(path = "log_reg_6.png")
@@ -136,10 +136,16 @@ knitr::include_graphics(path = "log_reg_6.png")
 knitr::include_graphics(path = "log_reg_4.png")
 ```
 
-# Example 3 - Shiny App
+# Bonus Example - Shiny App
 
-## Provide the Idea
+We now move to a more advanced programming exercise, and simultaneously lean more heavily on ChatGPT to do the bulk of the work for us. In this example, we wanted to create a [Shiny App](https://shiny.posit.co/). We want this app to import a dataset containing columns of personally identifiable information (PID) and exports a new dataset which masks this PID, maintaining the structure/distribution of the original data.
+
+## Providing the Idea
+
+Similar to example 2, we're interested in how ChatGPT performs with minimal prompting and technical jargon. Our inital request looks like this:
 
 ## Refinement
 
 ## End Result and Discussion
+
+In this first part, we have seen how easy and powerful the use of AI can be in the data analysis and statistical workflow. In part two, we will look at some pitfalls of AI and some traps we can fall into. We'll see if we can determine some good rules-of-thumb for its use to ensure our AI-assisted work remains both efficient and accurate.
