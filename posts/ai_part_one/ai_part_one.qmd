@@ -17,9 +17,9 @@ The term AI has many meanings depending on the context - in this article we are 
 
 Since first investigating the capabilities of ChatGPT at writing R code, our team has been working to utilise it safely and effectively in our everyday workflows.
 
-The summary of our message to the Institute staff was that we cannot ignore the massive increase in efficiency that AI ***can*** bring if used properly. However, we also need to stress its limitations and the need for human experts to validate any non-trivial output.
+The summary of our message to the Institute staff was that we cannot ignore the massive increase in efficiency that AI ***can*** bring if used properly. However, we also need to be [**very**]{.underline} aware of its limitations, and the necessary role of human experts in the process of validating any non-trivial output.
 
-This is part one in a two part series. This part will look at the capabilities of AI to benefit our workflows and increase efficiency. The next part will look at some limitations of the technology as it currently exists, including some practical recommendations to identify these issues.
+This is Part One in a two part series. This part will look at the capabilities of AI to benefit our workflows and increase efficiency. The next part will look at some limitations of the technology as it currently exists, including some practical recommendations to identify these issues.
 
 ## Format of this post
 
@@ -31,13 +31,13 @@ We will work through a couple of practical examples of how we might use AI in an
 
 3.  **Bonus - Shiny App Development**
 
-In these examples, we will increasingly take out hands off the wheel and allow AI (in these examples, ChatGPT 4.0) to perform more and more of the task.
+In these examples, we will increasingly take our hands off the wheel and allow AI (in these examples, [ChatGPT 4.0](https://openai.com/chatgpt/)) to perform more and more of the task.
 
 # Example 1 - Data Visualisation
 
-A couple of summers ago (2021/22) felt unusually hot in Perth, Australia. Specifically, it seemed that the maximum temperature was always somewhere in the realm of 35 to 40 degrees Celsius. My colleague, being a statistician, wished to compare this summer to previous summers to determine if this suspicion was justified.
+A couple of summers ago (2021/22) felt unusually hot in Perth, Australia. Specifically, it seemed that the maximum temperature was regularly exceeding round numbers like 35 or 40 degrees Celsius. The most recent summer felt similar, but as it relates to 'hot days', were we seeing more of these? My colleague, being a statistician, wished to contrast this most recent summer to previous summers.
 
-He whipped up a quick plot using ggplot2, attempting to show the number of days above a certain maximum, shown below updated up to January 2024:
+He whipped up a quick plot using ggplot2, with a focus on the number of 'summer days' above a certain maximum (and equally important, 'hot nights' that stayed above certain minimums). Shown below, is data through to mid February 2024:
 
 ```{r out.width="700px", fig.align='center', echo = F}
 knitr::include_graphics(path = "weather_p1.jpeg")
@@ -45,7 +45,7 @@ knitr::include_graphics(path = "weather_p1.jpeg")
 
 Here we can see the number of days over a certain maximum for each year since 2010. For example, in 2023, Perth had 0 days above 40°C and 4 above 38°C.
 
-The sweltering summer in question had a whopping 12 days over 40°C and 23 above 38°C. Since the next highest count since 2010 was 7 and 14 respectively, its fair to say this was quite the outlier!
+The sweltering summer in question (2021/22) had a whopping 12 days over 40°C and 23 above 38°C. Since the next highest count since 2010 was 7 and 14 respectively, it's fair to say this was quite the outlier! And the 'current' (at the time) summer was similar was to this, but yet to exceed it.
 
 My colleague felt that the data visualisation could probably be cleaner and more clear, so enlisted ChatGPT for help (for one of the first times!).
 
@@ -53,9 +53,15 @@ My colleague felt that the data visualisation could probably be cleaner and more
 
 ChatGPT allows the user to provide images as a part of prompts. With that in mind, the image was uploaded first by itself. ChatGPT was able to successfully identify the key elements of the plot just from the image (!), and so the next step was to give some guidance to make the plot more visually appealing.
 
-With just one prompt: "can you facet wrap the min max data", in addition to the original plot, it got to work. Once the original data was provided, it was able code a new plot using Python (R cannot be run within ChatGPT, though we certainly could have requested R code to run ourselves instead).
+With just one prompt: "can you facet wrap the min max data", in addition to the original plot, it got to work. Once the original data was provided, it returned the requested modifcation - complete with Python code for the plot (R cannot be run within ChatGPT, though we certainly could have requested R code to run ourselves instead).
 
-Here is the entire prompt history, from beginning to end. One image, one command and some data was all the context required to understand approximately the desired output. We say approximately, since some key information such as the counts above certain levels, is absent from this first attempt.
+Here is the entire prompt history, from beginning to end:
+
+-   One image
+-   One command
+-   Some (undescribed) data
+
+was all the context required to understand and return, approximately, the desired output. We say approximately, since some key information such as the counts above certain levels, is absent from this first attempt.
 
 ```{r out.width="700px", fig.align='center', echo = F}
 knitr::include_graphics(path = "weather_p3.png")
@@ -118,13 +124,13 @@ Amazingly, especially if you have had limited exposure to AI, these high-level, 
 knitr::include_graphics(path = "log_res_2_v2.png")
 ```
 
-Here is where we encounter a difference from our previous visualisation example, however. For someone unfamiliar with statistics, would they have known if this answer happened to be incorrect? (keep that in mind! #2).
+Here is where we encounter a difference from our previous visualisation example, however. For someone unfamiliar with statistics, would they have known if this answer happened to be incorrect? Broadly, this response is on track, but should Doctor be nested within Hospital? (keep this in mind! #2).
 
 For now, we do recognise that it has selected an appropriate model to get started. An impressive feat!
 
 ## End Result and Discussion
 
-For brevity's sake, we will not include the whole prompting process here. However, following the model specification, ChatGPT was able to successfully guide us through adding a random slope, and then summarising our model using the *broom.mixed* package (broom for mixed models, as the name suggests).
+For brevity's sake, we will not include the whole prompting process here. However, following the model specification, ChatGPT was able to successfully guide us through adding a random slope, and then summarising our model using the `broom.mixed` package (broom for mixed models, as the name suggests).
 
 It then gave us code to check the model fit, run model diagnostics, and perform sensitivity analysis. At each stage, it was able to give advice on interpretation and next steps that we could not fault. Here are some highlights:
 
@@ -138,11 +144,11 @@ knitr::include_graphics(path = "log_reg_4.png")
 
 # Bonus Example - Shiny App
 
-We now move to a more advanced programming exercise, and simultaneously lean more heavily on ChatGPT to do the bulk of the work for us. In this example, we wanted to create a [Shiny App](https://shiny.posit.co/). We want this app to import a dataset containing columns of personally identifiable information (PID) and exports a new dataset which masks this PID, maintaining the structure/distribution of the original data.
+We now move to a more advanced programming exercise, and simultaneously lean more heavily on ChatGPT to do the bulk of the work for us. In this example, we wanted to create a [Shiny App](https://shiny.posit.co/). We want this app to import a dataset containing columns of personally identifiable information (PID) and export a new dataset which masks this PID (and all data in the dataset) while maintaining the broad structure/distribution of the original data.
 
 ## Providing the Idea
 
-Similar to example 2, we're interested in how ChatGPT performs with minimal prompting and technical jargon. Our inital request looks like this:
+Similar to example 2, we're interested in how ChatGPT performs with minimal prompting and technical jargon. Our initial request looks like this:
 
 ## Refinement
 
