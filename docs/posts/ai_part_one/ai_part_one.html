@@ -177,7 +177,7 @@ ul.task-list li input[type="checkbox"] {
 <ol type="1">
 <li><p><strong>Data Visualisation</strong></p></li>
 <li><p><strong>Statistical Analysis</strong></p></li>
-<li><p><strong>Shiny App Development</strong></p></li>
+<li><p><strong>Bonus - Shiny App Development</strong></p></li>
 </ol>
 <p>In these examples, we will increasingly take out hands off the wheel and allow AI (in these examples, ChatGPT 4.0) to perform more and more of the task.</p>
 </section>
@@ -295,8 +295,8 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="end-result-and-discussion-1" class="level2">
 <h2 class="anchored" data-anchor-id="end-result-and-discussion-1">End Result and Discussion</h2>
-<p>For brevity’s sake, we will not include the whole prompting process here. However, following the model specificiation, ChatGPT was able to successfully guide us through adding a random slope, summarising our model using the <em>broom.mixed</em> package (broom for mixed models, as the name suggests).</p>
-<p>It then gave us code to check the model fit, run model diagnostics, and perform sensitivity analysis. At each stage, it was able to give advice on interpretation and next steps that we could not fault. Here are some highlights before we move onto our third and final example:</p>
+<p>For brevity’s sake, we will not include the whole prompting process here. However, following the model specification, ChatGPT was able to successfully guide us through adding a random slope, and then summarising our model using the <em>broom.mixed</em> package (broom for mixed models, as the name suggests).</p>
+<p>It then gave us code to check the model fit, run model diagnostics, and perform sensitivity analysis. At each stage, it was able to give advice on interpretation and next steps that we could not fault. Here are some highlights:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -317,16 +317,19 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </section>
 </section>
-<section id="example-3---shiny-app" class="level1">
-<h1>Example 3 - Shiny App</h1>
-<section id="provide-the-idea" class="level2">
-<h2 class="anchored" data-anchor-id="provide-the-idea">Provide the Idea</h2>
+<section id="bonus-example---shiny-app" class="level1">
+<h1>Bonus Example - Shiny App</h1>
+<p>We now move to a more advanced programming exercise, and simultaneously lean more heavily on ChatGPT to do the bulk of the work for us. In this example, we wanted to create a <a href="https://shiny.posit.co/">Shiny App</a>. We want this app to import a dataset containing columns of personally identifiable information (PID) and exports a new dataset which masks this PID, maintaining the structure/distribution of the original data.</p>
+<section id="providing-the-idea" class="level2">
+<h2 class="anchored" data-anchor-id="providing-the-idea">Providing the Idea</h2>
+<p>Similar to example 2, we’re interested in how ChatGPT performs with minimal prompting and technical jargon. Our inital request looks like this:</p>
 </section>
 <section id="refinement" class="level2">
 <h2 class="anchored" data-anchor-id="refinement">Refinement</h2>
 </section>
 <section id="end-result-and-discussion-2" class="level2">
 <h2 class="anchored" data-anchor-id="end-result-and-discussion-2">End Result and Discussion</h2>
+<p>In this first part, we have seen how easy and powerful the use of AI can be in the data analysis and statistical workflow. In part two, we will look at some pitfalls of AI and some traps we can fall into. We’ll see if we can determine some good rules-of-thumb for its use to ensure our AI-assisted work remains both efficient and accurate.</p>
 
 
 </section>
