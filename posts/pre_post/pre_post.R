@@ -1,10 +1,10 @@
+library(tidyverse)
 library(simstudy)
 library(data.table)
 library(lme4)
 library(jtools)
 library(ggbrace)
 library(gtsummary)
-library(tidyverse)
 
 theme_clean <- function() {
   theme_minimal(base_family = "Barlow Semi Condensed") +
@@ -50,6 +50,63 @@ dat %>%
   as_gt() %>% 
   gt::fmt_markdown(columns = everything())
 
+# Change score
+
+dat %>% 
+  tibble %>% 
+  pivot_wider(id_cols = c(id, group), names_from = timepoint, values_from = c(Out, time)) %>% 
+  mutate(change = Out_Post - Out_Pre) %>% 
+  select(group, change) %>% 
+  tbl_summary(by = group, missing = "no",
+              statistic = all_continuous() ~ c("{mean} ({sd})  \n[{N_obs}]"),
+              digits = all_continuous() ~ c(2,1,0))
+
+dat %>% 
+  tibble %>% 
+  pivot_wider(id_cols = c(id, group), names_from = timepoint, values_from = c(Out, time)) %>% 
+  mutate(change = Out_Post - Out_Pre) %>% 
+  select(group, change) %>% 
+  ggplot(aes(group, change, colour = group)) +
+  geom_violin(aes(fill = group), alpha = 0.1) +
+  geom_jitter(width = 0.1, height = 0, alpha = 0.8) +
+  theme_clean() +
+  scale_colour_viridis_d(option = "plasma", end = 0.85) +
+  scale_fill_viridis_d(option = "plasma", end = 0.85) +
+  labs(y = "Outcome", x = "Timepoint",
+       title = "Pre-post change score analysis", 
+       subtitle = "Two-groups, violin plot with jittered points", colour = "Group", fill = "Group")
+
+dat %>% 
+  tibble %>% 
+  pivot_wider(id_cols = c(id, group), names_from = timepoint, values_from = c(Out, time)) %>% 
+  mutate(change = Out_Post - Out_Pre,
+         group = factor(group, levels = c("Control", "Treatment"))) %>% 
+  select(group, change) %>% 
+  t.test(change ~ group, data = .) %>% 
+  tidy() %>% 
+  select(-estimate1, -estimate2, -parameter)
+
+dat %>% 
+  tibble %>% 
+  pivot_wider(id_cols = c(id, group), names_from = timepoint, values_from = c(Out, time)) %>% 
+  mutate(change = Out_Post - Out_Pre,
+         group = factor(group, levels = c("Control", "Treatment"))) %>% 
+  select(group, change) %>% 
+  lm(change ~ group, data = .) %>% 
+  tbl_regression(intercept = T,
+                 estimate_fun = function(x) style_number(x, digits = 2))
+
+dat %>% 
+  tibble %>% 
+  pivot_wider(id_cols = c(id, group), names_from = timepoint, values_from = c(Out, time)) %>% 
+  mutate(change = Out_Post - Out_Pre,
+         group = factor(group, levels = c("Control", "Treatment"))) %>% 
+  select(group, change, Out_Pre) %>% 
+  lm(change ~ group + Out_Pre, data = .) %>% 
+  tbl_regression(intercept = T,
+                 estimate_fun = function(x) style_number(x, digits = 2))
+
+
 # Get a visual of the data
 dat %>% 
   mutate(timepoint = factor(timepoint, levels = c("Pre", "Post"))) %>% 
@@ -60,7 +117,8 @@ dat %>%
   theme_clean() +
   scale_colour_viridis_d(option = "plasma", end = 0.85) +
   labs(y = "Outcome", x = "Timepoint",
-       title = "aadfsaad", colour = "Group")
+       title = "Pre-post analysis", 
+       subtitle = "Two-groups, jitterplot with line connecting observed means", colour = "Group")
 
 # Run a basic ANCOVA model
 dat %>% 
@@ -71,13 +129,6 @@ dat %>%
                  estimate_fun = function(x) style_number(x, digits = 2))
 
 # Another visual
-dat <- dat %>% 
-  tibble %>% 
-  mutate(timepoint = as.numeric(factor(timepoint, levels = c("Pre", "Post"))) - 1,
-         group = as.numeric(factor(group, levels = c("Control", "Treatment"))) -1) %>% 
-  mutate(jittered_pos = jitter(timepoint, amount = 0.05),
-         dodge_pos = group * 0.25 )#- 0.25/2)
-
 dat %>% 
   tibble %>% 
   mutate(timepoint = as.numeric(factor(timepoint, levels = c("Pre", "Post"))) - 1,
@@ -94,7 +145,8 @@ dat %>%
   theme_clean() +
   scale_colour_viridis_d(option = "plasma", end = 0.85) +
   labs(y = "Outcome", x = "Timepoint",
-       title = "aadfsaad", colour = "Group")# Adjust based on your actual levels and needs
+       title = "Pre-post analysis", 
+       subtitle = "Two-groups, jitterplot with line connecting pairs of observations", colour = "Group")
 
 # what are we seeing
 # With braces
@@ -118,15 +170,16 @@ dat %>%
   theme(legend.position = "bottom") +
   scale_colour_viridis_d(option = "plasma", end = 0.85) +
   labs(y = "Outcome", x = "Timepoint",
-       title = "aadfsaad", colour = "Group") +
+       title = "Pre-post analysis", 
+       subtitle = "Two-groups, jitterplot with line connecting observed means", colour = "Group") +
   stat_brace(data = dat_b, aes(group = timepoint), 
-             rotate = 90, width = 0.15, outerstart = 2.2, bending = 1) +
+             rotate = 90, width = 0.1, outerstart = 2.2, bending = 1) +
   scale_y_continuous(breaks = seq(0,100,10)) +
-  geom_text(data = tibble(timepoint = c(2.4),
+  geom_text(data = tibble(timepoint = c(2.35),
                           Out = c(50.8), # (71.2-30.4) / 2 + 30.4
-                          label = c("A difference of 40?\nThe model said 30?")),
+                          label = c("A difference of ~40?\nThe model said ~30?")),
             aes(label = label), size = 3.5, hjust = 0) +
-  coord_cartesian(xlim = c(1, 2.7)) 
+  coord_cartesian(xlim = c(1.25, 2.2)) 
 
 # Run a basic mixed effects model
 dat %>% tibble %>% 
@@ -135,34 +188,6 @@ dat %>% tibble %>%
   tbl_regression(intercept = T,
                  estimate_fun = function(x) style_number(x, digits = 2))
 
-# A further visual of the data
-
-dtCombined <- rbind(dtTreatPre %>% 
-                      mutate(Out = sort(Out)), dtTreatPost %>% 
-                      mutate(Out = sort(Out)), dtControlPre %>% 
-                      mutate(Out = sort(Out)), dtControlPost %>% 
-                      mutate(Out = sort(Out)), fill = TRUE)
-dtCombined <- dtCombined %>% tibble %>% 
-  mutate(timepoint = as.numeric(factor(timepoint, levels = c("Pre", "Post"))) - 1,
-         group = as.numeric(factor(group, levels = c("Control", "Treatment"))) -1) %>% 
-  mutate(jittered_pos = jitter(timepoint, amount = 0.05),
-         dodge_pos = group * 0.25 )#- 0.25/2)
-
-dtCombined %>% 
-  mutate(#timepoint = as.numeric(factor(timepoint, levels = c("Pre", "Post"))) - 1,
-    group = factor(group, labels = c("Control", "Treatment"))) %>% 
-  ggplot(aes(x = dodge_pos + jittered_pos, y = Out, group = id, colour = group)) +
-  geom_point(aes(x = dodge_pos + jittered_pos), 
-             position = position_dodge(width = 0.25)) +
-  geom_line(aes(x = dodge_pos + jittered_pos), alpha = 0.2) +
-  scale_x_continuous(breaks = 0:1, labels = c("Pre", "Post")) # Adjust based on your actual levels and needs
-
-# Run a basic mixed effects model
-dtCombined %>% tibble %>% 
-  mutate(timepoint = factor(timepoint, levels = c("Pre", "Post"))) %>% 
-  lmer(Out ~ group*timepoint + (1 | id), data = .) -> mod
-mod %>% 
-  export_summs(error_pos = "right", error_format = "[{conf.low}, {conf.high}]")
 
 
 
