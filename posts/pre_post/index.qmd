@@ -38,30 +38,30 @@ theme_clean <- function() {
 
 Pre-post designs are in use everywhere we look. Before and after treatment, e.g. in a randomised clinical trial, might be the example that most readily comes to mind for analysts in the health sciences area. However, the pre-post concept occurs in many non-randomised settings as well, like observational studies or retrospective policy evaluation studies, and can feature in our daily lives without us even knowing it (like in A/B testing to see if you spend just a little bit longer on social media or buy that chocolate bar at the checkout).
 
-While in principle, the set-up (premise) for such a question seems straight forward, there is extensive literature debating the different approaches to the analysis of data structured this way. The discussions around these choices may confuse the lay or even semi-experienced analyst reader. Often these discussions are held without a serviceable example to illustrate implementation.
+While in principle, the set-up (premise) for such a question seems straightforward, there is extensive literature debating the different approaches to the analysis of data structured this way. The discussions around these choices may confuse the lay or even semi-experienced analyst reader. Often these discussions are held without a serviceable example to illustrate implementation.
 
 So, here we go.
 
 # Analysis options
 
-When we have pre-post data (focusing on continuous, approximately normally distributed data here), there three basic approaches analysts may reach for:
+When we have pre-post data (focusing on continuous, approximately normally distributed data here), there are three basic approaches analysts may reach for:
 
 -   **Change score analysis**
-    -   the outcome data for each participant is reduced to one data point (a change score: post value - pre value)
-    -   can just be analysed with a t.test or as the outcome variable of a linear regression model with the treatment variable as the exposure of interest (on the right hand side (RHS) of the model)
+    -   The outcome data for each participant is reduced to one data point (a change score: post value - pre value)
+    -   This can just be analysed with a t.test, or altneratively as the outcome variable of a linear regression model with the treatment variable as the exposure of interest (on the right hand side \[RHS\] of the model)
 -   **Linear regression (ANCOVA framework)**
-    -   the data is structured as one row per participant, with two variables representation the outcome (one for pre, one for post)
-    -   in the ANCOVA (Analysis of covariance) framework, the outcome variable is the post value, and both the treatment variable (as the exposure of interest) AND the pre value (as an adjustment variable) are included on the RHS of the model
+    -   The data is structured as one row per participant, with two variables representing the outcome (one for pre, one for post)
+    -   In the ANCOVA (Analysis of covariance) framework, the outcome variable is the post value, and both the treatment variable (as the exposure of interest) AND the pre value (as an adjustment variable) are included on the RHS of the model
 -   **Linear mixed effects models**
-    -   *can be structured in the same way as linear regression, via an ANCOVA framework (and this will reduce to linear regression in certain situations,* OR
-    -   the data is structured as two rows per participant, with one row for the pre data and one row for the post data (there will be a column here that represents time, with values `pre` and `post`)
-        -   both the pre and post measurements are on the left hand side (LHS) of the model, with an interaction between the treatment variable (as the exposure of interest) and time on the RHS of the model
+    -   *Can be structured in the same way as linear regression, via an ANCOVA framework (and this will reduce to linear regression in certain situations),* OR
+    -   the data is structured as two rows per participant, with one row for the pre data and one row for the post data (there will be a column here that represents timepoint, with values `pre` and `post`)
+        -   both the pre and post measurements are on the left hand side (LHS) of the model, with an interaction between the treatment variable (as the exposure of interest) and timepoint on the RHS of the model
 
-There are a number of nuanced variations on these methods to be aware of. This article is not stricticly focused on randomised controlled trials, for which a lot of [methodological literature](https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-021-01323-9) [addressing this](https://psycnet.apa.org/doiLanding?doi=10.1037%2Fh0025105) [decision exists](https://onlinelibrary.wiley.com/doi/10.1002/sim.2682) - it is intended to be a light, applied look at model implementation.
+There are a number of nuanced variations on these methods to be aware of. This article is not strictly focused on randomised controlled trials, for which a lot of [methodological literature](https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-021-01323-9) [addressing this](https://psycnet.apa.org/doiLanding?doi=10.1037%2Fh0025105) [decision exists](https://onlinelibrary.wiley.com/doi/10.1002/sim.2682) - it is intended to be a light, applied look at model implementation.
 
 Linear regression (ANCOVA framework) is [typically\* the recommended approach](https://doi.org/10.4172%2F2155-6180.1000334), but varied disciplines my lean more towards the other two methods.
 
-*\*typically, statisticians are very reserved about making broad sweeping methodological recommendations, typically - I share that reservation*
+*\*typically, statisticians are very reserved about making broad sweeping methodological recommendations. Typically - I share that reservation*
 
 # Setting the scene
 
@@ -307,8 +307,8 @@ This output suggests (in order):
 
 -   The intercept (mean value for a Control participant at the [pre timepoint]{.underline}) is \~10 (makes sense)
 -   The Treatment group mean (at the [pre timepoint]{.underline}) is \~11 units higher than the Control group (makes sense).
--   The post timepoint values are (on average) \~20 units higher than at the pre timepoint values.
--   **\[Perhaps of most interest\]** The post values for treatment group are (on average) \~30 units higher than the control group.
+-   The post timepoint values *in the Control group* are (on average) 20 units higher than the pre timepoint values. 
+-   \[**Perhaps of most interest\]** Compared to the 20 unit difference in the Control group, the post timepoint values in the Treatment group are an additional 30 units higher than the pre timepoint values (total of 50 units difference between pre and post)
 
 In looking at, and breaking down, this output, you might think that the linear mixed effects model gives you the same answer but with a much more explicit breakdown of many other 'things going on' with your outcome data - and you'd be right.
 
