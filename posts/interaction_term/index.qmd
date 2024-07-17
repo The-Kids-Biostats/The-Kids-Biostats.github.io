@@ -1,0 +1,70 @@
+---
+title: "Interaction Terms in Logistic Regression"
+author: "Zac Dempsey"
+format:
+  html:
+    code-fold: true
+    toc: true
+    toc-location: left
+date: Sys.Date()
+categories:
+  - R
+  - regression
+  - model
+  - interpretation
+draft: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Overview
+
+-   Anybody can fit a model to any data set. And R will oblige so long as it is possible!
+
+-   Interpreting/drawing meaning from model coefficients is where the bulk of the work/complexity arises in statistical/biostatistical work. Also what we need to write to deliver at the end of the day!
+
+    -   Interaction terms add an additional layer of complexity, particularly with respect to nonlinear models.
+
+# Background
+
+## Logistic Regression
+
+### Components
+
+-   Odds
+
+-   Log-odds
+
+-   Proportions
+
+### Model Form
+
+-   Coefficients are estimated on a log-odds scale. For interpretation, we often interpret in terms of odds ratio (exponentiation)
+
+## Interaction Terms
+
+# Motivating Example
+
+-   Leave the correct interpretation hanging? Can we structure things to set up a motivating example
+
+# Example 1
+
+## Acknowledgements
+
+Thanks to Wesley Billingham, Matt Cooper, and Elizabeth McKinnon for providing feedback on and reviewing this post.
+
+You can look forward to seeing posts from these other team members here in the coming weeks and months.
+
+<br>
+
+## Reproducibility Information
+
+To access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:
+
+The session information can also be seen below.
+
+```{r echo = T}
+sessionInfo()
+```

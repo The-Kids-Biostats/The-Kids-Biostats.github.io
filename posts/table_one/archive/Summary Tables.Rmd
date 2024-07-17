@@ -19,19 +19,17 @@ library(summarytools)
 
 # Overview
 
-Analysing data will normally always involve generating tables, whether they are the final goal of the analysis or used as an intermediary step to guide further analysis. Here, we're going to focus on the former while keeping the latter in the back of our minds. A common use case here might be a "Table 1" from a randomised control trial where we are examining (not testing and generating p-values) a range of summary statistics for each arm of the trial, or perhaps data are collected on a group over three time points and we want to examine a range of summary statistics for each time point. 
+Analysing data will normally always involve generating tables, whether they are the final goal of the analysis or used as an intermediary step to guide further analysis. Here, we're going to focus on the former while keeping the latter in the back of our minds. A common use case here might be a "Table 1" from a randomised control trial where we are examining (not testing and generating p-values) a range of summary statistics for each arm of the trial, or perhaps data are collected on a group over three time points and we want to examine a range of summary statistics for each time point.
 
 There are many R packages and functions dedicated to this task. In the post below, we specify a range of criteria that we deem important for our most common use cases (which include continuous data, dichotomous variables, and both ordered and unordered categorical data). We then use these criteria to evaluate a number of the more commonly used functions, showing examples of the code and output along the way.
 
 # Assessment criteria
 
-- Ease of changing presented statistics
--- Formatting, order, number of decimal places
+-   Ease of changing presented statistics -- Formatting, order, number of decimal places
 
-- Ability to make inline adjustments (manual edits)
+-   Ability to make inline adjustments (manual edits)
 
-- Rendering across different outputs (html, pdf, word)
--- Specifically, output format and presentation
+-   Rendering across different outputs (html, pdf, word) -- Specifically, output format and presentation
 
 Considerations
 
@@ -39,18 +37,17 @@ Error Handling and Robustness
 
 # Contenders
 
-- gtsummary (https://www.danieldsjoberg.com/gtsummary/)
-- flextable (https://ardata-fr.github.io/flextable-book/)
-- huxtable (https://hughjonesd.github.io/huxtable/)
-- tableone (https://cran.r-project.org/web/packages/tableone/vignettes/introduction.html)
-- janitor tabyl (https://cran.r-project.org/web/packages/janitor/vignettes/tabyls.html)
-- stargazer (https://cran.r-project.org/web/packages/stargazer/vignettes/stargazer.pdf)
-- custom (https://mcfromnz.wordpress.com/2010/09/21/automatic-descriptive-statistic-tables/)
-- summarytools (https://rdrr.io/cran/summarytools/man/dfSummary.html)
-- pastecs
-- psych
-- Hmisc (https://rdrr.io/cran/Hmisc/man/describe.html)
-
+-   gtsummary (<https://www.danieldsjoberg.com/gtsummary/>)
+-   flextable (<https://ardata-fr.github.io/flextable-book/>)
+-   huxtable (<https://hughjonesd.github.io/huxtable/>)
+-   tableone (<https://cran.r-project.org/web/packages/tableone/vignettes/introduction.html>)
+-   janitor tabyl (<https://cran.r-project.org/web/packages/janitor/vignettes/tabyls.html>)
+-   stargazer (<https://cran.r-project.org/web/packages/stargazer/vignettes/stargazer.pdf>)
+-   custom (<https://mcfromnz.wordpress.com/2010/09/21/automatic-descriptive-statistic-tables/>)
+-   summarytools (<https://rdrr.io/cran/summarytools/man/dfSummary.html>)
+-   pastecs
+-   psych
+-   Hmisc (<https://rdrr.io/cran/Hmisc/man/describe.html>)
 
 # Worked examples
 
@@ -67,34 +64,34 @@ str(flchain)
 
 The modifications we will make are:
 
-- 
+-   
 
 <p>
 
 Objectives:
 
-- Stratify summarys statistics for all variables by `death`
+-   Stratify summarys statistics for all variables by `death`
 
 # Summary Tables
 
 In the `flchain` dataset, we may be interested in comparing summary statistics by the `death` variable. Below, we look at the output of each of our candidate tabling functions when they are asked to summarise the data by `death`. Where possible, we will test the assessment criteria by adjusting the table as follows:
 
-- Change `lambda` statistics to contain 1 decimal place
-- **Bold** the year 1997 and its statistics
-- Rename sample.yr to Sample Year. 
-- Render in html, pdf and word and compare consistency across these. 
+-   Change `lambda` statistics to contain 1 decimal place
+-   **Bold** the year 1997 and its statistics
+-   Rename sample.yr to Sample Year.
+-   Render in html, pdf and word and compare consistency across these.
 
-Where any of the above was seemingly not possible, it will be reported in the comments of that method. Comments will also be made on the quality of the documentation for each package and the wealth of online support through StackOverflow, blogs, tutorials, etc. 
+Where any of the above was seemingly not possible, it will be reported in the comments of that method. Comments will also be made on the quality of the documentation for each package and the wealth of online support through StackOverflow, blogs, tutorials, etc.
 
 <br>
 
 ## Method 1 - `gtsummary`
 
-+ Required data structure:
-  + In general, `tbl_summary` requires data in **long format**. This is consistent across both the `tbl_summary` and `tbl_strata` functions.
-  + "Columns" in the output are defined by use of the `by = ` argument.
-  + "Rows" in the output are defined by columns in the input data set.
-  + All variables included in the input data are, by default, included in the output. Therefore, the user must select/un-select columns pursuant to what is required.
+-   Required data structure:
+    -   In general, `tbl_summary` requires data in **long format**. This is consistent across both the `tbl_summary` and `tbl_strata` functions.
+    -   "Columns" in the output are defined by use of the `by =` argument.
+    -   "Rows" in the output are defined by columns in the input data set.
+    -   All variables included in the input data are, by default, included in the output. Therefore, the user must select/un-select columns pursuant to what is required.
 
 ```{r echo = T}
 
@@ -129,7 +126,7 @@ flchain %>%
 
 <p>
 
-+ For stratified tables, we can use `tbl_summary` inside of the `tbl_strata` function. Take for example the below, which stratifies by `sex`.
+-   For stratified tables, we can use `tbl_summary` inside of the `tbl_strata` function. Take for example the below, which stratifies by `sex`.
 
 ```{r echo = T}
 
@@ -145,18 +142,17 @@ flchain %>%
   add_p())
 ```
 
-
 ### Comments (pros/cons)
 
-+ **Pros**
-  + Massive amount of options/variability in output
-  + Formatting is very nice in html form.
-  + Easy to add in and specify arguments to testing.
-+ **Cons**
-  + Does not render in Word document markdown format (can save output to Word document).
-  + Can be a bit clumsy when specifying some arguments (must be inside list, etc.)
-  + Can be annoying when working with high dimensional data (selecting large number of columns).
-  + When applying multiple tests within a class of variables (e.g., t-test for one continuous variable, Kruskal-Wallis test for another) it is not obvious which test is applied to which. Only the p-value is returned in each instance.
+-   **Pros**
+    -   Massive amount of options/variability in output
+    -   Formatting is very nice in html form.
+    -   Easy to add in and specify arguments to testing.
+-   **Cons**
+    -   Does not render in Word document markdown format (can save output to Word document).
+    -   Can be a bit clumsy when specifying some arguments (must be inside list, etc.)
+    -   Can be annoying when working with high dimensional data (selecting large number of columns).
+    -   When applying multiple tests within a class of variables (e.g., t-test for one continuous variable, Kruskal-Wallis test for another) it is not obvious which test is applied to which. Only the p-value is returned in each instance.
 
 <br>
 
@@ -169,17 +165,17 @@ flchain %>%
 
 ### Comments (pros/cons)
 
-+ **Pros**
-  + Supports html, Word, pdf, PowerPoint RMarkdown rendering (Word and PowerPoint requires `officer` package)
-  + Can also easily render table as Rplots or graphic files (.png, .pdf, .jpeg)
-+ **Cons**
-  + Slow?
+-   **Pros**
+    -   Supports html, Word, pdf, PowerPoint RMarkdown rendering (Word and PowerPoint requires `officer` package)
+    -   Can also easily render table as Rplots or graphic files (.png, .pdf, .jpeg)
+-   **Cons**
+    -   Slow?
 
 <br>
 
 ## Method 3 - `huxtable`
 
-+ Can print the raw dataframe nicely in html format
+-   Can print the raw dataframe nicely in html format
 
 ```{r echo = T}
 as_hux(head(flchain))
@@ -187,7 +183,7 @@ as_hux(head(flchain))
 
 <p>
 
-+ Not sure if this is correct? If so, this is clunky?
+-   Not sure if this is correct? If so, this is clunky?
 
 ```{r echo = T}
 continuous <- flchain %>%
@@ -216,14 +212,13 @@ as_hux(continuous)
 as_hux(categorical)
 ```
 
-
 ### Comments (pros/cons)
 
-+ **Pros**
-  + Nicely renders html and pdf (LaTeX) tables
-+ **Cons**
-  + Clunky to specify?
-  + Have to do calculations yourself?
+-   **Pros**
+    -   Nicely renders html and pdf (LaTeX) tables
+-   **Cons**
+    -   Clunky to specify?
+    -   Have to do calculations yourself?
 
 <br>
 
@@ -251,15 +246,15 @@ tableone::CreateTableOne(data = flchain,
 
 ### Comments (pros/cons)
 
-+ **Pros**
-  + Implicitly tests each variable for appropriateness of test (e.g., normal vs. non-normal etc.)
-  + Seems like a good "first pass" sort of function to apply in cases where we have a lot of variables. Perhaps less so a "publication ready" function. 
-+ **Cons**
-  + Renders nicely to console, not so much to Rmarkdown (relative to above)
-  + Clunky to specify testing
-    + Cannot easily tell which test is being applied to which variable (cannot tell whether variable is "normal" vs. "non-normal")
-    + Different arguments specified for approximate vs. exact categorical tests (chi-square vs. Fisher's test) and normal vs. non-normal continuous tests (t-test vs. Kruskal-Wallis Rank-Sum test)
-  + Output is clunky and cannot be tweaked (decimal places, structure of output)
+-   **Pros**
+    -   Implicitly tests each variable for appropriateness of test (e.g., normal vs. non-normal etc.)
+    -   Seems like a good "first pass" sort of function to apply in cases where we have a lot of variables. Perhaps less so a "publication ready" function.
+-   **Cons**
+    -   Renders nicely to console, not so much to Rmarkdown (relative to above)
+    -   Clunky to specify testing
+        -   Cannot easily tell which test is being applied to which variable (cannot tell whether variable is "normal" vs. "non-normal")
+        -   Different arguments specified for approximate vs. exact categorical tests (chi-square vs. Fisher's test) and normal vs. non-normal continuous tests (t-test vs. Kruskal-Wallis Rank-Sum test)
+    -   Output is clunky and cannot be tweaked (decimal places, structure of output)
 
 <br>
 
@@ -283,14 +278,14 @@ flchain %>%
 
 ### Comments (pros/cons)
 
-+ **Pros**
-  + Interactive table
-  + Can copy output directly to clipboard, excel (with interactive button)
-+ **Cons**
-  + Must specify grouping variables outside of the `desctable` environment
-  + Is slooow.
-  + Specification of tests are a little clunky and troublesome with categorical factors.
-  + Specification of statistics between categorical and continuous variables are a little clunky (shows IQR for categorical variables, etc.)
+-   **Pros**
+    -   Interactive table
+    -   Can copy output directly to clipboard, excel (with interactive button)
+-   **Cons**
+    -   Must specify grouping variables outside of the `desctable` environment
+    -   Is slooow.
+    -   Specification of tests are a little clunky and troublesome with categorical factors.
+    -   Specification of statistics between categorical and continuous variables are a little clunky (shows IQR for categorical variables, etc.)
 
 <br>
 
@@ -307,11 +302,11 @@ flchain %>%
 
 ### Comments
 
-+ **Pros**
-  + Has some pretty cool graphs
-+ **Cons**
-  + A bit fiddly to render nicely in RMarkdown. Requires specification of additional arguments in chunk header (`results = asis`)
-  + Stratification is clunky in output, and requires manual `group_by` argument.
+-   **Pros**
+    -   Has some pretty cool graphs
+-   **Cons**
+    -   A bit fiddly to render nicely in RMarkdown. Requires specification of additional arguments in chunk header (`results = asis`)
+    -   Stratification is clunky in output, and requires manual `group_by` argument.
 
 <br>
 
@@ -335,9 +330,9 @@ flchain %>%
 
 ### Comments
 
-+ **Pros**
-+ **Cons**
-  + Does not nicely consider missing values for logical/categorical variables.
+-   **Pros**
+-   **Cons**
+    -   Does not nicely consider missing values for logical/categorical variables.
 
 <br>
 
@@ -349,9 +344,9 @@ psych::describe(flchain)
 
 ### Comments
 
-+ Seems like a more comprehensive version of `base::summary`?
-+ **Pros**
-+ **Cons**
+-   Seems like a more comprehensive version of `base::summary`?
+-   **Pros**
+-   **Cons**
 
 <br>
 
@@ -363,18 +358,15 @@ Hmisc::describe(flchain)
 
 ### Comments
 
-+ **Pros**
-+ **Cons**
-  + Clunky and long output, particularly if there are lots of variables.
-  + Slow to render.
+-   **Pros**
+-   **Cons**
+    -   Clunky and long output, particularly if there are lots of variables.
+    -   Slow to render.
 
-<br>
-# Conclusion
+<br> \# Conclusion
 
 <br>
 
 # Additional comments
 
 Additional use for model output to minimise the number of necessary packages. Next post!
-
-
