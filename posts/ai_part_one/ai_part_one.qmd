@@ -172,7 +172,7 @@ Outside of adding the instructional blurb and some minor aesthetic tweaks, **thi
 
 We then thoroughly inspected the code (knowing roughly how it should have been written/structured) and tested it with a range of test datasets.
 
-```{r out.width="700px", fig.align='center', echo = F}
+```{r out.width="400px", fig.align='center', echo = F}
 knitr::include_graphics(path = "app_17_iterations.png")
 ```
 
@@ -188,7 +188,7 @@ How was that created? You guessed it!
 knitr::include_graphics(path = "app_synth_req.png")
 ```
 
-```{r out.width="700px", fig.align='center', echo = F}
+```{r out.width="350px", fig.align='center', echo = F}
 knitr::include_graphics(path = "app_synth_req_3.png")
 ```
 

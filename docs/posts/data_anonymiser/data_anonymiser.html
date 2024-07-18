@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Dr Matthew Cooper, Wesley Billingham">
-<meta name="dcterms.date" content="2024-05-06">
+<meta name="dcterms.date" content="2024-07-19">
 
-<title>The Kids Biostats - AI in Biostatistics</title>
+<title>The Kids Biostats - Data Anonymiser</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -124,9 +158,9 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">AI in Biostatistics</h1>
+      <h1 class="title">Data Anonymiser</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">AI</div>
+                <div class="quarto-category">Shiny</div>
                 <div class="quarto-category">R</div>
               </div>
                   </div>
@@ -145,7 +179,7 @@ ul.task-list li input[type="checkbox"] {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">May 6, 2024</p>
+        <p class="date">July 19, 2024</p>
       </div>
     </div>
     
@@ -166,169 +200,22 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="overview" class="level1">
 <h1>Overview</h1>
-<p>AI is a hot topic in most fields right now, and biostatistics is no exception! We (the Telethon Kids Institute biostats team) were asked to present at the weekly Institute seminar on the use of AI in statistical workflows.</p>
-<p>The term AI has many meanings depending on the context - in this article we are referring exclusively to (and use the term interchangeably with) large language models (LLMs) such as ChatGPT and Claude. These tools are useful not just for writing sentences and paragraphs of text, but also functioning code!</p>
-<p>Since first investigating the capabilities of ChatGPT at writing R code, our team has been working to utilise it safely and effectively in our everyday workflows.</p>
-<p>The summary of our message to the Institute staff was that we cannot ignore the massive increase in efficiency that AI <strong><em>can</em></strong> bring if used properly. However, we also need to be <u><strong>very</strong></u> aware of its limitations, and the necessary role of human experts in the process of validating any non-trivial output.</p>
-<p>This is Part One in a two part series. This part will look at the capabilities of AI to benefit our workflows and increase efficiency. The next part will look at some limitations of the technology as it currently exists, including some practical recommendations to identify these issues.</p>
-<section id="format-of-this-post" class="level2">
-<h2 class="anchored" data-anchor-id="format-of-this-post">Format of this post</h2>
-<p>We will work through a couple of practical examples of how we might use AI in an everyday workflow:</p>
-<ol type="1">
-<li><p><strong>Data Visualisation</strong></p></li>
-<li><p><strong>Statistical Analysis</strong></p></li>
-<li><p><strong>Bonus - Shiny App Development</strong></p></li>
-</ol>
-<p>In these examples, we will increasingly take our hands off the wheel and allow AI (in these examples, <a href="https://openai.com/chatgpt/">ChatGPT 4.0</a>) to perform more and more of the task.</p>
-</section>
-</section>
-<section id="example-1---data-visualisation" class="level1">
-<h1>Example 1 - Data Visualisation</h1>
-<p>A couple of summers ago (2021/22) felt unusually hot in Perth, Australia. Specifically, it seemed that the maximum temperature was regularly exceeding round numbers like 35 or 40 degrees Celsius. The most recent summer felt similar, but as it relates to ‘hot days’, were we seeing more of these? My colleague, being a statistician, wished to contrast this most recent summer to previous summers.</p>
-<p>He whipped up a quick plot using ggplot2, with a focus on the number of ‘summer days’ above a certain maximum (and equally important, ‘hot nights’ that stayed above certain minimums). Shown below, is data through to mid February 2024:</p>
+<p>Data access and security is a really important topic and one that can be challenging to navigate. Research ethics and governance approvals typically require detail about where and how data will be stored and analysed - and a researcher typically does not have approval for the data they are working with to be moved to other locations.</p>
+<p>The rapid emergence of AI tools and online data analytics platforms (e.g.&nbsp;dashboards) may tempt researchers with the promise of short cuts to writing code and/or producing attractive figures with ease. For example, <a href="https://www.graphmaker.ai/">sites like this</a> that will take an uploaded dataset and draw a figure from it following a user prompt - <strong><em>but where did your precious private research data just go?</em></strong></p>
+<p>Below, we share a data anonymising (obscuring) app that you can run on your local machine. It will return to you, a “similar” dataset to your original dataset, allowing you to then safely use an online chat bot to assisted you to code up that complex figure or model.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="weather_p1.jpeg" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Here we can see the number of days over a certain maximum for each year since 2010. For example, in 2023, Perth had 0 days above 40°C and 4 above 38°C.</p>
-<p>The sweltering summer in question (2021/22) had a whopping 12 days over 40°C and 23 above 38°C. Since the next highest count since 2010 was 7 and 14 respectively, it’s fair to say this was quite the outlier! And the ‘current’ (at the time) summer was similar was to this, but yet to exceed it.</p>
-<p>My colleague felt that the data visualisation could probably be cleaner and more clear, so enlisted ChatGPT for help (for one of the first times!).</p>
-<section id="providing-the-blueprint" class="level2">
-<h2 class="anchored" data-anchor-id="providing-the-blueprint">Providing the Blueprint</h2>
-<p>ChatGPT allows the user to provide images as a part of prompts. With that in mind, the image was uploaded first by itself. ChatGPT was able to successfully identify the key elements of the plot just from the image (!), and so the next step was to give some guidance to make the plot more visually appealing.</p>
-<p>With just one prompt: “can you facet wrap the min max data”, in addition to the original plot, it got to work. Once the original data was provided, it returned the requested modifcation - complete with Python code for the plot (R cannot be run within ChatGPT, though we certainly could have requested R code to run ourselves instead).</p>
-<p>Here is the entire prompt history, from beginning to end:</p>
-<ul>
-<li>One image</li>
-<li>One command</li>
-<li>Some (undescribed) data</li>
-</ul>
-<p>was all the context required to understand and return, approximately, the desired output. We say approximately, since some key information such as the counts above certain levels, is absent from this first attempt.</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="weather_p3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="weather_p4.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+<p><img src="example_img.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
 </figure>
 </div>
 </div>
 </div>
 </section>
-<section id="end-result-and-discussion" class="level2">
-<h2 class="anchored" data-anchor-id="end-result-and-discussion">End Result and Discussion</h2>
-<p>After some further refinement and back-and-forth, we arrive at a much-improved plot which more closely captures the spirit of the original, while improving the colour scheme and facetting the data.</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="weather_p8.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Plots are a great use-case of AI, since the nitty gritty of colours, panes, text, etc can be a time-consuming hassle to do manually. AI in our experience does a good job of translating our descriptive visual prompts into code that achieves the described vision. Furthermore, the output is instantly verifiable (keep this point in mind!) and easy to refine.</p>
-</section>
-</section>
-<section id="example-2---statistical-workflow" class="level1">
-<h1>Example 2 - Statistical Workflow</h1>
-<p>The following example was created specifically for our presentation. We wanted to mimic a researcher with a passing understanding in statistics, but no expertise, as they attempt to run through an entire statistical pipeline from design to analysis. This would involve more careful and lengthy prompting than the previous example.</p>
-<p>For the example, we downloaded a data set contacting simulated lung data for 8528 individuals. It can be found here:</p>
-<p>https://stats.idre.ucla.edu/stat/data/hdp.csv (NOTE clicking the link initiates a download of the data.)</p>
-<p>The data has the following variables of interest for our example:</p>
-<ul>
-<li><strong>Outcome</strong>
-<ul>
-<li>remission (0/1)</li>
-</ul></li>
-<li><strong>Patient-level variables</strong>
-<ul>
-<li>IL6 levels</li>
-<li>CRP levels</li>
-<li>Length of hospital stay</li>
-<li>Family history</li>
-<li>Cancer stage</li>
-</ul></li>
-<li><strong>Physician-level variables</strong>
-<ul>
-<li>Physician experience</li>
-<li>Physician ID</li>
-<li>Hospital ID</li>
-</ul></li>
-</ul>
-<p>We will be very careful to avoid statistical terminology as we prompt ChatGPT, but we can see that there is an implied nesting structure to our data, with patient inside physician inside hospital. With that in mind, and the fact that our outcome is binary, we are hoping that ChatGPT suggests a hierarchical logistic regression.</p>
-<section id="providing-the-problem" class="level2">
-<h2 class="anchored" data-anchor-id="providing-the-problem">Providing the Problem</h2>
-<p>In this example, we provided ChatGPT with a very high-level summary of our data and research question, as seen here:</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="log_reg_1_v2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Again, we have tried to use prompts that anyone with some familiarity with stats and data analysis would be able to replicate and understand. Here, we simply mention to ChatGPT that there are patients, doctors and hospitals (highlighted above).</p>
-</section>
-<section id="the-response" class="level2">
-<h2 class="anchored" data-anchor-id="the-response">The Response</h2>
-<p>Amazingly, especially if you have had limited exposure to AI, these high-level, lay descriptions of our data and research questions were sufficient for ChatGPT to suggest a mixed-effects logistic regression model. It recognised the binary outcome and the hierarchical structure of the data, and proceeded to provide R code to perform the analysis.</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="log_res_2_v2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Here is where we encounter a difference from our previous visualisation example, however. For someone unfamiliar with statistics, would they have known if this answer happened to be incorrect? Broadly, this response is on track, but should Doctor be nested within Hospital? (keep this in mind! #2).</p>
-<p>For now, we do recognise that it has selected an appropriate model to get started. An impressive feat!</p>
-</section>
-<section id="end-result-and-discussion-1" class="level2">
-<h2 class="anchored" data-anchor-id="end-result-and-discussion-1">End Result and Discussion</h2>
-<p>For brevity’s sake, we will not include the whole prompting process here. However, following the model specification, ChatGPT was able to successfully guide us through adding a random slope, and then summarising our model using the <code>broom.mixed</code> package (broom for mixed models, as the name suggests).</p>
-<p>It then gave us code to check the model fit, run model diagnostics, and perform sensitivity analysis. At each stage, it was able to give advice on interpretation and next steps that we could not fault. Here are some highlights:</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="log_reg_6.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="log_reg_4.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-</section>
-<section id="bonus-example---data-anonymising-app" class="level1">
-<h1>Bonus Example - Data Anonymising App</h1>
-<p>One thing that the first example might make you think is, “Great! I’m going to make all my graphs online”. Slow down! The data uploaded as part of that example is public data, freely available from the Australia <a href="https://reg.bom.gov.au/climate/data-services/">Bureau of Meteorology</a> website. There are a lot of AI based websites that will draw a graph for you if you provide them data to do so - <a href="https://www.graphmaker.ai/">there are some where</a> that is all they do.</p>
-<p>However. For most researchers, particularly in the health research space, <u><strong>you will not have approval (ethics and/or governance)</strong></u> to upload your data to random websites.</p>
-<p>So, we created an app that will transform your data into a reduced, fully-anonymised dataset that can then be used in online AI tools for assistance with coding up figures or structuring models. This is not just anonymised in the sense of the masking/removing the identifiable data - all <code>values</code> in the dataset are replaced, with numeric data regenerated, and category and variable labels stripped off.</p>
-<p>It looks like this:</p>
+<section id="data-anonymising-shiny-app" class="level1">
+<h1>Data anonymising shiny app</h1>
+<p>The app is a shiny app, written in R. When loaded it looks like this:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -338,65 +225,88 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<section id="why" class="level2">
-<h2 class="anchored" data-anchor-id="why">Why?</h2>
-<p>Well yes, you could just use random data between 0 and 1 - but we (and we presume a lot of people) find less mental load involved when the data being worked with resembles the original data (as in, the values are between 140 and 200 for our “blood pressure” histogram, or between 70 and 130 for the “IQ scores” we’re plotting against values between 1.4-2.1 for “height” etc).</p>
-</section>
-<section id="how-do-i-access-it" class="level2">
-<h2 class="anchored" data-anchor-id="how-do-i-access-it">How do I access it?</h2>
-<p>It would be ironic if we provided this for you on our website, because then you would be sending your data to our servers. At Telethon Kids, we run this on an internal server that is not accessible from outside our internal network.</p>
-<p>You can <a href="https://github.com/TelethonKids/data_anonymiser">download a copy from our github</a> (it is a Shiny app that runs within R), and then run it locally on the desktop (or virtual) machine you are working on - anonymising your data without it leaving your analysis environment.</p>
-</section>
-<section id="anything-else" class="level2">
-<h2 class="anchored" data-anchor-id="anything-else">Anything else?</h2>
-<p>Outside of adding the instructional blurb and some minor aesthetic tweaks, <strong>this entire app was written by ChatGPT</strong>. ChatGPT made the code available for download (as a zip file) and worked through a series of prompts (after the initial prompt) to make small tweaks to get the app doing exactly what we wanted.</p>
-<p>We then thoroughly inspected the code (knowing roughly how it should have been written/structured) and tested it with a range of test datasets.</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="app_17_iterations.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="500"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="app_as_zip.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>There is a test dataset (<code>.xlsx</code>) available for download [LINK] with the app.</p>
-<p>How was that created? You guessed it!</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="app_synth_req.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="app_synth_req_3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="450"></p>
-</figure>
-</div>
-</div>
-</div>
+<section id="the-process" class="level2">
+<h2 class="anchored" data-anchor-id="the-process">The process</h2>
+<p>The app simply does the following:</p>
+<ul>
+<li>takes an uploaded dataset (.csv or .xlsx),</li>
+<li>lets you choose which variables to keep and how many rows you want returned,</li>
+<li>returns to you a fully obscured dataset (.csv) for download <em>(see example above)</em>.</li>
+</ul>
+<p>Contained on a tab within the app is a brief tabular report that compares your original data to the anonymised data.</p>
+<section id="gettting-started" class="level3">
+<h3 class="anchored" data-anchor-id="gettting-started">Gettting started</h3>
+<p>To use the app, you can either download a <code>.zip</code> (or clone the github repository) at the following link:</p>
+<p><a href="https://github.com/TelethonKids/data_anonymiser" class="uri">https://github.com/TelethonKids/data_anonymiser</a></p>
+<ol type="1">
+<li>Unzip the folder</li>
+<li>In your R sesssion, ensure you are in directory of the unzipped files</li>
+<li>In your R console, type <code>runApp()</code></li>
+</ol>
+<p>You may need to <code>install.packages()</code> a few packages, though this app only leverages very popular apps that most R users are likely to already have.</p>
 </section>
 </section>
-<section id="end-result-and-discussion-2" class="level1">
-<h1>End Result and Discussion</h1>
-<p>In this Part One part, we have seen how easy and powerful the use of AI can be in the data analysis and statistical workflow.</p>
-<p>In Part Two, we will look at some pitfalls of AI and some traps we can fall into. We’ll see if we can determine some good rules-of-thumb for its use to ensure our AI-assisted work remains both efficient and accurate.</p>
+<section id="data-obscuring-process" class="level2">
+<h2 class="anchored" data-anchor-id="data-obscuring-process">Data obscuring process</h2>
+<p>This is also explained on the app’s landing page - but the detail of what is happening in the data obscuring process is as follows:</p>
+<ul>
+<li><strong>Column names:</strong> These will all be replaced with a generic name of the form “VAR_1”, “VAR_2” etc</li>
+<li><strong>Continuous variables</strong>
+<ul>
+<li><strong>15 or fewer unique values:</strong> These will be randomly (evenly) replaced with integers 0 through to the n (where n is the number of unique values within that variable).</li>
+<li><strong>More than 15 unique values:</strong> Will be replaced with random normally distributed data that has the same mean and standard deviation as the original data.</li>
+</ul></li>
+<li><strong>Date variables:</strong> The min and max date will be found within the provided data, then uniformly distributed dates between that min and max date will be returned.</li>
+<li><strong>Categorical variables (includes dichotomous variables)</strong>
+<ul>
+<li><strong>15 or fewer unique categories:</strong> These will be randomly (evenly) replaced with letters “A” through “O”</li>
+<li><strong>More than 15 unique categories:</strong> (For example studyIDs, names, addresses etc) these will be replaced with a random string of length 6 (may or may not be unique).</li>
+</ul></li>
+</ul>
+</section>
+</section>
+<section id="closing-notes" class="level1">
+<h1>Closing notes</h1>
+<p>The app is by no means ground breaking or overly complex. The target audience is not likely the savvy analysis/coder, but perhaps you (the savvy analysis/coder) reading this might know of someone (or a research group) that could benefit from access to this. Or perhaps you could pursue/advocate for having this setup on an internal server (with no internet access) at your workplace for colleagues to use - this is what we have done at Telethon Kids.</p>
+<p>Daily we are entrusted with extremely personal data on our fellow human beings (deidentified or otherwise), anything we do to limit potential data breaches is to be encouraged.</p>
+<section id="acknowledgements" class="level2">
+<h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
+<p>Thanks to Wesley Billingham and Zac Dempsey for providing feedback on and reviewing this post.</p>
+<p>You can look forward to seeing posts from these other team members here in the coming weeks and months.</p>
+</section>
+<section id="reproducibility-information" class="level2">
+<h2 class="anchored" data-anchor-id="reproducibility-information">Reproducibility Information</h2>
+<p>Session information:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.3.3 (2024-02-29)
+Platform: aarch64-apple-darwin20 (64-bit)
+Running under: macOS Sonoma 14.4.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: Australia/Perth
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+loaded via a namespace (and not attached):
+ [1] htmlwidgets_1.6.4 compiler_4.3.3    fastmap_1.2.0     cli_3.6.3        
+ [5] tools_4.3.3       htmltools_0.5.8.1 rstudioapi_0.16.0 yaml_2.3.8       
+ [9] rmarkdown_2.27    knitr_1.47        jsonlite_1.8.8    xfun_0.45        
+[13] digest_0.6.36     rlang_1.1.4       evaluate_0.24.0  </code></pre>
+</div>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
