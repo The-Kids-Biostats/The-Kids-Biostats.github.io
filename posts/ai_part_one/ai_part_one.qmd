@@ -180,7 +180,7 @@ knitr::include_graphics(path = "app_17_iterations.png")
 knitr::include_graphics(path = "app_as_zip.png")
 ```
 
-There is a test dataset (`.xlsx`) available for download \[LINK\] with the app.
+There is a test dataset (`.xlsx`) available [for download here](https://github.com/TelethonKids/data_anonymiser/blob/main/synthetic_health_dataset_final.xlsx) (click downward arrow on right hand size of the page) with the app.
 
 How was that created? You guessed it!
 

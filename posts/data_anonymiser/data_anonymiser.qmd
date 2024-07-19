@@ -1,6 +1,10 @@
 ---
 title: "Data Anonymiser"
-output: html_document
+format:
+  html:
+    code-fold: true
+    toc: true
+    toc-location: left
 date: "2024-07-19"
 author: "Dr Matthew Cooper, Wesley Billingham"
 categories:

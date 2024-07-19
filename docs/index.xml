@@ -14,7 +14,7 @@
 <item>
   <title>Parallel Computing in R</title>
   <dc:creator>Zac Dempsey</dc:creator>
-  <link>https://www.the-kids-biostats.github.io/posts/parallel/</link>
+  <link>https://www.the-kids-biostats.github.io/posts/parallel/parallel.html</link>
   <description><![CDATA[ 
 
 
@@ -34,7 +34,7 @@
 <p>Parallel computing refers to executing multiple operations in “parallel” (i.e., at the same time) across a machine’s multiple cores/processors. Most modern computers have at least four cores, and often many more. By default, R uses only one core, running iterative operations sequentially; not starting the next until the previous is complete. Under a parallel framework, however, multiple iterations/calculations can be allocated across multiple cores so they can be executed at the same time — thus saving (overall) time. These time savings accumulate particularly with large underlying tasks <em>(as opposed to running many small tasks in parallel — a situation that often ultimately ends up slower!)</em>.</p>
 <p>In this post, we will have a look at a couple of examples using <code>R</code>. We provide some simple examples and use-cases, in addition to some additional resources to continue learning.</p>
 <p>The <code>doParallel</code> and <code>foreach</code> packages of <code>R</code> are one set of packages, intended to be used together, to facilitate parallel computing in a syntactically simple way. Additionally, the base <code>parallel</code> package is used for some basic set-up and detection.</p>
-<p>These examples are run using R version 4.3.2 (2023-10-31 ucrt) on Windows 10 x64.</p>
+<p>These examples are run using R version 4.3.3 (2024-02-29) on Darwin 23.4.0.</p>
 </section>
 <section id="when-should-we-consider-parallel-computing" class="level1">
 <h1>When should we consider Parallel Computing?</h1>
@@ -371,7 +371,7 @@ font-style: inherit;">print</span>(time1)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   8.13    0.11    8.25 </code></pre>
+  4.254   0.011   4.293 </code></pre>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -530,7 +530,7 @@ font-style: inherit;">print</span>(time2)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   7.33    0.09    7.46 </code></pre>
+  3.680   0.009   3.697 </code></pre>
 </div>
 </div>
 <p>
@@ -660,13 +660,13 @@ background-color: null;
 font-style: inherit;">head</span>(bootstrap_coefs)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>         (Intercept)          hp         wt        am
-result.1    29.01023 -0.03144924 -1.7011668 1.9710101
-result.2    34.64419 -0.02981554 -3.3686345 2.2630996
-result.3    29.30763 -0.05186821 -0.7765918 5.3702237
-result.4    32.78371 -0.05571083 -1.8368810 4.7410181
-result.5    34.58447 -0.02907062 -3.3133915 0.1025598
-result.6    33.63623 -0.03984186 -2.6517603 2.7519106</code></pre>
+<pre><code>         (Intercept)          hp        wt        am
+result.1    31.48209 -0.03671749 -2.342623 1.4217909
+result.2    33.95259 -0.02362518 -3.406813 0.9267277
+result.3    36.59211 -0.03248322 -3.755576 0.9103209
+result.4    34.87373 -0.03891634 -3.238203 0.8272840
+result.5    33.20963 -0.04487305 -2.284206 2.1212567
+result.6    33.79241 -0.04119127 -2.805964 2.6563277</code></pre>
 </div>
 </div>
 <p>as are the associated 95% confidence intervals.</p>
@@ -676,9 +676,9 @@ result.6    33.63623 -0.03984186 -2.6517603 2.7519106</code></pre>
 <div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1">bootstrap_cis</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>      (Intercept)          hp        wt         am
-2.5%     29.00517 -0.05536575 -5.181523 -0.7919252
-97.5%    40.89882 -0.02190769 -1.076947  4.9375445</code></pre>
+<pre><code>      (Intercept)          hp        wt        am
+2.5%     29.01510 -0.05586253 -5.215733 -0.786392
+97.5%    40.95525 -0.02165217 -1.047514  4.892388</code></pre>
 </div>
 </div>
 <p>Lastly, this had the following run-time (seconds)</p>
@@ -691,7 +691,7 @@ font-style: inherit;">print</span>(time3)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   2.81    0.45    4.63 </code></pre>
+  4.817   0.344   1.359 </code></pre>
 </div>
 </div>
 <p>
@@ -699,7 +699,7 @@ font-style: inherit;">print</span>(time3)</span></code></pre></div>
 <section id="discussion" class="level2">
 <h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
 <p>Immediately, the syntax of the alternative for-loop structures are <strong>more readable</strong> and <strong>easier to construct</strong> than the traditional for-loop. Because the <code>foreach::foreach</code> function easily combines output in a list, we need not define an empty matrix to append output to.</p>
-<p>Computation time in the parallel environment is significantly faster — approximately 44% faster than the traditional for-loop! Across multiple analyses and data sets, these time savings certainly add up!</p>
+<p>Computation time in the parallel environment is significantly faster — approximately 68% faster than the traditional for-loop! Across multiple analyses and data sets, these time savings certainly add up!</p>
 <p><br></p>
 </section>
 </section>
@@ -953,8 +953,8 @@ font-style: inherit;">$</span>species_presence)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>           
 predictions absent present
-    absent     705     777
-    present    781     737</code></pre>
+    absent     707     769
+    present    779     745</code></pre>
 </div>
 </div>
 <p>This has the following run-time (seconds):</p>
@@ -967,7 +967,7 @@ font-style: inherit;">print</span>(time1)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   5.47    0.26    5.77 </code></pre>
+  6.172   0.156   6.366 </code></pre>
 </div>
 </div>
 <p>
@@ -1063,8 +1063,8 @@ font-style: inherit;">$</span>species_presence)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>           
 predictions absent present
-    absent     706     778
-    present    780     736</code></pre>
+    absent     699     777
+    present    787     737</code></pre>
 </div>
 </div>
 <p>This has the following run-time (seconds):</p>
@@ -1077,7 +1077,7 @@ font-style: inherit;">print</span>(time2)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   5.31    0.48    5.81 </code></pre>
+  5.949   0.221   6.216 </code></pre>
 </div>
 </div>
 <p>
@@ -1189,8 +1189,8 @@ font-style: inherit;">$</span>species_presence)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>           
 predictions absent present
-    absent     704     767
-    present    782     747</code></pre>
+    absent     707     772
+    present    779     742</code></pre>
 </div>
 </div>
 <p>This now has the following run-time (seconds):</p>
@@ -1203,14 +1203,14 @@ font-style: inherit;">print</span>(time3)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.08    0.55    3.81 </code></pre>
+  6.344   0.688   2.907 </code></pre>
 </div>
 </div>
 <p>
 </p></section>
 <section id="discussion-1" class="level2">
 <h2 class="anchored" data-anchor-id="discussion-1">Discussion</h2>
-<p>Again, using <u>easily adaptable and readable syntax</u>, we leverage a parallel environment to significantly lessen the computation time of our large model. Relative to a standard for-loop, the parallelised computation is approximately 34% faster.</p>
+<p>Again, using <u>easily adaptable and readable syntax</u>, we leverage a parallel environment to significantly lessen the computation time of our large model. Relative to a standard for-loop, the parallelised computation is approximately 54% faster.</p>
 <p><br></p>
 </section>
 </section>
@@ -1445,7 +1445,7 @@ font-style: inherit;">print</span>(time1)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.00    0.23    1.25 </code></pre>
+  0.545   0.075   0.624 </code></pre>
 </div>
 </div>
 <p>
@@ -1568,7 +1568,7 @@ font-style: inherit;">print</span>(time2)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.11    0.15    1.28 </code></pre>
+  0.453   0.072   0.526 </code></pre>
 </div>
 </div>
 <p>
@@ -1711,7 +1711,7 @@ font-style: inherit;">print</span>(time3)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   0.14    0.01    2.39 </code></pre>
+  0.098   0.027   1.210 </code></pre>
 </div>
 </div>
 <p>
@@ -1849,14 +1849,14 @@ font-style: inherit;">print</span>(time4)</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-   1.23    0.68    4.80 </code></pre>
+  0.121   0.138   0.753 </code></pre>
 </div>
 </div>
 <p>
 </p></section>
 <section id="discussion-2" class="level2">
 <h2 class="anchored" data-anchor-id="discussion-2">Discussion</h2>
-<p>We now see that the parallel processing of these tasks takes far <em>longer</em> – about 74% so! The underlying set of operations — running a series of linear models — are already small and relatively fast, so the overhead of managing the task (splitting, computing and combining results) in a parallel environment far exceeds what what can easily be spun up using a for-loop (or <code>purrr::map</code>).</p>
+<p>We now see that the parallel processing of these tasks takes far <em>longer</em> – about 17% so! The underlying set of operations — running a series of linear models — are already small and relatively fast, so the overhead of managing the task (splitting, computing and combining results) in a parallel environment far exceeds what what can easily be spun up using a for-loop (or <code>purrr::map</code>).</p>
 <p><br></p>
 </section>
 </section>
@@ -1899,17 +1899,16 @@ background-color: null;
 font-style: inherit;">sessionInfo</span>()</span></code></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>R version 4.3.2 (2023-10-31 ucrt)
-Platform: x86_64-w64-mingw32/x64 (64-bit)
-Running under: Windows 10 x64 (build 19045)
+<pre><code>R version 4.3.3 (2024-02-29)
+Platform: aarch64-apple-darwin20 (64-bit)
+Running under: macOS Sonoma 14.4.1
 
 Matrix products: default
-
+BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
 
 locale:
-[1] LC_COLLATE=English_Australia.utf8  LC_CTYPE=English_Australia.utf8   
-[3] LC_MONETARY=English_Australia.utf8 LC_NUMERIC=C                      
-[5] LC_TIME=English_Australia.utf8    
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 
 time zone: Australia/Perth
 tzcode source: internal
@@ -1927,17 +1926,17 @@ other attached packages:
 [16] tidyverse_2.0.0     
 
 loaded via a namespace (and not attached):
- [1] utf8_1.2.4         generics_0.1.3     stringi_1.8.3      listenv_0.9.1     
- [5] hms_1.1.3          digest_0.6.35      magrittr_2.0.3     evaluate_0.23     
- [9] grid_4.3.2         timechange_0.3.0   fastmap_1.1.1      jsonlite_1.8.8    
-[13] fansi_1.0.6        scales_1.3.0       codetools_0.2-20   cli_3.6.2         
-[17] rlang_1.1.3        parallelly_1.37.1  munsell_0.5.1      withr_3.0.0       
-[21] yaml_2.3.8         tools_4.3.2        tzdb_0.4.0         colorspace_2.1-0  
+ [1] utf8_1.2.4         generics_0.1.3     stringi_1.8.4      listenv_0.9.1     
+ [5] hms_1.1.3          digest_0.6.36      magrittr_2.0.3     evaluate_0.24.0   
+ [9] grid_4.3.3         timechange_0.3.0   fastmap_1.2.0      jsonlite_1.8.8    
+[13] fansi_1.0.6        scales_1.3.0       codetools_0.2-20   cli_3.6.3         
+[17] rlang_1.1.4        parallelly_1.37.1  munsell_0.5.1      withr_3.0.0       
+[21] yaml_2.3.8         tools_4.3.3        tzdb_0.4.0         colorspace_2.1-0  
 [25] globals_0.16.3     vctrs_0.6.5        R6_2.5.1           lifecycle_1.0.4   
 [29] htmlwidgets_1.6.4  pkgconfig_2.0.3    pillar_1.9.0       gtable_0.3.5      
-[33] glue_1.7.0         xfun_0.43          tidyselect_1.2.1   rstudioapi_0.16.0 
-[37] knitr_1.46         htmltools_0.5.8.1  rmarkdown_2.26     nycflights13_1.0.2
-[41] compiler_4.3.2    </code></pre>
+[33] glue_1.7.0         xfun_0.45          tidyselect_1.2.1   rstudioapi_0.16.0 
+[37] knitr_1.47         htmltools_0.5.8.1  rmarkdown_2.27     nycflights13_1.0.2
+[41] compiler_4.3.3    </code></pre>
 </div>
 </div>
 
@@ -1948,13 +1947,13 @@ loaded via a namespace (and not attached):
  ]]></description>
   <category>R</category>
   <category>Parallel</category>
-  <guid>https://www.the-kids-biostats.github.io/posts/parallel/</guid>
+  <guid>https://www.the-kids-biostats.github.io/posts/parallel/parallel.html</guid>
   <pubDate>Sun, 30 Jun 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Handling Missing Data with LMER</title>
   <dc:creator>Dr Matthew Cooper</dc:creator>
-  <link>https://www.the-kids-biostats.github.io/posts/lmer-missing/</link>
+  <link>https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer.html</link>
   <description><![CDATA[ 
 
 
@@ -2108,24 +2107,23 @@ background-color: null;
 font-style: inherit;">"{n}"</span>)</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div>
-<div id="gqraeieeob" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#gqraeieeob table {
+<div id="kdyersojmd" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#kdyersojmd table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#gqraeieeob thead, #gqraeieeob tbody, #gqraeieeob tfoot, #gqraeieeob tr, #gqraeieeob td, #gqraeieeob th {
+#kdyersojmd thead, #kdyersojmd tbody, #kdyersojmd tfoot, #kdyersojmd tr, #kdyersojmd td, #kdyersojmd th {
   border-style: none;
 }
 
-#gqraeieeob p {
+#kdyersojmd p {
   margin: 0;
   padding: 0;
 }
 
-#gqraeieeob .gt_table {
+#kdyersojmd .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -2151,12 +2149,12 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-left-color: #D3D3D3;
 }
 
-#gqraeieeob .gt_caption {
+#kdyersojmd .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#gqraeieeob .gt_title {
+#kdyersojmd .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -2168,7 +2166,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-bottom-width: 0;
 }
 
-#gqraeieeob .gt_subtitle {
+#kdyersojmd .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -2180,7 +2178,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-top-width: 0;
 }
 
-#gqraeieeob .gt_heading {
+#kdyersojmd .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -2192,13 +2190,13 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-right-color: #D3D3D3;
 }
 
-#gqraeieeob .gt_bottom_border {
+#kdyersojmd .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#gqraeieeob .gt_col_headings {
+#kdyersojmd .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2213,7 +2211,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-right-color: #D3D3D3;
 }
 
-#gqraeieeob .gt_col_heading {
+#kdyersojmd .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2233,7 +2231,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   overflow-x: hidden;
 }
 
-#gqraeieeob .gt_column_spanner_outer {
+#kdyersojmd .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2245,15 +2243,15 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   padding-right: 4px;
 }
 
-#gqraeieeob .gt_column_spanner_outer:first-child {
+#kdyersojmd .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#gqraeieeob .gt_column_spanner_outer:last-child {
+#kdyersojmd .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#gqraeieeob .gt_column_spanner {
+#kdyersojmd .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -2265,11 +2263,11 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   width: 100%;
 }
 
-#gqraeieeob .gt_spanner_row {
+#kdyersojmd .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#gqraeieeob .gt_group_heading {
+#kdyersojmd .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2295,7 +2293,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   text-align: left;
 }
 
-#gqraeieeob .gt_empty_group_heading {
+#kdyersojmd .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -2310,15 +2308,15 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   vertical-align: middle;
 }
 
-#gqraeieeob .gt_from_md > :first-child {
+#kdyersojmd .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#gqraeieeob .gt_from_md > :last-child {
+#kdyersojmd .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#gqraeieeob .gt_row {
+#kdyersojmd .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2337,7 +2335,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   overflow-x: hidden;
 }
 
-#gqraeieeob .gt_stub {
+#kdyersojmd .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2350,7 +2348,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   padding-right: 5px;
 }
 
-#gqraeieeob .gt_stub_row_group {
+#kdyersojmd .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -2364,15 +2362,15 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   vertical-align: top;
 }
 
-#gqraeieeob .gt_row_group_first td {
+#kdyersojmd .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#gqraeieeob .gt_row_group_first th {
+#kdyersojmd .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#gqraeieeob .gt_summary_row {
+#kdyersojmd .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2382,16 +2380,16 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   padding-right: 5px;
 }
 
-#gqraeieeob .gt_first_summary_row {
+#kdyersojmd .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#gqraeieeob .gt_first_summary_row.thick {
+#kdyersojmd .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#gqraeieeob .gt_last_summary_row {
+#kdyersojmd .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2401,7 +2399,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-bottom-color: #D3D3D3;
 }
 
-#gqraeieeob .gt_grand_summary_row {
+#kdyersojmd .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -2411,7 +2409,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   padding-right: 5px;
 }
 
-#gqraeieeob .gt_first_grand_summary_row {
+#kdyersojmd .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2421,7 +2419,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-top-color: #D3D3D3;
 }
 
-#gqraeieeob .gt_last_grand_summary_row_top {
+#kdyersojmd .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -2431,11 +2429,11 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-bottom-color: #D3D3D3;
 }
 
-#gqraeieeob .gt_striped {
+#kdyersojmd .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#gqraeieeob .gt_table_body {
+#kdyersojmd .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -2444,7 +2442,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-bottom-color: #D3D3D3;
 }
 
-#gqraeieeob .gt_footnotes {
+#kdyersojmd .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2458,7 +2456,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-right-color: #D3D3D3;
 }
 
-#gqraeieeob .gt_footnote {
+#kdyersojmd .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -2467,7 +2465,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   padding-right: 5px;
 }
 
-#gqraeieeob .gt_sourcenotes {
+#kdyersojmd .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -2481,7 +2479,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-right-color: #D3D3D3;
 }
 
-#gqraeieeob .gt_sourcenote {
+#kdyersojmd .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -2489,68 +2487,68 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   padding-right: 5px;
 }
 
-#gqraeieeob .gt_left {
+#kdyersojmd .gt_left {
   text-align: left;
 }
 
-#gqraeieeob .gt_center {
+#kdyersojmd .gt_center {
   text-align: center;
 }
 
-#gqraeieeob .gt_right {
+#kdyersojmd .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#gqraeieeob .gt_font_normal {
+#kdyersojmd .gt_font_normal {
   font-weight: normal;
 }
 
-#gqraeieeob .gt_font_bold {
+#kdyersojmd .gt_font_bold {
   font-weight: bold;
 }
 
-#gqraeieeob .gt_font_italic {
+#kdyersojmd .gt_font_italic {
   font-style: italic;
 }
 
-#gqraeieeob .gt_super {
+#kdyersojmd .gt_super {
   font-size: 65%;
 }
 
-#gqraeieeob .gt_footnote_marks {
+#kdyersojmd .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#gqraeieeob .gt_asterisk {
+#kdyersojmd .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#gqraeieeob .gt_indent_1 {
+#kdyersojmd .gt_indent_1 {
   text-indent: 5px;
 }
 
-#gqraeieeob .gt_indent_2 {
+#kdyersojmd .gt_indent_2 {
   text-indent: 10px;
 }
 
-#gqraeieeob .gt_indent_3 {
+#kdyersojmd .gt_indent_3 {
   text-indent: 15px;
 }
 
-#gqraeieeob .gt_indent_4 {
+#kdyersojmd .gt_indent_4 {
   text-indent: 20px;
 }
 
-#gqraeieeob .gt_indent_5 {
+#kdyersojmd .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
 
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
@@ -2614,7 +2612,6 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
 
 </table>
 
-</div>
 </div>
 </div>
 </div>
@@ -2706,7 +2703,7 @@ font-style: inherit;">"Wage"</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -2821,7 +2818,7 @@ font-style: inherit;">9</span>))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -3080,7 +3077,7 @@ font-style: inherit;">9</span>))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -3202,7 +3199,7 @@ font-style: inherit;">-&gt;</span> p1</span>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -3537,7 +3534,7 @@ font-style: inherit;">-&gt;</span> p2</span>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -3633,7 +3630,7 @@ font-style: inherit;">"Mixed effects model"</span>))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -3846,7 +3843,6 @@ font-style: inherit;">"{n}"</span>)</span>
 <span id="cb16-15">  )</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div>
 <div id="tgjctjomfb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#tgjctjomfb table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -4288,7 +4284,7 @@ font-style: inherit;">"{n}"</span>)</span>
 }
 </style>
 
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <colgroup>
 <col style="width: 20%">
 <col style="width: 20%">
@@ -4378,7 +4374,6 @@ font-style: inherit;">"{n}"</span>)</span>
 
 </table>
 
-</div>
 </div>
 </div>
 </div>
@@ -4491,7 +4486,7 @@ font-style: inherit;">9</span>)) </span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -4679,7 +4674,7 @@ font-style: inherit;">9</span>))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -5030,7 +5025,7 @@ font-style: inherit;">-&gt;</span> p4</span>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -5523,7 +5518,7 @@ font-style: inherit;">-&gt;</span> p4</span>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -5760,7 +5755,7 @@ font-style: inherit;">'bottom'</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -5926,7 +5921,6 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <div id="bahldkstyb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#bahldkstyb table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -6368,7 +6362,7 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
 }
 </style>
 
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
@@ -6432,7 +6426,6 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
 
 </table>
 
-</div>
 </div>
 </div>
 </div>
@@ -6604,7 +6597,7 @@ font-style: inherit;">9</span>))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -6822,7 +6815,7 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/index_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -6887,39 +6880,39 @@ other attached packages:
  [1] lubridate_1.9.3   forcats_1.0.0     stringr_1.5.1     dplyr_1.1.4      
  [5] purrr_1.0.2       readr_2.1.5       tidyr_1.3.1       tibble_3.2.1     
  [9] ggplot2_3.5.1     tidyverse_2.0.0   patchwork_1.2.0   parameters_0.21.7
-[13] jtools_2.2.2      gtsummary_1.7.2   AER_1.2-12        survival_3.6-4   
+[13] jtools_2.2.2      gtsummary_1.7.2   AER_1.2-12        survival_3.7-0   
 [17] sandwich_3.1-0    lmtest_0.9-40     zoo_1.8-12        car_3.1-2        
 [21] carData_3.0-5     merTools_0.6.2    arm_1.14-4        MASS_7.3-60.0.1  
-[25] lme4_1.1-35.3     Matrix_1.6-5     
+[25] lme4_1.1-35.4     Matrix_1.6-5     
 
 loaded via a namespace (and not attached):
- [1] rlang_1.1.3          magrittr_2.0.3       multcomp_1.4-25     
+ [1] rlang_1.1.4          magrittr_2.0.3       multcomp_1.4-25     
  [4] furrr_0.3.1          compiler_4.3.3       vctrs_0.6.5         
- [7] pkgconfig_2.0.3      crayon_1.5.2         fastmap_1.2.0       
+ [7] pkgconfig_2.0.3      crayon_1.5.3         fastmap_1.2.0       
 [10] backports_1.5.0      labeling_0.4.3       pander_0.6.5        
 [13] utf8_1.2.4           promises_1.3.0       rmarkdown_2.27      
-[16] markdown_1.12        tzdb_0.4.0           nloptr_2.0.3        
-[19] xfun_0.44            jsonlite_1.8.8       later_1.3.2         
+[16] markdown_1.13        tzdb_0.4.0           nloptr_2.1.1        
+[19] xfun_0.45            jsonlite_1.8.8       later_1.3.2         
 [22] broom_1.0.6          parallel_4.3.3       R6_2.5.1            
 [25] stringi_1.8.4        parallelly_1.37.1    boot_1.3-30         
 [28] numDeriv_2016.8-1.1  estimability_1.5.1   assertthat_0.2.1    
-[31] Rcpp_1.0.12          iterators_1.0.14     knitr_1.45          
+[31] Rcpp_1.0.12          iterators_1.0.14     knitr_1.47          
 [34] httpuv_1.6.15        splines_4.3.3        timechange_0.3.0    
 [37] tidyselect_1.2.1     rstudioapi_0.16.0    abind_1.4-5         
 [40] yaml_2.3.8           codetools_0.2-20     listenv_0.9.1       
 [43] lmerTest_3.1-3       lattice_0.22-6       shiny_1.8.1.1       
 [46] withr_3.0.0          bayestestR_0.13.2    coda_0.19-4.1       
-[49] evaluate_0.23        future_1.33.2        huxtable_5.5.6      
+[49] evaluate_0.24.0      future_1.33.2        huxtable_5.5.6      
 [52] xml2_1.3.6           pillar_1.9.0         foreach_1.5.2       
-[55] insight_0.19.11      generics_0.1.3       hms_1.1.3           
+[55] insight_0.20.1       generics_0.1.3       hms_1.1.3           
 [58] munsell_0.5.1        commonmark_1.9.1     scales_1.3.0        
 [61] minqa_1.2.7          globals_0.16.3       xtable_1.8-4        
 [64] glue_1.7.0           emmeans_1.10.2       tools_4.3.3         
 [67] mvtnorm_1.2-5        grid_4.3.3           datawizard_0.10.0   
 [70] colorspace_2.1-0     nlme_3.1-164         Formula_1.2-5       
-[73] cli_3.6.2            fansi_1.0.6          viridisLite_0.4.2   
+[73] cli_3.6.3            fansi_1.0.6          viridisLite_0.4.2   
 [76] broom.helpers_1.15.0 gt_0.10.1            gtable_0.3.5        
-[79] broom.mixed_0.2.9.5  sass_0.4.9           digest_0.6.35       
+[79] broom.mixed_0.2.9.5  sass_0.4.9           digest_0.6.36       
 [82] TH.data_1.1-2        farver_2.1.2         htmlwidgets_1.6.4   
 [85] htmltools_0.5.8.1    lifecycle_1.0.4      mime_0.12           
 [88] blme_1.0-5          </code></pre>
@@ -6934,7 +6927,7 @@ loaded via a namespace (and not attached):
   <category>Missing Data</category>
   <category>Mixed Models</category>
   <category>R</category>
-  <guid>https://www.the-kids-biostats.github.io/posts/lmer-missing/</guid>
+  <guid>https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer.html</guid>
   <pubDate>Thu, 06 Jun 2024 16:00:00 GMT</pubDate>
 </item>
 <item>

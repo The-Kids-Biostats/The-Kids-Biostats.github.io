@@ -16,10 +16,6 @@ draft: true
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-```
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(survival)
 library(gtsummary)
@@ -377,19 +373,6 @@ Hmisc::describe(flchain)
     -   Clunky and long output, particularly if there are lots of variables.
     -   Slow to render.
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-library(tidyverse)
-library(survival)
-library(gtsummary)
-library(flextable)
-library(huxtable)
-library(janitor)
-library(stargazer)
-library(tableone)
-library(summarytools)
-```
-
 # Overview
 
 Analysing data will normally always involve generating tables, whether they are the final goal of the analysis or used as an intermediary step to guide further analysis. Here, we're going to focus on the former while keeping the latter in the back of our minds. A common use case here might be a "Table 1" from a randomised control trial where we are examining (not testing and generating p-values) a range of summary statistics for each arm of the trial, or perhaps data are collected on a group over three time points and we want to examine a range of summary statistics for each time point.
@@ -735,19 +718,6 @@ Hmisc::describe(flchain)
 -   **Cons**
     -   Clunky and long output, particularly if there are lots of variables.
     -   Slow to render.
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-library(tidyverse)
-library(survival)
-library(gtsummary)
-library(flextable)
-library(huxtable)
-library(janitor)
-library(stargazer)
-library(tableone)
-library(summarytools)
-```
 
 # Overview
 
