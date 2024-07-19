@@ -19,7 +19,7 @@ Data access and security is a really important topic and one that can be challen
 
 The rapid emergence of AI tools and online data analytics platforms (e.g. dashboards) may tempt researchers with the promise of short cuts to writing code and/or producing attractive figures with ease. For example, [sites like this](https://www.graphmaker.ai/) that will take an uploaded dataset and draw a figure from it following a user prompt – ***but where did your precious private research data just go?***
 
-Below, we share a data anonymising (obscuring) app that you can run on your local machine. It will return to you, a "similar" dataset to your original dataset, allowing you to then safely use an online chat bot to assisted you to code up that complex figure or model.
+Below, we share a data anonymising (obscuring) [shiny app](https://shiny.posit.co/) that you can run on your local machine. It will return to you, a "similar" dataset to your original dataset, allowing you to then safely use an online chat bot to assisted you to code up that complex figure or model.
 
 ```{r out.width="700px", fig.align='center', echo = F}
 knitr::include_graphics(path = "example_img.png")
@@ -27,7 +27,7 @@ knitr::include_graphics(path = "example_img.png")
 
 # Data anonymising shiny app
 
-The app is a shiny app, written in R. When loaded it looks like this:
+The app is a [shiny app](https://shiny.posit.co/), written in R. When loaded it looks like this:
 
 ```{r out.width="700px", fig.align='center', echo = F}
 knitr::include_graphics(path = "app_preview.png")
