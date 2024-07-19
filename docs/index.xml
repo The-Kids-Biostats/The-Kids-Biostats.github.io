@@ -10,7 +10,140 @@
 <atom:link href="https://www.the-kids-biostats.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description>Biostats R solutions</description>
 <generator>quarto-1.4.555</generator>
-<lastBuildDate>Sun, 30 Jun 2024 16:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 18 Jul 2024 16:00:00 GMT</lastBuildDate>
+<item>
+  <title>Data Anonymiser</title>
+  <dc:creator>Dr Matthew Cooper, Wesley Billingham</dc:creator>
+  <link>https://www.the-kids-biostats.github.io/posts/data_anonymiser/data_anonymiser.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<p>Data access and security is a really important topic and one that can be challenging to navigate. Research ethics and governance approvals typically require detail about where and how data will be stored and analysed - and a researcher typically does not have approval for the data they are working with to be moved to other locations.</p>
+<p>The rapid emergence of AI tools and online data analytics platforms (e.g.&nbsp;dashboards) may tempt researchers with the promise of short cuts to writing code and/or producing attractive figures with ease. For example, <a href="https://www.graphmaker.ai/">sites like this</a> that will take an uploaded dataset and draw a figure from it following a user prompt – <strong><em>but where did your precious private research data just go?</em></strong></p>
+<p>Below, we share a data anonymising (obscuring) <a href="https://shiny.posit.co/">shiny app</a> that you can run on your local machine. It will return to you, a “similar” dataset to your original dataset, allowing you to then safely use an online chat bot to assisted you to code up that complex figure or model.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://www.the-kids-biostats.github.io/posts/data_anonymiser/example_img.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="data-anonymising-shiny-app" class="level1">
+<h1>Data anonymising shiny app</h1>
+<p>The app is a <a href="https://shiny.posit.co/">shiny app</a>, written in R. When loaded it looks like this:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://www.the-kids-biostats.github.io/posts/data_anonymiser/app_preview.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="the-process" class="level2">
+<h2 class="anchored" data-anchor-id="the-process">The process</h2>
+<p>The app simply does the following:</p>
+<ul>
+<li>takes an uploaded dataset (.csv or .xlsx),</li>
+<li>lets you choose which variables to keep and how many rows you want returned,</li>
+<li>returns to you a fully obscured dataset (.csv) for download <em>(see example above)</em>.</li>
+</ul>
+<p>Contained on a tab within the app is a brief tabular report that compares your original data to the anonymised data.</p>
+<section id="getting-started" class="level3">
+<h3 class="anchored" data-anchor-id="getting-started">Getting started</h3>
+<p>To use the app, you can either download a <code>.zip</code> (or clone the github repository) at the following link:</p>
+<p><a href="https://github.com/TelethonKids/data_anonymiser" class="uri">https://github.com/TelethonKids/data_anonymiser</a></p>
+<p>Then:</p>
+<ol type="1">
+<li>Unzip the folder</li>
+<li>In your R session, ensure you are in directory of the unzipped files</li>
+<li>In your R console, type <code>runApp()</code></li>
+</ol>
+<p>You may need to <code>install.packages()</code> a few packages, though this app only leverages very popular packages that most R users are likely to already have.</p>
+</section>
+</section>
+<section id="data-obscuring-process" class="level2">
+<h2 class="anchored" data-anchor-id="data-obscuring-process">Data obscuring process</h2>
+<p>This is also explained on the app’s landing page – but the detail of what is happening in the data obscuring process is as follows:</p>
+<ul>
+<li><strong>Column names:</strong> These will all be replaced with a generic name of the form “VAR_1”, “VAR_2”, etc.</li>
+<li><strong>Continuous variables</strong>
+<ul>
+<li><strong>15 or fewer unique values:</strong> These will be randomly (evenly) replaced with integers 0 through to the n (where n is the number of unique values within that variable).</li>
+<li><strong>More than 15 unique values:</strong> Will be replaced with random normally distributed data that has the same mean and standard deviation as the original data.</li>
+</ul></li>
+<li><strong>Date variables:</strong> The min and max date will be found within the provided data, then uniformly distributed dates between that min and max date will be returned.</li>
+<li><strong>Categorical variables (includes dichotomous variables)</strong>
+<ul>
+<li><strong>15 or fewer unique categories:</strong> These will be randomly (evenly) replaced with letters “A” through “O”</li>
+<li><strong>More than 15 unique categories:</strong> (E.g., studyIDs, names, addresses etc) these will be replaced with a random string of length 6 (may or may not be unique).</li>
+</ul></li>
+</ul>
+</section>
+</section>
+<section id="closing-notes" class="level1">
+<h1>Closing notes</h1>
+<p>The app is by no means ground breaking or overly complex. The target audience is not likely the savvy analysis/coder, but perhaps you (the savvy analysis/coder) reading this might know of someone (or a research group) that could benefit from access to this. Or perhaps you could pursue/advocate for having this setup on an internal server (with no internet access) at your workplace for colleagues to use – as we have done at Telethon Kids.</p>
+<p>Every day, we are entrusted with extremely personal data on our fellow human beings (de-identified or otherwise), so anything we do to limit potential data breaches is to be encouraged.</p>
+<section id="acknowledgements" class="level2">
+<h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
+<p>Thanks to Wesley Billingham and Zac Dempsey for providing feedback on and reviewing this post.</p>
+<p>You can look forward to seeing posts from these other team members here in the coming weeks and months.</p>
+</section>
+<section id="reproducibility-information" class="level2">
+<h2 class="anchored" data-anchor-id="reproducibility-information">Reproducibility Information</h2>
+<p>Session information:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sessionInfo</span>()</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.3.3 (2024-02-29)
+Platform: aarch64-apple-darwin20 (64-bit)
+Running under: macOS Sonoma 14.4.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: Australia/Perth
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+loaded via a namespace (and not attached):
+ [1] htmlwidgets_1.6.4 compiler_4.3.3    fastmap_1.2.0     cli_3.6.3        
+ [5] tools_4.3.3       htmltools_0.5.8.1 rstudioapi_0.16.0 yaml_2.3.8       
+ [9] rmarkdown_2.27    knitr_1.47        jsonlite_1.8.8    xfun_0.45        
+[13] digest_0.6.36     rlang_1.1.4       evaluate_0.24.0  </code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <category>Shiny</category>
+  <category>R</category>
+  <guid>https://www.the-kids-biostats.github.io/posts/data_anonymiser/data_anonymiser.html</guid>
+  <pubDate>Thu, 18 Jul 2024 16:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Parallel Computing in R</title>
   <dc:creator>Zac Dempsey</dc:creator>

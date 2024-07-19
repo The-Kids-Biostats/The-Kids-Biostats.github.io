@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/data_anonymiser/data_anonymiser.html",
       "/posts/parallel/parallel.html",
       "/posts/lmer-missing/missing_lmer.html"
     ]

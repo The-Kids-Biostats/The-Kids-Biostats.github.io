@@ -81,7 +81,7 @@
     "href": "index.html",
     "title": "The Kids Biostats",
     "section": "",
-    "text": "Parallel Computing in R\n\n\n\n\n\n\nR\n\n\nParallel\n\n\n\n\n\n\n\n\n\nJul 1, 2024\n\n\nZac Dempsey\n\n\n\n\n\n\n\n\n\n\n\n\nHandling Missing Data with LMER\n\n\n\n\n\n\nMissing Data\n\n\nMixed Models\n\n\nR\n\n\n\n\n\n\n\n\n\nJun 7, 2024\n\n\nDr Matthew Cooper\n\n\n\n\n\n\nNo matching items"
+    "text": "Data Anonymiser\n\n\n\n\n\n\nShiny\n\n\nR\n\n\n\n\n\n\n\n\n\nJul 19, 2024\n\n\nDr Matthew Cooper, Wesley Billingham\n\n\n\n\n\n\n\n\n\n\n\n\nParallel Computing in R\n\n\n\n\n\n\nR\n\n\nParallel\n\n\n\n\n\n\n\n\n\nJul 1, 2024\n\n\nZac Dempsey\n\n\n\n\n\n\n\n\n\n\n\n\nHandling Missing Data with LMER\n\n\n\n\n\n\nMissing Data\n\n\nMixed Models\n\n\nR\n\n\n\n\n\n\n\n\n\nJun 7, 2024\n\n\nDr Matthew Cooper\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about.html",
@@ -404,5 +404,40 @@
     "title": "Parallel Computing in R",
     "section": "Reproducibility Information",
     "text": "Reproducibility Information\nTo access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:\nhttps://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/parallel\nThe session information can also be seen below.\n\n\nCode\nsessionInfo()\n\n\nR version 4.3.3 (2024-02-29)\nPlatform: aarch64-apple-darwin20 (64-bit)\nRunning under: macOS Sonoma 14.4.1\n\nMatrix products: default\nBLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib \nLAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0\n\nlocale:\n[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8\n\ntime zone: Australia/Perth\ntzcode source: internal\n\nattached base packages:\n[1] parallel  stats     graphics  grDevices utils     datasets  methods  \n[8] base     \n\nother attached packages:\n [1] furrr_0.3.1          future_1.33.2        randomForest_4.7-1.1\n [4] doParallel_1.0.17    iterators_1.0.14     foreach_1.5.2       \n [7] lubridate_1.9.3      forcats_1.0.0        stringr_1.5.1       \n[10] dplyr_1.1.4          purrr_1.0.2          readr_2.1.5         \n[13] tidyr_1.3.1          tibble_3.2.1         ggplot2_3.5.1       \n[16] tidyverse_2.0.0     \n\nloaded via a namespace (and not attached):\n [1] utf8_1.2.4         generics_0.1.3     stringi_1.8.4      listenv_0.9.1     \n [5] hms_1.1.3          digest_0.6.36      magrittr_2.0.3     evaluate_0.24.0   \n [9] grid_4.3.3         timechange_0.3.0   fastmap_1.2.0      jsonlite_1.8.8    \n[13] fansi_1.0.6        scales_1.3.0       codetools_0.2-20   cli_3.6.3         \n[17] rlang_1.1.4        parallelly_1.37.1  munsell_0.5.1      withr_3.0.0       \n[21] yaml_2.3.8         tools_4.3.3        tzdb_0.4.0         colorspace_2.1-0  \n[25] globals_0.16.3     vctrs_0.6.5        R6_2.5.1           lifecycle_1.0.4   \n[29] htmlwidgets_1.6.4  pkgconfig_2.0.3    pillar_1.9.0       gtable_0.3.5      \n[33] glue_1.7.0         xfun_0.45          tidyselect_1.2.1   rstudioapi_0.16.0 \n[37] knitr_1.47         htmltools_0.5.8.1  rmarkdown_2.27     nycflights13_1.0.2\n[41] compiler_4.3.3"
+  },
+  {
+    "objectID": "posts/data_anonymiser/data_anonymiser.html",
+    "href": "posts/data_anonymiser/data_anonymiser.html",
+    "title": "Data Anonymiser",
+    "section": "",
+    "text": "Data access and security is a really important topic and one that can be challenging to navigate. Research ethics and governance approvals typically require detail about where and how data will be stored and analysed - and a researcher typically does not have approval for the data they are working with to be moved to other locations.\nThe rapid emergence of AI tools and online data analytics platforms (e.g. dashboards) may tempt researchers with the promise of short cuts to writing code and/or producing attractive figures with ease. For example, sites like this that will take an uploaded dataset and draw a figure from it following a user prompt – but where did your precious private research data just go?\nBelow, we share a data anonymising (obscuring) shiny app that you can run on your local machine. It will return to you, a “similar” dataset to your original dataset, allowing you to then safely use an online chat bot to assisted you to code up that complex figure or model."
+  },
+  {
+    "objectID": "posts/data_anonymiser/data_anonymiser.html#the-process",
+    "href": "posts/data_anonymiser/data_anonymiser.html#the-process",
+    "title": "Data Anonymiser",
+    "section": "The process",
+    "text": "The process\nThe app simply does the following:\n\ntakes an uploaded dataset (.csv or .xlsx),\nlets you choose which variables to keep and how many rows you want returned,\nreturns to you a fully obscured dataset (.csv) for download (see example above).\n\nContained on a tab within the app is a brief tabular report that compares your original data to the anonymised data.\n\nGetting started\nTo use the app, you can either download a .zip (or clone the github repository) at the following link:\nhttps://github.com/TelethonKids/data_anonymiser\nThen:\n\nUnzip the folder\nIn your R session, ensure you are in directory of the unzipped files\nIn your R console, type runApp()\n\nYou may need to install.packages() a few packages, though this app only leverages very popular packages that most R users are likely to already have."
+  },
+  {
+    "objectID": "posts/data_anonymiser/data_anonymiser.html#data-obscuring-process",
+    "href": "posts/data_anonymiser/data_anonymiser.html#data-obscuring-process",
+    "title": "Data Anonymiser",
+    "section": "Data obscuring process",
+    "text": "Data obscuring process\nThis is also explained on the app’s landing page – but the detail of what is happening in the data obscuring process is as follows:\n\nColumn names: These will all be replaced with a generic name of the form “VAR_1”, “VAR_2”, etc.\nContinuous variables\n\n15 or fewer unique values: These will be randomly (evenly) replaced with integers 0 through to the n (where n is the number of unique values within that variable).\nMore than 15 unique values: Will be replaced with random normally distributed data that has the same mean and standard deviation as the original data.\n\nDate variables: The min and max date will be found within the provided data, then uniformly distributed dates between that min and max date will be returned.\nCategorical variables (includes dichotomous variables)\n\n15 or fewer unique categories: These will be randomly (evenly) replaced with letters “A” through “O”\nMore than 15 unique categories: (E.g., studyIDs, names, addresses etc) these will be replaced with a random string of length 6 (may or may not be unique)."
+  },
+  {
+    "objectID": "posts/data_anonymiser/data_anonymiser.html#acknowledgements",
+    "href": "posts/data_anonymiser/data_anonymiser.html#acknowledgements",
+    "title": "Data Anonymiser",
+    "section": "Acknowledgements",
+    "text": "Acknowledgements\nThanks to Wesley Billingham and Zac Dempsey for providing feedback on and reviewing this post.\nYou can look forward to seeing posts from these other team members here in the coming weeks and months."
+  },
+  {
+    "objectID": "posts/data_anonymiser/data_anonymiser.html#reproducibility-information",
+    "href": "posts/data_anonymiser/data_anonymiser.html#reproducibility-information",
+    "title": "Data Anonymiser",
+    "section": "Reproducibility Information",
+    "text": "Reproducibility Information\nSession information:\n\n\nCode\nsessionInfo()\n\n\nR version 4.3.3 (2024-02-29)\nPlatform: aarch64-apple-darwin20 (64-bit)\nRunning under: macOS Sonoma 14.4.1\n\nMatrix products: default\nBLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib \nLAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0\n\nlocale:\n[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8\n\ntime zone: Australia/Perth\ntzcode source: internal\n\nattached base packages:\n[1] stats     graphics  grDevices utils     datasets  methods   base     \n\nloaded via a namespace (and not attached):\n [1] htmlwidgets_1.6.4 compiler_4.3.3    fastmap_1.2.0     cli_3.6.3        \n [5] tools_4.3.3       htmltools_0.5.8.1 rstudioapi_0.16.0 yaml_2.3.8       \n [9] rmarkdown_2.27    knitr_1.47        jsonlite_1.8.8    xfun_0.45        \n[13] digest_0.6.36     rlang_1.1.4       evaluate_0.24.0"
   }
 ]

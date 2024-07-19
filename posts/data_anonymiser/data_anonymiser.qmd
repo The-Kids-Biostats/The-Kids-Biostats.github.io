@@ -10,7 +10,7 @@ author: "Dr Matthew Cooper, Wesley Billingham"
 categories:
   - Shiny
   - R
-draft: true
+draft: false
 ---
 
 # Overview
