@@ -9,7 +9,7 @@
 <link>https://www.the-kids-biostats.github.io/</link>
 <atom:link href="https://www.the-kids-biostats.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description>Biostats R solutions</description>
-<generator>quarto-1.4.555</generator>
+<generator>quarto-1.4.553</generator>
 <lastBuildDate>Sun, 30 Jun 2024 16:00:00 GMT</lastBuildDate>
 <item>
   <title>Parallel Computing in R</title>
@@ -2107,6 +2107,7 @@ background-color: null;
 font-style: inherit;">"{n}"</span>)</span></code></pre></div>
 </details>
 <div class="cell-output-display">
+<div>
 <div id="kdyersojmd" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#kdyersojmd table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -2548,7 +2549,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
 }
 </style>
 
-<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
@@ -2612,6 +2613,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
 
 </table>
 
+</div>
 </div>
 </div>
 </div>
@@ -3843,6 +3845,7 @@ font-style: inherit;">"{n}"</span>)</span>
 <span id="cb16-15">  )</span></code></pre></div>
 </details>
 <div class="cell-output-display">
+<div>
 <div id="tgjctjomfb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#tgjctjomfb table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -4284,7 +4287,7 @@ font-style: inherit;">"{n}"</span>)</span>
 }
 </style>
 
-<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <colgroup>
 <col style="width: 20%">
 <col style="width: 20%">
@@ -4374,6 +4377,7 @@ font-style: inherit;">"{n}"</span>)</span>
 
 </table>
 
+</div>
 </div>
 </div>
 </div>
@@ -5921,6 +5925,7 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
+<div>
 <div id="bahldkstyb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#bahldkstyb table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -6362,7 +6367,7 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
 }
 </style>
 
-<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
@@ -6426,6 +6431,7 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
 
 </table>
 
+</div>
 </div>
 </div>
 </div>

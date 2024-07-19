@@ -17,7 +17,7 @@ draft: true
 
 Data access and security is a really important topic and one that can be challenging to navigate. Research ethics and governance approvals typically require detail about where and how data will be stored and analysed - and a researcher typically does not have approval for the data they are working with to be moved to other locations.
 
-The rapid emergence of AI tools and online data analytics platforms (e.g. dashboards) may tempt researchers with the promise of short cuts to writing code and/or producing attractive figures with ease. For example, [sites like this](https://www.graphmaker.ai/) that will take an uploaded dataset and draw a figure from it following a user prompt - ***but where did your precious private research data just go?***
+The rapid emergence of AI tools and online data analytics platforms (e.g. dashboards) may tempt researchers with the promise of short cuts to writing code and/or producing attractive figures with ease. For example, [sites like this](https://www.graphmaker.ai/) that will take an uploaded dataset and draw a figure from it following a user prompt – ***but where did your precious private research data just go?***
 
 Below, we share a data anonymising (obscuring) app that you can run on your local machine. It will return to you, a "similar" dataset to your original dataset, allowing you to then safely use an online chat bot to assisted you to code up that complex figure or model.
 
@@ -43,36 +43,38 @@ The app simply does the following:
 
 Contained on a tab within the app is a brief tabular report that compares your original data to the anonymised data.
 
-### Gettting started
+### Getting started
 
 To use the app, you can either download a `.zip` (or clone the github repository) at the following link:
 
 <https://github.com/TelethonKids/data_anonymiser>
 
+Then:
+
 1.  Unzip the folder
-2.  In your R sesssion, ensure you are in directory of the unzipped files
+2.  In your R session, ensure you are in directory of the unzipped files
 3.  In your R console, type `runApp()`
 
-You may need to `install.packages()` a few packages, though this app only leverages very popular apps that most R users are likely to already have.
+You may need to `install.packages()` a few packages, though this app only leverages very popular packages that most R users are likely to already have.
 
 ## Data obscuring process
 
-This is also explained on the app's landing page - but the detail of what is happening in the data obscuring process is as follows:
+This is also explained on the app's landing page – but the detail of what is happening in the data obscuring process is as follows:
 
--   **Column names:** These will all be replaced with a generic name of the form “VAR_1”, “VAR_2” etc
+-   **Column names:** These will all be replaced with a generic name of the form “VAR_1”, “VAR_2”, etc.
 -   **Continuous variables**
     -   **15 or fewer unique values:** These will be randomly (evenly) replaced with integers 0 through to the n (where n is the number of unique values within that variable).
     -   **More than 15 unique values:** Will be replaced with random normally distributed data that has the same mean and standard deviation as the original data.
 -   **Date variables:** The min and max date will be found within the provided data, then uniformly distributed dates between that min and max date will be returned.
 -   **Categorical variables (includes dichotomous variables)**
     -   **15 or fewer unique categories:** These will be randomly (evenly) replaced with letters “A” through "O"
-    -   **More than 15 unique categories:** (For example studyIDs, names, addresses etc) these will be replaced with a random string of length 6 (may or may not be unique).
+    -   **More than 15 unique categories:** (E.g., studyIDs, names, addresses etc) these will be replaced with a random string of length 6 (may or may not be unique).
 
 # Closing notes
 
-The app is by no means ground breaking or overly complex. The target audience is not likely the savvy analysis/coder, but perhaps you (the savvy analysis/coder) reading this might know of someone (or a research group) that could benefit from access to this. Or perhaps you could pursue/advocate for having this setup on an internal server (with no internet access) at your workplace for colleagues to use - this is what we have done at Telethon Kids.
+The app is by no means ground breaking or overly complex. The target audience is not likely the savvy analysis/coder, but perhaps you (the savvy analysis/coder) reading this might know of someone (or a research group) that could benefit from access to this. Or perhaps you could pursue/advocate for having this setup on an internal server (with no internet access) at your workplace for colleagues to use – as we have done at Telethon Kids.
 
-Daily we are entrusted with extremely personal data on our fellow human beings (deidentified or otherwise), anything we do to limit potential data breaches is to be encouraged.
+Every day, we are entrusted with extremely personal data on our fellow human beings (de-identified or otherwise), so anything we do to limit potential data breaches is to be encouraged.
 
 ## Acknowledgements
 

@@ -6,7 +6,7 @@
   </url>
   <url>
     <loc>https://www.the-kids-biostats.github.io/index.html</loc>
-    <lastmod>2024-06-05T02:11:19.201Z</lastmod>
+    <lastmod>2024-06-06T23:18:11.296Z</lastmod>
   </url>
   <url>
     <loc>https://www.the-kids-biostats.github.io/about.html</loc>
@@ -15,5 +15,13 @@
   <url>
     <loc>https://www.the-kids-biostats.github.io/posts/parallel/index.html</loc>
     <lastmod>2024-07-01T08:24:59.123Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer.html</loc>
+    <lastmod>2024-07-19T02:43:42.110Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.the-kids-biostats.github.io/posts/parallel/parallel.html</loc>
+    <lastmod>2024-07-19T02:43:42.135Z</lastmod>
   </url>
 </urlset>
