@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.553">
+<meta name="generator" content="quarto-1.4.555">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Dr Matthew Cooper">
-<meta name="dcterms.date" content="2024-07-18">
+<meta name="dcterms.date" content="2024-07-22">
 
 <title>The Kids Biostats - Analysing pre-post data</title>
 <style>
@@ -180,7 +180,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">July 18, 2024</p>
+        <p class="date">July 22, 2024</p>
       </div>
     </div>
     
@@ -229,35 +229,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="overview" class="level1">
 <h1>Overview</h1>
 <p>Pre-post designs are in use everywhere we look. Before and after treatment, e.g.&nbsp;in a randomised clinical trial, might be the example that most readily comes to mind for analysts in the health sciences area. However, the pre-post concept occurs in many non-randomised settings as well, like observational studies or retrospective policy evaluation studies, and can feature in our daily lives without us even knowing it (like in A/B testing to see if you spend just a little bit longer on social media or buy that chocolate bar at the checkout).</p>
-<p>While in principle, the set-up (premise) for such a question seems straightforward, there is extensive literature debating the different approaches to the analysis of data structured this way. The discussions around these choices may confuse the lay or even semi-experienced analyst reader. Often these discussions are held without a serviceable example to illustrate implementation.</p>
-<p>So, here we go.</p>
+<p>While in principle, the set-up (premise) for such a question seems straightforward, there is extensive literature debating the different approaches to the analysis of this data. The discussions around these choices may confuse the lay or even semi-experienced analyst. Often these discussions are held without a serviceable example to illustrate implementation.</p>
+<p>Below is an example to help provide some direct links between what we see with raw data and model output, when tackling this question.</p>
 </section>
 <section id="analysis-options" class="level1">
 <h1>Analysis options</h1>
-<p>When we have pre-post data (focusing on continuous, approximately normally distributed data here), there are three basic approaches analysts may reach for:</p>
+<p>The context here is two groups, that both have a pre and a post measure, but they differ in some property (we’ll use ‘treatment’ in the sense of a ‘treatment’ intervention group compared to a control group). When we have pre-post data like this <em>(focusing on continuous, approximately normally distributed data here)</em>, there are three basic approaches analysts may reach for:</p>
 <ul>
 <li><strong>Change score analysis</strong>
 <ul>
-<li>The outcome data for each participant is reduced to one data point (a change score: post value - pre value)</li>
-<li>This can just be analysed with a t.test, or altneratively as the outcome variable of a linear regression model with the treatment variable as the exposure of interest (on the right hand side [RHS] of the model)</li>
+<li>The outcome data for each participant is reduced to one data point (a change score: post-value minus pre-value)</li>
+<li>This can just be analysed with a t.test or alternatively as the outcome variable of a linear regression model with the treatment variable as the exposure of interest (on the right hand side (RHS) of the model)</li>
+<li>Other variations on this theme are also possible</li>
 </ul></li>
 <li><strong>Linear regression (ANCOVA framework)</strong>
 <ul>
-<li>The data is structured as one row per participant, with two variables representing the outcome (one for pre, one for post)</li>
-<li>In the ANCOVA (Analysis of covariance) framework, the outcome variable is the post value, and both the treatment variable (as the exposure of interest) AND the pre value (as an adjustment variable) are included on the RHS of the model</li>
+<li>The data is structured as one row per participant, with two variables (columns) representing the outcome (one for the pre-measure, one for post-measure)</li>
+<li>In the ANCOVA (Analysis of covariance) framework, the outcome variable is the post-value, and both the treatment variable (as the exposure of interest) AND the pre-value (as an adjustment variable) are included on the RHS of the model</li>
 </ul></li>
 <li><strong>Linear mixed effects models</strong>
 <ul>
 <li><em>Can be structured in the same way as linear regression, via an ANCOVA framework (and this will reduce to linear regression in certain situations),</em> OR</li>
-<li>the data is structured as two rows per participant, with one row for the pre data and one row for the post data (there will be a column here that represents timepoint, with values <code>pre</code> and <code>post</code>)
+<li>the data is structured as two rows per participant, with one row for the pre-data and one row for the post-data (there will then be a variable (column) here that represents timepoint, with values <code>pre</code> and <code>post</code>)
 <ul>
-<li>both the pre and post measurements are on the left hand side (LHS) of the model, with an interaction between the treatment variable (as the exposure of interest) and timepoint on the RHS of the model</li>
+<li>both the pre- and post-measures are on the left hand side (LHS) of the model, with an interaction term between the treatment variable and timepoint on the RHS of the model (as the variable of interest)</li>
 </ul></li>
 </ul></li>
 </ul>
-<p>There are a number of nuanced variations on these methods to be aware of. This article is not strictly focused on randomised controlled trials, for which a lot of <a href="https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-021-01323-9">methodological literature</a> <a href="https://psycnet.apa.org/doiLanding?doi=10.1037%2Fh0025105">addressing this</a> <a href="https://onlinelibrary.wiley.com/doi/10.1002/sim.2682">decision exists</a> - it is intended to be a light, applied look at model implementation.</p>
-<p>Linear regression (ANCOVA framework) is <a href="https://doi.org/10.4172%2F2155-6180.1000334">typically* the recommended approach</a>, but varied disciplines my lean more towards the other two methods.</p>
-<p><em>*typically, statisticians are very reserved about making broad sweeping methodological recommendations. Typically - I share that reservation</em></p>
+<p>There are a number of nuanced variations on these methods to be aware of. This post is not strictly focused on randomised controlled trials, for which a lot of <a href="https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-021-01323-9">methodological literature</a> <a href="https://psycnet.apa.org/doiLanding?doi=10.1037%2Fh0025105">addressing this</a> <a href="https://onlinelibrary.wiley.com/doi/10.1002/sim.2682">decision exists</a> - it is intended to be a light, applied look at model implementation and interpretation (in light of examining the raw data).</p>
+<p>Linear regression (ANCOVA framework) is <a href="https://doi.org/10.4172%2F2155-6180.1000334">typically* the recommended approach</a>, but varied disciplines can lean more towards the other two methods.</p>
+<p><em>*typically, statisticians are very reserved about making broad sweeping methodological recommendations. Typically - I share that reservation.</em></p>
 </section>
 <section id="setting-the-scene" class="level1">
 <h1>Setting the scene</h1>
@@ -266,28 +267,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>Data for 204 treatment patients
 <ul>
-<li>pre data is random value with a mean of 20 (SD 7.5)</li>
-<li>post data <u>is the pre-value plus</u> a random value with a mean of 50 (SD 7.5)</li>
+<li>pre-data is random value with a mean of 20 (SD 5)</li>
+<li>post-data <u>is the pre-value plus</u> a random value with a mean of 50 (SD 5)</li>
 </ul></li>
 <li>Data for 197 control patients
 <ul>
-<li>pre data is random with a mean of 10 (SD 5)</li>
-<li>post data <u>is the pre-value plus</u> a random value with a mean of 20 (SD 5)</li>
+<li>pre-data is random with a mean of 10 (SD 5)</li>
+<li>post-data <u>is the pre-value plus</u> a random value with a mean of 20 (SD 5)</li>
 </ul></li>
-<li>Pre data is measured between days (time) 0 to 28 [largely ignored]</li>
-<li>Post data is measured between days (time) 150 and 210 [largely ignored]</li>
-<li>The actual <code>time</code> variable we will use in future examples with this dataset, for this article we will use the <code>timepoint</code> variable which simply differentiates the data as <code>pre</code> or <code>post</code>.</li>
+<li>Pre-data is measured between days (time) 0 to 28 [largely ignored]</li>
+<li>Post-data is measured between days (time) 150 and 210 [largely ignored]</li>
+<li>The actual <code>time</code> variable, we will use in future examples with this dataset. For this post we will use the <code>timepoint</code> variable which simply differentiates the data as <code>pre</code> or <code>post</code>.</li>
 </ul>
-<p>For full readability, we do this in four steps, and then combine. Let’s have a look.</p>
+<p>For full readability, we do this in four steps, and then combine. Let’s have a look:</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>        id     group  time      out timepoint
      &lt;int&gt;    &lt;char&gt; &lt;int&gt;    &lt;num&gt;    &lt;char&gt;
-  1:     1 treatment     1 21.07516       pre
-  2:     2 treatment     4 19.93709       pre
-  3:     3 treatment    12 28.23937       pre
-  4:     4 treatment    27 33.09051       pre
-  5:     5 treatment    16 19.61644       pre
+  1:     1 treatment     1 20.71677       pre
+  2:     2 treatment     4 19.95806       pre
+  3:     3 treatment    12 25.49292       pre
+  4:     4 treatment    27 28.72701       pre
+  5:     5 treatment    16 19.74429       pre
  ---                                         
 798:   397   control   184 26.37403      post
 799:   398   control   156 36.85208      post
@@ -299,7 +300,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Let’s look at the means of the data (remembering what we set them to be).</p>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <div id="awkenskjer" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#awkenskjer table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -323,7 +323,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   margin-left: auto;
   margin-right: auto;
   color: #333333;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: normal;
   font-style: normal;
   background-color: #FFFFFF;
@@ -510,8 +510,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 
 #awkenskjer .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 4px;
+  padding-bottom: 4px;
   padding-left: 5px;
   padding-right: 5px;
   margin: 10px;
@@ -741,7 +741,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 </style>
 
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <colgroup>
 <col style="width: 20%">
 <col style="width: 20%">
@@ -769,9 +769,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 [197]</p></td>
 <td class="gt_row gt_center" headers="stat_2_1"><p>30.45 (6.6)<br>
 [197]</p></td>
-<td class="gt_row gt_center" headers="stat_1_2"><p>20.82 (7.9)<br>
+<td class="gt_row gt_center" headers="stat_1_2"><p>20.55 (5.2)<br>
 [204]</p></td>
-<td class="gt_row gt_center" headers="stat_2_2"><p>71.19 (10.3)<br>
+<td class="gt_row gt_center" headers="stat_2_2"><p>70.79 (6.9)<br>
 [204]</p></td>
 </tr>
 </tbody><tfoot class="gt_footnotes">
@@ -786,11 +786,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-</div>
 <p>This all makes sense:</p>
 <ul>
-<li>Control mean increases by ~20</li>
-<li>Treatment mean increases by ~50</li>
+<li>The control group mean increases by ~20</li>
+<li>The treatment group mean increases by ~50</li>
 </ul>
 <section id="a-visual-of-our-data" class="level3">
 <h3 class="anchored" data-anchor-id="a-visual-of-our-data">A visual of our data</h3>
@@ -800,7 +799,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dat <span class="sc">%&gt;%</span> </span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">timepoint =</span> <span class="fu">factor</span>(timepoint, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"pre"</span>, <span class="st">"post"</span>))) <span class="sc">%&gt;%</span> </span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(timepoint, out, <span class="at">group =</span> group, <span class="at">colour =</span> group)) <span class="sc">+</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">position =</span> <span class="fu">position_jitterdodge</span>(<span class="at">jitter.width =</span> <span class="fl">0.1</span>, <span class="at">dodge.width =</span> <span class="fl">0.25</span>)) <span class="sc">+</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">position =</span> <span class="fu">position_jitterdodge</span>(<span class="at">jitter.width =</span> <span class="fl">0.1</span>, <span class="at">dodge.width =</span> <span class="fl">0.25</span>), <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.25</span>), </span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">formula=</span> y <span class="sc">~</span> x) <span class="sc">+</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_clean</span>() <span class="sc">+</span></span>
@@ -822,15 +821,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="question" class="level1">
 <h1>Question</h1>
 <p><strong>What is the treatment effect?</strong></p>
-<p>There is a lot in that question. There is extensive literature (existing and emerging) on estimands, estimators of the estimands (see <a href="https://journals.sagepub.com/doi/full/10.1177/09622802241254197">here for a recent discussion in the cluster randomised trials space</a>), and just broadly defining the ‘treatment effect’; this discussion, particularly as it relates to establishing a standardised nomenclature in this space, is incredibly valuable.</p>
-<p>For the purposes of this applied example, we are going to assume the reader wants to ‘understand the post treatment differences between groups, factoring in any baseline imbalance’.</p>
+<p>There is a lot in that question. There is extensive literature (existing and emerging) on estimands, estimators of the estimands (see <a href="https://journals.sagepub.com/doi/full/10.1177/09622802241254197">here for a recent discussion in the cluster randomised trials space</a>), and more broadly in just defining the ‘treatment effect’; this discussion, particularly as it relates to establishing a standardised nomenclature in this space, is incredibly valuable.</p>
+<p>For the purposes of this applied example, we are going to assume the reader wants to ‘understand the post-treatment differences between groups, factoring in any baseline imbalance’.</p>
 <p>Let’s dive into the three methods we outlined above.</p>
 <section id="change-score-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="change-score-analysis">Change score analysis</h2>
-<p>Let’s reduce the two observations we have per participant into one ‘difference’ (change score: post - pre).</p>
+<p>Let’s reduce the two observations we have per participant into one ‘difference’ (change score: post-value minus pre-value).</p>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <div id="unhdjkjcwc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#unhdjkjcwc table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -854,7 +852,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   margin-left: auto;
   margin-right: auto;
   color: #333333;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: normal;
   font-style: normal;
   background-color: #FFFFFF;
@@ -1041,8 +1039,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 
 #unhdjkjcwc .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 4px;
+  padding-bottom: 4px;
   padding-left: 5px;
   padding-right: 5px;
   margin: 10px;
@@ -1272,7 +1270,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 </style>
 
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
@@ -1289,7 +1287,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">change</td>
 <td class="gt_row gt_center" headers="stat_1">20.34 (4.7) [197]</td>
-<td class="gt_row gt_center" headers="stat_2">50.37 (6.8) [204]</td>
+<td class="gt_row gt_center" headers="stat_2">50.24 (4.5) [204]</td>
 </tr>
 </tbody><tfoot class="gt_footnotes">
 <tr class="even">
@@ -1300,7 +1298,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </table>
 
-</div>
 </div>
 </div>
 </div>
@@ -1315,7 +1312,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(group, change) <span class="sc">%&gt;%</span> </span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(group, change, <span class="at">colour =</span> group)) <span class="sc">+</span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="fu">aes</span>(<span class="at">fill =</span> group), <span class="at">alpha =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">height =</span> <span class="dv">0</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">height =</span> <span class="dv">0</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_clean</span>() <span class="sc">+</span></span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_viridis_d</span>(<span class="at">option =</span> <span class="st">"plasma"</span>, <span class="at">end =</span> <span class="fl">0.85</span>) <span class="sc">+</span></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">option =</span> <span class="st">"plasma"</span>, <span class="at">end =</span> <span class="fl">0.85</span>) <span class="sc">+</span></span>
@@ -1343,22 +1340,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code># A tibble: 1 × 7
   estimate statistic   p.value conf.low conf.high method             alternative
      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;              &lt;chr&gt;      
-1    -30.0     -51.7 1.70e-169    -31.2     -28.9 Welch Two Sample … two.sided  </code></pre>
+1    -29.9     -64.9 3.13e-213    -30.8     -29.0 Welch Two Sample … two.sided  </code></pre>
 </div>
 </div>
 <p>The output suggests:</p>
 <ul>
-<li>A difference between groups means of ~-30.</li>
+<li>A difference between groups means of ~30.</li>
 </ul>
-<p>This exact result, with using a change score as the outcome, can also be calculated using linear regression (left to the reader).</p>
+<p>This exact result, with using a change score as the outcome, can also be reached using linear regression (left to the reader).</p>
 </section>
 <section id="linear-regression-ancova-framework" class="level2">
 <h2 class="anchored" data-anchor-id="linear-regression-ancova-framework">Linear regression (ANCOVA framework)</h2>
-<p>Here, the outcome variable is the post measurement with the treatment variable as the exposure of interest (RHS of the model).</p>
-<p><code>out_post ~ out_pre + group</code></p>
+<p>Here, the outcome variable is the post-value with the treatment variable as the exposure of interest (RHS of the model).</p>
+<p><code>lm(out_post ~ out_pre + group, data = dat)</code></p>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <div id="zmbrshzinm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#zmbrshzinm table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -1382,7 +1378,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   margin-left: auto;
   margin-right: auto;
   color: #333333;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: normal;
   font-style: normal;
   background-color: #FFFFFF;
@@ -1569,8 +1565,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 
 #zmbrshzinm .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 4px;
+  padding-bottom: 4px;
   padding-left: 5px;
   padding-right: 5px;
   margin: 10px;
@@ -1800,7 +1796,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 </style>
 
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <colgroup>
 <col style="width: 25%">
 <col style="width: 25%">
@@ -1818,14 +1814,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody class="gt_table_body">
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">(Intercept)</td>
-<td class="gt_row gt_center" headers="estimate">20.66</td>
-<td class="gt_row gt_center" headers="ci">19.45, 21.86</td>
+<td class="gt_row gt_center" headers="estimate">20.77</td>
+<td class="gt_row gt_center" headers="ci">19.66, 21.88</td>
 <td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="label">out_pre</td>
-<td class="gt_row gt_center" headers="estimate">0.97</td>
-<td class="gt_row gt_center" headers="ci">0.88, 1.06</td>
+<td class="gt_row gt_center" headers="estimate">0.96</td>
+<td class="gt_row gt_center" headers="ci">0.87, 1.05</td>
 <td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
 </tr>
 <tr class="odd">
@@ -1846,8 +1842,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;treatment</td>
-<td class="gt_row gt_center" headers="estimate">30.37</td>
-<td class="gt_row gt_center" headers="ci">28.89, 31.85</td>
+<td class="gt_row gt_center" headers="estimate">30.36</td>
+<td class="gt_row gt_center" headers="ci">29.06, 31.65</td>
 <td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
 </tr>
 </tbody><tfoot class="gt_footnotes">
@@ -1861,15 +1857,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-</div>
 <p>This output suggests (in order):</p>
 <ul>
-<li>The intercept (the mean value for a Control participant <u>with 0 as a pre value</u>) is ~21
+<li>The intercept (the mean value for a control participant <u>with 0 as a pre-value</u>) is ~21
 <ul>
-<li><em>This may be curious, we know the post values for the Control group have a mean of ~30, however the mean pre value for the Control groups is ~10. Take that 10 away from the 30, and this is why we see ~20 here for a Control participant <u>with 0 as a pre value).</u></em></li>
+<li><em>This may be curious, we know the post-values for the control group have a mean of ~30, however, the mean pre -alue for the control groups is ~10. Take that 10 away from the ~30, and this is why we see ~20 here for a control participant <u>with 0 as a pre-value)</u></em></li>
 </ul></li>
-<li>For every 1 unit increase in a participants pre value, their post value will be 0.97 units higher <em>(… than if their pre value was 1 unit lower)</em></li>
-<li><strong>[Perhaps of most interest]</strong> The post values for the Treatment group are (on average) ~30 units higher than the Control group.</li>
+<li>For every 1 unit increase in a participants pre-value, their post-value will be 0.97 units higher <em>(… than if their pre-value was 1 unit lower)</em></li>
+<li><strong>[Perhaps of most interest]</strong> The post-values for the treatment group are (on average) ~30 units higher than the control group.</li>
 </ul>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
@@ -1883,7 +1878,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">group =</span> <span class="fu">factor</span>(group, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"control"</span>, <span class="st">"treatment"</span>))) <span class="sc">%&gt;%</span> </span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> dodge_pos <span class="sc">+</span> jittered_pos, <span class="at">y =</span> out, <span class="at">group =</span> id, <span class="at">colour =</span> group)) <span class="sc">+</span></span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> dodge_pos <span class="sc">+</span> jittered_pos), </span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.25</span>)) <span class="sc">+</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.25</span>), <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> dodge_pos <span class="sc">+</span> jittered_pos), <span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"pre"</span>, <span class="st">"post"</span>)) <span class="sc">+</span></span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_clean</span>() <span class="sc">+</span></span>
@@ -1900,8 +1895,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>With lines connecting each pairs data points together, we can perhaps more clearly see that those with a higher pre value also have a higher post value! (What might the data look like if this wasn’t the case…)</p>
-<p>But you may be wondering?</p>
+<p>With lines connecting each pairs’ data points together, we can perhaps more clearly see that those with a higher pre-value also have a higher post-value! <em>(What might the data look like if this wasn’t the case…)</em></p>
+<p>But you may be wondering …?</p>
 <div class="cell" data-layout-align="center">
 <details class="code-fold">
 <summary>Code</summary>
@@ -1916,10 +1911,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">timepoint =</span> <span class="fu">factor</span>(timepoint, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"pre"</span>, <span class="st">"post"</span>))) <span class="sc">%&gt;%</span> </span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(timepoint, out)) <span class="sc">+</span></span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">colour =</span> group, <span class="at">group =</span> group), </span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>              <span class="at">position =</span> <span class="fu">position_jitterdodge</span>(<span class="at">jitter.width =</span> <span class="fl">0.1</span>, <span class="at">dodge.width =</span> <span class="fl">0.35</span>)) <span class="sc">+</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>              <span class="at">position =</span> <span class="fu">position_jitterdodge</span>(<span class="at">jitter.width =</span> <span class="fl">0.1</span>, <span class="at">dodge.width =</span> <span class="fl">0.35</span>), <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
 <span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">colour =</span> group, <span class="at">group =</span> group), </span>
 <span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>              <span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.45</span>),</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>              <span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">formula=</span> y <span class="sc">~</span> x) <span class="sc">+</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>              <span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">formula=</span> y <span class="sc">~</span> x, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
 <span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_clean</span>() <span class="sc">+</span></span>
 <span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>) <span class="sc">+</span></span>
 <span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_colour_viridis_d</span>(<span class="at">option =</span> <span class="st">"plasma"</span>, <span class="at">end =</span> <span class="fl">0.85</span>) <span class="sc">+</span></span>
@@ -1943,15 +1938,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>We know the post score means are ~40 units apart. The model has returned the value of ~30, which (implicitly) has adjusted for the baseline difference between groups of ~10 units.</p>
+<p>We know the post-value means are ~40 units apart, yet the model has returned the value of ~30 for the ‘treatment effect’, which (implicitly) has adjusted for the baseline difference between groups of ~10 units.</p>
 </section>
 <section id="linear-mixed-effects-models" class="level2">
 <h2 class="anchored" data-anchor-id="linear-mixed-effects-models">Linear mixed effects models</h2>
-<p>Here, the outcome variable is the post measurement with the treatment variable as the exposure of interest (RHS of the model).</p>
-<p><code>out ~ group*timepoint</code></p>
+<p>Here, the outcome variable includes both the pre- and post-measures with the interaction on the RHS of the model allowing the effect of the treatment variable (as the exposure of interest) to vary according to time.</p>
+<p><code>lmer(out ~ group*timepoint + (1 | id), data = dat)</code></p>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <div id="gjiywuhjay" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#gjiywuhjay table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -1975,7 +1969,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   margin-left: auto;
   margin-right: auto;
   color: #333333;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: normal;
   font-style: normal;
   background-color: #FFFFFF;
@@ -2162,8 +2156,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 
 #gjiywuhjay .gt_row {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 4px;
+  padding-bottom: 4px;
   padding-left: 5px;
   padding-right: 5px;
   margin: 10px;
@@ -2393,7 +2387,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }
 </style>
 
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
@@ -2410,7 +2404,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">(Intercept)</td>
 <td class="gt_row gt_center" headers="estimate">10.11</td>
-<td class="gt_row gt_center" headers="ci">9.03, 11.18</td>
+<td class="gt_row gt_center" headers="ci">9.28, 10.94</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="label">group</td>
@@ -2426,8 +2420,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;treatment</td>
-<td class="gt_row gt_center" headers="estimate">10.71</td>
-<td class="gt_row gt_center" headers="ci">9.21, 12.22</td>
+<td class="gt_row gt_center" headers="estimate">10.44</td>
+<td class="gt_row gt_center" headers="ci">9.27, 11.61</td>
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">timepoint</td>
@@ -2444,7 +2438,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;post</td>
 <td class="gt_row gt_center" headers="estimate">20.34</td>
-<td class="gt_row gt_center" headers="ci">19.52, 21.15</td>
+<td class="gt_row gt_center" headers="ci">19.69, 20.98</td>
 </tr>
 <tr class="even">
 <td class="gt_row gt_left" headers="label">group * timepoint</td>
@@ -2455,8 +2449,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 <tr class="odd">
 <td class="gt_row gt_left" headers="label">&nbsp;&nbsp;&nbsp;&nbsp;treatment * post</td>
-<td class="gt_row gt_center" headers="estimate">30.03</td>
-<td class="gt_row gt_center" headers="ci">28.88, 31.17</td>
+<td class="gt_row gt_center" headers="estimate">29.91</td>
+<td class="gt_row gt_center" headers="ci">29.00, 30.81</td>
 </tr>
 </tbody><tfoot class="gt_footnotes">
 <tr class="even">
@@ -2469,21 +2463,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-</div>
 <p>This output suggests (in order):</p>
 <ul>
-<li>The intercept (mean value for a Control participant at the <u>pre timepoint</u>) is ~10 (makes sense)</li>
-<li>The Treatment group mean (at the <u>pre timepoint</u>) is ~11 units higher than the Control group (makes sense).</li>
-<li>The post timepoint values <em>in the Control group</em> are (on average) 20 units higher than the pre timepoint values.&nbsp;</li>
-<li>[<strong>Perhaps of most interest]</strong> Compared to the 20 unit difference in the Control group, the post timepoint values in the Treatment group are an additional 30 units higher than the pre timepoint values (total of 50 units difference between pre and post)</li>
+<li>The intercept (mean value for a control participant at the <u>pre-measure</u>) is ~10 (makes sense)</li>
+<li>The treatment group mean (at the <u>pre-measure</u>) is ~11 units higher than the control group mean (makes sense)</li>
+<li>The post-values <em>in the <strong>control group</strong></em> are (on average) ~20 units higher than the pre-values&nbsp;</li>
+<li>[<strong>Perhaps of most interest]</strong> Compared to the ~20 unit difference (over time) in the control group, the post-values in the treatment group are (an additional) ~30 units higher than the pre-values (total of 50 units difference between pre and post)</li>
 </ul>
 <p>In looking at, and breaking down, this output, you might think that the linear mixed effects model gives you the same answer but with a much more explicit breakdown of many other ‘things going on’ with your outcome data - and you’d be right.</p>
 </section>
 </section>
 <section id="conclusion" class="level1">
 <h1>Conclusion</h1>
-<p>For a basic pre-post design, both an ANCOVA framework implemented with linear regression and a linear mixed effects model will quite easily return an unbiased estimate of the post treatment (intervention) effect allowing for adjustment for any baseline imbalance in your outcome variable. Change score analysis may give a similar result, but the framework is restrictive in the way that other variables and design complexity can be handled.</p>
-<p>While ANCOVA framework (implemented with linear regression) is typically recommended, the linear mixed effects model can give a more verbose breakdown with the estimates it returns, providing explicit insights into the outcome variable across groups and time. Both approaches have other assumptions and design features that should be considered when deciding which to use and how to present the results.</p>
+<p>For a basic pre-post design, both an ANCOVA framework implemented with linear regression and a linear mixed effects model will quite easily return an unbiased estimate of the post treatment (intervention) effect allowing for adjustment of any baseline imbalance in your outcome variable. Change score analysis may give a similar result, but the framework is restrictive in the way that other variables and design complexity can be handled.</p>
+<p>While ANCOVA framework (implemented with linear regression) is typically recommended, the linear mixed effects model can give a more verbose breakdown of the data with the estimates it returns, providing explicit insights into the outcome variable between groups and across time.</p>
+<p>Both approaches <u><strong>have other assumptions and design features</strong></u> that should be considered when deciding which to use and how to present the results.</p>
 <section id="acknowledgements" class="level2">
 <h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
 <p>Thanks to Elizabeth McKinnon, Zac Dempsey, and Wesley Billingham for providing feedback on and reviewing this post.</p>
@@ -2492,7 +2486,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="reproducibility-information" class="level2">
 <h2 class="anchored" data-anchor-id="reproducibility-information">Reproducibility Information</h2>
 <p>To access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:</p>
-<p><a href="https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/lmer-missingx" class="uri">https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/lmer-missingx</a></p>
+<p>UPDATE LINK</p>
 <p>The session information can also be seen below.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">

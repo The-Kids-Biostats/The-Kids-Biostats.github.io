@@ -5,7 +5,7 @@ format:
     code-fold: true
     toc: true
     toc-location: left
-date: "2024-07-18"
+date: "2024-07-22"
 author: "Dr Matthew Cooper"
 categories:
   - Pre-post
@@ -14,7 +14,7 @@ categories:
 draft: true
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=F, message = F}
 knitr::opts_chunk$set(echo = F, warning = F)
 
 library(tidyverse)
@@ -22,6 +22,15 @@ library(simstudy); library(data.table)
 library(lme4)
 library(jtools); library(gtsummary)
 library(ggbrace)
+
+my_compact_theme <-
+  list(
+    # for gt in render
+    "as_gt-lst:addl_cmds" = list(tab_spanner = rlang::expr(gt::tab_options(table.font.size = 14,
+                                                                           data_row.padding = 4)))
+  )
+
+set_gtsummary_theme(my_compact_theme)
 
 theme_clean <- function() {
   theme_minimal(base_family = "Barlow Semi Condensed") +
@@ -38,30 +47,31 @@ theme_clean <- function() {
 
 Pre-post designs are in use everywhere we look. Before and after treatment, e.g. in a randomised clinical trial, might be the example that most readily comes to mind for analysts in the health sciences area. However, the pre-post concept occurs in many non-randomised settings as well, like observational studies or retrospective policy evaluation studies, and can feature in our daily lives without us even knowing it (like in A/B testing to see if you spend just a little bit longer on social media or buy that chocolate bar at the checkout).
 
-While in principle, the set-up (premise) for such a question seems straightforward, there is extensive literature debating the different approaches to the analysis of data structured this way. The discussions around these choices may confuse the lay or even semi-experienced analyst reader. Often these discussions are held without a serviceable example to illustrate implementation.
+While in principle, the set-up (premise) for such a question seems straightforward, there is extensive literature debating the different approaches to the analysis of this data. The discussions around these choices may confuse the lay or even semi-experienced analyst. Often these discussions are held without a serviceable example to illustrate implementation.
 
-So, here we go.
+Below is an example to help provide some direct links between what we see with raw data and model output, when tackling this question.
 
 # Analysis options
 
-When we have pre-post data (focusing on continuous, approximately normally distributed data here), there are three basic approaches analysts may reach for:
+The context here is two groups, that both have a pre and a post measure, but they differ in some property (we'll use 'treatment' in the sense of a 'treatment' intervention group compared to a control group). When we have pre-post data like this *(focusing on continuous, approximately normally distributed data here)*, there are three basic approaches analysts may reach for:
 
 -   **Change score analysis**
-    -   The outcome data for each participant is reduced to one data point (a change score: post value - pre value)
-    -   This can just be analysed with a t.test, or altneratively as the outcome variable of a linear regression model with the treatment variable as the exposure of interest (on the right hand side \[RHS\] of the model)
+    -   The outcome data for each participant is reduced to one data point (a change score: post-value minus pre-value)
+    -   This can just be analysed with a t.test or alternatively as the outcome variable of a linear regression model with the treatment variable as the exposure of interest (on the right hand side (RHS) of the model)
+    -   Other variations on this theme are also possible
 -   **Linear regression (ANCOVA framework)**
-    -   The data is structured as one row per participant, with two variables representing the outcome (one for pre, one for post)
-    -   In the ANCOVA (Analysis of covariance) framework, the outcome variable is the post value, and both the treatment variable (as the exposure of interest) AND the pre value (as an adjustment variable) are included on the RHS of the model
+    -   The data is structured as one row per participant, with two variables (columns) representing the outcome (one for the pre-measure, one for post-measure)
+    -   In the ANCOVA (Analysis of covariance) framework, the outcome variable is the post-value, and both the treatment variable (as the exposure of interest) AND the pre-value (as an adjustment variable) are included on the RHS of the model
 -   **Linear mixed effects models**
     -   *Can be structured in the same way as linear regression, via an ANCOVA framework (and this will reduce to linear regression in certain situations),* OR
-    -   the data is structured as two rows per participant, with one row for the pre data and one row for the post data (there will be a column here that represents timepoint, with values `pre` and `post`)
-        -   both the pre and post measurements are on the left hand side (LHS) of the model, with an interaction between the treatment variable (as the exposure of interest) and timepoint on the RHS of the model
+    -   the data is structured as two rows per participant, with one row for the pre-data and one row for the post-data (there will then be a variable (column) here that represents timepoint, with values `pre` and `post`)
+        -   both the pre- and post-measures are on the left hand side (LHS) of the model, with an interaction term between the treatment variable and timepoint on the RHS of the model (as the variable of interest)
 
-There are a number of nuanced variations on these methods to be aware of. This article is not strictly focused on randomised controlled trials, for which a lot of [methodological literature](https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-021-01323-9) [addressing this](https://psycnet.apa.org/doiLanding?doi=10.1037%2Fh0025105) [decision exists](https://onlinelibrary.wiley.com/doi/10.1002/sim.2682) - it is intended to be a light, applied look at model implementation.
+There are a number of nuanced variations on these methods to be aware of. This post is not strictly focused on randomised controlled trials, for which a lot of [methodological literature](https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-021-01323-9) [addressing this](https://psycnet.apa.org/doiLanding?doi=10.1037%2Fh0025105) [decision exists](https://onlinelibrary.wiley.com/doi/10.1002/sim.2682) - it is intended to be a light, applied look at model implementation and interpretation (in light of examining the raw data).
 
-Linear regression (ANCOVA framework) is [typically\* the recommended approach](https://doi.org/10.4172%2F2155-6180.1000334), but varied disciplines my lean more towards the other two methods.
+Linear regression (ANCOVA framework) is [typically\* the recommended approach](https://doi.org/10.4172%2F2155-6180.1000334), but varied disciplines can lean more towards the other two methods.
 
-*\*typically, statisticians are very reserved about making broad sweeping methodological recommendations. Typically - I share that reservation*
+*\*typically, statisticians are very reserved about making broad sweeping methodological recommendations. Typically - I share that reservation.*
 
 # Setting the scene
 
@@ -70,26 +80,26 @@ We're going to use some simulated data here, generated using the [`simstudy`](ht
 We generate a dataset based on the following:
 
 -   Data for 204 treatment patients
-    -   pre data is random value with a mean of 20 (SD 7.5)
-    -   post data [is the pre-value plus]{.underline} a random value with a mean of 50 (SD 7.5)
+    -   pre-data is random value with a mean of 20 (SD 5)
+    -   post-data [is the pre-value plus]{.underline} a random value with a mean of 50 (SD 5)
 -   Data for 197 control patients
-    -   pre data is random with a mean of 10 (SD 5)
-    -   post data [is the pre-value plus]{.underline} a random value with a mean of 20 (SD 5)
--   Pre data is measured between days (time) 0 to 28 \[largely ignored\]
--   Post data is measured between days (time) 150 and 210 \[largely ignored\]
--   The actual `time` variable we will use in future examples with this dataset, for this article we will use the `timepoint` variable which simply differentiates the data as `pre` or `post`.
+    -   pre-data is random with a mean of 10 (SD 5)
+    -   post-data [is the pre-value plus]{.underline} a random value with a mean of 20 (SD 5)
+-   Pre-data is measured between days (time) 0 to 28 \[largely ignored\]
+-   Post-data is measured between days (time) 150 and 210 \[largely ignored\]
+-   The actual `time` variable, we will use in future examples with this dataset. For this post we will use the `timepoint` variable which simply differentiates the data as `pre` or `post`.
 
-For full readability, we do this in four steps, and then combine. Let's have a look.
+For full readability, we do this in four steps, and then combine. Let's have a look:
 
 ```{r}
-# Initialize random seed for reproducibility
+# Initialise random seed for reproducibility
 set.seed(2024)
 
 # Generate Treatment group data
 dat_treat_pre <- data.table(id = 1:204, group = "treatment", time = sample(0:28, 204, replace = TRUE), 
-                         out = rnorm(204, mean = 20, sd = 7.5), timepoint = "pre")
+                         out = rnorm(204, mean = 20, sd = 5), timepoint = "pre")
 dat_treat_post <- data.table(id = 1:204, group = "treatment", time = sample(150:210, 204, replace = TRUE), 
-                          out = dat_treat_pre$out + rnorm(204, mean = 50, sd = 7.5), timepoint = "post")
+                          out = dat_treat_pre$out + rnorm(204, mean = 50, sd = 5), timepoint = "post")
 
 # Generate Control group data
 dat_cont_pre <- data.table(id = 205:401, group = "control", time = sample(0:28, 197, replace = TRUE), 
@@ -126,8 +136,8 @@ dat %>%
 
 This all makes sense:
 
--   Control mean increases by \~20
--   Treatment mean increases by \~50
+-   The control group mean increases by \~20
+-   The treatment group mean increases by \~50
 
 ### A visual of our data
 
@@ -135,7 +145,7 @@ This all makes sense:
 dat %>% 
   mutate(timepoint = factor(timepoint, levels = c("pre", "post"))) %>% 
   ggplot(aes(timepoint, out, group = group, colour = group)) +
-  geom_jitter(position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.25)) +
+  geom_jitter(position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.25), alpha = 0.3) +
   geom_smooth(position = position_dodge(width = 0.25), 
               method = "lm", formula= y ~ x) +
   theme_clean() +
@@ -149,15 +159,15 @@ dat %>%
 
 **What is the treatment effect?**
 
-There is a lot in that question. There is extensive literature (existing and emerging) on estimands, estimators of the estimands (see [here for a recent discussion in the cluster randomised trials space](https://journals.sagepub.com/doi/full/10.1177/09622802241254197)), and just broadly defining the 'treatment effect'; this discussion, particularly as it relates to establishing a standardised nomenclature in this space, is incredibly valuable.
+There is a lot in that question. There is extensive literature (existing and emerging) on estimands, estimators of the estimands (see [here for a recent discussion in the cluster randomised trials space](https://journals.sagepub.com/doi/full/10.1177/09622802241254197)), and more broadly in just defining the 'treatment effect'; this discussion, particularly as it relates to establishing a standardised nomenclature in this space, is incredibly valuable.
 
-For the purposes of this applied example, we are going to assume the reader wants to 'understand the post treatment differences between groups, factoring in any baseline imbalance'.
+For the purposes of this applied example, we are going to assume the reader wants to 'understand the post-treatment differences between groups, factoring in any baseline imbalance'.
 
 Let's dive into the three methods we outlined above.
 
 ## Change score analysis
 
-Let's reduce the two observations we have per participant into one 'difference' (change score: post - pre).
+Let's reduce the two observations we have per participant into one 'difference' (change score: post-value minus pre-value).
 
 ```{r}
 dat %>% 
@@ -180,7 +190,7 @@ dat %>%
   select(group, change) %>% 
   ggplot(aes(group, change, colour = group)) +
   geom_violin(aes(fill = group), alpha = 0.1) +
-  geom_jitter(width = 0.1, height = 0, alpha = 0.8) +
+  geom_jitter(width = 0.1, height = 0, alpha = 0.3) +
   theme_clean() +
   scale_colour_viridis_d(option = "plasma", end = 0.85) +
   scale_fill_viridis_d(option = "plasma", end = 0.85) +
@@ -205,15 +215,15 @@ dat %>%
 
 The output suggests:
 
--   A difference between groups means of \~-30.
+-   A difference between groups means of \~30.
 
-This exact result, with using a change score as the outcome, can also be calculated using linear regression (left to the reader).
+This exact result, with using a change score as the outcome, can also be reached using linear regression (left to the reader).
 
 ## Linear regression (ANCOVA framework)
 
-Here, the outcome variable is the post measurement with the treatment variable as the exposure of interest (RHS of the model).
+Here, the outcome variable is the post-value with the treatment variable as the exposure of interest (RHS of the model).
 
-`out_post ~ out_pre + group`
+`lm(out_post ~ out_pre + group, data = dat)`
 
 ```{r}
 dat %>% 
@@ -226,10 +236,10 @@ dat %>%
 
 This output suggests (in order):
 
--   The intercept (the mean value for a Control participant [with 0 as a pre value]{.underline}) is \~21
-    -   *This may be curious, we know the post values for the Control group have a mean of \~30, however the mean pre value for the Control groups is \~10. Take that 10 away from the 30, and this is why we see \~20 here for a Control participant [with 0 as a pre value).]{.underline}*
--   For every 1 unit increase in a participants pre value, their post value will be 0.97 units higher *(... than if their pre value was 1 unit lower)*
--   **\[Perhaps of most interest\]** The post values for the Treatment group are (on average) \~30 units higher than the Control group.
+-   The intercept (the mean value for a control participant [with 0 as a pre-value]{.underline}) is \~21
+    -   *This may be curious, we know the post-values for the control group have a mean of \~30, however, the mean pre -alue for the control groups is \~10. Take that 10 away from the \~30, and this is why we see \~20 here for a control participant [with 0 as a pre-value)]{.underline}*
+-   For every 1 unit increase in a participants pre-value, their post-value will be 0.97 units higher *(... than if their pre-value was 1 unit lower)*
+-   **\[Perhaps of most interest\]** The post-values for the treatment group are (on average) \~30 units higher than the control group.
 
 ```{r echo=T, fig.align='center', fig.width=6, fig.height=4.5, message=F, warning=F}
 dat %>% 
@@ -241,7 +251,7 @@ dat %>%
   mutate(group = factor(group, labels = c("control", "treatment"))) %>% 
   ggplot(aes(x = dodge_pos + jittered_pos, y = out, group = id, colour = group)) +
   geom_point(aes(x = dodge_pos + jittered_pos), 
-             position = position_dodge(width = 0.25)) +
+             position = position_dodge(width = 0.25), alpha = 0.3) +
   geom_line(aes(x = dodge_pos + jittered_pos), alpha = 0.2) +
   scale_x_continuous(breaks = 0:1, labels = c("pre", "post")) +
   theme_clean() +
@@ -251,9 +261,9 @@ dat %>%
        subtitle = "Two-groups, jitterplot with line connecting pairs of observations", colour = "Group")
 ```
 
-With lines connecting each pairs data points together, we can perhaps more clearly see that those with a higher pre value also have a higher post value! (What might the data look like if this wasn't the case...)
+With lines connecting each pairs' data points together, we can perhaps more clearly see that those with a higher pre-value also have a higher post-value! *(What might the data look like if this wasn't the case...)*
 
-But you may be wondering?
+But you may be wondering ...?
 
 ```{r echo=T, fig.align='center', fig.width=6, fig.height=4.5, message=F, warning=F}
 dat_b <- dat %>% 
@@ -267,10 +277,10 @@ dat %>%
   mutate(timepoint = factor(timepoint, levels = c("pre", "post"))) %>% 
   ggplot(aes(timepoint, out)) +
   geom_jitter(aes(colour = group, group = group), 
-              position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.35)) +
+              position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.35), alpha = 0.3) +
   geom_smooth(aes(colour = group, group = group), 
               position = position_dodge(width = 0.45),
-              method = "lm", formula= y ~ x) +
+              method = "lm", formula= y ~ x, alpha = 0.6) +
   theme_clean() +
   theme(legend.position = "bottom") +
   scale_colour_viridis_d(option = "plasma", end = 0.85) +
@@ -287,13 +297,13 @@ dat %>%
   coord_cartesian(xlim = c(1.25, 2.35)) 
 ```
 
-We know the post score means are \~40 units apart. The model has returned the value of \~30, which (implicitly) has adjusted for the baseline difference between groups of \~10 units.
+We know the post-value means are \~40 units apart, yet the model has returned the value of \~30 for the 'treatment effect', which (implicitly) has adjusted for the baseline difference between groups of \~10 units.
 
 ## Linear mixed effects models
 
-Here, the outcome variable is the post measurement with the treatment variable as the exposure of interest (RHS of the model).
+Here, the outcome variable includes both the pre- and post-measures with the interaction on the RHS of the model allowing the effect of the treatment variable (as the exposure of interest) to vary according to time.
 
-`out ~ group*timepoint`
+`lmer(out ~ group*timepoint + (1 | id), data = dat)`
 
 ```{r}
 dat %>% tibble %>% 
@@ -305,18 +315,20 @@ dat %>% tibble %>%
 
 This output suggests (in order):
 
--   The intercept (mean value for a Control participant at the [pre timepoint]{.underline}) is \~10 (makes sense)
--   The Treatment group mean (at the [pre timepoint]{.underline}) is \~11 units higher than the Control group (makes sense).
--   The post timepoint values *in the Control group* are (on average) 20 units higher than the pre timepoint values. 
--   \[**Perhaps of most interest\]** Compared to the 20 unit difference in the Control group, the post timepoint values in the Treatment group are an additional 30 units higher than the pre timepoint values (total of 50 units difference between pre and post)
+-   The intercept (mean value for a control participant at the [pre-measure]{.underline}) is \~10 (makes sense)
+-   The treatment group mean (at the [pre-measure]{.underline}) is \~11 units higher than the control group mean (makes sense)
+-   The post-values *in the **control group*** are (on average) \~20 units higher than the pre-values 
+-   \[**Perhaps of most interest\]** Compared to the \~20 unit difference (over time) in the control group, the post-values in the treatment group are (an additional) \~30 units higher than the pre-values (total of 50 units difference between pre and post)
 
 In looking at, and breaking down, this output, you might think that the linear mixed effects model gives you the same answer but with a much more explicit breakdown of many other 'things going on' with your outcome data - and you'd be right.
 
 # Conclusion
 
-For a basic pre-post design, both an ANCOVA framework implemented with linear regression and a linear mixed effects model will quite easily return an unbiased estimate of the post treatment (intervention) effect allowing for adjustment for any baseline imbalance in your outcome variable. Change score analysis may give a similar result, but the framework is restrictive in the way that other variables and design complexity can be handled.
+For a basic pre-post design, both an ANCOVA framework implemented with linear regression and a linear mixed effects model will quite easily return an unbiased estimate of the post treatment (intervention) effect allowing for adjustment of any baseline imbalance in your outcome variable. Change score analysis may give a similar result, but the framework is restrictive in the way that other variables and design complexity can be handled.
 
-While ANCOVA framework (implemented with linear regression) is typically recommended, the linear mixed effects model can give a more verbose breakdown with the estimates it returns, providing explicit insights into the outcome variable across groups and time. Both approaches have other assumptions and design features that should be considered when deciding which to use and how to present the results.
+While ANCOVA framework (implemented with linear regression) is typically recommended, the linear mixed effects model can give a more verbose breakdown of the data with the estimates it returns, providing explicit insights into the outcome variable between groups and across time.
+
+Both approaches [**have other assumptions and design features**]{.underline} that should be considered when deciding which to use and how to present the results.
 
 ## Acknowledgements
 
@@ -328,7 +340,7 @@ You can look forward to seeing posts from these other team members here in the c
 
 To access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:
 
-<https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/lmer-missingx>
+UPDATE LINK
 
 The session information can also be seen below.
 
