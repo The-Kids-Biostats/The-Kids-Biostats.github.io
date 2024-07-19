@@ -3,8 +3,7 @@
     "listing": "/index.html",
     "items": [
       "/posts/parallel/parallel.html",
-      "/posts/lmer-missing/missing_lmer.html",
-      "/posts/table_one/archive/Summary Tables.html"
+      "/posts/lmer-missing/missing_lmer.html"
     ]
   }
 ]
