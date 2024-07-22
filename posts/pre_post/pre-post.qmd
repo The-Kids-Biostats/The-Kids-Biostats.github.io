@@ -11,7 +11,7 @@ categories:
   - Pre-post
   - Mixed Models
   - R
-draft: true
+draft: false
 ---
 
 ```{r setup, include=F, message = F}
@@ -71,7 +71,11 @@ There are a number of nuanced variations on these methods to be aware of. This p
 
 Linear regression (ANCOVA framework) is [typically\* the recommended approach](https://doi.org/10.4172%2F2155-6180.1000334), but varied disciplines can lean more towards the other two methods.
 
-*\*typically, statisticians are very reserved about making broad sweeping methodological recommendations. Typically - I share that reservation.*
+::: callout-note
+## Note.
+
+Typically, statisticians are very reserved about making broad sweeping methodological recommendations. Typically - I share that reservation.
+:::
 
 # Setting the scene
 
@@ -297,6 +301,13 @@ dat %>%
   coord_cartesian(xlim = c(1.25, 2.35)) 
 ```
 
+::: {.column-margin}
+**ggbrace()**
+
+It was a bit of a battle with stat_brace() to get the annotation in there, but it was worth it, Shirley!
+:::
+
+
 We know the post-value means are \~40 units apart, yet the model has returned the value of \~30 for the 'treatment effect', which (implicitly) has adjusted for the baseline difference between groups of \~10 units.
 
 ## Linear mixed effects models
@@ -338,9 +349,7 @@ You can look forward to seeing posts from these other team members here in the c
 
 ## Reproducibility Information
 
-To access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:
-
-UPDATE LINK
+To access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, [please visit our GitHub](https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/pre_post):
 
 The session information can also be seen below.
 

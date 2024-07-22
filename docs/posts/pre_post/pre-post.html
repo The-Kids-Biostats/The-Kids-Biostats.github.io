@@ -107,7 +107,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="floating nav-fixed">
+<body class="floating nav-fixed slimcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
@@ -220,7 +220,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content quarto-banner-title-block page-columns page-full" id="quarto-document-content">
 
 
 
@@ -258,7 +258,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>There are a number of nuanced variations on these methods to be aware of. This post is not strictly focused on randomised controlled trials, for which a lot of <a href="https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-021-01323-9">methodological literature</a> <a href="https://psycnet.apa.org/doiLanding?doi=10.1037%2Fh0025105">addressing this</a> <a href="https://onlinelibrary.wiley.com/doi/10.1002/sim.2682">decision exists</a> - it is intended to be a light, applied look at model implementation and interpretation (in light of examining the raw data).</p>
 <p>Linear regression (ANCOVA framework) is <a href="https://doi.org/10.4172%2F2155-6180.1000334">typically* the recommended approach</a>, but varied disciplines can lean more towards the other two methods.</p>
-<p><em>*typically, statisticians are very reserved about making broad sweeping methodological recommendations. Typically - I share that reservation.</em></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note.
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Typically, statisticians are very reserved about making broad sweeping methodological recommendations. Typically - I share that reservation.</p>
+</div>
+</div>
 </section>
 <section id="setting-the-scene" class="level1">
 <h1>Setting the scene</h1>
@@ -818,7 +830,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 </section>
-<section id="question" class="level1">
+<section id="question" class="level1 page-columns page-full">
 <h1>Question</h1>
 <p><strong>What is the treatment effect?</strong></p>
 <p>There is a lot in that question. There is extensive literature (existing and emerging) on estimands, estimators of the estimands (see <a href="https://journals.sagepub.com/doi/full/10.1177/09622802241254197">here for a recent discussion in the cluster randomised trials space</a>), and more broadly in just defining the ‘treatment effect’; this discussion, particularly as it relates to establishing a standardised nomenclature in this space, is incredibly valuable.</p>
@@ -1349,7 +1361,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>This exact result, with using a change score as the outcome, can also be reached using linear regression (left to the reader).</p>
 </section>
-<section id="linear-regression-ancova-framework" class="level2">
+<section id="linear-regression-ancova-framework" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="linear-regression-ancova-framework">Linear regression (ANCOVA framework)</h2>
 <p>Here, the outcome variable is the post-value with the treatment variable as the exposure of interest (RHS of the model).</p>
 <p><code>lm(out_post ~ out_pre + group, data = dat)</code></p>
@@ -1938,7 +1950,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>We know the post-value means are ~40 units apart, yet the model has returned the value of ~30 for the ‘treatment effect’, which (implicitly) has adjusted for the baseline difference between groups of ~10 units.</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p><strong>ggbrace()</strong></p>
+<p>It was a bit of a battle with stat_brace() to get the annotation in there, but it was worth it, Shirley!</p>
+</div></div><p>We know the post-value means are ~40 units apart, yet the model has returned the value of ~30 for the ‘treatment effect’, which (implicitly) has adjusted for the baseline difference between groups of ~10 units.</p>
 </section>
 <section id="linear-mixed-effects-models" class="level2">
 <h2 class="anchored" data-anchor-id="linear-mixed-effects-models">Linear mixed effects models</h2>
@@ -2485,8 +2501,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="reproducibility-information" class="level2">
 <h2 class="anchored" data-anchor-id="reproducibility-information">Reproducibility Information</h2>
-<p>To access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:</p>
-<p>UPDATE LINK</p>
+<p>To access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, <a href="https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/pre_post">please visit our GitHub</a>:</p>
 <p>The session information can also be seen below.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
