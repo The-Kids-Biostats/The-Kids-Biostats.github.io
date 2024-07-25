@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Dr Matthew Cooper, Wesley Billingham">
+<meta name="dcterms.date" content="2024-07-19">
 
-<title>About – The Kids Biostats</title>
+<title>Data Anonymiser – The Kids Biostats</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,24 +22,59 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -67,17 +104,17 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="floating nav-fixed">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top">
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">The Kids Biostats</span>
     </a>
   </div>
@@ -88,7 +125,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./about.html" aria-current="page"> 
+    <a class="nav-link" href="../../about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item compact">
@@ -97,7 +134,7 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="./index.xml"> <i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -118,41 +155,189 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
-<!-- sidebar -->
-<!-- margin-sidebar -->
-    
-<!-- main -->
-<div class="quarto-about-jolla">
-  <img src="logo.png" class="about-image
-  round " style="height: 15em; width: 15em;">
- <header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">About</h1>
-</div>
-<div class="quarto-title-meta">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Data Anonymiser</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">Shiny</div>
+                <div class="quarto-category">R</div>
+              </div>
+                  </div>
   </div>
-</header><main class="content" id="quarto-document-content">
-<p>We are members of the biostatistics team at Telethon Kids Institute in Perth, Western Australia. Our work involves providing statistical consultation and collaboration to child health researchers at all stages of the scientific pipeline, from design to analysis to publication.<br>
-<br>
-Primarily R users, we encounter particular coding, methodology, or analysis challenges - often that have recurring or related themes. The idea of this site is to be a centralised repository of our solutions to or narration of these recurrent challenges, for both our reference and yours!</p>
-<p>We hope you’ll find something useful here, and are always open to feedback and conversation on these topics.</p>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Dr Matthew Cooper, Wesley Billingham </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">July 19, 2024</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#data-anonymising-shiny-app" id="toc-data-anonymising-shiny-app" class="nav-link" data-scroll-target="#data-anonymising-shiny-app">Data anonymising shiny app</a>
+  <ul class="collapse">
+  <li><a href="#the-process" id="toc-the-process" class="nav-link" data-scroll-target="#the-process">The process</a>
+  <ul class="collapse">
+  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started">Getting started</a></li>
+  </ul></li>
+  <li><a href="#data-obscuring-process" id="toc-data-obscuring-process" class="nav-link" data-scroll-target="#data-obscuring-process">Data obscuring process</a></li>
+  </ul></li>
+  <li><a href="#closing-notes" id="toc-closing-notes" class="nav-link" data-scroll-target="#closing-notes">Closing notes</a>
+  <ul class="collapse">
+  <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements">Acknowledgements</a></li>
+  <li><a href="#reproducibility-information" id="toc-reproducibility-information" class="nav-link" data-scroll-target="#reproducibility-information">Reproducibility Information</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
-</main> 
-  <hr class="about-sep">
-   <div class="about-links">
-  <a href="https://x.com/telethonkids" class="about-link" rel="" target="">
-    <i class="bi bi-twitter"></i>
-     <span class="about-link-text">Twitter</span>
-  </a>
-  <a href="https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io" class="about-link" rel="" target="">
-    <i class="bi bi-github"></i>
-     <span class="about-link-text">Github</span>
-  </a>
+
+
+
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<p>Data access and security is a really important topic and one that can be challenging to navigate. Research ethics and governance approvals typically require detail about where and how data will be stored and analysed - and a researcher typically does not have approval for the data they are working with to be moved to other locations.</p>
+<p>The rapid emergence of AI tools and online data analytics platforms (e.g.&nbsp;dashboards) may tempt researchers with the promise of short cuts to writing code and/or producing attractive figures with ease. For example, <a href="https://www.graphmaker.ai/">sites like this</a> that will take an uploaded dataset and draw a figure from it following a user prompt – <strong><em>but where did your precious private research data just go?</em></strong></p>
+<p>Below, we share a data anonymising (obscuring) <a href="https://shiny.posit.co/">shiny app</a> that you can run on your local machine. It will return to you, a “similar” dataset to your original dataset, allowing you to then safely use an online chat bot to assisted you to code up that complex figure or model.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="example_img.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+</figure>
 </div>
 </div>
- <!-- /main -->
+</div>
+</section>
+<section id="data-anonymising-shiny-app" class="level1">
+<h1>Data anonymising shiny app</h1>
+<p>The app is a <a href="https://shiny.posit.co/">shiny app</a>, written in R. When loaded it looks like this:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="app_preview.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="the-process" class="level2">
+<h2 class="anchored" data-anchor-id="the-process">The process</h2>
+<p>The app simply does the following:</p>
+<ul>
+<li>takes an uploaded dataset (.csv or .xlsx),</li>
+<li>lets you choose which variables to keep and how many rows you want returned,</li>
+<li>returns to you a fully obscured dataset (.csv) for download <em>(see example above)</em>.</li>
+</ul>
+<p>Contained on a tab within the app is a brief tabular report that compares your original data to the anonymised data.</p>
+<section id="getting-started" class="level3">
+<h3 class="anchored" data-anchor-id="getting-started">Getting started</h3>
+<p>To use the app, you can either download a <code>.zip</code> (or clone the github repository) at the following link:</p>
+<p><a href="https://github.com/TelethonKids/data_anonymiser" class="uri">https://github.com/TelethonKids/data_anonymiser</a></p>
+<p>Then:</p>
+<ol type="1">
+<li>Unzip the folder</li>
+<li>In your R session, ensure you are in directory of the unzipped files</li>
+<li>In your R console, type <code>runApp()</code></li>
+</ol>
+<p>You may need to <code>install.packages()</code> a few packages, though this app only leverages very popular packages that most R users are likely to already have.</p>
+</section>
+</section>
+<section id="data-obscuring-process" class="level2">
+<h2 class="anchored" data-anchor-id="data-obscuring-process">Data obscuring process</h2>
+<p>This is also explained on the app’s landing page – but the detail of what is happening in the data obscuring process is as follows:</p>
+<ul>
+<li><strong>Column names:</strong> These will all be replaced with a generic name of the form “VAR_1”, “VAR_2”, etc.</li>
+<li><strong>Continuous variables</strong>
+<ul>
+<li><strong>15 or fewer unique values:</strong> These will be randomly (evenly) replaced with integers 0 through to the n (where n is the number of unique values within that variable).</li>
+<li><strong>More than 15 unique values:</strong> Will be replaced with random normally distributed data that has the same mean and standard deviation as the original data.</li>
+</ul></li>
+<li><strong>Date variables:</strong> The min and max date will be found within the provided data, then uniformly distributed dates between that min and max date will be returned.</li>
+<li><strong>Categorical variables (includes dichotomous variables)</strong>
+<ul>
+<li><strong>15 or fewer unique categories:</strong> These will be randomly (evenly) replaced with letters “A” through “O”</li>
+<li><strong>More than 15 unique categories:</strong> (E.g., studyIDs, names, addresses etc) these will be replaced with a random string of length 6 (may or may not be unique).</li>
+</ul></li>
+</ul>
+</section>
+</section>
+<section id="closing-notes" class="level1">
+<h1>Closing notes</h1>
+<p>The app is by no means ground breaking or overly complex. The target audience is not likely the savvy analysis/coder, but perhaps you (the savvy analysis/coder) reading this might know of someone (or a research group) that could benefit from access to this. Or perhaps you could pursue/advocate for having this setup on an internal server (with no internet access) at your workplace for colleagues to use – as we have done at Telethon Kids.</p>
+<p>Every day, we are entrusted with extremely personal data on our fellow human beings (de-identified or otherwise), so anything we do to limit potential data breaches is to be encouraged.</p>
+<section id="acknowledgements" class="level2">
+<h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
+<p>Thanks to Wesley Billingham and Zac Dempsey for providing feedback on and reviewing this post.</p>
+<p>You can look forward to seeing posts from these other team members here in the coming weeks and months.</p>
+</section>
+<section id="reproducibility-information" class="level2">
+<h2 class="anchored" data-anchor-id="reproducibility-information">Reproducibility Information</h2>
+<p>Session information:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.4.0 (2024-04-24)
+Platform: aarch64-apple-darwin20
+Running under: macOS Sonoma 14.5
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: Australia/Perth
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+loaded via a namespace (and not attached):
+ [1] htmlwidgets_1.6.4 compiler_4.4.0    fastmap_1.2.0     cli_3.6.3        
+ [5] tools_4.4.0       htmltools_0.5.8.1 rstudioapi_0.16.0 yaml_2.3.9       
+ [9] rmarkdown_2.27    knitr_1.48        jsonlite_1.8.8    xfun_0.46        
+[13] digest_0.6.36     rlang_1.1.4       evaluate_0.24.0  </code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -173,6 +358,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
   toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
   const isCodeAnnotation = (el) => {
     for (const clz of el.classList) {
       if (clz.startsWith('code-annotation-')) {                     

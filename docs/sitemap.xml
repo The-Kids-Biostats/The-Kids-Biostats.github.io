@@ -1,43 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.the-kids-biostats.github.io/posts/lmer-missing/index.html</loc>
-    <lastmod>2024-06-21T00:52:17.126Z</lastmod>
+    <loc>https://www.the-kids-biostats.github.io/about.html</loc>
+    <lastmod>2024-06-20T02:55:11.018Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.the-kids-biostats.github.io/posts/2024-07-22_pre_post/pre-post.html</loc>
+    <lastmod>2024-07-25T02:47:18.142Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.the-kids-biostats.github.io/posts/2024-07-01_parallel/parallel.html</loc>
+    <lastmod>2024-07-25T02:47:18.141Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.the-kids-biostats.github.io/posts/2024-07-19_data_anonymiser/data_anonymiser.html</loc>
+    <lastmod>2024-07-25T02:47:18.140Z</lastmod>
+  </url>
+  <url>
+    <loc>https://www.the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer.html</loc>
+    <lastmod>2024-07-25T02:47:18.141Z</lastmod>
   </url>
   <url>
     <loc>https://www.the-kids-biostats.github.io/index.html</loc>
     <lastmod>2024-06-20T02:55:11.045Z</lastmod>
   </url>
   <url>
-    <loc>https://www.the-kids-biostats.github.io/about.html</loc>
-    <lastmod>2024-06-05T04:09:44.254Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.the-kids-biostats.github.io/posts/parallel/index.html</loc>
-    <lastmod>2024-07-01T08:24:59.123Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer.html</loc>
-    <lastmod>2024-07-19T02:43:42.110Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.the-kids-biostats.github.io/posts/parallel/parallel.html</loc>
-    <lastmod>2024-07-25T02:47:18.141Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.the-kids-biostats.github.io/posts/data_anonymiser/data_anonymiser.html</loc>
-    <lastmod>2024-07-25T02:47:18.140Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.the-kids-biostats.github.io/posts/pre_post/pre-post.html</loc>
-    <lastmod>2024-07-25T02:47:18.142Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.the-kids-biostats.github.io/posts/001_lmer-missing/missing_lmer.html</loc>
-    <lastmod>2024-07-25T02:47:18.141Z</lastmod>
-  </url>
-  <url>
-    <loc>https://www.the-kids-biostats.github.io/posts/002_parallel/parallel.html</loc>
-    <lastmod>2024-07-25T02:47:18.141Z</lastmod>
+    <loc>https://www.the-kids-biostats.github.io/posts/DRAFT_ai_part_one/ai_part_one.html</loc>
+    <lastmod>2024-07-25T02:47:18.134Z</lastmod>
   </url>
 </urlset>
