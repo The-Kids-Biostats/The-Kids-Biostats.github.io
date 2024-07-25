@@ -9,7 +9,7 @@
 <link>https://www.the-kids-biostats.github.io/</link>
 <atom:link href="https://www.the-kids-biostats.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description>Biostats R solutions</description>
-<generator>quarto-1.4.555</generator>
+<generator>quarto-1.5.54</generator>
 <lastBuildDate>Sun, 21 Jul 2024 16:00:00 GMT</lastBuildDate>
 <item>
   <title>Analysing pre-post data</title>
@@ -3400,8 +3400,10 @@ font-style: inherit;">data =</span> mtcars)))</span>
 <span id="cb9-6"></span>
 <span id="cb9-7"><span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">in</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
@@ -3468,6 +3470,7 @@ background-color: null;
 font-style: inherit;">2</span>, </span>
 <span id="cb9-25">                       <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(coefs){<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">quantile</span>(coefs, <span class="at" style="color: #657422;
@@ -3629,6 +3632,7 @@ background-color: null;
 font-style: inherit;">2</span>, </span>
 <span id="cb16-12">                       <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(coefs) {<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">quantile</span>(coefs, <span class="at" style="color: #657422;
@@ -3784,6 +3788,7 @@ background-color: null;
 font-style: inherit;">2</span>, </span>
 <span id="cb23-13">                       <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(coefs) {<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">quantile</span>(coefs, <span class="at" style="color: #657422;
@@ -4040,8 +4045,10 @@ background-color: null;
 font-style: inherit;">list</span>()</span>
 <span id="cb32-3"><span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">in</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
@@ -4516,11 +4523,14 @@ font-style: inherit;"># To store our model output</span></span>
 <span id="cb50-3"></span>
 <span id="cb50-4"><span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">in</span> outcome_vars){</span>
 <span id="cb50-5">  <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (i <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -4549,8 +4559,10 @@ font-style: inherit;">data =</span> flights)</span>
 <span id="cb50-8">    </span>
 <span id="cb50-9">  } <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (i <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -4637,6 +4649,7 @@ font-style: inherit;">map</span>(outcome_vars, </span>
 background-color: null;
 font-style: inherit;">~</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -4669,8 +4682,10 @@ font-style: inherit;">summary</span>()</span>
 <span id="cb53-10">        </span>
 <span id="cb53-11">        } <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -4774,6 +4789,7 @@ font-style: inherit;">future_map</span>(outcome_vars, </span>
 background-color: null;
 font-style: inherit;">~</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -4806,8 +4822,10 @@ font-style: inherit;">summary</span>()</span>
 <span id="cb56-12">        </span>
 <span id="cb56-13">        } <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -4921,6 +4939,7 @@ background-color: null;
 font-style: inherit;">%dopar%</span> {</span>
 <span id="cb59-5">  <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (j <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -4948,8 +4967,10 @@ background-color: null;
 font-style: inherit;">data =</span> flights)</span>
 <span id="cb59-8">  } <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (j <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -5118,7 +5139,7 @@ loaded via a namespace (and not attached):
 <item>
   <title>Handling Missing Data with LMER</title>
   <dc:creator>Dr Matthew Cooper</dc:creator>
-  <link>https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer.html</link>
+  <link>https://www.the-kids-biostats.github.io/posts/001_lmer-missing/missing_lmer.html</link>
   <description><![CDATA[ 
 
 
@@ -5272,24 +5293,23 @@ background-color: null;
 font-style: inherit;">"{n}"</span>)</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div>
-<div id="kdyersojmd" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#kdyersojmd table {
+<div id="xzfydmzkdr" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#xzfydmzkdr table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#kdyersojmd thead, #kdyersojmd tbody, #kdyersojmd tfoot, #kdyersojmd tr, #kdyersojmd td, #kdyersojmd th {
+#xzfydmzkdr thead, #xzfydmzkdr tbody, #xzfydmzkdr tfoot, #xzfydmzkdr tr, #xzfydmzkdr td, #xzfydmzkdr th {
   border-style: none;
 }
 
-#kdyersojmd p {
+#xzfydmzkdr p {
   margin: 0;
   padding: 0;
 }
 
-#kdyersojmd .gt_table {
+#xzfydmzkdr .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -5315,12 +5335,12 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-left-color: #D3D3D3;
 }
 
-#kdyersojmd .gt_caption {
+#xzfydmzkdr .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#kdyersojmd .gt_title {
+#xzfydmzkdr .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -5332,7 +5352,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-bottom-width: 0;
 }
 
-#kdyersojmd .gt_subtitle {
+#xzfydmzkdr .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -5344,7 +5364,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-top-width: 0;
 }
 
-#kdyersojmd .gt_heading {
+#xzfydmzkdr .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -5356,13 +5376,13 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-right-color: #D3D3D3;
 }
 
-#kdyersojmd .gt_bottom_border {
+#xzfydmzkdr .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#kdyersojmd .gt_col_headings {
+#xzfydmzkdr .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -5377,7 +5397,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-right-color: #D3D3D3;
 }
 
-#kdyersojmd .gt_col_heading {
+#xzfydmzkdr .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -5397,7 +5417,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   overflow-x: hidden;
 }
 
-#kdyersojmd .gt_column_spanner_outer {
+#xzfydmzkdr .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -5409,15 +5429,15 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   padding-right: 4px;
 }
 
-#kdyersojmd .gt_column_spanner_outer:first-child {
+#xzfydmzkdr .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#kdyersojmd .gt_column_spanner_outer:last-child {
+#xzfydmzkdr .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#kdyersojmd .gt_column_spanner {
+#xzfydmzkdr .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -5429,11 +5449,11 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   width: 100%;
 }
 
-#kdyersojmd .gt_spanner_row {
+#xzfydmzkdr .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#kdyersojmd .gt_group_heading {
+#xzfydmzkdr .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -5459,7 +5479,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   text-align: left;
 }
 
-#kdyersojmd .gt_empty_group_heading {
+#xzfydmzkdr .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -5474,15 +5494,15 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   vertical-align: middle;
 }
 
-#kdyersojmd .gt_from_md > :first-child {
+#xzfydmzkdr .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#kdyersojmd .gt_from_md > :last-child {
+#xzfydmzkdr .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#kdyersojmd .gt_row {
+#xzfydmzkdr .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -5501,7 +5521,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   overflow-x: hidden;
 }
 
-#kdyersojmd .gt_stub {
+#xzfydmzkdr .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -5514,7 +5534,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   padding-right: 5px;
 }
 
-#kdyersojmd .gt_stub_row_group {
+#xzfydmzkdr .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -5528,15 +5548,15 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   vertical-align: top;
 }
 
-#kdyersojmd .gt_row_group_first td {
+#xzfydmzkdr .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#kdyersojmd .gt_row_group_first th {
+#xzfydmzkdr .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#kdyersojmd .gt_summary_row {
+#xzfydmzkdr .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -5546,16 +5566,16 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   padding-right: 5px;
 }
 
-#kdyersojmd .gt_first_summary_row {
+#xzfydmzkdr .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#kdyersojmd .gt_first_summary_row.thick {
+#xzfydmzkdr .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#kdyersojmd .gt_last_summary_row {
+#xzfydmzkdr .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -5565,7 +5585,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-bottom-color: #D3D3D3;
 }
 
-#kdyersojmd .gt_grand_summary_row {
+#xzfydmzkdr .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -5575,7 +5595,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   padding-right: 5px;
 }
 
-#kdyersojmd .gt_first_grand_summary_row {
+#xzfydmzkdr .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -5585,7 +5605,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-top-color: #D3D3D3;
 }
 
-#kdyersojmd .gt_last_grand_summary_row_top {
+#xzfydmzkdr .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -5595,11 +5615,11 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-bottom-color: #D3D3D3;
 }
 
-#kdyersojmd .gt_striped {
+#xzfydmzkdr .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#kdyersojmd .gt_table_body {
+#xzfydmzkdr .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -5608,7 +5628,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-bottom-color: #D3D3D3;
 }
 
-#kdyersojmd .gt_footnotes {
+#xzfydmzkdr .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -5622,7 +5642,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-right-color: #D3D3D3;
 }
 
-#kdyersojmd .gt_footnote {
+#xzfydmzkdr .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -5631,7 +5651,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   padding-right: 5px;
 }
 
-#kdyersojmd .gt_sourcenotes {
+#xzfydmzkdr .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -5645,7 +5665,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   border-right-color: #D3D3D3;
 }
 
-#kdyersojmd .gt_sourcenote {
+#xzfydmzkdr .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -5653,68 +5673,68 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
   padding-right: 5px;
 }
 
-#kdyersojmd .gt_left {
+#xzfydmzkdr .gt_left {
   text-align: left;
 }
 
-#kdyersojmd .gt_center {
+#xzfydmzkdr .gt_center {
   text-align: center;
 }
 
-#kdyersojmd .gt_right {
+#xzfydmzkdr .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#kdyersojmd .gt_font_normal {
+#xzfydmzkdr .gt_font_normal {
   font-weight: normal;
 }
 
-#kdyersojmd .gt_font_bold {
+#xzfydmzkdr .gt_font_bold {
   font-weight: bold;
 }
 
-#kdyersojmd .gt_font_italic {
+#xzfydmzkdr .gt_font_italic {
   font-style: italic;
 }
 
-#kdyersojmd .gt_super {
+#xzfydmzkdr .gt_super {
   font-size: 65%;
 }
 
-#kdyersojmd .gt_footnote_marks {
+#xzfydmzkdr .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#kdyersojmd .gt_asterisk {
+#xzfydmzkdr .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#kdyersojmd .gt_indent_1 {
+#xzfydmzkdr .gt_indent_1 {
   text-indent: 5px;
 }
 
-#kdyersojmd .gt_indent_2 {
+#xzfydmzkdr .gt_indent_2 {
   text-indent: 10px;
 }
 
-#kdyersojmd .gt_indent_3 {
+#xzfydmzkdr .gt_indent_3 {
   text-indent: 15px;
 }
 
-#kdyersojmd .gt_indent_4 {
+#xzfydmzkdr .gt_indent_4 {
   text-indent: 20px;
 }
 
-#kdyersojmd .gt_indent_5 {
+#xzfydmzkdr .gt_indent_5 {
   text-indent: 25px;
 }
 </style>
 
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
@@ -5778,7 +5798,6 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
 
 </table>
 
-</div>
 </div>
 </div>
 </div>
@@ -5870,7 +5889,7 @@ font-style: inherit;">"Wage"</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/001_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -5985,7 +6004,7 @@ font-style: inherit;">9</span>))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/001_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -6244,7 +6263,7 @@ font-style: inherit;">9</span>))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/001_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -6366,7 +6385,7 @@ font-style: inherit;">-&gt;</span> p1</span>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/001_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -6701,7 +6720,7 @@ font-style: inherit;">-&gt;</span> p2</span>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/001_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -6797,7 +6816,7 @@ font-style: inherit;">"Mixed effects model"</span>))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/001_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -7010,7 +7029,6 @@ font-style: inherit;">"{n}"</span>)</span>
 <span id="cb16-15">  )</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div>
 <div id="tgjctjomfb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#tgjctjomfb table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -7452,7 +7470,7 @@ font-style: inherit;">"{n}"</span>)</span>
 }
 </style>
 
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <colgroup>
 <col style="width: 20%">
 <col style="width: 20%">
@@ -7542,7 +7560,6 @@ font-style: inherit;">"{n}"</span>)</span>
 
 </table>
 
-</div>
 </div>
 </div>
 </div>
@@ -7655,7 +7672,7 @@ font-style: inherit;">9</span>)) </span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/001_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -7843,7 +7860,7 @@ font-style: inherit;">9</span>))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/001_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -8194,7 +8211,7 @@ font-style: inherit;">-&gt;</span> p4</span>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/001_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -8687,7 +8704,7 @@ font-style: inherit;">-&gt;</span> p4</span>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/001_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -8924,7 +8941,7 @@ font-style: inherit;">'bottom'</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/001_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -9090,7 +9107,6 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <div id="bahldkstyb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#bahldkstyb table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -9532,7 +9548,7 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
 }
 </style>
 
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
@@ -9596,7 +9612,6 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
 
 </table>
 
-</div>
 </div>
 </div>
 </div>
@@ -9768,7 +9783,7 @@ font-style: inherit;">9</span>))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/001_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -9986,7 +10001,7 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/001_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -10030,13 +10045,13 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
 <p>The session information can also be seen below.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>R version 4.3.3 (2024-02-29)
-Platform: aarch64-apple-darwin20 (64-bit)
-Running under: macOS Sonoma 14.4.1
+<pre><code>R version 4.4.0 (2024-04-24)
+Platform: aarch64-apple-darwin20
+Running under: macOS Sonoma 14.5
 
 Matrix products: default
-BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
-LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+BLAS:   /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0
 
 locale:
 [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -10050,43 +10065,42 @@ attached base packages:
 other attached packages:
  [1] lubridate_1.9.3   forcats_1.0.0     stringr_1.5.1     dplyr_1.1.4      
  [5] purrr_1.0.2       readr_2.1.5       tidyr_1.3.1       tibble_3.2.1     
- [9] ggplot2_3.5.1     tidyverse_2.0.0   patchwork_1.2.0   parameters_0.21.7
-[13] jtools_2.2.2      gtsummary_1.7.2   AER_1.2-12        survival_3.7-0   
+ [9] ggplot2_3.5.1     tidyverse_2.0.0   patchwork_1.2.0   parameters_0.22.0
+[13] jtools_2.2.2      gtsummary_1.7.2   AER_1.2-12        survival_3.5-8   
 [17] sandwich_3.1-0    lmtest_0.9-40     zoo_1.8-12        car_3.1-2        
-[21] carData_3.0-5     merTools_0.6.2    arm_1.14-4        MASS_7.3-60.0.1  
-[25] lme4_1.1-35.4     Matrix_1.6-5     
+[21] carData_3.0-5     merTools_0.6.2    arm_1.14-4        MASS_7.3-60.2    
+[25] lme4_1.1-35.4     Matrix_1.7-0     
 
 loaded via a namespace (and not attached):
- [1] rlang_1.1.4          magrittr_2.0.3       multcomp_1.4-25     
- [4] furrr_0.3.1          compiler_4.3.3       vctrs_0.6.5         
- [7] pkgconfig_2.0.3      crayon_1.5.3         fastmap_1.2.0       
-[10] backports_1.5.0      labeling_0.4.3       pander_0.6.5        
-[13] utf8_1.2.4           promises_1.3.0       rmarkdown_2.27      
-[16] markdown_1.13        tzdb_0.4.0           nloptr_2.1.1        
-[19] xfun_0.45            jsonlite_1.8.8       later_1.3.2         
-[22] broom_1.0.6          parallel_4.3.3       R6_2.5.1            
-[25] stringi_1.8.4        parallelly_1.37.1    boot_1.3-30         
-[28] numDeriv_2016.8-1.1  estimability_1.5.1   assertthat_0.2.1    
-[31] Rcpp_1.0.12          iterators_1.0.14     knitr_1.47          
-[34] httpuv_1.6.15        splines_4.3.3        timechange_0.3.0    
-[37] tidyselect_1.2.1     rstudioapi_0.16.0    abind_1.4-5         
-[40] yaml_2.3.8           codetools_0.2-20     listenv_0.9.1       
-[43] lmerTest_3.1-3       lattice_0.22-6       shiny_1.8.1.1       
-[46] withr_3.0.0          bayestestR_0.13.2    coda_0.19-4.1       
-[49] evaluate_0.24.0      future_1.33.2        huxtable_5.5.6      
-[52] xml2_1.3.6           pillar_1.9.0         foreach_1.5.2       
-[55] insight_0.20.1       generics_0.1.3       hms_1.1.3           
-[58] munsell_0.5.1        commonmark_1.9.1     scales_1.3.0        
-[61] minqa_1.2.7          globals_0.16.3       xtable_1.8-4        
-[64] glue_1.7.0           emmeans_1.10.2       tools_4.3.3         
-[67] mvtnorm_1.2-5        grid_4.3.3           datawizard_0.10.0   
-[70] colorspace_2.1-0     nlme_3.1-164         Formula_1.2-5       
-[73] cli_3.6.3            fansi_1.0.6          viridisLite_0.4.2   
-[76] broom.helpers_1.15.0 gt_0.10.1            gtable_0.3.5        
-[79] broom.mixed_0.2.9.5  sass_0.4.9           digest_0.6.36       
-[82] TH.data_1.1-2        farver_2.1.2         htmlwidgets_1.6.4   
-[85] htmltools_0.5.8.1    lifecycle_1.0.4      mime_0.12           
-[88] blme_1.0-5          </code></pre>
+ [1] rlang_1.1.4          magrittr_2.0.3       furrr_0.3.1         
+ [4] compiler_4.4.0       vctrs_0.6.5          pkgconfig_2.0.3     
+ [7] crayon_1.5.3         fastmap_1.2.0        backports_1.5.0     
+[10] labeling_0.4.3       pander_0.6.5         utf8_1.2.4          
+[13] promises_1.3.0       rmarkdown_2.27       markdown_1.13       
+[16] tzdb_0.4.0           nloptr_2.1.0         xfun_0.46           
+[19] jsonlite_1.8.8       later_1.3.2          broom_1.0.6         
+[22] parallel_4.4.0       R6_2.5.1             stringi_1.8.4       
+[25] parallelly_1.37.1    boot_1.3-30          estimability_1.5.1  
+[28] assertthat_0.2.1     Rcpp_1.0.13          iterators_1.0.14    
+[31] knitr_1.48           httpuv_1.6.15        splines_4.4.0       
+[34] timechange_0.3.0     tidyselect_1.2.1     rstudioapi_0.16.0   
+[37] abind_1.4-5          yaml_2.3.9           codetools_0.2-20    
+[40] listenv_0.9.1        lattice_0.22-6       shiny_1.8.1.1       
+[43] withr_3.0.0          bayestestR_0.13.2    coda_0.19-4.1       
+[46] evaluate_0.24.0      future_1.33.2        huxtable_5.5.6      
+[49] xml2_1.3.6           pillar_1.9.0         foreach_1.5.2       
+[52] insight_0.20.1       generics_0.1.3       hms_1.1.3           
+[55] munsell_0.5.1        commonmark_1.9.1     scales_1.3.0        
+[58] minqa_1.2.7          globals_0.16.3       xtable_1.8-4        
+[61] glue_1.7.0           emmeans_1.10.2       tools_4.4.0         
+[64] mvtnorm_1.2-5        grid_4.4.0           datawizard_0.11.0   
+[67] colorspace_2.1-0     nlme_3.1-164         Formula_1.2-5       
+[70] cli_3.6.3            fansi_1.0.6          broom.helpers_1.15.0
+[73] viridisLite_0.4.2    gt_0.10.1            gtable_0.3.5        
+[76] broom.mixed_0.2.9.5  sass_0.4.9           digest_0.6.36       
+[79] pbkrtest_0.5.3       htmlwidgets_1.6.4    farver_2.1.2        
+[82] htmltools_0.5.8.1    lifecycle_1.0.4      mime_0.12           
+[85] blme_1.0-5          </code></pre>
 </div>
 </div>
 
@@ -10098,7 +10112,7 @@ loaded via a namespace (and not attached):
   <category>Missing Data</category>
   <category>Mixed Models</category>
   <category>R</category>
-  <guid>https://www.the-kids-biostats.github.io/posts/lmer-missing/missing_lmer.html</guid>
+  <guid>https://www.the-kids-biostats.github.io/posts/001_lmer-missing/missing_lmer.html</guid>
   <pubDate>Thu, 06 Jun 2024 16:00:00 GMT</pubDate>
 </item>
 </channel>
