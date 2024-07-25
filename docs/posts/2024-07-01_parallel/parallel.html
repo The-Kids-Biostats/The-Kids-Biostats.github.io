@@ -430,7 +430,7 @@ Let’s use 6 cores for our examples.</p>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  3.939   0.007   3.953 </code></pre>
+  4.201   0.014   4.309 </code></pre>
 </div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -513,7 +513,7 @@ result.6    34.42623 -0.03900395 -2.865725 1.167583</code></pre>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  3.360   0.010   3.376 </code></pre>
+  3.624   0.009   3.672 </code></pre>
 </div>
 </div>
 <p>
@@ -551,13 +551,13 @@ result.6    34.42623 -0.03900395 -2.865725 1.167583</code></pre>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(bootstrap_coefs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code>         (Intercept)          hp        wt        am
-result.1    33.51224 -0.04472950 -2.468053 3.0139212
-result.2    34.53204 -0.03596011 -3.053106 1.0860128
-result.3    36.04249 -0.02218326 -4.034634 0.0786925
-result.4    32.67421 -0.02486648 -3.109107 1.0199057
-result.5    35.12784 -0.04211192 -3.056229 3.3785526
-result.6    35.36255 -0.03055802 -3.687348 1.7844073</code></pre>
+<pre><code>         (Intercept)          hp        wt         am
+result.1    40.28800 -0.02495526 -5.378558  1.0705520
+result.2    35.76160 -0.03754365 -3.259903  2.3125147
+result.3    34.22544 -0.04007194 -2.705909  2.4514809
+result.4    33.92515 -0.03215035 -3.096706  1.1716197
+result.5    35.84923 -0.01510045 -4.301475 -0.4492253
+result.6    30.77413 -0.04316729 -1.616423  2.6139924</code></pre>
 </div>
 </div>
 <p>as are the associated 95% confidence intervals.</p>
@@ -568,8 +568,8 @@ result.6    35.36255 -0.03055802 -3.687348 1.7844073</code></pre>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>      (Intercept)          hp        wt         am
-2.5%     29.13136 -0.05541914 -5.230298 -0.7836806
-97.5%    40.90237 -0.02163623 -1.129041  4.8753067</code></pre>
+2.5%     29.09744 -0.05537917 -5.151840 -0.8456313
+97.5%    40.98867 -0.02161646 -1.085433  4.8985324</code></pre>
 </div>
 </div>
 <p>Lastly, this had the following run-time (seconds)</p>
@@ -580,7 +580,7 @@ result.6    35.36255 -0.03055802 -3.687348 1.7844073</code></pre>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  4.319   0.278   1.173 </code></pre>
+  4.555   0.273   1.318 </code></pre>
 </div>
 </div>
 <p>
@@ -588,7 +588,7 @@ result.6    35.36255 -0.03055802 -3.687348 1.7844073</code></pre>
 <section id="discussion" class="level2">
 <h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
 <p>Immediately, the syntax of the alternative for-loop structures are <strong>more readable</strong> and <strong>easier to construct</strong> than the traditional for-loop. Because the <code>foreach::foreach</code> function easily combines output in a list, we need not define an empty matrix to append output to.</p>
-<p>Computation time in the parallel environment is significantly faster — approximately 70% faster than the traditional for-loop! Across multiple analyses and data sets, these time savings certainly add up!</p>
+<p>Computation time in the parallel environment is significantly faster — approximately 69% faster than the traditional for-loop! Across multiple analyses and data sets, these time savings certainly add up!</p>
 <p><br></p>
 </section>
 </section>
@@ -690,7 +690,7 @@ predictions absent present
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  5.658   0.123   5.826 </code></pre>
+  5.929   0.159   6.203 </code></pre>
 </div>
 </div>
 <p>
@@ -736,7 +736,7 @@ predictions absent present
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  5.580   0.186   5.801 </code></pre>
+  5.768   0.219   6.057 </code></pre>
 </div>
 </div>
 <p>
@@ -774,8 +774,8 @@ predictions absent present
 <div class="cell-output cell-output-stdout">
 <pre><code>           
 predictions absent present
-    absent     708     759
-    present    778     755</code></pre>
+    absent     705     775
+    present    781     739</code></pre>
 </div>
 </div>
 <p>This now has the following run-time (seconds):</p>
@@ -786,14 +786,14 @@ predictions absent present
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  5.927   0.605   2.744 </code></pre>
+  6.237   0.796   3.253 </code></pre>
 </div>
 </div>
 <p>
 </p></section>
 <section id="discussion-1" class="level2">
 <h2 class="anchored" data-anchor-id="discussion-1">Discussion</h2>
-<p>Again, using <u>easily adaptable and readable syntax</u>, we leverage a parallel environment to significantly lessen the computation time of our large model. Relative to a standard for-loop, the parallelised computation is approximately 53% faster.</p>
+<p>Again, using <u>easily adaptable and readable syntax</u>, we leverage a parallel environment to significantly lessen the computation time of our large model. Relative to a standard for-loop, the parallelised computation is approximately 48% faster.</p>
 <p><br></p>
 </section>
 </section>
@@ -896,7 +896,7 @@ There are other packages which may be useful in these circumstances, such as the
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  0.440   0.053   0.496 </code></pre>
+  0.495   0.071   0.657 </code></pre>
 </div>
 </div>
 <p>
@@ -939,7 +939,7 @@ There are other packages which may be useful in these circumstances, such as the
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  0.436   0.046   0.482 </code></pre>
+  0.476   0.055   0.544 </code></pre>
 </div>
 </div>
 <p>
@@ -986,7 +986,7 @@ There are other packages which may be useful in these circumstances, such as the
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  0.079   0.012   0.826 </code></pre>
+  0.087   0.012   0.888 </code></pre>
 </div>
 </div>
 <p>
@@ -1030,14 +1030,14 @@ There are other packages which may be useful in these circumstances, such as the
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  0.137   0.126   0.716 </code></pre>
+  0.124   0.136   0.701 </code></pre>
 </div>
 </div>
 <p>
 </p></section>
 <section id="discussion-2" class="level2">
 <h2 class="anchored" data-anchor-id="discussion-2">Discussion</h2>
-<p>We now see that the parallel processing of these tasks takes far <em>longer</em> – about 31% so! The underlying set of operations — running a series of linear models — are already small and relatively fast, so the overhead of managing the task (splitting, computing and combining results) in a parallel environment far exceeds what what can easily be spun up using a for-loop (or <code>purrr::map</code>).</p>
+<p>We now see that the parallel processing of these tasks takes far <em>longer</em> – about 6% so! The underlying set of operations — running a series of linear models — are already small and relatively fast, so the overhead of managing the task (splitting, computing and combining results) in a parallel environment far exceeds what what can easily be spun up using a for-loop (or <code>purrr::map</code>).</p>
 <p><br></p>
 </section>
 </section>

@@ -10,6 +10,9 @@ date: "2024-07-01"
 categories:
   - R
   - Parallel
+aliases: 
+  - /posts/parallel/parallel.html
+  - /posts/parallel/
 draft: false
 ---
 

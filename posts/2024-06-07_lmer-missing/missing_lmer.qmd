@@ -11,6 +11,9 @@ categories:
   - Missing Data
   - Mixed Models
   - R
+aliases: 
+  - /posts/missing_lmer/missing_lmer.html
+draft: false
 ---
 
 ```{r setup, include=FALSE}

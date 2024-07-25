@@ -11,6 +11,8 @@ categories:
   - Pre-post
   - Mixed Models
   - R
+aliases: 
+  - /posts/pre_post/pre-post.html
 draft: false
 ---
 
@@ -301,12 +303,11 @@ dat %>%
   coord_cartesian(xlim = c(1.25, 2.35)) 
 ```
 
-::: {.column-margin}
+::: column-margin
 **ggbrace()**
 
 It was a bit of a battle with stat_brace() to get the annotation in there, but it was worth it, Shirley!
 :::
-
 
 We know the post-value means are \~40 units apart, yet the model has returned the value of \~30 for the 'treatment effect', which (implicitly) has adjusted for the baseline difference between groups of \~10 units.
 

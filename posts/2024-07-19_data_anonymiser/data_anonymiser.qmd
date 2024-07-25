@@ -11,7 +11,7 @@ categories:
   - Shiny
   - R
 aliases: 
-  - /posts/pre_post/pre-post.html
+  - /posts/data_anonymiser/data_anonymiser.html
 draft: false
 ---
 
