@@ -4,8 +4,8 @@
     "items": [
       "/posts/pre_post/pre-post.html",
       "/posts/data_anonymiser/data_anonymiser.html",
+      "/posts/parallel/parallel.html",
       "/posts/002_parallel/parallel.html",
       "/posts/001_lmer-missing/missing_lmer.html"
     ]
   }
-]
