@@ -29,17 +29,33 @@ library(summarytools)
 
 # Overview
 
-Analysing data will normally always involve generating tables, whether they are the final goal of the analysis or used as an intermediary step to guide further analysis. Here, we're going to focus on the former while keeping the latter in the back of our minds. A common use case here might be a "Table 1" from a randomised control trial where we are examining (not testing and generating p-values) a range of summary statistics for each arm of the trial, or perhaps data are collected on a group over three time points and we want to examine a range of summary statistics for each time point.
+Analysing data will normally always involve generating tables– whether they are the final goal of the analysis or used as an intermediary step to guide further analysis. This blog post will focus on the former, while keeping the latter in the back of our minds. A common use case here might be a "Table 1" from a randomised control trial where we are examining (not testing and generating p-values) a range of summary statistics for each arm of the trial, or perhaps data are collected on a group over three time points and we want to examine a range of summary statistics for each time point.
 
-There are many R packages and functions dedicated to this task. In the post below, we specify a range of criteria that we deem important for our most common use cases (which include continuous data, dichotomous variables, and both ordered and unordered categorical data). We then use these criteria to evaluate a number of the more commonly used functions, showing examples of the code and output along the way.
+There are *many* R packages and functions dedicated to this very task. We will specify a range of criteria we often deem important in our work (which include continuous data, dichotomous variables, and both ordered and unordered categorical data). We then use these criteria to evaluate a number of the more commonly used functions, showing examples of the code and output along the way.
 
 # Assessment criteria
 
--   Ease of changing presented statistics -- Formatting, order, number of decimal places
+1.  Range of summary functions available
 
--   Ability to make inline adjustments (manual edits)
+    -   How flexible are the summary functions to different metrics (mean, median, SD, IQR)?
 
--   Rendering across different outputs (html, pdf, word) -- Specifically, output format and presentation
+    -   Ease in applying to different variable types (continuous, dichotomous, ordinal, nominal)
+
+2.  Flexibliliy of formatting table output
+
+    -   Formatting
+
+    -   Ordering
+
+    -   Rounding
+
+3.  Ability to make inline adjustments (manual edits)
+
+4.  Rendering across different output
+
+    -   Can output be formatted across different platforms (html, pdf, word)?
+
+    -   
 
 Considerations
 
@@ -47,17 +63,17 @@ Error Handling and Robustness
 
 # Contenders
 
--   gtsummary (<https://www.danieldsjoberg.com/gtsummary/>)
--   flextable (<https://ardata-fr.github.io/flextable-book/>)
--   huxtable (<https://hughjonesd.github.io/huxtable/>)
--   tableone (<https://cran.r-project.org/web/packages/tableone/vignettes/introduction.html>)
--   janitor tabyl (<https://cran.r-project.org/web/packages/janitor/vignettes/tabyls.html>)
--   stargazer (<https://cran.r-project.org/web/packages/stargazer/vignettes/stargazer.pdf>)
--   custom (<https://mcfromnz.wordpress.com/2010/09/21/automatic-descriptive-statistic-tables/>)
--   summarytools (<https://rdrr.io/cran/summarytools/man/dfSummary.html>)
--   pastecs
--   psych
--   Hmisc (<https://rdrr.io/cran/Hmisc/man/describe.html>)
+-   \[`gtsummary::tbl_summary`\](<https://www.danieldsjoberg.com/gtsummary/>)
+-   \[`flextable`\](<https://ardata-fr.github.io/flextable-book/>)
+-   \[`huxtable`\](<https://hughjonesd.github.io/huxtable/>)
+-   \[`tableone`\](<https://cran.r-project.org/web/packages/tableone/vignettes/introduction.html>)
+-   \[`janitor::tabyl`\](<https://cran.r-project.org/web/packages/janitor/vignettes/tabyls.html>)
+-   \[\`stargazer\](<https://cran.r-project.org/web/packages/stargazer/vignettes/stargazer.pdf>)
+-   \[custom\](<https://mcfromnz.wordpress.com/2010/09/21/automatic-descriptive-statistic-tables/>)
+-   \[summarytools\](<https://rdrr.io/cran/summarytools/man/dfSummary.html>)
+-   \[pastecs\]
+-   \[`psych::describe`\]
+-   \[`Hmisc::describe`\](<https://rdrr.io/cran/Hmisc/man/describe.html>)
 
 # Worked examples
 
