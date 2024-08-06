@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="Dr Matthew Cooper, Wesley Billingham">
+<meta name="dcterms.date" content="2024-05-06">
 
-<title>The Kids Biostats</title>
+<title>The Kids Biostats - AI in Biostatistics - Part 2</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,24 +25,22 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -68,77 +68,23 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
+<script src="../../site_libs/kePrint-0.0.1/kePrint.js"></script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
+<link href="../../site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
 
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
-    };
 
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
 
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
+<link rel="stylesheet" href="../../styles.css">
+</head>
 
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-const typesetMath = (el) => {
-  if (window.MathJax) {
-    // MathJax Typeset
-    window.MathJax.typeset([el]);
-  } else if (window.katex) {
-    // KaTeX Render
-    var mathElements = el.getElementsByClassName("math");
-    var macros = [];
-    for (var i = 0; i < mathElements.length; i++) {
-      var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
-        window.katex.render(texText.data, mathElements[i], {
-          displayMode: mathElements[i].classList.contains('display'),
-          throwOnError: false,
-          macros: macros,
-          fleqn: false
-        });
-      }
-    }
-  }
-}
-window.Quarto = {
-  typesetMath
-};
-</script>
-
-<link rel="stylesheet" href="styles.css">
-<link rel="alternate" type="application/rss+xml" title="The Kids Biostats" href="index.xml" data-external="1"></head>
-
-<body class="nav-fixed">
+<body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">The Kids Biostats</span>
     </a>
   </div>
@@ -149,7 +95,7 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../../about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item compact">
@@ -158,7 +104,7 @@ window.Quarto = {
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="./index.xml"> <i class="bi bi-rss" role="img">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -181,194 +127,219 @@ window.Quarto = {
 <!-- content -->
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-page-left">
-      <h1 class="title">The Kids Biostats</h1>
-                      </div>
+    <div class="quarto-title column-body">
+      <h1 class="title">AI in Biostatistics - Part 2</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">AI</div>
+                <div class="quarto-category">R</div>
+              </div>
+                  </div>
   </div>
     
   
-  <div class="quarto-title-meta column-page-left">
+  <div class="quarto-title-meta">
 
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Dr Matthew Cooper, Wesley Billingham </p>
+            </div>
+    </div>
       
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">May 6, 2024</p>
+      </div>
+    </div>
     
       
     </div>
     
   
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(4)</span></div><div class="category" data-category="Missing Data">Missing Data <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Mixed Models">Mixed Models <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Parallel">Parallel <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Pre-post">Pre-post <span class="quarto-category-count">(1)</span></div><div class="category" data-category="R">R <span class="quarto-category-count">(4)</span></div><div class="category" data-category="Shiny">Shiny <span class="quarto-category-count">(1)</span></div></div></div>
+    
 <!-- main -->
-<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
 
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<p>If you haven’t read part one of this two-part series on AI, do that first here:</p>
+<p>Last time we looked at three cases where our use of AI aided our productivity and gave us the desired result. In this post, we’ll be looking at the other side of the coin to situations where AI has struggled and attempts to use it in these situations would hinder our productivity and potentially give us incorrect output.</p>
+<p>To demonstrate this point, we’ll look through the results of a few published papers and some concepts they introduce. Then we will examine some guidelines we can use to maximise our efficiency by using AI appropriately.</p>
+</section>
+<section id="examples" class="level1">
+<h1>Examples</h1>
+<section id="example-1---jagged-frontier" class="level2">
+<h2 class="anchored" data-anchor-id="example-1---jagged-frontier">Example 1 - Jagged Frontier</h2>
+<p>Our first example is drawn from a 2023 paper which looked at the effect of AI use on productivity and quality of work. You can read the paper here:</p>
+<p><a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4573321" class="uri">https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4573321</a></p>
+<p>It introduces a very helpful concept - the ‘Jagged Frontier’. Below we use ggplot2 to demonstrate this idea.</p>
+<section id="what-is-the-jagged-frontier" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-the-jagged-frontier">What is the Jagged Frontier?</h3>
+<p>Imagine you have 5 tasks to complete today, and you are trying to decide which of these you can delegate to AI (in this case, ChatGPT). You might have in mind that each task has some implicit difficulty associated with it, and your perception of current AI technology is that in is capable of tackling tasks with a difficulty of up to 5. This is represented by the blue dashed line.</p>
+<p>Your 5 tasks have various difficulties, represented by the black points. At this point, based on your perception of the difficulty of your tasks and the capability of AI, you would assign tasks 2, 3 and 5 to ChatGPT, since these have a difficulty of &lt;=5.</p>
+<p>Unfortunately, the reality is that our perception of difficulty does not line up well with AI’s capabilities. As we have seen in the last post, it can complete some pretty incredible tasks, such as coding Shiny apps and performing advanced statistical analyses. But as we will also see later, it can struggle with some pretty mundane tasks.</p>
+<p>And so the capability of AI cannot be measured by the blue dashed line, but rather the red, <em>jagged</em> line, a seemingly random level of capability which is unrelated to our ideas of difficulty. This is what is referred to as the “Jagged Frontier”.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ai_part_two_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="1152"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="why-should-we-care" class="level3">
+<h3 class="anchored" data-anchor-id="why-should-we-care">Why should we care?</h3>
+<p>When a task is achievable using AI, we refer to that task as being ‘Inside the Frontier’; that is, below the red jagged line above. If AI would struggle or be unable to do a task, that would then be ‘Outside the Frontier’.</p>
+<p>The study above set out to investigate the difference in worker productivity when AI is used for tasks within its capability as opposed to not. A large study was set up, with the following methodology:</p>
+<ol type="1">
+<li>All 758 participants (experts in the relevant field) complete a baseline project without any AI use. Speed and quality are measured.</li>
+<li>Participants are randomised into one of four groups (see table below).</li>
+</ol>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Metric</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Inside.Frontier</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Outside.Frontier</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">ChatGPT</td>
+<td style="text-align: right;">189</td>
+<td style="text-align: right;">190</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ChatGPT + Overview</td>
+<td style="text-align: right;">190</td>
+<td style="text-align: right;">189</td>
+</tr>
+</tbody>
+</table>
 
 
+</div>
+</div>
+<ol start="3" type="1">
+<li>Those in the “Inside Frontier” group were assigned a project that had been determined beforehand to be within the capabilities of ChatGPT 3.5. In contrast, the “Outside Frontier” group were assigned a project beyond the capabilities of ChatGPT 3.5.<br>
+</li>
+<li>The participants were further divided into “ChatGPT” and “ChatGPT + Overview” groups. The latter received some training on prompt engineering before undertaking the project.</li>
+<li>All participants completed their project, and their speed and quality was compared to their own individual baseline score.</li>
+</ol>
+<p>The results are quite striking:</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Metric</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">Inside.Frontier</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd" data-grouplength="2">
+<td colspan="2" style="border-bottom: 1px solid"><strong>ChatGPT</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Speed</td>
+<td style="text-align: left;">28%</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Quality</td>
+<td style="text-align: left;">38%</td>
+</tr>
+<tr class="even" data-grouplength="2">
+<td colspan="2" style="border-bottom: 1px solid"><strong>ChatGPT + Overview</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Speed</td>
+<td style="text-align: left;">23%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Quality</td>
+<td style="text-align: left;">43%</td>
+</tr>
+</tbody>
+</table>
 
 
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="Pre-post,Mixed Models,R" data-listing-date-sort="1721577600000" data-listing-file-modified-sort="1721885695504" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="17" data-listing-word-count-sort="3375">
-<div class="thumbnail">
-<p><a href="./posts/2024-07-22_pre_post/pre-post.html" class="no-external"></a></p><a href="./posts/2024-07-22_pre_post/pre-post.html" class="no-external">
-<p class="card-img-top"><img src="posts\2024-07-22_pre_post\pre-post_files\figure-html\unnamed-chunk-4-1.png"  class="thumbnail-image card-img"/></p>
-</a><p><a href="./posts/2024-07-22_pre_post/pre-post.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/2024-07-22_pre_post/pre-post.html" class="no-external">Analysing pre-post data</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/2024-07-22_pre_post/pre-post.html" class="no-external"></a>
-</div>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('Pre-post'); return false;">
-Pre-post
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Mixed Models'); return false;">
-Mixed Models
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('R'); return false;">
-R
 </div>
 </div>
-<div class="listing-description">
-<a href="./posts/2024-07-22_pre_post/pre-post.html" class="no-external">Pre-post designs are in use everywhere we look. Before and after treatment, e.g.&nbsp;in a randomised clinical trial, might be the example that most readily comes to mind for…</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/2024-07-22_pre_post/pre-post.html" class="no-external">
-<div class="listing-date">
-Jul 22, 2024
-</div>
-<div class="listing-author">
-Dr Matthew Cooper
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-categories="Shiny,R" data-listing-date-sort="1721318400000" data-listing-file-modified-sort="1721885694141" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="684">
-<div class="thumbnail">
-<p><a href="./posts/2024-07-19_data_anonymiser/data_anonymiser.html" class="no-external"></a></p><a href="./posts/2024-07-19_data_anonymiser/data_anonymiser.html" class="no-external">
-<p class="card-img-top"><img src="posts\2024-07-19_data_anonymiser\app_preview.png"  class="thumbnail-image card-img"/></p>
-</a><p><a href="./posts/2024-07-19_data_anonymiser/data_anonymiser.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/2024-07-19_data_anonymiser/data_anonymiser.html" class="no-external">Data Anonymiser</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/2024-07-19_data_anonymiser/data_anonymiser.html" class="no-external"></a>
-</div>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('Shiny'); return false;">
-Shiny
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('R'); return false;">
-R
-</div>
-</div>
-<div class="listing-description">
-<a href="./posts/2024-07-19_data_anonymiser/data_anonymiser.html" class="no-external">Data access and security is a really important topic and one that can be challenging to navigate. Research ethics and governance approvals typically require detail about…</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/2024-07-19_data_anonymiser/data_anonymiser.html" class="no-external">
-<div class="listing-date">
-Jul 19, 2024
-</div>
-<div class="listing-author">
-Dr Matthew Cooper, Wesley Billingham
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="2" data-categories="R,Parallel" data-listing-date-sort="1719763200000" data-listing-file-modified-sort="1721885692558" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="25" data-listing-word-count-sort="4992">
-<div class="thumbnail">
-<p><a href="./posts/2024-07-01_parallel/parallel.html" class="no-external"></a></p><a href="./posts/2024-07-01_parallel/parallel.html" class="no-external">
-<p class="card-img-top"><img src="posts\2024-07-01_parallel\parallel_comps.png"  class="thumbnail-image card-img"/></p>
-</a><p><a href="./posts/2024-07-01_parallel/parallel.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/2024-07-01_parallel/parallel.html" class="no-external">Parallel Computing in R</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/2024-07-01_parallel/parallel.html" class="no-external"></a>
-</div>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('R'); return false;">
-R
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Parallel'); return false;">
-Parallel
-</div>
-</div>
-<div class="listing-description">
-<a href="./posts/2024-07-01_parallel/parallel.html" class="no-external">While most of the datasets we work with are of a manageable size here at the Telethon Kids Institute, occasionally we are presented with data containing <em>millions</em> of rows…<em></em></a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/2024-07-01_parallel/parallel.html" class="no-external">
-<div class="listing-date">
-Jul 1, 2024
-</div>
-<div class="listing-author">
-Zac Dempsey
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="3" data-categories="Missing Data,Mixed Models,R" data-listing-date-sort="1717689600000" data-listing-file-modified-sort="1721885692342" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="27" data-listing-word-count-sort="5210">
-<div class="thumbnail">
-<p><a href="./posts/2024-06-07_lmer-missing/missing_lmer.html" class="no-external"></a></p><a href="./posts/2024-06-07_lmer-missing/missing_lmer.html" class="no-external">
-<p class="card-img-top"><img src="posts\2024-06-07_lmer-missing\missing_lmer_files\figure-html\unnamed-chunk-3-1.png"  class="thumbnail-image card-img"/></p>
-</a><p><a href="./posts/2024-06-07_lmer-missing/missing_lmer.html" class="no-external"></a></p>
-</div>
-<div class="body">
-<h3 class="no-anchor listing-title">
-<a href="./posts/2024-06-07_lmer-missing/missing_lmer.html" class="no-external">Handling Missing Data with LMER</a>
-</h3>
-<div class="listing-subtitle">
-<a href="./posts/2024-06-07_lmer-missing/missing_lmer.html" class="no-external"></a>
-</div>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('Missing Data'); return false;">
-Missing Data
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('Mixed Models'); return false;">
-Mixed Models
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('R'); return false;">
-R
-</div>
-</div>
-<div class="listing-description">
-<a href="./posts/2024-06-07_lmer-missing/missing_lmer.html" class="no-external">As consultant statisticians, we are often approached by people who have already carried out some preliminary data analysis and who are now looking to move onto something…</a>
-</div>
-</div>
-<div class="metadata">
-<a href="./posts/2024-06-07_lmer-missing/missing_lmer.html" class="no-external">
-<div class="listing-date">
-Jun 7, 2024
-</div>
-<div class="listing-author">
-Dr Matthew Cooper
-</div>
-</a>
+<p>Using ChatGPT for the project within the frontier resulted in considerable improvements in both speed and quality of work, regardless of whether participants received training.</p>
+<p>But perhaps more interestingly, the groups with projects outside the frontier saw a decrease in quality of work, even though the work was faster.</p>
+<p>We will return to these results in the discussion below.</p>
+</section>
+</section>
+<section id="example-2---biostatistical-questions" class="level2">
+<h2 class="anchored" data-anchor-id="example-2---biostatistical-questions">Example 2 - Biostatistical Questions</h2>
+<p>As promised, we are going to investigate some examples of tasks that lie ‘Outside the Frontier’. These examples are drawn from this paper:</p>
+<p>https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10646144/</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ai_part_two_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="1152"></p>
+</figure>
 </div>
 </div>
 </div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+</section>
+</section>
+<section id="discussion" class="level1">
+<h1>Discussion</h1>
+<p>When we presented this material to researchers at the Institute, our objective was to steer listeners away from the two extreme attitudes they might take towards AI use in their work.</p>
+<p>The first extreme is to not use AI whatsoever. As we have clearly seen from part one of this blog series, and the results of the ‘jagged frontier’ study, the increases in productivity can be astonishing. If any tool increases our work speed by 30-40% while maintaining or even improving quality, it ought to be used.</p>
+<p>The second extreme is the overuse and/or over-reliance on AI. Some tasks are simply outside the current capabilities of AI (not to say they will remain so in the future). To use AI in such circumstances wastes time at best, and at worst produces inaccuracies that remain unnoticed by us even up to publication of our work. The worked biostatistics example above shows how easy it is to be convinced by the confident language of AI as it repeats an answer that is patently incorrect.</p>
+<section id="where-to-from-hereour-recommendations" class="level2">
+<h2 class="anchored" data-anchor-id="where-to-from-hereour-recommendations">Where to from here?/Our Recommendations</h2>
+<p>The ‘jagged frontier’ of AI is invisible to us, and hence we often cannot know whether the task we are about to delegate is within its capability. For this reason, we propose the following guidelines to ensure you are using AI effectively and responsibly:</p>
+<ol type="1">
+<li>You should be able to verify the output is true/accurate.</li>
+<li>The time it would take to verify the AI output should be less than the time it would take to achieve the same output yourself.</li>
+</ol>
+<p>Looking back at our examples throughout the two posts:</p>
+<section id="weather-plot" class="level3">
+<h3 class="anchored" data-anchor-id="weather-plot">Weather plot</h3>
+<p>In this example, we could verify the more complex plot by visually comparing it to simple plots we coded ourselves. Additionally, we could understand the R code that AI produced. Whether the use of AI in this case was justified or not depends on how quickly we could have remembered all the ggplot2 commands and done it ourselves.</p>
+</section>
+<section id="statistical-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="statistical-analysis">Statistical Analysis</h3>
+<p>For the statistical analysis, we were well placed to verify the suggestions of ChatGPT. However, this would be a dangerous use-case for someone who is unfamiliar with statistical methods. We know that the suggested hierarchical mixed models is a good suggestion, but this would not be immediately verifiable to everyone. Therefore we would recommend against this use-case for non-statisticians.</p>
+</section>
+<section id="shiny-app" class="level3">
+<h3 class="anchored" data-anchor-id="shiny-app">Shiny App</h3>
+<p>This is probably the best example of AI saving time and increasing quality. The objective is simple - a Shiny App which takes and randomises data. Even as someone who has never coded a Shiny App before, it is easy to verify whether it works by simply using the app.</p>
+</section>
+<section id="mathematical-questions" class="level3">
+<h3 class="anchored" data-anchor-id="mathematical-questions">Mathematical Questions</h3>
+<p>Finally, we have seen that AI can make mistakes when calculating numerical results, and remain confidently incorrect in the face of correction. To verify the answer requires working line by line through each piece of code to ensure it is doing what we asked. Hence it is unlikely to save us time and seemingly likely to be incorrect.</p>
+</section>
+</section>
+</section>
+<section id="conclusion" class="level1">
+<h1>Conclusion</h1>
+<p>These two posts have been a summation of our thoughts as they have developed through the first year of incorporating AI into our workflows. We have sought to experiment with different prompts to see where we can use AI to improve our productivity and where it hampers it. The two guidelines above have been helpful to avoid over-reliance, and our experiences with effective AI have helped to avoid under-utilisation.</p>
+<p>We’d love to hear your thoughts and ideas on these two posts. Do you disagree with our recommendations and/or conclusions? Or perhaps you have some additional ones you would like to suggest.</p>
+<section id="further-reading" class="level2">
+<h2 class="anchored" data-anchor-id="further-reading">Further reading</h2>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

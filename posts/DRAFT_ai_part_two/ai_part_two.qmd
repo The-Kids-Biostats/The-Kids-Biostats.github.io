@@ -9,34 +9,200 @@ categories:
 draft: true
 ---
 
+```{r echo = F, warning = F, message = F}
+library(tidyverse)
+library(kableExtra)
+```
+
+
 # Overview
 
 If you haven't read part one of this two-part series on AI, do that first here:
 
-Last time we looked at three cases where our use of AI aided our productivity and gave us the desired result. In this post, we'll be looking at the other side of the coin to situations where AI has struggled and attempts to use it in these situations would hinder our productivity and potentially give us incorrect output. 
+Last time we looked at three cases where our use of AI aided our productivity and gave us the desired result. In this post, we'll be looking at the other side of the coin to situations where AI has struggled and attempts to use it in these situations would hinder our productivity and potentially give us incorrect output.
 
-To demonstrate this point, we'll look through the results of a few published papers and some concepts they introduce. Then we will examine some guidelines we can use to maximise our efficiency by using AI appropriately. 
-
-## Format of this post
+To demonstrate this point, we'll look through the results of a few published papers and some concepts they introduce. Then we will examine some guidelines we can use to maximise our efficiency by using AI appropriately.
 
 # Examples
 
 ## Example 1 - Jagged Frontier
 
+Our first example is drawn from a 2023 paper which looked at the effect of AI use on productivity and quality of work. You can read the paper here:
+
+<https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4573321>
+
+It introduces a very helpful concept - the 'Jagged Frontier'. Below we use ggplot2 to demonstrate this idea.
+
+### What is the Jagged Frontier?
+
+Imagine you have 5 tasks to complete today, and you are trying to decide which of these you can delegate to AI (in this case, ChatGPT). You might have in mind that each task has some implicit difficulty associated with it, and your perception of current AI technology is that in is capable of tackling tasks with a difficulty of up to 5. This is represented by the blue dashed line. 
+
+Your 5 tasks have various difficulties, represented by the black points. At this point, based on your perception of the difficulty of your tasks and the capability of AI, you would assign tasks 2, 3 and 5 to ChatGPT, since these have a difficulty of <=5. 
+
+Unfortunately, the reality is that our perception of difficulty does not line up well with AI's capabilities. As we have seen in the last post, it can complete some pretty incredible tasks, such as coding Shiny apps and performing advanced statistical analyses. But as we will also see later, it can struggle with some pretty mundane tasks. 
+
+And so the capability of AI cannot be measured by the blue dashed line, but rather the red, *jagged* line, a seemingly random level of capability which is unrelated to our ideas of difficulty. This is what is referred to as the "Jagged Frontier". 
+
+
+```{r echo = F, warning = F, fig.width = 12, fig.height = 8}
+expected_capability <- data.frame(y = 5, label = "Expected AI capability")
+
+# Create data for the points
+points_data <- data.frame(
+  Tasks = c(1, 2, 3, 4, 5),  # Equally dispersed points on x-axis
+  y = c(7, 3, 5, 8, 4)   # Difficulty levels
+)
+
+# Define turning points for zigzag
+zigzag_points <- data.frame(
+  Tasks = c(1, 2, 3, 4, 5),
+  y = c(6, 1, 7, 9, 4),
+  label = rep("Actual AI capability", 5)
+)
+
+# Create the plot
+p <- ggplot() +
+  # Add horizontal line
+  geom_hline(data = expected_capability, aes(yintercept = y, color = label), linetype = "dashed", size = 2) +
+  # Add zigzag lines
+  geom_path(data = zigzag_points, aes(x = Tasks, y = y, color = "Actual AI Capability"), size = 2) +
+  # Add points
+  geom_point(data = points_data, aes(x = Tasks, y = y), size = 7) +
+  # Add labels and customize axes
+  labs(y = "Perceived Task Difficulty",
+       x = "Arbitrary Question Number",
+       color = "Legend",
+       fill = "") +
+  scale_y_continuous(limits = c(0, 10)) +
+  theme_classic() +
+  theme(text = element_text(size = 21))
+
+p
+```
+
+### Why should we care?
+
+When a task is achievable using AI, we refer to that task as being 'Inside the Frontier'; that is, below the red jagged line above. If AI would struggle or be unable to do a task, that would then be 'Outside the Frontier'.
+
+The study above set out to investigate the difference in worker productivity when AI is used for tasks within its capability as opposed to not. A large study was set up, with the following methodology:
+
+1. All 758 participants (experts in the relevant field) complete a baseline project without any AI use. Speed and quality are measured. 
+2. Participants are randomised into one of four groups (see table below). 
+
+```{r echo = F}
+data.frame(
+  Metric = c("ChatGPT", "ChatGPT + Overview"),
+  "Inside Frontier" = c(189, 190),
+  "Outside Frontier" = c(190, 189)
+) %>%
+  kable() %>% kable_styling(full_width = T)
+```
+
+
+3. Those in the "Inside Frontier" group were assigned a project that had been determined beforehand to be within the capabilities of ChatGPT 3.5. In contrast, the "Outside Frontier" group were assigned a project beyond the capabilities of ChatGPT 3.5.  
+4. The participants were further divided into "ChatGPT" and "ChatGPT + Overview" groups. The latter received some training on prompt engineering before undertaking the project.
+5. All participants completed their project, and their speed and quality was compared to their own individual baseline score.
+
+The results are quite striking:
+
+```{r echo = F}
+data.frame(
+  Metric = c("Speed", "Quality", "Speed", "Quality"),
+  "Inside Frontier" = c("28%", "38%", "23%", "43%"),
+  "Outside Frontier" = c("18%", "-13%", "30%", "-24%")
+) %>%
+  select(-Outside.Frontier) %>%
+  kable() %>% kable_styling(full_width = T) %>%
+  kableExtra::pack_rows("ChatGPT", 1, 2) %>%
+  kableExtra::pack_rows("ChatGPT + Overview", 3, 4)
+```
+
+Using ChatGPT for the project within the frontier resulted in considerable improvements in both speed and quality of work, regardless of whether participants received training. 
+
+But perhaps more interestingly, the groups with projects outside the frontier saw a decrease in quality of work, even though the work was faster. 
+
+We will return to these results in the discussion below. 
 
 
 ## Example 2 - Biostatistical Questions
 
+As promised, we are going to investigate some examples of tasks that lie 'Outside the Frontier'. These examples are drawn from this paper:
+
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10646144/
 
 
-## Bonus Example - Endodontics
+
+```{r echo = F, warning = F, message = F, fig.width = 12, fig.height = 6}
+data <- expand.grid(Question = paste("Question", 10:1),
+                    Rating = c("3.5", "4.0"))
+data$Response <- c(2, 2, 1, 1, 3, 1, 3, 1, 3, 1,
+                   1, 2, 1, 1, 2, 1, 2, 1, 2, 1)
+
+# Map the responses to symbols and colors
+data <- data %>%
+  mutate(Symbol = case_when(
+    Response == 1 ~ "✓ First Attempt",
+    Response == 2 ~ "✓ Second/Third Attempt",
+    Response == 3 ~ "✗ Incorrect Every Time"
+  ),
+  Color = case_when(
+    Response == 1 ~ "green",
+    Response == 2 ~ "yellow",
+    Response == 3 ~ "red"
+  ))
+
+# Plot
+ggplot(data, aes(x = Rating, y = Question)) +
+  geom_tile(color = "white") + # Adds a background tile for each combination
+  geom_text(aes(label = Symbol, color = Color), size = 6) + # Adds symbols
+  scale_color_identity() + # Use the actual colors specified in the data
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1), # Improve x axis label appearance
+        panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(),
+        axis.line = element_line(colour = "black"),
+        text = element_text(size = 21)) +
+  labs(x = NULL, y = NULL, title = "ChatGPT Performance at Biostatistics Tasks") # Customize labels and title
+```
 
 # Discussion
 
-## Results from Jagged Frontier Paper
+When we presented this material to researchers at the Institute, our objective was to steer listeners away from the two extreme attitudes they might take towards AI use in their work. 
 
-## Brief Review of Part One
+The first extreme is to not use AI whatsoever. As we have clearly seen from part one of this blog series, and the results of the 'jagged frontier' study, the increases in productivity can be astonishing. If any tool increases our work speed by 30-40% while maintaining or even improving quality, it ought to be used. 
+
+The second extreme is the overuse and/or over-reliance on AI. Some tasks are simply outside the current capabilities of AI (not to say they will remain so in the future). To use AI in such circumstances wastes time at best, and at worst produces inaccuracies that remain unnoticed by us even up to publication of our work. The worked biostatistics example above shows how easy it is to be convinced by the confident language of AI as it repeats an answer that is patently incorrect. 
 
 ## Where to from here?/Our Recommendations
 
+The 'jagged frontier' of AI is invisible to us, and hence we often cannot know whether the task we are about to delegate is within its capability. For this reason, we propose the following guidelines to ensure you are using AI effectively and responsibly:
+
+1. You should be able to verify the output is true/accurate. 
+2. The time it would take to verify the AI output should be less than the time it would take to achieve the same output yourself. 
+
+Looking back at our examples throughout the two posts:
+
+### Weather plot
+
+In this example, we could verify the more complex plot by visually comparing it to simple plots we coded ourselves. Additionally, we could understand the R code that AI produced. Whether the use of AI in this case was justified or not depends on how quickly we could have remembered all the ggplot2 commands and done it ourselves. 
+
+### Statistical Analysis
+
+For the statistical analysis, we were well placed to verify the suggestions of ChatGPT. However, this would be a dangerous use-case for someone who is unfamiliar with statistical methods. We know that the suggested hierarchical mixed models is a good suggestion, but this would not be immediately verifiable to everyone. Therefore we would recommend against this use-case for non-statisticians. 
+
+### Shiny App
+
+This is probably the best example of AI saving time and increasing quality. The objective is simple - a Shiny App which takes and randomises data. Even as someone who has never coded a Shiny App before, it is easy to verify whether it works by simply using the app. 
+
+### Mathematical Questions
+
+Finally, we have seen that AI can make mistakes when calculating numerical results, and remain confidently incorrect in the face of correction. To verify the answer requires working line by line through each piece of code to ensure it is doing what we asked. Hence it is unlikely to save us time and seemingly likely to be incorrect. 
+
 # Conclusion
+
+These two posts have been a summation of our thoughts as they have developed through the first year of incorporating AI into our workflows. We have sought to experiment with different prompts to see where we can use AI to improve our productivity and where it hampers it. The two guidelines above have been helpful to avoid over-reliance, and our experiences with effective AI have helped to avoid under-utilisation. 
+
+We'd love to hear your thoughts and ideas on these two posts. Do you disagree with our recommendations and/or conclusions? Or perhaps you have some additional ones you would like to suggest. 
+
+## Further reading
