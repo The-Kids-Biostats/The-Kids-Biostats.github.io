@@ -22,6 +22,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -286,6 +320,7 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="example-2---biostatistical-questions">Example 2 - Biostatistical Questions</h2>
 <p>As promised, we are going to investigate some examples of tasks that lie ‘Outside the Frontier’. These examples are drawn from this paper:</p>
 <p>https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10646144/</p>
+<p>In summary, 10 different biostatistics-related problems were posed to ChatGPT 3.5 and subsequently ChatGPT 4.0. It was given three attempts to correctly answer each question. The results are below:</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -295,6 +330,152 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
+<p>While, ChatGPT 4.0 made significant improvements on 3.5, 40% of answers were still incorrect on the first attempt.</p>
+<p>We attempted to reproduce the results of Question 2, which was:</p>
+<p>“Suppose the probability of surviving from a particular disease is 0.9 and there are 20 patients. The number surviving will follow a Binomial distribution with p=0.9 and n=20. What is the probability that no more than 1 patient dies?”</p>
+<p>The expected answer to this question is 39.2%, and there are two ways we could get this answer in R using the <em>pbinom</em> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>size <span class="ot">&lt;-</span> <span class="dv">20</span> <span class="co"># Number of trials</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>prob <span class="ot">&lt;-</span> <span class="fl">0.1</span> <span class="co"># Probability of *dying*</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">pbinom</span>(<span class="dv">1</span>, size, prob)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.391747</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>prob <span class="ot">&lt;-</span> <span class="fl">0.9</span> <span class="co"># Probability of *surviving*</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">pbinom</span>(<span class="dv">18</span>, size, prob)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.391747</code></pre>
+</div>
+</div>
+<p>Graphically, we can highlight the are of the distribution we are interested in calculating - this will be helpful later to compare with ChatGPT’s responses.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ai_part_two_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="1056"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="first-attempt" class="level2">
+<h2 class="anchored" data-anchor-id="first-attempt">First Attempt:</h2>
+<p>Below is our prompt history with ChatGPT 4.0 as we attempted to reproduce the results from the paper - namely, that it took two or three attempts to get the correct answer.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note.
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Highlighted sections and markings were added for emphasis and to assist with the live presentation that these two blog posts have been adapted from.</p>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="reproduced_q1.PNG" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>On ChatGPT’s first attempt, it gives us an answer of 87.8%, a far cry from 39.2%! The blue icon at the end of its answer reveals the Python code it used to generate this answer, however we asked it to provide the equivalent code in R:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="reproduced_q2.PNG" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can run the code here to verify the answer:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">20</span> <span class="co"># number of trials</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fl">0.9</span> <span class="co"># probability of success</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>prob <span class="ot">&lt;-</span> <span class="fu">pbinom</span>(<span class="dv">19</span>, n, p)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>prob</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.8784233</code></pre>
+</div>
+</div>
+<p>Interestingly, the <em>binom</em> package is not used!</p>
+<p>The AI has seemingly ‘understood’ the question, as shown by its correct inference that “no more than 1 patient dies” is equivalent to “at least 19 patients surviving” in its code documentation. However, the code provided has gotten things the wrong way around.</p>
+<p>Above, we showed the correct area of the distribution we are interested in. Now we can see this side by side with what the AI code is calculating:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ai_part_two_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="1056"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="second-attempt" class="level2">
+<h2 class="anchored" data-anchor-id="second-attempt">Second Attempt</h2>
+<p>In the paper, the way in which ChatGPT was prompted to try again at a particular problem was to simply say “I got <correct answer="">”. We do the same here:</correct></p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="reproduced_q3.PNG" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We see that the AI has doubled down and suggesting we have misunderstood the question. It describes the problem back to us perfectly, with one exception:</p>
+<p>“The focus should be on the cumulative probability of having <em>up to</em> 19 survivors.”</p>
+<p>This is the first time anything it has said has matched the calculation it did.</p>
+</section>
+<section id="third-attempt" class="level2">
+<h2 class="anchored" data-anchor-id="third-attempt">Third Attempt</h2>
+<p>The final attempt is up for debate on where it is correct or not:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="reproduced_q5.PNG" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="reproduced_q6.PNG" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The code it provides does give the correct answer now, however there is still a ‘belief’ that 0.392 was and is incorrect.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">20</span> <span class="co"># number of trials</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fl">0.9</span> <span class="co"># probability of success</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>prob_no_more_than_1_dying <span class="ot">&lt;-</span> <span class="fu">pbinom</span>(<span class="dv">1</span>, n, <span class="dv">1</span><span class="sc">-</span> p)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(prob_no_more_than_1_dying)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.391747</code></pre>
+</div>
+</div>
+</section>
+<section id="takeaway" class="level2">
+<h2 class="anchored" data-anchor-id="takeaway">Takeaway</h2>
+<p>Without knowing how pbinom works (and even then, noticing it had been implemented incorrectly!), it is likely that a user would trust the initial incorrect answer. The AI showed signs of understanding the question, the code documentation made sense, and the code itself looked completely plausible.</p>
+<p>How much more so for more complicated scenarios?</p>
 </section>
 </section>
 <section id="discussion" class="level1">
@@ -334,6 +515,8 @@ ul.task-list li input[type="checkbox"] {
 <p>We’d love to hear your thoughts and ideas on these two posts. Do you disagree with our recommendations and/or conclusions? Or perhaps you have some additional ones you would like to suggest.</p>
 <section id="further-reading" class="level2">
 <h2 class="anchored" data-anchor-id="further-reading">Further reading</h2>
+<p>A similar paper to Example 2, testing responses to a set of 70 medical questions: https://onlinelibrary.wiley.com/doi/full/10.1111/iej.13985</p>
+<p>Despite the humourous title, a fascinating paper on where Artificial Intelligence is, well, intelligent: https://link.springer.com/article/10.1007/s10676-024-09775-5</p>
 
 
 </section>

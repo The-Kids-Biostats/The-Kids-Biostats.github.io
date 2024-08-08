@@ -130,7 +130,7 @@ As promised, we are going to investigate some examples of tasks that lie 'Outsid
 
 https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10646144/
 
-
+In summary, 10 different biostatistics-related problems were posed to ChatGPT 3.5 and subsequently ChatGPT 4.0. It was given three attempts to correctly answer each question. The results are below:
 
 ```{r echo = F, warning = F, message = F, fig.width = 12, fig.height = 6}
 data <- expand.grid(Question = paste("Question", 10:1),
@@ -165,6 +165,149 @@ ggplot(data, aes(x = Rating, y = Question)) +
         text = element_text(size = 21)) +
   labs(x = NULL, y = NULL, title = "ChatGPT Performance at Biostatistics Tasks") # Customize labels and title
 ```
+
+While, ChatGPT 4.0 made significant improvements on 3.5, 40% of answers were still incorrect on the first attempt.
+
+We attempted to reproduce the results of Question 2, which was:
+
+"Suppose the probability of surviving from a particular disease is 0.9 and there are 20 patients. The number surviving will follow a Binomial distribution with p=0.9 and n=20. What is the probability that no more than 1 patient dies?"
+
+The expected answer to this question is 39.2%, and there are two ways we could get this answer in R using the *pbinom* function:
+
+```{r echo = T}
+size <- 20 # Number of trials
+prob <- 0.1 # Probability of *dying*
+
+pbinom(1, size, prob)
+```
+
+```{r echo = T}
+prob <- 0.9 # Probability of *surviving*
+
+1 - pbinom(18, size, prob)
+```
+
+Graphically, we can highlight the are of the distribution we are interested in calculating - this will be helpful later to compare with ChatGPT's responses. 
+
+```{r echo = F, warning = F, fig.height = 6, fig.width = 11}
+# Binomial distribution parameters
+size <- 20
+prob <- 0.9
+
+# Generate data for the binomial distribution
+binom_data <- tibble(Size = 0:size,
+                     Probability = dbinom(0:size, size, prob))
+
+# Basic plot
+p <- ggplot(binom_data, aes(x = Size, y = Probability)) + 
+  geom_col(fill = "grey") +
+  theme_minimal()
+
+# Plot with area up to and including 19 shaded in red
+p1 <- p + geom_col(data = subset(binom_data, Size <= 19), 
+                    aes(x = Size, y = Probability), fill = "red") +
+  ggtitle("ChatGPT Calculation") +
+  xlim(c(8, 20.5)) + 
+  labs(x = "N People Who Survive") + 
+  theme(text=element_text(size=21))
+
+# Plot with area above and including 19 shaded in blue
+p2 <- p + geom_col(data = subset(binom_data, Size >= 19), 
+                    aes(x = Size, y = Probability), fill = "blue") +
+  ggtitle("True Calculation") +
+  xlim(c(8, 20.5)) + 
+  labs(x = "N People Who Survive") + 
+  theme(text=element_text(size=21))
+
+# Arrange the plots in one window for easy comparison
+p2
+```
+
+
+## First Attempt:
+
+Below is our prompt history with ChatGPT 4.0 as we attempted to reproduce the results from the paper - namely, that it took two or three attempts to get the correct answer.
+
+::: callout-note
+## Note.
+
+Highlighted sections and markings were added for emphasis and to assist with the live presentation that these two blog posts have been adapted from. 
+:::
+
+```{r out.width="700px", fig.align='center', echo = F}
+knitr::include_graphics(path = "reproduced_q1.PNG")
+```
+
+On ChatGPT's first attempt, it gives us an answer of 87.8%, a far cry from 39.2%! The blue icon at the end of its answer reveals the Python code it used to generate this answer, however we asked it to provide the equivalent code in R:
+
+```{r out.width="700px", fig.align='center', echo = F}
+knitr::include_graphics(path = "reproduced_q2.PNG")
+```
+
+We can run the code here to verify the answer:
+
+```{r echo = T}
+n <- 20 # number of trials
+p <- 0.9 # probability of success
+
+prob <- pbinom(19, n, p)
+
+prob
+```
+
+Interestingly, the *binom* package is not used!
+
+The AI has seemingly 'understood' the question, as shown by its correct inference that "no more than 1 patient dies" is equivalent to "at least 19 patients surviving" in its code documentation. However, the code provided has gotten things the wrong way around. 
+
+Above, we showed the correct area of the distribution we are interested in. Now we can see this side by side with what the AI code is calculating:
+
+```{r echo = F, warning = F, message = F, fig.height = 6, fig.width = 11}
+library(gridExtra)
+grid.arrange(p1, p2, ncol = 2)
+```
+
+## Second Attempt
+
+In the paper, the way in which ChatGPT was prompted to try again at a particular problem was to simply say "I got <correct answer>". We do the same here:
+
+```{r out.width="700px", fig.align='center', echo = F}
+knitr::include_graphics(path = "reproduced_q3.PNG")
+```
+
+We see that the AI has doubled down and suggesting we have misunderstood the question. It describes the problem back to us perfectly, with one exception:
+
+"The focus should be on the cumulative probability of having *up to* 19 survivors."
+
+This is the first time anything it has said has matched the calculation it did. 
+
+## Third Attempt
+
+The final attempt is up for debate on where it is correct or not:
+
+```{r out.width="700px", fig.align='center', echo = F}
+knitr::include_graphics(path = "reproduced_q5.PNG")
+```
+
+```{r out.width="700px", fig.align='center', echo = F}
+knitr::include_graphics(path = "reproduced_q6.PNG")
+```
+
+The code it provides does give the correct answer now, however there is still a 'belief' that 0.392 was and is incorrect.
+
+```{r}
+n <- 20 # number of trials
+p <- 0.9 # probability of success
+
+prob_no_more_than_1_dying <- pbinom(1, n, 1- p)
+
+print(prob_no_more_than_1_dying)
+```
+
+## Takeaway
+
+Without knowing how pbinom works (and even then, noticing it had been implemented incorrectly!), it is likely that a user would trust the initial incorrect answer. The AI showed signs of understanding the question, the code documentation made sense, and the code itself looked completely plausible. 
+
+How much more so for more complicated scenarios?
 
 # Discussion
 
@@ -206,3 +349,10 @@ These two posts have been a summation of our thoughts as they have developed thr
 We'd love to hear your thoughts and ideas on these two posts. Do you disagree with our recommendations and/or conclusions? Or perhaps you have some additional ones you would like to suggest. 
 
 ## Further reading
+
+A similar paper to Example 2, testing responses to a set of 70 medical questions:
+https://onlinelibrary.wiley.com/doi/full/10.1111/iej.13985
+
+Despite the humourous title, a fascinating paper on where Artificial Intelligence is, well, intelligent:
+https://link.springer.com/article/10.1007/s10676-024-09775-5
+
