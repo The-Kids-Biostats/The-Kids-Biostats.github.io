@@ -18,7 +18,7 @@ library(kableExtra)
 
 If you haven't read part one of this two-part series on AI, do that first here:
 
-<https://the-kids-biostats.github.io/posts/2024-08-08_ai_part_one/ai_part_one.html>
+<https://the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/ai_part_one.html>
 
 Last time we looked at three cases where our use of AI aided our productivity and gave us the desired result. In this post, we'll be looking at the other side of the coin, to situations where AI has struggled and where attempts to pursue its use would hinder our productivity and have us produced errors.
 
