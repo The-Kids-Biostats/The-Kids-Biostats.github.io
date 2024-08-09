@@ -6,8 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Dr Matthew Cooper, Wesley Billingham">
-<meta name="dcterms.date" content="2024-05-06">
+<meta name="author" content="Wesley Billingham, Dr Matthew Cooper">
+<meta name="dcterms.date" content="2024-08-09">
 
 <title>The Kids Biostats - AI in Biostatistics - Part 2</title>
 <style>
@@ -176,14 +176,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div>
       <div class="quarto-title-meta-heading">Author</div>
       <div class="quarto-title-meta-contents">
-               <p>Dr Matthew Cooper, Wesley Billingham </p>
+               <p>Wesley Billingham, Dr Matthew Cooper </p>
             </div>
     </div>
       
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">May 6, 2024</p>
+        <p class="date">August 9, 2024</p>
       </div>
     </div>
     
@@ -205,8 +205,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="overview" class="level1">
 <h1>Overview</h1>
 <p>If you haven’t read part one of this two-part series on AI, do that first here:</p>
-<p>Last time we looked at three cases where our use of AI aided our productivity and gave us the desired result. In this post, we’ll be looking at the other side of the coin to situations where AI has struggled and attempts to use it in these situations would hinder our productivity and potentially give us incorrect output.</p>
-<p>To demonstrate this point, we’ll look through the results of a few published papers and some concepts they introduce. Then we will examine some guidelines we can use to maximise our efficiency by using AI appropriately.</p>
+<p>Last time we looked at three cases where our use of AI aided our productivity and gave us the desired result. In this post, we’ll be looking at the other side of the coin, to situations where AI has struggled and where attempts to pursue its use would hinder our productivity and have us produced errors.</p>
+<p>To demonstrate this, we’ll look through the results of a few published papers and the concepts they introduce. Then, as a wrap of Part 1 and 2, we propose some guidelines that can be used to maximise ones efficiency when using (or thinking about using) AI.</p>
 </section>
 <section id="examples" class="level1">
 <h1>Examples</h1>
@@ -217,7 +217,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>It introduces a very helpful concept - the ‘Jagged Frontier’. Below we use ggplot2 to demonstrate this idea.</p>
 <section id="what-is-the-jagged-frontier" class="level3">
 <h3 class="anchored" data-anchor-id="what-is-the-jagged-frontier">What is the Jagged Frontier?</h3>
-<p>Imagine you have 5 tasks to complete today, and you are trying to decide which of these you can delegate to AI (in this case, ChatGPT). You might have in mind that each task has some implicit difficulty associated with it, and your perception of current AI technology is that in is capable of tackling tasks with a difficulty of up to 5. This is represented by the blue dashed line.</p>
+<p>Imagine you have 5 tasks to complete today, and you are trying to decide which of these you can delegate to AI (in this case, ChatGPT). You might have in mind that each task has some implicit difficulty associated with it (rated 1- 10), and your perception of current AI technology is that in is capable of tackling tasks up to a difficulty of 5. This is represented by the blue dashed line below.</p>
 <p>Your 5 tasks have various difficulties, represented by the black points. At this point, based on your perception of the difficulty of your tasks and the capability of AI, you would assign tasks 2, 3 and 5 to ChatGPT, since these have a difficulty of &lt;=5.</p>
 <p>Unfortunately, the reality is that our perception of difficulty does not line up well with AI’s capabilities. As we have seen in the last post, it can complete some pretty incredible tasks, such as coding Shiny apps and performing advanced statistical analyses. But as we will also see later, it can struggle with some pretty mundane tasks.</p>
 <p>And so the capability of AI cannot be measured by the blue dashed line, but rather the red, <em>jagged</em> line, a seemingly random level of capability which is unrelated to our ideas of difficulty. This is what is referred to as the “Jagged Frontier”.</p>
@@ -233,8 +233,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="why-should-we-care" class="level3">
 <h3 class="anchored" data-anchor-id="why-should-we-care">Why should we care?</h3>
-<p>When a task is achievable using AI, we refer to that task as being ‘Inside the Frontier’; that is, below the red jagged line above. If AI would struggle or be unable to do a task, that would then be ‘Outside the Frontier’.</p>
-<p>The study above set out to investigate the difference in worker productivity when AI is used for tasks within its capability as opposed to not. A large study was set up, with the following methodology:</p>
+<p>When a task can successfully be completed using AI, we refer to that task as being ‘Inside the Frontier’; that is, below the red jagged line above. When AI would struggle or be unable to complete a task, we refer to that as being ‘Outside the Frontier’.</p>
+<p>The study above set out to investigate the difference in worker productivity when AI is used for tasks considered ‘Inside the Frontier’ compared with those considered ‘Outside the Frontier’. A large study was set up, with the following methodology:</p>
 <ol type="1">
 <li>All 758 participants (experts in the relevant field) complete a baseline project without any AI use. Speed and quality are measured.</li>
 <li>Participants are randomised into one of four groups (see table below).</li>
@@ -267,9 +267,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <ol start="3" type="1">
-<li>Those in the “Inside Frontier” group were assigned a project that had been determined beforehand to be within the capabilities of ChatGPT 3.5. In contrast, the “Outside Frontier” group were assigned a project beyond the capabilities of ChatGPT 3.5.<br>
-</li>
-<li>The participants were further divided into “ChatGPT” and “ChatGPT + Overview” groups. The latter received some training on prompt engineering before undertaking the project.</li>
+<li>Those in the “Inside Frontier” group were assigned a project that had been determined beforehand to be within the capabilities of ChatGPT 3.5. In contrast, the “Outside Frontier” group were assigned a project beyond the capabilities of ChatGPT 3.5.</li>
+<li>The participants were further divided into “ChatGPT” and “ChatGPT + Overview” groups. The latter received some training on prompt engineering (how be to use ChaptGPT) before undertaking the project.</li>
 <li>All participants completed their project, and their speed and quality was compared to their own individual baseline score.</li>
 </ol>
 <p>The results are quite striking:</p>
@@ -311,16 +310,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </div>
 </div>
-<p>Using ChatGPT for the project within the frontier resulted in considerable improvements in both speed and quality of work, regardless of whether participants received training.</p>
-<p>But perhaps more interestingly, the groups with projects outside the frontier saw a decrease in quality of work, even though the work was faster.</p>
+<p>Using ChatGPT for the project ‘Inside the Frontier’ resulted in considerable improvements in both speed and quality of work, regardless of whether participants received training.</p>
+<p>But perhaps more interestingly, the groups with projects ‘Outside the Frontier’ saw a decrease in quality of work, even though the work was completed faster…</p>
 <p>We will return to these results in the discussion below.</p>
 </section>
 </section>
 <section id="example-2---biostatistical-questions" class="level2">
 <h2 class="anchored" data-anchor-id="example-2---biostatistical-questions">Example 2 - Biostatistical Questions</h2>
 <p>As promised, we are going to investigate some examples of tasks that lie ‘Outside the Frontier’. These examples are drawn from this paper:</p>
-<p>https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10646144/</p>
-<p>In summary, 10 different biostatistics-related problems were posed to ChatGPT 3.5 and subsequently ChatGPT 4.0. It was given three attempts to correctly answer each question. The results are below:</p>
+<p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10646144/" class="uri">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10646144/</a></p>
+<p>As a brief summary, 10 different biostatistics-related problems were posed to ChatGPT 3.5 and subsequently to ChatGPT 4.0. For each problem, the team attempted up to three times to get the correct answer from the AI. The results are below:</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -331,8 +330,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>While, ChatGPT 4.0 made significant improvements on 3.5, 40% of answers were still incorrect on the first attempt.</p>
-<p>We attempted to reproduce the results of Question 2, which was:</p>
-<p>“Suppose the probability of surviving from a particular disease is 0.9 and there are 20 patients. The number surviving will follow a Binomial distribution with p=0.9 and n=20. What is the probability that no more than 1 patient dies?”</p>
+<p>We attempted to reproduce one of these results, using their Question 2, which was:</p>
+<p><em>“Suppose the probability of surviving from a particular disease is 0.9 and there are 20 patients. The number surviving will follow a Binomial distribution with p=0.9 and n=20. What is the probability that no more than 1 patient dies?”</em></p>
 <p>The expected answer to this question is 39.2%, and there are two ways we could get this answer in R using the <em>pbinom</em> function:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>size <span class="ot">&lt;-</span> <span class="dv">20</span> <span class="co"># Number of trials</span></span>
@@ -351,7 +350,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>[1] 0.391747</code></pre>
 </div>
 </div>
-<p>Graphically, we can highlight the are of the distribution we are interested in calculating - this will be helpful later to compare with ChatGPT’s responses.</p>
+<p>Graphically, we can highlight the area of the distribution we are interested in calculating - this will be helpful later to compare with ChatGPT’s responses.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -364,7 +363,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="first-attempt" class="level2">
 <h2 class="anchored" data-anchor-id="first-attempt">First Attempt:</h2>
-<p>Below is our prompt history with ChatGPT 4.0 as we attempted to reproduce the results from the paper - namely, that it took two or three attempts to get the correct answer.</p>
+<p>Below is our prompt history with ChatGPT 4.0 as we attempted to reproduce the results from the paper - namely, using a maximum of three attempts to get the correct answer.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -409,7 +408,7 @@ Note.
 <pre><code>[1] 0.8784233</code></pre>
 </div>
 </div>
-<p>Interestingly, the <em>binom</em> package is not used!</p>
+<p>Interestingly, the <code>binom</code> package is not actually used!</p>
 <p>The AI has seemingly ‘understood’ the question, as shown by its correct inference that “no more than 1 patient dies” is equivalent to “at least 19 patients surviving” in its code documentation. However, the code provided has gotten things the wrong way around.</p>
 <p>Above, we showed the correct area of the distribution we are interested in. Now we can see this side by side with what the AI code is calculating:</p>
 <div class="cell">
@@ -434,13 +433,13 @@ Note.
 </div>
 </div>
 </div>
-<p>We see that the AI has doubled down and suggesting we have misunderstood the question. It describes the problem back to us perfectly, with one exception:</p>
+<p>We see that the AI has doubled down and is suggesting <strong><em>we</em></strong> have misunderstood the question. It describes the problem back to us perfectly, with one exception:</p>
 <p>“The focus should be on the cumulative probability of having <em>up to</em> 19 survivors.”</p>
-<p>This is the first time anything it has said has matched the calculation it did.</p>
+<p>While this is incorrect, it is the first time anything it has <em>said</em> has matched the calculation it carried out.</p>
 </section>
 <section id="third-attempt" class="level2">
 <h2 class="anchored" data-anchor-id="third-attempt">Third Attempt</h2>
-<p>The final attempt is up for debate on where it is correct or not:</p>
+<p>With final attempt, it is up for debate whether the response is correct or not:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -474,18 +473,18 @@ Note.
 </section>
 <section id="takeaway" class="level2">
 <h2 class="anchored" data-anchor-id="takeaway">Takeaway</h2>
-<p>Without knowing how pbinom works (and even then, noticing it had been implemented incorrectly!), it is likely that a user would trust the initial incorrect answer. The AI showed signs of understanding the question, the code documentation made sense, and the code itself looked completely plausible.</p>
+<p>Without knowing how <code>pbinom</code> works (and even then, noticing it had been implemented incorrectly!), it is likely that a user would trust the initial incorrect answer. The AI showed signs of <em>understanding</em> the question, the code documentation <em>made sense</em>, and the code itself <em>looked</em> completely plausible…</p>
 <p>How much more so for more complicated scenarios?</p>
 </section>
 </section>
 <section id="discussion" class="level1">
 <h1>Discussion</h1>
 <p>When we presented this material to researchers at the Institute, our objective was to steer listeners away from the two extreme attitudes they might take towards AI use in their work.</p>
-<p>The first extreme is to not use AI whatsoever. As we have clearly seen from part one of this blog series, and the results of the ‘jagged frontier’ study, the increases in productivity can be astonishing. If any tool increases our work speed by 30-40% while maintaining or even improving quality, it ought to be used.</p>
-<p>The second extreme is the overuse and/or over-reliance on AI. Some tasks are simply outside the current capabilities of AI (not to say they will remain so in the future). To use AI in such circumstances wastes time at best, and at worst produces inaccuracies that remain unnoticed by us even up to publication of our work. The worked biostatistics example above shows how easy it is to be convinced by the confident language of AI as it repeats an answer that is patently incorrect.</p>
-<section id="where-to-from-hereour-recommendations" class="level2">
-<h2 class="anchored" data-anchor-id="where-to-from-hereour-recommendations">Where to from here?/Our Recommendations</h2>
-<p>The ‘jagged frontier’ of AI is invisible to us, and hence we often cannot know whether the task we are about to delegate is within its capability. For this reason, we propose the following guidelines to ensure you are using AI effectively and responsibly:</p>
+<p>The <u>first extreme</u> is to not use AI whatsoever. As we have clearly seen from part one of this blog series, and the results of the ‘jagged frontier’ study, the increases in productivity can be astonishing. If any tool increases our work speed by 30-40% while maintaining or even improving quality, it ought to be used.</p>
+<p>The <u>second extreme</u> is the overuse and/or over-reliance on AI. Some tasks are simply outside the current capabilities of AI (not to say they will remain so in the future). To use AI in such circumstances wastes time at best, and at worst produces inaccuracies that remain unnoticed by us - will the reader of our work know? The worked biostatistics example above shows how easy it is to be convinced by the confident language of AI as it repeats an answer that is patently incorrect.</p>
+<section id="where-to-from-here-our-recommendations" class="level2">
+<h2 class="anchored" data-anchor-id="where-to-from-here-our-recommendations">Where to from here? Our recommendations…</h2>
+<p>The ‘jagged frontier’ of AI is invisible to us, and hence we often cannot know whether the task we are about to delegate is within its capability or not (and it doesn’t know!). For this reason, we propose the following guidelines to ensure you are using AI effectively and responsibly:</p>
 <ol type="1">
 <li>You should be able to verify the output is true/accurate.</li>
 <li>The time it would take to verify the AI output should be less than the time it would take to achieve the same output yourself.</li>
@@ -493,11 +492,11 @@ Note.
 <p>Looking back at our examples throughout the two posts:</p>
 <section id="weather-plot" class="level3">
 <h3 class="anchored" data-anchor-id="weather-plot">Weather plot</h3>
-<p>In this example, we could verify the more complex plot by visually comparing it to simple plots we coded ourselves. Additionally, we could understand the R code that AI produced. Whether the use of AI in this case was justified or not depends on how quickly we could have remembered all the ggplot2 commands and done it ourselves.</p>
+<p>In this example, we could verify the more complex plot by visually comparing it to simple plots we coded ourselves. Additionally, we could understand the R code that AI produced. Whether the use of AI in this case was justified or not depends on how quickly we could have remembered all the ggplot2 commands to do this ourselves!</p>
 </section>
 <section id="statistical-analysis" class="level3">
 <h3 class="anchored" data-anchor-id="statistical-analysis">Statistical Analysis</h3>
-<p>For the statistical analysis, we were well placed to verify the suggestions of ChatGPT. However, this would be a dangerous use-case for someone who is unfamiliar with statistical methods. We know that the suggested hierarchical mixed models is a good suggestion, but this would not be immediately verifiable to everyone. Therefore we would recommend against this use-case for non-statisticians.</p>
+<p>For the statistical analysis, we were well-placed to verify the suggestions of ChatGPT. However, this would be a dangerous use-case for someone who is unfamiliar with statistical methodology - advanced or otherwise. We know that the suggested hierarchical mixed models is a good suggestion, but this would not be immediately verifiable to everyone. Therefore we would recommend against this use-case for non-statisticians.</p>
 </section>
 <section id="shiny-app" class="level3">
 <h3 class="anchored" data-anchor-id="shiny-app">Shiny App</h3>
@@ -511,7 +510,7 @@ Note.
 </section>
 <section id="conclusion" class="level1">
 <h1>Conclusion</h1>
-<p>These two posts have been a summation of our thoughts as they have developed through the first year of incorporating AI into our workflows. We have sought to experiment with different prompts to see where we can use AI to improve our productivity and where it hampers it. The two guidelines above have been helpful to avoid over-reliance, and our experiences with effective AI have helped to avoid under-utilisation.</p>
+<p>These two posts have been a summation of our thoughts as they have developed through the first year or so of incorporating AI into our workflows. We have sought to experiment with different prompts to see where we can use AI to improve our productivity and where it hampers it. The two guidelines above have been helpful to avoid our over-reliance on AI, and our experiences with effective AI have helped to avoid under-utilisation.</p>
 <p>We’d love to hear your thoughts and ideas on these two posts. Do you disagree with our recommendations and/or conclusions? Or perhaps you have some additional ones you would like to suggest.</p>
 <section id="further-reading" class="level2">
 <h2 class="anchored" data-anchor-id="further-reading">Further reading</h2>
