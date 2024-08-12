@@ -1,5 +1,5 @@
 ---
-title: "AI in Biostatistics"
+title: "AI in Biostatistics - Part 1"
 output: html_document
 date: "2024-08-08"
 author: "Wesley Billingham, Dr Matthew Cooper"

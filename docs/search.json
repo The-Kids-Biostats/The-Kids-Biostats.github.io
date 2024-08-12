@@ -1,5 +1,12 @@
 [
   {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "We are members of the biostatistics team at Telethon Kids Institute in Perth, Western Australia. Our work involves providing statistical consultation and collaboration to child health researchers at all stages of the scientific pipeline, from design to analysis to publication.\n\nPrimarily R users, we encounter particular coding, methodology, or analysis challenges - often that have recurring or related themes. The idea of this site is to be a centralised repository of our solutions to or narration of these recurrent challenges, for both our reference and yours!\nWe hope you’ll find something useful here, and are always open to feedback and conversation on these topics."
+  },
+  {
     "objectID": "posts/2024_08_09_ai_part_two/ai_part_two.html",
     "href": "posts/2024_08_09_ai_part_two/ai_part_two.html",
     "title": "AI in Biostatistics - Part 2",
@@ -224,18 +231,109 @@
     "text": "Reproducibility Information\nTo access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:\nhttps://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/parallel\nThe session information can also be seen below.\n\n\nCode\nsessionInfo()\n\n\nR version 4.4.0 (2024-04-24)\nPlatform: aarch64-apple-darwin20\nRunning under: macOS Sonoma 14.5\n\nMatrix products: default\nBLAS:   /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRblas.0.dylib \nLAPACK: /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0\n\nlocale:\n[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8\n\ntime zone: Australia/Perth\ntzcode source: internal\n\nattached base packages:\n[1] parallel  stats     graphics  grDevices utils     datasets  methods  \n[8] base     \n\nother attached packages:\n [1] furrr_0.3.1          future_1.33.2        randomForest_4.7-1.1\n [4] doParallel_1.0.17    iterators_1.0.14     foreach_1.5.2       \n [7] lubridate_1.9.3      forcats_1.0.0        stringr_1.5.1       \n[10] dplyr_1.1.4          purrr_1.0.2          readr_2.1.5         \n[13] tidyr_1.3.1          tibble_3.2.1         ggplot2_3.5.1       \n[16] tidyverse_2.0.0     \n\nloaded via a namespace (and not attached):\n [1] utf8_1.2.4         generics_0.1.3     stringi_1.8.4      listenv_0.9.1     \n [5] hms_1.1.3          digest_0.6.36      magrittr_2.0.3     evaluate_0.24.0   \n [9] grid_4.4.0         timechange_0.3.0   fastmap_1.2.0      jsonlite_1.8.8    \n[13] fansi_1.0.6        scales_1.3.0       codetools_0.2-20   cli_3.6.3         \n[17] rlang_1.1.4        parallelly_1.37.1  munsell_0.5.1      withr_3.0.0       \n[21] yaml_2.3.9         tools_4.4.0        tzdb_0.4.0         colorspace_2.1-0  \n[25] globals_0.16.3     vctrs_0.6.5        R6_2.5.1           lifecycle_1.0.4   \n[29] htmlwidgets_1.6.4  pkgconfig_2.0.3    pillar_1.9.0       gtable_0.3.5      \n[33] glue_1.7.0         xfun_0.46          tidyselect_1.2.1   rstudioapi_0.16.0 \n[37] knitr_1.48         htmltools_0.5.8.1  rmarkdown_2.27     nycflights13_1.0.2\n[41] compiler_4.4.0"
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "The Kids Biostats",
+    "objectID": "posts/2024-07-19_data_anonymiser/data_anonymiser.html",
+    "href": "posts/2024-07-19_data_anonymiser/data_anonymiser.html",
+    "title": "Data Anonymiser",
     "section": "",
-    "text": "AI in Biostatistics - Part 2\n\n\n\n\n\n\nAI\n\n\nR\n\n\n\n\n\n\n\n\n\nAug 9, 2024\n\n\nWesley Billingham, Dr Matthew Cooper\n\n\n\n\n\n\n\n\n\n\n\n\nAI in Biostatistics\n\n\n\n\n\n\nAI\n\n\nR\n\n\n\n\n\n\n\n\n\nAug 8, 2024\n\n\nWesley Billingham, Dr Matthew Cooper\n\n\n\n\n\n\n\n\n\n\n\n\nAnalysing pre-post data\n\n\n\n\n\n\nPre-post\n\n\nMixed Models\n\n\nR\n\n\n\n\n\n\n\n\n\nJul 22, 2024\n\n\nDr Matthew Cooper\n\n\n\n\n\n\n\n\n\n\n\n\nData Anonymiser\n\n\n\n\n\n\nShiny\n\n\nR\n\n\n\n\n\n\n\n\n\nJul 19, 2024\n\n\nDr Matthew Cooper, Wesley Billingham\n\n\n\n\n\n\n\n\n\n\n\n\nParallel Computing in R\n\n\n\n\n\n\nR\n\n\nParallel\n\n\n\n\n\n\n\n\n\nJul 1, 2024\n\n\nZac Dempsey\n\n\n\n\n\n\n\n\n\n\n\n\nHandling Missing Data with LMER\n\n\n\n\n\n\nMissing Data\n\n\nMixed Models\n\n\nR\n\n\n\n\n\n\n\n\n\nJun 7, 2024\n\n\nDr Matthew Cooper\n\n\n\n\n\n\nNo matching items"
+    "text": "Data access and security is a really important topic and one that can be challenging to navigate. Research ethics and governance approvals typically require detail about where and how data will be stored and analysed - and a researcher typically does not have approval for the data they are working with to be moved to other locations.\nThe rapid emergence of AI tools and online data analytics platforms (e.g. dashboards) may tempt researchers with the promise of short cuts to writing code and/or producing attractive figures with ease. For example, sites like this that will take an uploaded dataset and draw a figure from it following a user prompt – but where did your precious private research data just go?\nBelow, we share a data anonymising (obscuring) shiny app that you can run on your local machine. It will return to you, a “similar” dataset to your original dataset, allowing you to then safely use an online chat bot to assisted you to code up that complex figure or model."
   },
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
+    "objectID": "posts/2024-07-19_data_anonymiser/data_anonymiser.html#the-process",
+    "href": "posts/2024-07-19_data_anonymiser/data_anonymiser.html#the-process",
+    "title": "Data Anonymiser",
+    "section": "The process",
+    "text": "The process\nThe app simply does the following:\n\ntakes an uploaded dataset (.csv or .xlsx),\nlets you choose which variables to keep and how many rows you want returned,\nreturns to you a fully obscured dataset (.csv) for download (see example above).\n\nContained on a tab within the app is a brief tabular report that compares your original data to the anonymised data.\n\nGetting started\nTo use the app, you can either download a .zip (or clone the github repository) at the following link:\nhttps://github.com/TelethonKids/data_anonymiser\nThen:\n\nUnzip the folder\nIn your R session, ensure you are in directory of the unzipped files\nIn your R console, type runApp()\n\nYou may need to install.packages() a few packages, though this app only leverages very popular packages that most R users are likely to already have."
+  },
+  {
+    "objectID": "posts/2024-07-19_data_anonymiser/data_anonymiser.html#data-obscuring-process",
+    "href": "posts/2024-07-19_data_anonymiser/data_anonymiser.html#data-obscuring-process",
+    "title": "Data Anonymiser",
+    "section": "Data obscuring process",
+    "text": "Data obscuring process\nThis is also explained on the app’s landing page – but the detail of what is happening in the data obscuring process is as follows:\n\nColumn names: These will all be replaced with a generic name of the form “VAR_1”, “VAR_2”, etc.\nContinuous variables\n\n15 or fewer unique values: These will be randomly (evenly) replaced with integers 0 through to the n (where n is the number of unique values within that variable).\nMore than 15 unique values: Will be replaced with random normally distributed data that has the same mean and standard deviation as the original data.\n\nDate variables: The min and max date will be found within the provided data, then uniformly distributed dates between that min and max date will be returned.\nCategorical variables (includes dichotomous variables)\n\n15 or fewer unique categories: These will be randomly (evenly) replaced with letters “A” through “O”\nMore than 15 unique categories: (E.g., studyIDs, names, addresses etc) these will be replaced with a random string of length 6 (may or may not be unique)."
+  },
+  {
+    "objectID": "posts/2024-07-19_data_anonymiser/data_anonymiser.html#acknowledgements",
+    "href": "posts/2024-07-19_data_anonymiser/data_anonymiser.html#acknowledgements",
+    "title": "Data Anonymiser",
+    "section": "Acknowledgements",
+    "text": "Acknowledgements\nThanks to Wesley Billingham and Zac Dempsey for providing feedback on and reviewing this post.\nYou can look forward to seeing posts from these other team members here in the coming weeks and months."
+  },
+  {
+    "objectID": "posts/2024-07-19_data_anonymiser/data_anonymiser.html#reproducibility-information",
+    "href": "posts/2024-07-19_data_anonymiser/data_anonymiser.html#reproducibility-information",
+    "title": "Data Anonymiser",
+    "section": "Reproducibility Information",
+    "text": "Reproducibility Information\nSession information:\n\n\nCode\nsessionInfo()\n\n\nR version 4.4.0 (2024-04-24)\nPlatform: aarch64-apple-darwin20\nRunning under: macOS Sonoma 14.5\n\nMatrix products: default\nBLAS:   /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRblas.0.dylib \nLAPACK: /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0\n\nlocale:\n[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8\n\ntime zone: Australia/Perth\ntzcode source: internal\n\nattached base packages:\n[1] stats     graphics  grDevices utils     datasets  methods   base     \n\nloaded via a namespace (and not attached):\n [1] htmlwidgets_1.6.4 compiler_4.4.0    fastmap_1.2.0     cli_3.6.3        \n [5] tools_4.4.0       htmltools_0.5.8.1 rstudioapi_0.16.0 yaml_2.3.9       \n [9] rmarkdown_2.27    knitr_1.48        jsonlite_1.8.8    xfun_0.46        \n[13] digest_0.6.36     rlang_1.1.4       evaluate_0.24.0"
+  },
+  {
+    "objectID": "posts/2024_08_08_ai_part_one/ai_part_one.html",
+    "href": "posts/2024_08_08_ai_part_one/ai_part_one.html",
+    "title": "AI in Biostatistics - Part 1",
     "section": "",
-    "text": "We are members of the biostatistics team at Telethon Kids Institute in Perth, Western Australia. Our work involves providing statistical consultation and collaboration to child health researchers at all stages of the scientific pipeline, from design to analysis to publication.\n\nPrimarily R users, we encounter particular coding, methodology, or analysis challenges - often that have recurring or related themes. The idea of this site is to be a centralised repository of our solutions to or narration of these recurrent challenges, for both our reference and yours!\nWe hope you’ll find something useful here, and are always open to feedback and conversation on these topics."
+    "text": "AI is a hot topic in most fields right now, and biostatistics is no exception! We (the Telethon Kids Institute biostats team) were asked to present at the weekly Institute seminar on the use of AI in statistical workflows.\nThe term AI has many meanings depending on the context - in this article we are referring exclusively to (and use the term interchangeably with) large language models (LLMs) such as ChatGPT and Claude. These tools are useful not just for writing sentences and paragraphs of text, but also for writing functioning code!\nSince first investigating the capabilities of ChatGPT in writing R code, our team has been working to utilise it safely and effectively in our everyday workflows.\nThe summary of our message to the Institute staff was that we cannot ignore the massive increase in efficiency that AI can bring if used properly. However, we also need to be very aware of its limitations, and the necessary role of human experts in the process of validating any non-trivial output.\nThis is Part One in a two-part series. This part will look at the capabilities of AI to benefit our workflows and increase efficiency. The next part will look at some limitations of the technology as it currently exists, including some practical recommendations to identify these issues.\n\n\nWe will work through a couple of practical examples of how we might use AI in an everyday workflow:\n\nData Visualisation\nStatistical Analysis\nBonus - Shiny App Development\n\nIn these examples, we will increasingly take our hands off the wheel and allow AI (in these examples, ChatGPT 4.0) to perform more and more of the task."
+  },
+  {
+    "objectID": "posts/2024_08_08_ai_part_one/ai_part_one.html#format-of-this-post",
+    "href": "posts/2024_08_08_ai_part_one/ai_part_one.html#format-of-this-post",
+    "title": "AI in Biostatistics - Part 1",
+    "section": "",
+    "text": "We will work through a couple of practical examples of how we might use AI in an everyday workflow:\n\nData Visualisation\nStatistical Analysis\nBonus - Shiny App Development\n\nIn these examples, we will increasingly take our hands off the wheel and allow AI (in these examples, ChatGPT 4.0) to perform more and more of the task."
+  },
+  {
+    "objectID": "posts/2024_08_08_ai_part_one/ai_part_one.html#providing-the-blueprint",
+    "href": "posts/2024_08_08_ai_part_one/ai_part_one.html#providing-the-blueprint",
+    "title": "AI in Biostatistics - Part 1",
+    "section": "Providing the Blueprint",
+    "text": "Providing the Blueprint\nChatGPT allows the user to provide images as a part of the prompt. With that in mind, the image was uploaded first by itself. ChatGPT was able to successfully identify the key elements of the plot just from the image (!), and so the next step was to give some guidance to make the plot more visually appealing.\nWith just one prompt: “can you facet wrap the min max data”, in addition to the original plot, it got to work. Once the original data was provided, it returned the requested modifcation - complete with Python code for the plot (R cannot be run within ChatGPT, though we certainly could have requested R code to run ourselves instead).\nHere is the entire prompt history, from beginning to end:\n\nOne image\nOne command\nSome (undescribed) data\n\nwas all the context required to understand and return, approximately, the desired output. We say approximately, since some key information such as the counts above certain levels, is absent from this first attempt."
+  },
+  {
+    "objectID": "posts/2024_08_08_ai_part_one/ai_part_one.html#end-result-and-discussion",
+    "href": "posts/2024_08_08_ai_part_one/ai_part_one.html#end-result-and-discussion",
+    "title": "AI in Biostatistics - Part 1",
+    "section": "End Result and Discussion",
+    "text": "End Result and Discussion\nAfter some further refinement and back-and-forth, we arrive at a much-improved plot which more closely captures the spirit of the original, while improving the colour scheme and facetting the data.\n\n\n\n\n\n\n\n\n\nPlots are a great use-case of AI, since the nitty gritty of colours, panes, text, etc can be a time-consuming hassle to navigate manually. AI in our experience does a good job of translating our descriptive visual prompts into code that achieves the described vision. Furthermore, the output is instantly verifiable (keep this point in mind!) and easy to refine."
+  },
+  {
+    "objectID": "posts/2024_08_08_ai_part_one/ai_part_one.html#providing-the-problem",
+    "href": "posts/2024_08_08_ai_part_one/ai_part_one.html#providing-the-problem",
+    "title": "AI in Biostatistics - Part 1",
+    "section": "Providing the Problem",
+    "text": "Providing the Problem\nIn this example, we provided ChatGPT with a very high-level summary of our data and research question, as seen here:\n\n\n\n\n\n\n\n\n\nAgain, we have tried to use prompts that anyone with some familiarity with stats and data analysis would be able to replicate and understand. Here, we simply mention to ChatGPT that there are patients, doctors and hospitals (highlighted above)."
+  },
+  {
+    "objectID": "posts/2024_08_08_ai_part_one/ai_part_one.html#the-response",
+    "href": "posts/2024_08_08_ai_part_one/ai_part_one.html#the-response",
+    "title": "AI in Biostatistics - Part 1",
+    "section": "The Response",
+    "text": "The Response\nAmazingly, especially if you have had limited exposure to AI, these high-level, lay descriptions of our data and research questions were sufficient for ChatGPT to suggest a mixed-effects logistic regression model. It recognised the binary outcome and the hierarchical structure of the data, and proceeded to provide R code to perform the analysis.\n\n\n\n\n\n\n\n\n\nHere is where we encounter a difference from our previous visualisation example, however. For someone unfamiliar with statistics, would they have known if this answer happened to be incorrect? Broadly, this response is on track, but should Doctor be nested within Hospital? (keep this in mind! #2).\nFor now, we do recognise that it has selected an appropriate model to get started. An impressive feat!"
+  },
+  {
+    "objectID": "posts/2024_08_08_ai_part_one/ai_part_one.html#end-result-and-discussion-1",
+    "href": "posts/2024_08_08_ai_part_one/ai_part_one.html#end-result-and-discussion-1",
+    "title": "AI in Biostatistics - Part 1",
+    "section": "End Result and Discussion",
+    "text": "End Result and Discussion\nFor brevity’s sake, we will not include the whole prompting process here. However, following the model specification, ChatGPT was able to successfully guide us through adding a random slope, and then summarising our model using the broom.mixed package (broom for mixed models, as the name suggests).\nIt then gave us code to check the model fit, run model diagnostics, and perform sensitivity analysis. At each stage, it was able to give advice on interpretation and next steps that we could not fault. Here are some highlights:"
+  },
+  {
+    "objectID": "posts/2024_08_08_ai_part_one/ai_part_one.html#why",
+    "href": "posts/2024_08_08_ai_part_one/ai_part_one.html#why",
+    "title": "AI in Biostatistics - Part 1",
+    "section": "Why?",
+    "text": "Why?\nWell yes, you could just use random data between 0 and 1 - but we (and we presume a lot of people) find less mental load involved when the data being worked with resembles the original data (as in, the values are between 140 and 200 for our “blood pressure” histogram, or between 70 and 130 for the “IQ scores” we’re plotting against values between 1.4m-2.1m for “height” etc)."
+  },
+  {
+    "objectID": "posts/2024_08_08_ai_part_one/ai_part_one.html#how-do-i-access-it",
+    "href": "posts/2024_08_08_ai_part_one/ai_part_one.html#how-do-i-access-it",
+    "title": "AI in Biostatistics - Part 1",
+    "section": "How do I access it?",
+    "text": "How do I access it?\nIt would be ironic if we provided this for you on our website, because then you would be sending your data to our servers. At our Institute, we run this on an internal server that is not accessible from outside our internal network.\nYou can download a copy from our github (it is a Shiny app that runs within R), and then run it locally on the desktop (or virtual) machine you are working on - anonymising your data without it leaving your analysis environment!"
+  },
+  {
+    "objectID": "posts/2024_08_08_ai_part_one/ai_part_one.html#anything-else",
+    "href": "posts/2024_08_08_ai_part_one/ai_part_one.html#anything-else",
+    "title": "AI in Biostatistics - Part 1",
+    "section": "Anything else?",
+    "text": "Anything else?\nOutside of adding the instructional blurb and some minor aesthetic tweaks, this entire app was written by ChatGPT. ChatGPT made the code available for download (as a zip file) and worked through a series of prompts (after the initial prompt) to make small tweaks to get the app doing exactly what we wanted.\nWe then thoroughly inspected the code (knowing roughly how it should have been written/structured) and tested it with a range of test datasets.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThere is a test dataset (.xlsx) available for download here (click downward arrow on right hand size of the page) alongside the app.\nHow was that created? You guessed it!"
   },
   {
     "objectID": "posts/2024-06-07_lmer-missing/missing_lmer.html",
@@ -315,108 +413,10 @@
     "text": "Reproducibility Information\nTo access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:\nhttps://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/lmer-missingx\nThe session information can also be seen below.\n\n\nR version 4.4.0 (2024-04-24)\nPlatform: aarch64-apple-darwin20\nRunning under: macOS Sonoma 14.5\n\nMatrix products: default\nBLAS:   /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRblas.0.dylib \nLAPACK: /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0\n\nlocale:\n[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8\n\ntime zone: Australia/Perth\ntzcode source: internal\n\nattached base packages:\n[1] stats     graphics  grDevices utils     datasets  methods   base     \n\nother attached packages:\n [1] lubridate_1.9.3   forcats_1.0.0     stringr_1.5.1     dplyr_1.1.4      \n [5] purrr_1.0.2       readr_2.1.5       tidyr_1.3.1       tibble_3.2.1     \n [9] ggplot2_3.5.1     tidyverse_2.0.0   patchwork_1.2.0   parameters_0.22.0\n[13] jtools_2.2.2      gtsummary_1.7.2   AER_1.2-12        survival_3.5-8   \n[17] sandwich_3.1-0    lmtest_0.9-40     zoo_1.8-12        car_3.1-2        \n[21] carData_3.0-5     merTools_0.6.2    arm_1.14-4        MASS_7.3-60.2    \n[25] lme4_1.1-35.4     Matrix_1.7-0     \n\nloaded via a namespace (and not attached):\n [1] rlang_1.1.4          magrittr_2.0.3       furrr_0.3.1         \n [4] compiler_4.4.0       vctrs_0.6.5          pkgconfig_2.0.3     \n [7] crayon_1.5.3         fastmap_1.2.0        backports_1.5.0     \n[10] labeling_0.4.3       pander_0.6.5         utf8_1.2.4          \n[13] promises_1.3.0       rmarkdown_2.27       markdown_1.13       \n[16] tzdb_0.4.0           nloptr_2.1.0         xfun_0.46           \n[19] jsonlite_1.8.8       later_1.3.2          broom_1.0.6         \n[22] parallel_4.4.0       R6_2.5.1             stringi_1.8.4       \n[25] parallelly_1.37.1    boot_1.3-30          estimability_1.5.1  \n[28] assertthat_0.2.1     Rcpp_1.0.13          iterators_1.0.14    \n[31] knitr_1.48           httpuv_1.6.15        splines_4.4.0       \n[34] timechange_0.3.0     tidyselect_1.2.1     rstudioapi_0.16.0   \n[37] abind_1.4-5          yaml_2.3.9           codetools_0.2-20    \n[40] listenv_0.9.1        lattice_0.22-6       shiny_1.8.1.1       \n[43] withr_3.0.0          bayestestR_0.13.2    coda_0.19-4.1       \n[46] evaluate_0.24.0      future_1.33.2        huxtable_5.5.6      \n[49] xml2_1.3.6           pillar_1.9.0         foreach_1.5.2       \n[52] insight_0.20.1       generics_0.1.3       hms_1.1.3           \n[55] munsell_0.5.1        commonmark_1.9.1     scales_1.3.0        \n[58] minqa_1.2.7          globals_0.16.3       xtable_1.8-4        \n[61] glue_1.7.0           emmeans_1.10.2       tools_4.4.0         \n[64] mvtnorm_1.2-5        grid_4.4.0           datawizard_0.11.0   \n[67] colorspace_2.1-0     nlme_3.1-164         Formula_1.2-5       \n[70] cli_3.6.3            fansi_1.0.6          broom.helpers_1.15.0\n[73] viridisLite_0.4.2    gt_0.10.1            gtable_0.3.5        \n[76] broom.mixed_0.2.9.5  sass_0.4.9           digest_0.6.36       \n[79] pbkrtest_0.5.3       htmlwidgets_1.6.4    farver_2.1.2        \n[82] htmltools_0.5.8.1    lifecycle_1.0.4      mime_0.12           \n[85] blme_1.0-5"
   },
   {
-    "objectID": "posts/2024-07-19_data_anonymiser/data_anonymiser.html",
-    "href": "posts/2024-07-19_data_anonymiser/data_anonymiser.html",
-    "title": "Data Anonymiser",
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "The Kids Biostats",
     "section": "",
-    "text": "Data access and security is a really important topic and one that can be challenging to navigate. Research ethics and governance approvals typically require detail about where and how data will be stored and analysed - and a researcher typically does not have approval for the data they are working with to be moved to other locations.\nThe rapid emergence of AI tools and online data analytics platforms (e.g. dashboards) may tempt researchers with the promise of short cuts to writing code and/or producing attractive figures with ease. For example, sites like this that will take an uploaded dataset and draw a figure from it following a user prompt – but where did your precious private research data just go?\nBelow, we share a data anonymising (obscuring) shiny app that you can run on your local machine. It will return to you, a “similar” dataset to your original dataset, allowing you to then safely use an online chat bot to assisted you to code up that complex figure or model."
-  },
-  {
-    "objectID": "posts/2024-07-19_data_anonymiser/data_anonymiser.html#the-process",
-    "href": "posts/2024-07-19_data_anonymiser/data_anonymiser.html#the-process",
-    "title": "Data Anonymiser",
-    "section": "The process",
-    "text": "The process\nThe app simply does the following:\n\ntakes an uploaded dataset (.csv or .xlsx),\nlets you choose which variables to keep and how many rows you want returned,\nreturns to you a fully obscured dataset (.csv) for download (see example above).\n\nContained on a tab within the app is a brief tabular report that compares your original data to the anonymised data.\n\nGetting started\nTo use the app, you can either download a .zip (or clone the github repository) at the following link:\nhttps://github.com/TelethonKids/data_anonymiser\nThen:\n\nUnzip the folder\nIn your R session, ensure you are in directory of the unzipped files\nIn your R console, type runApp()\n\nYou may need to install.packages() a few packages, though this app only leverages very popular packages that most R users are likely to already have."
-  },
-  {
-    "objectID": "posts/2024-07-19_data_anonymiser/data_anonymiser.html#data-obscuring-process",
-    "href": "posts/2024-07-19_data_anonymiser/data_anonymiser.html#data-obscuring-process",
-    "title": "Data Anonymiser",
-    "section": "Data obscuring process",
-    "text": "Data obscuring process\nThis is also explained on the app’s landing page – but the detail of what is happening in the data obscuring process is as follows:\n\nColumn names: These will all be replaced with a generic name of the form “VAR_1”, “VAR_2”, etc.\nContinuous variables\n\n15 or fewer unique values: These will be randomly (evenly) replaced with integers 0 through to the n (where n is the number of unique values within that variable).\nMore than 15 unique values: Will be replaced with random normally distributed data that has the same mean and standard deviation as the original data.\n\nDate variables: The min and max date will be found within the provided data, then uniformly distributed dates between that min and max date will be returned.\nCategorical variables (includes dichotomous variables)\n\n15 or fewer unique categories: These will be randomly (evenly) replaced with letters “A” through “O”\nMore than 15 unique categories: (E.g., studyIDs, names, addresses etc) these will be replaced with a random string of length 6 (may or may not be unique)."
-  },
-  {
-    "objectID": "posts/2024-07-19_data_anonymiser/data_anonymiser.html#acknowledgements",
-    "href": "posts/2024-07-19_data_anonymiser/data_anonymiser.html#acknowledgements",
-    "title": "Data Anonymiser",
-    "section": "Acknowledgements",
-    "text": "Acknowledgements\nThanks to Wesley Billingham and Zac Dempsey for providing feedback on and reviewing this post.\nYou can look forward to seeing posts from these other team members here in the coming weeks and months."
-  },
-  {
-    "objectID": "posts/2024-07-19_data_anonymiser/data_anonymiser.html#reproducibility-information",
-    "href": "posts/2024-07-19_data_anonymiser/data_anonymiser.html#reproducibility-information",
-    "title": "Data Anonymiser",
-    "section": "Reproducibility Information",
-    "text": "Reproducibility Information\nSession information:\n\n\nCode\nsessionInfo()\n\n\nR version 4.4.0 (2024-04-24)\nPlatform: aarch64-apple-darwin20\nRunning under: macOS Sonoma 14.5\n\nMatrix products: default\nBLAS:   /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRblas.0.dylib \nLAPACK: /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0\n\nlocale:\n[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8\n\ntime zone: Australia/Perth\ntzcode source: internal\n\nattached base packages:\n[1] stats     graphics  grDevices utils     datasets  methods   base     \n\nloaded via a namespace (and not attached):\n [1] htmlwidgets_1.6.4 compiler_4.4.0    fastmap_1.2.0     cli_3.6.3        \n [5] tools_4.4.0       htmltools_0.5.8.1 rstudioapi_0.16.0 yaml_2.3.9       \n [9] rmarkdown_2.27    knitr_1.48        jsonlite_1.8.8    xfun_0.46        \n[13] digest_0.6.36     rlang_1.1.4       evaluate_0.24.0"
-  },
-  {
-    "objectID": "posts/2024_08_08_ai_part_one/ai_part_one.html",
-    "href": "posts/2024_08_08_ai_part_one/ai_part_one.html",
-    "title": "AI in Biostatistics",
-    "section": "",
-    "text": "AI is a hot topic in most fields right now, and biostatistics is no exception! We (the Telethon Kids Institute biostats team) were asked to present at the weekly Institute seminar on the use of AI in statistical workflows.\nThe term AI has many meanings depending on the context - in this article we are referring exclusively to (and use the term interchangeably with) large language models (LLMs) such as ChatGPT and Claude. These tools are useful not just for writing sentences and paragraphs of text, but also for writing functioning code!\nSince first investigating the capabilities of ChatGPT in writing R code, our team has been working to utilise it safely and effectively in our everyday workflows.\nThe summary of our message to the Institute staff was that we cannot ignore the massive increase in efficiency that AI can bring if used properly. However, we also need to be very aware of its limitations, and the necessary role of human experts in the process of validating any non-trivial output.\nThis is Part One in a two-part series. This part will look at the capabilities of AI to benefit our workflows and increase efficiency. The next part will look at some limitations of the technology as it currently exists, including some practical recommendations to identify these issues.\n\n\nWe will work through a couple of practical examples of how we might use AI in an everyday workflow:\n\nData Visualisation\nStatistical Analysis\nBonus - Shiny App Development\n\nIn these examples, we will increasingly take our hands off the wheel and allow AI (in these examples, ChatGPT 4.0) to perform more and more of the task."
-  },
-  {
-    "objectID": "posts/2024_08_08_ai_part_one/ai_part_one.html#format-of-this-post",
-    "href": "posts/2024_08_08_ai_part_one/ai_part_one.html#format-of-this-post",
-    "title": "AI in Biostatistics",
-    "section": "",
-    "text": "We will work through a couple of practical examples of how we might use AI in an everyday workflow:\n\nData Visualisation\nStatistical Analysis\nBonus - Shiny App Development\n\nIn these examples, we will increasingly take our hands off the wheel and allow AI (in these examples, ChatGPT 4.0) to perform more and more of the task."
-  },
-  {
-    "objectID": "posts/2024_08_08_ai_part_one/ai_part_one.html#providing-the-blueprint",
-    "href": "posts/2024_08_08_ai_part_one/ai_part_one.html#providing-the-blueprint",
-    "title": "AI in Biostatistics",
-    "section": "Providing the Blueprint",
-    "text": "Providing the Blueprint\nChatGPT allows the user to provide images as a part of the prompt. With that in mind, the image was uploaded first by itself. ChatGPT was able to successfully identify the key elements of the plot just from the image (!), and so the next step was to give some guidance to make the plot more visually appealing.\nWith just one prompt: “can you facet wrap the min max data”, in addition to the original plot, it got to work. Once the original data was provided, it returned the requested modifcation - complete with Python code for the plot (R cannot be run within ChatGPT, though we certainly could have requested R code to run ourselves instead).\nHere is the entire prompt history, from beginning to end:\n\nOne image\nOne command\nSome (undescribed) data\n\nwas all the context required to understand and return, approximately, the desired output. We say approximately, since some key information such as the counts above certain levels, is absent from this first attempt."
-  },
-  {
-    "objectID": "posts/2024_08_08_ai_part_one/ai_part_one.html#end-result-and-discussion",
-    "href": "posts/2024_08_08_ai_part_one/ai_part_one.html#end-result-and-discussion",
-    "title": "AI in Biostatistics",
-    "section": "End Result and Discussion",
-    "text": "End Result and Discussion\nAfter some further refinement and back-and-forth, we arrive at a much-improved plot which more closely captures the spirit of the original, while improving the colour scheme and facetting the data.\n\n\n\n\n\n\n\n\n\nPlots are a great use-case of AI, since the nitty gritty of colours, panes, text, etc can be a time-consuming hassle to navigate manually. AI in our experience does a good job of translating our descriptive visual prompts into code that achieves the described vision. Furthermore, the output is instantly verifiable (keep this point in mind!) and easy to refine."
-  },
-  {
-    "objectID": "posts/2024_08_08_ai_part_one/ai_part_one.html#providing-the-problem",
-    "href": "posts/2024_08_08_ai_part_one/ai_part_one.html#providing-the-problem",
-    "title": "AI in Biostatistics",
-    "section": "Providing the Problem",
-    "text": "Providing the Problem\nIn this example, we provided ChatGPT with a very high-level summary of our data and research question, as seen here:\n\n\n\n\n\n\n\n\n\nAgain, we have tried to use prompts that anyone with some familiarity with stats and data analysis would be able to replicate and understand. Here, we simply mention to ChatGPT that there are patients, doctors and hospitals (highlighted above)."
-  },
-  {
-    "objectID": "posts/2024_08_08_ai_part_one/ai_part_one.html#the-response",
-    "href": "posts/2024_08_08_ai_part_one/ai_part_one.html#the-response",
-    "title": "AI in Biostatistics",
-    "section": "The Response",
-    "text": "The Response\nAmazingly, especially if you have had limited exposure to AI, these high-level, lay descriptions of our data and research questions were sufficient for ChatGPT to suggest a mixed-effects logistic regression model. It recognised the binary outcome and the hierarchical structure of the data, and proceeded to provide R code to perform the analysis.\n\n\n\n\n\n\n\n\n\nHere is where we encounter a difference from our previous visualisation example, however. For someone unfamiliar with statistics, would they have known if this answer happened to be incorrect? Broadly, this response is on track, but should Doctor be nested within Hospital? (keep this in mind! #2).\nFor now, we do recognise that it has selected an appropriate model to get started. An impressive feat!"
-  },
-  {
-    "objectID": "posts/2024_08_08_ai_part_one/ai_part_one.html#end-result-and-discussion-1",
-    "href": "posts/2024_08_08_ai_part_one/ai_part_one.html#end-result-and-discussion-1",
-    "title": "AI in Biostatistics",
-    "section": "End Result and Discussion",
-    "text": "End Result and Discussion\nFor brevity’s sake, we will not include the whole prompting process here. However, following the model specification, ChatGPT was able to successfully guide us through adding a random slope, and then summarising our model using the broom.mixed package (broom for mixed models, as the name suggests).\nIt then gave us code to check the model fit, run model diagnostics, and perform sensitivity analysis. At each stage, it was able to give advice on interpretation and next steps that we could not fault. Here are some highlights:"
-  },
-  {
-    "objectID": "posts/2024_08_08_ai_part_one/ai_part_one.html#why",
-    "href": "posts/2024_08_08_ai_part_one/ai_part_one.html#why",
-    "title": "AI in Biostatistics",
-    "section": "Why?",
-    "text": "Why?\nWell yes, you could just use random data between 0 and 1 - but we (and we presume a lot of people) find less mental load involved when the data being worked with resembles the original data (as in, the values are between 140 and 200 for our “blood pressure” histogram, or between 70 and 130 for the “IQ scores” we’re plotting against values between 1.4m-2.1m for “height” etc)."
-  },
-  {
-    "objectID": "posts/2024_08_08_ai_part_one/ai_part_one.html#how-do-i-access-it",
-    "href": "posts/2024_08_08_ai_part_one/ai_part_one.html#how-do-i-access-it",
-    "title": "AI in Biostatistics",
-    "section": "How do I access it?",
-    "text": "How do I access it?\nIt would be ironic if we provided this for you on our website, because then you would be sending your data to our servers. At our Institute, we run this on an internal server that is not accessible from outside our internal network.\nYou can download a copy from our github (it is a Shiny app that runs within R), and then run it locally on the desktop (or virtual) machine you are working on - anonymising your data without it leaving your analysis environment!"
-  },
-  {
-    "objectID": "posts/2024_08_08_ai_part_one/ai_part_one.html#anything-else",
-    "href": "posts/2024_08_08_ai_part_one/ai_part_one.html#anything-else",
-    "title": "AI in Biostatistics",
-    "section": "Anything else?",
-    "text": "Anything else?\nOutside of adding the instructional blurb and some minor aesthetic tweaks, this entire app was written by ChatGPT. ChatGPT made the code available for download (as a zip file) and worked through a series of prompts (after the initial prompt) to make small tweaks to get the app doing exactly what we wanted.\nWe then thoroughly inspected the code (knowing roughly how it should have been written/structured) and tested it with a range of test datasets.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nThere is a test dataset (.xlsx) available for download here (click downward arrow on right hand size of the page) alongside the app.\nHow was that created? You guessed it!"
+    "text": "AI in Biostatistics - Part 2\n\n\n\n\n\n\nAI\n\n\nR\n\n\n\n\n\n\n\n\n\nAug 9, 2024\n\n\nWesley Billingham, Dr Matthew Cooper\n\n\n\n\n\n\n\n\n\n\n\n\nAI in Biostatistics - Part 1\n\n\n\n\n\n\nAI\n\n\nR\n\n\n\n\n\n\n\n\n\nAug 8, 2024\n\n\nWesley Billingham, Dr Matthew Cooper\n\n\n\n\n\n\n\n\n\n\n\n\nAnalysing pre-post data\n\n\n\n\n\n\nPre-post\n\n\nMixed Models\n\n\nR\n\n\n\n\n\n\n\n\n\nJul 22, 2024\n\n\nDr Matthew Cooper\n\n\n\n\n\n\n\n\n\n\n\n\nData Anonymiser\n\n\n\n\n\n\nShiny\n\n\nR\n\n\n\n\n\n\n\n\n\nJul 19, 2024\n\n\nDr Matthew Cooper, Wesley Billingham\n\n\n\n\n\n\n\n\n\n\n\n\nParallel Computing in R\n\n\n\n\n\n\nR\n\n\nParallel\n\n\n\n\n\n\n\n\n\nJul 1, 2024\n\n\nZac Dempsey\n\n\n\n\n\n\n\n\n\n\n\n\nHandling Missing Data with LMER\n\n\n\n\n\n\nMissing Data\n\n\nMixed Models\n\n\nR\n\n\n\n\n\n\n\n\n\nJun 7, 2024\n\n\nDr Matthew Cooper\n\n\n\n\n\n\nNo matching items"
   }
 ]
