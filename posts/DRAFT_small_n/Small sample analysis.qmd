@@ -5,6 +5,9 @@ format:
     code-fold: true
     toc: true
     toc-location: left
+    other-links:
+      - text: The Jackson Laboratory
+        href: https://www.jax.org/jax-mice-and-services/strain-data-sheet-pages/body-weight-chart-000664   
 date: ""    
 author: "Bethy McKinnon"
 draft: true
@@ -82,7 +85,7 @@ do.dist.plot<-function(dat,x="x",xlab="Weight (g)",title="",
 Consider the following example that demonstrates how sampling variation increases with decreasing sample sizes.
 
 ::: {layout-ncol="2"}
-We will simulate data to represent a "population" of healthy female C57BL/6J mice who are expected to have a mean weight of 23 grams, with a standard deviation of 2 grams, at 14 weeks of age. (see here[https://www.jax.org/jax-mice-and-services/strain-data-sheet-pages/body-weight-chart-000664])
+We will simulate data to represent a "population" of healthy female C57BL/6J mice who are expected to have a mean weight of 23 grams, with a standard deviation of 2 grams, at 14 weeks of age. (The Jackson Laboratory)
 
 ```{r}
 set.seed(5)
