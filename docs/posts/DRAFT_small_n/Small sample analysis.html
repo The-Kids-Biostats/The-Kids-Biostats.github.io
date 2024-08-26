@@ -6,10 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Dr Matthew Cooper, Wesley Billingham">
-<meta name="dcterms.date" content="2024-05-06">
+<meta name="author" content="Bethy McKinnon">
 
-<title>The Kids Biostats - AI in Biostatistics</title>
+<title>The Kids Biostats - Small-sample analysis</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -69,11 +68,40 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="floating nav-fixed slimcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
@@ -121,15 +149,11 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">AI in Biostatistics</h1>
-                                <div class="quarto-categories">
-                <div class="quarto-category">AI</div>
-                <div class="quarto-category">R</div>
-              </div>
-                  </div>
+      <h1 class="title">Small-sample analysis</h1>
+                      </div>
   </div>
     
   
@@ -138,16 +162,10 @@ ul.task-list li input[type="checkbox"] {
       <div>
       <div class="quarto-title-meta-heading">Author</div>
       <div class="quarto-title-meta-contents">
-               <p>Dr Matthew Cooper, Wesley Billingham </p>
+               <p>Bethy McKinnon </p>
             </div>
     </div>
       
-      <div>
-      <div class="quarto-title-meta-heading">Published</div>
-      <div class="quarto-title-meta-contents">
-        <p class="date">May 6, 2024</p>
-      </div>
-    </div>
     
       
     </div>
@@ -155,246 +173,206 @@ ul.task-list li input[type="checkbox"] {
   
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#section" id="toc-section" class="nav-link active" data-scroll-target="#section"></a></li>
+  <li><a href="#what-is-small" id="toc-what-is-small" class="nav-link" data-scroll-target="#what-is-small">What is small?</a></li>
+  <li><a href="#sample-statistics-and-sampling-variation" id="toc-sample-statistics-and-sampling-variation" class="nav-link" data-scroll-target="#sample-statistics-and-sampling-variation">Sample statistics and sampling variation</a></li>
+  <li><a href="#comparative-studies-with-small-group-sizes" id="toc-comparative-studies-with-small-group-sizes" class="nav-link" data-scroll-target="#comparative-studies-with-small-group-sizes">Comparative studies with small group sizes</a></li>
+  <li><a href="#using-confidence-intervals-to-guide-decision-making" id="toc-using-confidence-intervals-to-guide-decision-making" class="nav-link" data-scroll-target="#using-confidence-intervals-to-guide-decision-making">Using confidence intervals to guide decision-making</a></li>
+  <li><a href="#final-comments" id="toc-final-comments" class="nav-link" data-scroll-target="#final-comments">Final comments</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    </div>
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content quarto-banner-title-block page-columns page-full" id="quarto-document-content">
 
 
 
 
 
-<section id="overview" class="level1">
-<h1>Overview</h1>
-<p>AI is a hot topic in most fields right now, and biostatistics is no exception! We (the Telethon Kids Institute biostats team) were asked to present at the weekly Institute seminar on the use of AI in statistical workflows.</p>
-<p>The term AI has many meanings depending on the context - in this article we are referring exclusively to (and use the term interchangeably with) large language models (LLMs) such as ChatGPT and Claude. These tools are useful not just for writing sentences and paragraphs of text, but also functioning code!</p>
-<p>Since first investigating the capabilities of ChatGPT at writing R code, our team has been working to utilise it safely and effectively in our everyday workflows.</p>
-<p>The summary of our message to the Institute staff was that we cannot ignore the massive increase in efficiency that AI <strong><em>can</em></strong> bring if used properly. However, we also need to be <u><strong>very</strong></u> aware of its limitations, and the necessary role of human experts in the process of validating any non-trivial output.</p>
-<p>This is Part One in a two part series. This part will look at the capabilities of AI to benefit our workflows and increase efficiency. The next part will look at some limitations of the technology as it currently exists, including some practical recommendations to identify these issues.</p>
-<section id="format-of-this-post" class="level2">
-<h2 class="anchored" data-anchor-id="format-of-this-post">Format of this post</h2>
-<p>We will work through a couple of practical examples of how we might use AI in an everyday workflow:</p>
-<ol type="1">
-<li><p><strong>Data Visualisation</strong></p></li>
-<li><p><strong>Statistical Analysis</strong></p></li>
-<li><p><strong>Bonus - Shiny App Development</strong></p></li>
-</ol>
-<p>In these examples, we will increasingly take our hands off the wheel and allow AI (in these examples, <a href="https://openai.com/chatgpt/">ChatGPT 4.0</a>) to perform more and more of the task.</p>
+<section id="section" class="level2">
+<h2 class="anchored" data-anchor-id="section"></h2>
 </section>
+<section id="what-is-small" class="level1">
+<h1>What is small?</h1>
+<p>Sample size is often limited by practical constraints eg cost of equipment, logistics of animal breeding and management, prevalence of patients with a particular condition. While small can mean different things to different researchers, group sizes of 3-10 are typical of many animal studies and laboratory experiments.</p>
 </section>
-<section id="example-1---data-visualisation" class="level1">
-<h1>Example 1 - Data Visualisation</h1>
-<p>A couple of summers ago (2021/22) felt unusually hot in Perth, Australia. Specifically, it seemed that the maximum temperature was regularly exceeding round numbers like 35 or 40 degrees Celsius. The most recent summer felt similar, but as it relates to ‘hot days’, were we seeing more of these? My colleague, being a statistician, wished to contrast this most recent summer to previous summers.</p>
-<p>He whipped up a quick plot using ggplot2, with a focus on the number of ‘summer days’ above a certain maximum (and equally important, ‘hot nights’ that stayed above certain minimums). Shown below, is data through to mid February 2024:</p>
-<div class="cell" data-layout-align="center">
+<section id="sample-statistics-and-sampling-variation" class="level1 page-columns page-full">
+<h1>Sample statistics and sampling variation</h1>
+<p>To study a population of interest, data is gathered from a representative sample and characterised by summaries such as the sample median, mean, standard deviation or a proportion. These sample statistics vary about the population parameter for which they provide an estimate, and confidence intervals give a plausible range for this population value.</p>
+<p>The smaller the sample size, the larger the distance between the statistic and the true value (ie the sampling error) is likely to be, and the wider the range of the confidence interval.</p>
+<p>Consider the following example that demonstrates how sampling variation increases with decreasing sample sizes.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<p>We will simulate data to represent a “population” of healthy female C57BL/6J mice who are expected to have a mean weight of 23 grams, with a standard deviation of 2 grams, at 14 weeks of age. (see here[https://www.jax.org/jax-mice-and-services/strain-data-sheet-pages/body-weight-chart-000664])</p>
+</div>
+<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure class="figure">
-<p><img src="weather_p1.jpeg" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+<p><img src="Small-sample-analysis_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>Here we can see the number of days over a certain maximum for each year since 2010. For example, in 2023, Perth had 0 days above 40°C and 4 above 38°C.</p>
-<p>The sweltering summer in question (2021/22) had a whopping 12 days over 40°C and 23 above 38°C. Since the next highest count since 2010 was 7 and 14 respectively, it’s fair to say this was quite the outlier! And the ‘current’ (at the time) summer was similar was to this, but yet to exceed it.</p>
-<p>My colleague felt that the data visualisation could probably be cleaner and more clear, so enlisted ChatGPT for help (for one of the first times!).</p>
-<section id="providing-the-blueprint" class="level2">
-<h2 class="anchored" data-anchor-id="providing-the-blueprint">Providing the Blueprint</h2>
-<p>ChatGPT allows the user to provide images as a part of prompts. With that in mind, the image was uploaded first by itself. ChatGPT was able to successfully identify the key elements of the plot just from the image (!), and so the next step was to give some guidance to make the plot more visually appealing.</p>
-<p>With just one prompt: “can you facet wrap the min max data”, in addition to the original plot, it got to work. Once the original data was provided, it returned the requested modifcation - complete with Python code for the plot (R cannot be run within ChatGPT, though we certainly could have requested R code to run ourselves instead).</p>
-<p>Here is the entire prompt history, from beginning to end:</p>
-<ul>
-<li>One image</li>
-<li>One command</li>
-<li>Some (undescribed) data</li>
-</ul>
-<p>was all the context required to understand and return, approximately, the desired output. We say approximately, since some key information such as the counts above certain levels, is absent from this first attempt.</p>
-<div class="cell" data-layout-align="center">
+</div>
+</div>
+<p>In practice researchers would only have data on a sample (subset) of a (usually hypothetical) population, from which to calculate summary statistics as estimates of general population characteristics. As may be expected, for larger datasets the calculated summary statistic is more likely to be closer to the value of the population from which the sample was drawn. Let’s see how the calculated mean might be expected to vary from sample to sample for our mouse weight example.</p>
+<p>We’ll start by randomly 500 drawing samples that are each of size 50.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<p>Note that the mean of the sample means takes a value of 23.00, the same value, to 2 decimal places, as that in the parent population, but the spread is much reduced (Fig 2b). In fact, the standard deviation of the sample means (ie standard error of the mean) is 0.3, in line with the expected reduction of the population standard deviation of 2 by a factor of <span class="math inline">\(1/\sqrt{n}\)</span>.</p>
+</div>
+<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure class="figure">
-<p><img src="weather_p3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+<p><img src="Small-sample-analysis_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<div class="cell" data-layout-align="center">
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p><strong>Figure 2</strong><br>
+(a) The first 5 samples of 500 draws having a sample size of 50, from a simulated population with mean=23 and std dev=2.<br>
+<br> (b) The distribution of the sample means calculated from each of the 500 draws.</p>
+</div></div><p>Now let’s see what happens as the sample size decreases.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure class="figure">
-<p><img src="weather_p4.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+<p><img src="Small-sample-analysis_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
+<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Small-sample-analysis_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p><strong>Figure 3</strong><br>
+The first 5 samples of 500 draws having a sample size of 50, and those having a sample size of 5, together with the respective distributions of their sample means.</p>
+</div></div><div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<p>It is clear that as the sample size decreases the estimates of the population mean become progressively more variable. This increased variability is taken into account in the formula for calculating the 95% confidence interval which become accordingly wider as precision decreases:</p>
+</div>
+<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Small-sample-analysis_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p><strong>Figure 4</strong><br>
+Random samples of increasing size, annotated with means and 95% confidence intervals.</p>
+</div></div></section>
+<section id="comparative-studies-with-small-group-sizes" class="level1 page-columns page-full">
+<h1>Comparative studies with small group sizes</h1>
+<p>A major limitation of small-sample studies is that they lack power to detect anything other than large differences or large “effects”, as the sampling distribution of the test statistic needs to take account of increased variability of the sample statistics on which the test procedure is based.</p>
+<p>For comparisons of mean values (eg a t-test) a large effect translates to a large difference between groups relative to the within-group variation.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<p>If n=5 for both groups, the minimum difference a 2-sample t-test has at least 80% power to detect is just over 2 standard deviations. In line with the example above, if we were comparing weights of 2 treatment groups of mice, and it’s reasonable to assume a common SD of 2g, this would correspond to an absolute difference of 4g in the mean weights, quite a large treatment effect.</p>
+</div>
+<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Small-sample-analysis_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p><strong>Figure 4</strong><br>
+Power plots for a 2-sample t-test, with alpha=0.05 and equal sample sizes, assuming equal variances.</p>
+</div></div><p>At the design stage of an experiment, determine the minimum clinically meaningful difference/effect size you want to be able to detect and power accordingly. Consider increasing power by extending the simple 2-sample approach to factorial designs where the between treatment group differences are simultaneously examined across one or more factors (eg sex, age group).</p>
 </section>
-<section id="end-result-and-discussion" class="level2">
-<h2 class="anchored" data-anchor-id="end-result-and-discussion">End Result and Discussion</h2>
-<p>After some further refinement and back-and-forth, we arrive at a much-improved plot which more closely captures the spirit of the original, while improving the colour scheme and facetting the data.</p>
-<div class="cell" data-layout-align="center">
+<section id="using-confidence-intervals-to-guide-decision-making" class="level1 page-columns page-full">
+<h1>Using confidence intervals to guide decision-making</h1>
+<p>Confidence intervals can be a little tricky to get your head around. They don’t provide a range in which X% of the data values lie, but rather relate to our belief regarding where the population parameter of interest (eg true mean or proportion) lies. The “confidence” comes from sampling theory: Suppose we sample the same population many many times, and for each sample calculate the 95% confidence interval around the sample mean using the known formula, we would expect that 95% of the time the constructed interval will capture the true population mean. Sometimes, just by chance, the whole sample may lie towards the tail of the population distribution (see Sample 5 for n=5 in the example above) so that the 95% CI happens to “miss” the true value. We don’t actually know if this has happened of course, since in practice we only have a single sample and don’t know the true parameter value for the population from which the sample was drawn; hence the level of confidence simply reflects a rather nominal degree of plausibility.</p>
+<p>Even though we know that for small sample sizes the calculated confidence intervals will be wide, particularly for proportions, the upper and/or lower limits can still offer useful bounds to aid with decision making.</p>
+<p>For example, patient recruitment to an early-phase clinical trial of a new drug under development may cease early if there is sufficient evidence of high toxicity or provisional efficacy according to pre-defined criteria. Stopping rules based on one-sided binomial confidence intervals can inform trial planning and implementation.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
+<p>Say enrolment into a dose expansion cohort is planned, with dose limiting toxicity set at a rate of 40% and demonstration of provisional efficacy if treatment response rates are at least 50%. Assuming the planned cohort size is 10, Figure 4 presents 80% lower confidence bounds (LCBs) as a reference for response counts, and more conservative 90% upper confidence bounds (UCBs) for toxicity counts .</p>
+</div>
+<div class="cell quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
+<div>
 <figure class="figure">
-<p><img src="weather_p8.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+<p><img src="Small-sample-analysis_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>Plots are a great use-case of AI, since the nitty gritty of colours, panes, text, etc can be a time-consuming hassle to do manually. AI in our experience does a good job of translating our descriptive visual prompts into code that achieves the described vision. Furthermore, the output is instantly verifiable (keep this point in mind!) and easy to refine.</p>
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p><strong>Figure 4</strong> 90% upper confidence bounds (UCBs, teal) for dose-limiting toxicity (DLT) and 80% lower confidence bounds (LCBs, ochre) for treatment response, for a sample size of 10. Bounds were constructed from one-sided binomial confidence intervals, using the Clopper-Pearson method.</p>
+</div></div><p>The drug would be deemed to have an acceptable toxicity profile if no more than 1 subject was impacted by a dose-limiting toxicity (DLT). Given the small sample size, if there are 2 or more impacted subjects then the confidence interval for the true toxicity rate will be in excess of the 40% threshold, even though the observed rate may be no more than 20%. The stopping rule for unacceptable toxicity would be invoked if a second DLT occurs prior to the final enrolment. Similarly, if treatment elicits a defined response in at least 8 patients, there is reasonable confidence that the treatment has demonstrated sufficient efficacy to warrant continued investigation, and should this be established prior to enrolment of the complete cohort the trial may be stopped early.</p>
+<p>Confidence intervals for proportions are notoriously wide, and typically large sample sizes are sought to obtain a required level of precision for the rate that is being estimated. If available resources are limited, it may be that a more efficient experimental could be considered.</p>
 </section>
-</section>
-<section id="example-2---statistical-workflow" class="level1">
-<h1>Example 2 - Statistical Workflow</h1>
-<p>The following example was created specifically for our presentation. We wanted to mimic a researcher with a passing understanding in statistics, but no expertise, as they attempt to run through an entire statistical pipeline from design to analysis. This would involve more careful and lengthy prompting than the previous example.</p>
-<p>For the example, we downloaded a data set contacting simulated lung data for 8528 individuals. It can be found here:</p>
-<p>https://stats.idre.ucla.edu/stat/data/hdp.csv (NOTE clicking the link initiates a download of the data.)</p>
-<p>The data has the following variables of interest for our example:</p>
-<ul>
-<li><strong>Outcome</strong>
-<ul>
-<li>remission (0/1)</li>
-</ul></li>
-<li><strong>Patient-level variables</strong>
-<ul>
-<li>IL6 levels</li>
-<li>CRP levels</li>
-<li>Length of hospital stay</li>
-<li>Family history</li>
-<li>Cancer stage</li>
-</ul></li>
-<li><strong>Physician-level variables</strong>
-<ul>
-<li>Physician experience</li>
-<li>Physician ID</li>
-<li>Hospital ID</li>
-</ul></li>
-</ul>
-<p>We will be very careful to avoid statistical terminology as we prompt ChatGPT, but we can see that there is an implied nesting structure to our data, with patient inside physician inside hospital. With that in mind, and the fact that our outcome is binary, we are hoping that ChatGPT suggests a hierarchical logistic regression.</p>
-<section id="providing-the-problem" class="level2">
-<h2 class="anchored" data-anchor-id="providing-the-problem">Providing the Problem</h2>
-<p>In this example, we provided ChatGPT with a very high-level summary of our data and research question, as seen here:</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="log_reg_1_v2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Again, we have tried to use prompts that anyone with some familiarity with stats and data analysis would be able to replicate and understand. Here, we simply mention to ChatGPT that there are patients, doctors and hospitals (highlighted above).</p>
-</section>
-<section id="the-response" class="level2">
-<h2 class="anchored" data-anchor-id="the-response">The Response</h2>
-<p>Amazingly, especially if you have had limited exposure to AI, these high-level, lay descriptions of our data and research questions were sufficient for ChatGPT to suggest a mixed-effects logistic regression model. It recognised the binary outcome and the hierarchical structure of the data, and proceeded to provide R code to perform the analysis.</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="log_res_2_v2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Here is where we encounter a difference from our previous visualisation example, however. For someone unfamiliar with statistics, would they have known if this answer happened to be incorrect? Broadly, this response is on track, but should Doctor be nested within Hospital? (keep this in mind! #2).</p>
-<p>For now, we do recognise that it has selected an appropriate model to get started. An impressive feat!</p>
-</section>
-<section id="end-result-and-discussion-1" class="level2">
-<h2 class="anchored" data-anchor-id="end-result-and-discussion-1">End Result and Discussion</h2>
-<p>For brevity’s sake, we will not include the whole prompting process here. However, following the model specification, ChatGPT was able to successfully guide us through adding a random slope, and then summarising our model using the <code>broom.mixed</code> package (broom for mixed models, as the name suggests).</p>
-<p>It then gave us code to check the model fit, run model diagnostics, and perform sensitivity analysis. At each stage, it was able to give advice on interpretation and next steps that we could not fault. Here are some highlights:</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="log_reg_6.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="log_reg_4.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-</section>
-<section id="bonus-example---data-anonymising-app" class="level1">
-<h1>Bonus Example - Data Anonymising App</h1>
-<p>One thing that the first example might make you think is, “Great! I’m going to make all my graphs online”. Slow down! The data uploaded as part of that example is public data, freely available from the Australia <a href="https://reg.bom.gov.au/climate/data-services/">Bureau of Meteorology</a> website. There are a lot of AI based websites that will draw a graph for you if you provide them data to do so - <a href="https://www.graphmaker.ai/">there are some where</a> that is all they do.</p>
-<p>However. For most researchers, particularly in the health research space, <u><strong>you will not have approval (ethics and/or governance)</strong></u> to upload your data to random websites.</p>
-<p>So, we created an app that will transform your data into a reduced, fully-anonymised dataset that can then be used in online AI tools for assistance with coding up figures or structuring models. This is not just anonymised in the sense of the masking/removing the identifiable data - all <code>values</code> in the dataset are replaced, with numeric data regenerated, and category and variable labels stripped off.</p>
-<p>It looks like this:</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="app_preview.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<section id="why" class="level2">
-<h2 class="anchored" data-anchor-id="why">Why?</h2>
-<p>Well yes, you could just use random data between 0 and 1 - but we (and we presume a lot of people) find less mental load involved when the data being worked with resembles the original data (as in, the values are between 140 and 200 for our “blood pressure” histogram, or between 70 and 130 for the “IQ scores” we’re plotting against values between 1.4-2.1 for “height” etc).</p>
-</section>
-<section id="how-do-i-access-it" class="level2">
-<h2 class="anchored" data-anchor-id="how-do-i-access-it">How do I access it?</h2>
-<p>It would be ironic if we provided this for you on our website, because then you would be sending your data to our servers. At Telethon Kids, we run this on an internal server that is not accessible from outside our internal network.</p>
-<p>You can <a href="https://github.com/TelethonKids/data_anonymiser">download a copy from our github</a> (it is a Shiny app that runs within R), and then run it locally on the desktop (or virtual) machine you are working on - anonymising your data without it leaving your analysis environment.</p>
-</section>
-<section id="anything-else" class="level2">
-<h2 class="anchored" data-anchor-id="anything-else">Anything else?</h2>
-<p>Outside of adding the instructional blurb and some minor aesthetic tweaks, <strong>this entire app was written by ChatGPT</strong>. ChatGPT made the code available for download (as a zip file) and worked through a series of prompts (after the initial prompt) to make small tweaks to get the app doing exactly what we wanted.</p>
-<p>We then thoroughly inspected the code (knowing roughly how it should have been written/structured) and tested it with a range of test datasets.</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="app_17_iterations.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="400"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="app_as_zip.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>There is a test dataset (<code>.xlsx</code>) available <a href="https://github.com/TelethonKids/data_anonymiser/blob/main/synthetic_health_dataset_final.xlsx">for download here</a> (click downward arrow on right hand size of the page) with the app.</p>
-<p>How was that created? You guessed it!</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="app_synth_req.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="app_synth_req_3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="350"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-</section>
-<section id="end-result-and-discussion-2" class="level1">
-<h1>End Result and Discussion</h1>
-<p>In this Part One part, we have seen how easy and powerful the use of AI can be in the data analysis and statistical workflow.</p>
-<p>In Part Two, we will look at some pitfalls of AI and some traps we can fall into. We’ll see if we can determine some good rules-of-thumb for its use to ensure our AI-assisted work remains both efficient and accurate.</p>
+<section id="final-comments" class="level1">
+<h1>Final comments</h1>
+<p>For small-sample studies, as with those based on larger samples, consider if your results can be appropriately generalised to fit with the aim of the study.</p>
+<p><strong>Population sampling:</strong> Consider if there are subtle biases resulting from recruitment strategies that may impact how representative the sample is of the population being characterized.</p>
+<p><strong>Laboratory experiments or animal studies:</strong> Ensure that environmental factors have been adequately controlled and appropriate randomization undertaken so that differences between groups can be confidently attributed to the condition/treatment under study. Small-sample experiments require tight control of between-individual variation to achieve maximum power and appropriate randomization must be undertaken for results to be valid.</p>
 
 
 </section>
