@@ -4,6 +4,7 @@ author: "Zac Dempsey"
 format:
   html:
     code-fold: true
+    tabset: true
     toc: true
     toc-location: left
 date: "2024-07-01"
@@ -16,10 +17,10 @@ draft: true
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 suppressMessages(library(tidyverse))
-library(gtsummary)
-library(summarytools)
-library(desctable)
-library(tableone)
+#library(gtsummary)
+#library(summarytools)
+#library(desctable)
+#library(tableone)
 ```
 
 # Overview
@@ -54,7 +55,7 @@ There are *many* `R` packages and functions dedicated to this very task. We will
 
 # Contenders
 
-Let's define our set of contenting packages. Keep in mind this is not an exhaustive list of all summary and tabling functions – we select only a few that we often use or come across in our work. Any function is considered that is capable of presenting a formatted summary table in html, pdf and/or Word form. Therefore, the various summary tabling functions that print output to console (e.g., `Hmisc::describe`, `tableone::CreateTableOne`) are not considered.
+Let's define our set of contenting packages. Keep in mind this is not an exhaustive list of all summary and tabling functions – we select only a few that we often use or come across in our work. Any function is considered that is capable of presenting a formatted summary table in html, pdf and/or Word form. Therefore, the various summary tabling functions that print output to console (e.g., `Hmisc::describe`) are not considered.
 
 -   [`gtsummary::tbl_summary`](https://www.danieldsjoberg.com/gtsummary/)
 -   [`table1::table1`](https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html)
@@ -82,35 +83,33 @@ head(flchain)
 str(flchain)
 ```
 
+<p>
+
 This has the following variable types
 
--   Continuous (numeric)
-
-    -   `age`
-
-    -   `kappa`
-
-    -   `lambda`
-
-    -   `futime`
-
-    -   `creatinine`
-
--   Ordinal
-
-    -   `sample.yr`
-
-    -   `death`
-
-    -   `chapter`
-
--   Nominal
-
-    -   `sex`
-
-    -   `mgus`
-
-    -   `flc.grp`
++--------------+------------------+
+| Continuous   | -   `age`        |
+|              |                  |
+|              | -   `kappa`      |
+|              |                  |
+|              | -   `lambda`     |
+|              |                  |
+|              | -   `futime`     |
+|              |                  |
+|              | -   `creatinine` |
++--------------+------------------+
+| Ordinal      | -   `sample.yr`  |
+|              |                  |
+|              | -   `death`      |
+|              |                  |
+|              | -   `chapter`    |
++--------------+------------------+
+| Nominal      | -   `sex`        |
+|              |                  |
+|              | -   `mgus`       |
+|              |                  |
+|              | -   `flc.grp`    |
++--------------+------------------+
 
 <p>
 
@@ -118,18 +117,24 @@ This has the following variable types
 
 For each method, we will:
 
+-   Stratify results by `sex`.
 -   Report median (interquartile range) for `age` and mean (standard deviation) for all other continuous (numeric) variables.
 -   Apply level specifications to ordinal variables (`sample.yr`)
--   Stratify results by `death`.
--   Report the `lambda` statistics to 1 decimal place.
--   Rename sample.yr to Sample Year.
+-   Round continuous values to 1 decimal places.
+-   Apply nicely formatted labels to all variables
+-   Apply basic statistical to quantify any differences between the stratified death groups.
+    -   Chi-square test for categorical variables
+    -   Kruskal-Wallis test for continuous variables.
+-   Add overall summary statistics across all levels of the stratification variable.
 -   Render in html, pdf and word and compare consistency across these.
 
 Where any of the above was seemingly not possible, it will be reported in the comments of that method. Comments will also be made on the quality of the documentation for each package and the wealth of online support through StackOverflow, blogs, tutorials, etc.
 
-# Summary Tables
+<br>
 
-## Method 1 - `gtsummary`
+# 1) `gtsummary::tbl_summary`
+
+## i) Render table
 
 -   Required data structure:
     -   In general, `tbl_summary` requires data in **long format**. This is consistent across both the `tbl_summary` and `tbl_strata` functions.
@@ -138,55 +143,56 @@ Where any of the above was seemingly not possible, it will be reported in the co
     -   All variables included in the input data are, by default, included in the output. Therefore, the user must select/un-select columns pursuant to what is required.
 
 ```{r echo = T}
+library(gtsummary)
 
-#tf <- tempfile("example", fileext = ".docx")
-
-flchain %>%
-  gtsummary::tbl_summary(by = "death", # Levels to separate data by
-                         missing = "ifany", # Show missing values for a variable only if they exist
-                         digits = list(all_categorical() ~ c(0, 2), # Categorical counts 0dp; relative percentage 2dp
-                                       all_continuous() ~ 2, # Continuous summary stats 2dp
-                                       lambda ~ 1), # Report stats for `lambda` to 1dp
-                         type = all_continuous() ~ "continuous2", # Define multi-level summary stats for all continuous variables
-                         statistic = list(all_continuous() ~ c("{mean} ({sd})",            # Display mean & standard deviation
-                                                               "{median} ({p25}, {p75})"), # Display median & IQR
-                                          all_categorical() ~ "{n} ({p}%)"),               # Display count & percentage
-                         label = list(sample.yr ~ "Sample Year")) %>% # Amend label of `sample.yr`
+sumtab1 <- flchain %>%
+  mutate(death = case_match(death, 
+                          0 ~ "Alive at last contact date", 
+                          1 ~ "Dead"),
+         sex = case_match(sex,
+                          "F" ~ "Female",
+                          "M" ~ "Male")) %>%
   
-  add_overall(last = TRUE) %>% # Add overall counts, set to `last` column of output
-  italicize_labels() %>% # Italicize variable labels
-  
-  add_p(test = list(all_categorical() ~ "chisq.test", # Apply chi square test to all categorical variables
-                    c(kappa, lambda) ~ "t.test", # Apply t.test to `kappa`, `lambda`
-                    c(flc.grp, creatinine) ~ "kruskal.test"), # Apply Kruskal-Wallis test to `flc.grp` and `creatinine`
-        test.args = list(all_tests("t.test") ~ list(var.equal = F, # Equal variance assumption for t-test FALSE
-                                                       paired = F), # Paired t-test FALSE
-                         all_tests("chisq.test") ~ list(correct = F)), # Continuity correction = FALSE to chi-square test                                                   
-        pvalue_fun = function(x) style_pvalue(x, digits = 3)) # Set p-value rounding (`gtsummary::style_pvalue` supports only values 1, 2, 3)
-  #as_gt() %>% 
-  #gt::gtsave(filename = "example.docx")
-
-```
-
-<p>
-
--   For stratified tables, we can use `tbl_summary` inside of the `tbl_strata` function. Take for example the below, which stratifies by `sex`.
-
-```{r echo = T}
-
-flchain %>%
-  tbl_strata(strata = sex, 
-             .tbl_fun = ~.x %>%
   gtsummary::tbl_summary(by = "death",
-                         # test 1
-                         digits = lambda ~ 1,
-                         label = sample.yr ~ "Sample Year") %>%
-  add_overall(last = TRUE) %>%
-  italicize_labels() %>%
-  add_p())
+                         digits = list(all_categorical() ~ c(0, 1),
+                                       all_continuous() ~ 1),
+                         statistic = list(all_continuous() ~ "{mean} ({sd})",
+                                          age ~ "{median} ({p25}, {p75})"),       
+                         label = list(sample.yr ~ "Sample Year",
+                                      sex ~ "Sex",
+                                      age ~ "Age (years)",
+                                      kappa ~ "Serum free light chain: kappa portion",
+                                      lambda ~ "Serum free light chain: lambda portion",
+                                      flc.grp ~ "FLC group",
+                                      creatinine ~ "Serum creatinine",
+                                      mgus ~ "Monoclonal gammapothy diagnosis",
+                                      futime ~ "Time from enrolment until death (days)",
+                                      chapter ~ "Primary cause of death")) %>%
+  gtsummary::add_overall(last = TRUE)
 ```
 
-### Comments (pros/cons)
+## ii) Output table
+
+Print this to html
+
+```{r}
+sumtab1
+```
+
+Render to word doc
+
+```{r}
+sumtab1_word <- sumtab1 %>%
+  gtsummary::as_flex_table(.)
+
+officer::read_docx() %>%
+  flextable::body_add_flextable(sumtab1_word) %>%
+  print(target = "sumtab1.docx")
+```
+
+![Word document format](sumtab1_word.png){fig-align="center"}
+
+## iii) Comments
 
 -   **Pros**
     -   Massive amount of options/variability in output
@@ -200,29 +206,181 @@ flchain %>%
 
 <br>
 
-## Method 4 - `tableone`
+# 2) `table1::table1`
 
-```{r echo = T}
-tableone::CreateTableOne(data = flchain,
-                         strata = "death",
-                         test = TRUE,
-                         testApprox = chisq.test, # For categorical variables (where Chi-Square approximation is appropriate), apply chi-square test
-                         argsApprox = list(correct = T), # Arguments to above
-                         
-                         testExact = fisher.test, # For categorical variables with small counts, apply Fisher's test
-                         argsExact = list(workspace = 2*10^5), # Arguments to above
-                         
-                         testNormal = oneway.test, # For normally distributed continuous variables, apply one-way test (==t.test if 2 groups)
-                         argsNormal = list(var.equal = T), # Arguments to above
-                         
-                         testNonNormal = kruskal.test, # For non-normally distributed continuous variables, apply Kruskal-Wallis rank-sum test
-                         argsNonNormal = list(NULL), # Arguments to above
-                         
-                         addOverall = T # Add overall column
-                         )
+## i) Render table
+
+```{r}
+library(table1)
+flchain_mod <- flchain
+
+# Re-code categorical variable levels
+flchain_mod <- flchain_mod %>%
+  mutate(sex = case_match(sex, 
+                          "F" ~ "Female", 
+                          "M" ~ "Male"),
+         mgus = case_match(mgus, 
+                           0 ~ "No", 
+                           1 ~ "Yes"),
+         death = case_match(death, 
+                            0 ~ "Alive at last contact date", 
+                            1 ~ "Dead"),
+         sample.yr = as_factor(sample.yr))
+
+# Custom rendering function to apply formatting to table
+rndr <- function(x, name, ...) {
+  if (!is.numeric(x)) 
+    return(table1::render.categorical.default(x, 
+                                              na.is.category = FALSE,
+                                              digits.pct = 1
+                                              ))
+  
+  sum_stats <- if (name %in% c("age")){
+    "Median [Q1, Q3]"
+  } else {
+    "Mean (SD)"
+  }
+  table1::parse.abbrev.render.code(c("", sum_stats))(x)
+}
+
+#pvalue <- function(x, ...) {
+#    # Construct vectors of data y, and groups (strata) g
+#    y <- unlist(x)
+#    g <- factor(rep(1:length(x), times=sapply(x, length)))
+#    if (is.numeric(y)) {
+#        # For numeric variables, perform a standard 2-sample t-test
+#        p <- t.test(y ~ g)$p.value
+#    } else {
+#        # For categorical variables, perform a chi-squared test of independence
+#        p <- chisq.test(table(y, g))$p.value
+#    }
+#    # Format the p-value, using an HTML entity for the less-than sign.
+#    # The initial empty string places the output on the line below the variable #label.
+#    c("", sub("<", "&lt;", format.pval(p, digits=3, eps=0.001)))
+#}
+
+# Specify variable labels
+label(flchain_mod$age)        <-"Age (years)"
+label(flchain_mod$sex)        <- "Sex"
+label(flchain_mod$sample.yr)  <- "Sample Year"
+label(flchain_mod$kappa)      <- "Serum free light chain: kappa portion"
+label(flchain_mod$lambda)     <- "Serum free light chain: lambda portion"
+label(flchain_mod$flc.grp)    <- "FLC group"
+label(flchain_mod$creatinine) <- "Serum creatinine"
+label(flchain_mod$mgus)       <- "Monoclonal gammapothy diagnosis"
+label(flchain_mod$futime)     <- "Time from enrolment until death (days)"
+label(flchain_mod$chapter)    <- "Primary cause of death"
+
+# Specify table output
+sumtab2 <- flchain_mod %>%
+  table1::table1(~ age +  
+                   sample.yr + 
+                   kappa + 
+                   lambda + 
+                   flc.grp + 
+                   creatinine + 
+                   mgus + 
+                   futime + 
+                   sex + 
+                   chapter | death, 
+                 data = .,
+                 overall = c(right = "Overall"),
+                 #extra.col = list(`p-value` = pvalue),
+                 render = rndr # Call the custom rendering function from above
+                 )
 ```
 
-### Comments (pros/cons)
+## ii) Output table
+
+```{r}
+sumtab2
+```
+
+```{r}
+#sumtab2_table1 <- sumtab2 %>%
+#  flextable::as_flextable()
+
+#officer::read_docx() %>%
+#  flextable::body_add_flextable(sumtab1_word) %>%
+#  print(target = "sumtab1.docx")
+```
+
+<br>
+
+# 3) `tableone::CreateTableOne`
+
+## i) Render table
+
+```{r echo = T}
+library(tableone)
+
+flchain_mod <- flchain %>%
+  mutate(sex = case_match(sex, 
+                          "F" ~ "Female", 
+                          "M" ~ "Male"),
+         mgus = case_match(mgus, 
+                           0 ~ "No", 
+                           1 ~ "Yes"),
+         death = case_match(death, 
+                            0 ~ "Alive at last contact date", 
+                            1 ~ "Dead"))
+
+# Specify variable labels
+label(flchain_mod$age)        <- "Age (years)"
+label(flchain_mod$sex)        <- "Sex"
+label(flchain_mod$sample.yr)  <- "Sample Year"
+label(flchain_mod$kappa)      <- "Serum free light chain: kappa portion"
+label(flchain_mod$lambda)     <- "Serum free light chain: lambda portion"
+label(flchain_mod$flc.grp)    <- "FLC group"
+label(flchain_mod$creatinine) <- "Serum creatinine"
+label(flchain_mod$mgus)       <- "Monoclonal gammapothy diagnosis"
+label(flchain_mod$futime)     <- "Time from enrolment until death (days)"
+label(flchain_mod$chapter)    <- "Primary cause of death"
+
+
+sumtab3 <- flchain %>%
+    mutate(sex = case_match(sex, 
+                          "F" ~ "Female", 
+                          "M" ~ "Male"),
+         mgus = case_match(mgus, 
+                           0 ~ "No", 
+                           1 ~ "Yes"),
+         death = case_match(death, 
+                            0 ~ "Alive at last contact date", 
+                            1 ~ "Dead")) %>%
+  tableone::CreateTableOne(data = .,
+                           strata = "death", 
+                           test = FALSE,
+                           factorVars = c("sex", "sample.yr", "flc.grp", "mgus", "chapter"),
+                           addOverall = TRUE)
+
+mean_sd <- function(x) c(mean = mean(x, na.rm = TRUE), sd = sd(x, na.rm = TRUE))
+summary_stats <- list(age = function(x) c(median = median(x, na.rm = TRUE), 
+                                          IQR = IQR(x, na.rm = TRUE)),
+                      kappa = mean_sd,
+                      lambda = mean_sd,
+                      creatinine = mean_sd,
+                      futime = mean_sd
+                      )
+
+sumtab3 <- print(sumtab3,
+      showAllLevels = TRUE,
+      nonnormal = names(summary_stats),
+      contStats = summary_stats,
+      digits = 1,
+      quote = FALSE,
+      noSpaces = TRUE,
+      printToggle = FALSE) %>%
+  knitr::kable(., format = "html")
+```
+
+## ii) Output table
+
+```{r}
+sumtab3
+```
+
+## iii) Comments
 
 -   **Pros**
     -   Implicitly tests each variable for appropriateness of test (e.g., normal vs. non-normal etc.)
@@ -236,25 +394,57 @@ tableone::CreateTableOne(data = flchain,
 
 <br>
 
-## Method 5 - `desctable`
+# 4) `desctable::desc_table`
+
+## i) Render table
 
 ```{r echo = T}
-flchain %>% 
+labels <- list(sample.yr  = "Sample Year",
+               sex        = "Sex",
+               age        = "Age (years)",
+               kappa      = "Serum free light chain: kappa portion",
+               lambda     = "Serum free light chain: lambda portion",
+               flc.grp    = "FLC group",
+               creatinine = "Serum creatinine",
+               mgus       = "Monoclonal gammapothy diagnosis",
+               futime     = "Time from enrolment until death (days)",
+               chapter    = "Primary cause of death")
+
+sumtab4 <- flchain %>% 
   group_by(death) %>%
-  desctable::desc_table("N"    = length,
-                        "Min"  = min,
-                        "Q1"   = ~quantile(., .25),
-                        "Med"  = median,
-                        "Mean" = mean,
-                        "Q3"   = ~quantile(., .75),
-                        "Max"  = max,
-                        "sd"   = sd,
-                        "IQR"  = IQR) %>%
-  #desctable::desc_tests() %>%
+  desctable::desc_table(data = .,
+                        .labels = labels) %>% #,
+                        #"N"    = length,
+                        #"Min"  = min,
+                        #"Q1"   = ~quantile(., .25),
+                        #"Med"  = median,
+                        #"Mean" = mean,
+                        #"Q3"   = ~quantile(., .75),
+                        #"Max"  = max,
+                        #"sd"   = sd,
+                        #"IQR"  = IQR,
+                        #labels = list(
+                        #      sample.yr = "Sample Year",
+                        #      sex = "Sex",
+                        #      age = "Age (years)",
+                        #      kappa = "Serum free light chain: kappa portion",
+                        #      lambda = "Serum free light chain: lambda portion",
+                        #      flc.grp = "FLC group",
+                        #      creatinine = "Serum creatinine",
+                        #      mgus = "Monoclonal gammapothy diagnosis",
+                        #      futime = "Time from enrolment until death (days)",
+                        #      chapter = "Primary cause of death"
+                        #    )) #%>%
   desctable::desc_output("DT")
 ```
 
-### Comments (pros/cons)
+## ii) Output table
+
+```{r}
+sumtab4
+```
+
+## iii) Comments
 
 -   **Pros**
     -   Interactive table
@@ -267,18 +457,44 @@ flchain %>%
 
 <br>
 
-<br>
+# 5) `summarytools::dfSummary`
 
-## Method 6 - `summarytools`
+## i) Render table
 
 ```{r echo = T, results = "asis", cache = FALSE}
-flchain %>%
+flchain_mod <- flchain
+
+label(flchain_mod$age)        <- "Age (years)"
+label(flchain_mod$sex)        <- "Sex"
+label(flchain_mod$sample.yr)  <- "Sample Year"
+label(flchain_mod$kappa)      <- "Serum free light chain: kappa portion"
+label(flchain_mod$lambda)     <- "Serum free light chain: lambda portion"
+label(flchain_mod$flc.grp)    <- "FLC group"
+label(flchain_mod$creatinine) <- "Serum creatinine"
+label(flchain_mod$mgus)       <- "Monoclonal gammapothy diagnosis"
+label(flchain_mod$futime)     <- "Time from enrolment until death (days)"
+label(flchain_mod$chapter)    <- "Primary cause of death"
+
+sumtab5 <- flchain %>%
   group_by(death) %>%
-  summarytools::dfSummary(round.digits = 2) %>%
-  base::print(.)
+  summarytools::dfSummary(round.digits = 2,
+                          varnumbers = FALSE,
+                          na.col = TRUE,
+                          style = "multiline",
+                          plain.ascii = FALSE, # Recommended when rendering to markdown
+                          headings = FALSE, 
+                          labels.col = TRUE
+                          ) %>%
+  base::print(., method = "render")
 ```
 
-### Comments
+## ii) Output table
+
+```{r}
+sumtab5
+```
+
+## iii) Comments
 
 -   **Pros**
     -   Has some pretty cool graphs
