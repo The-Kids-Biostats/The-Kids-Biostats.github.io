@@ -9,673 +9,8 @@
 <link>https://www.the-kids-biostats.github.io/</link>
 <atom:link href="https://www.the-kids-biostats.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description>Biostats R solutions</description>
-<generator>quarto-1.4.553</generator>
-<lastBuildDate>Thu, 08 Aug 2024 16:00:00 GMT</lastBuildDate>
-<item>
-  <title>AI in Biostatistics - Part 2</title>
-  <dc:creator>Wesley Billingham, Dr Matthew Cooper</dc:creator>
-  <link>https://www.the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/ai_part_two.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<section id="overview" class="level1">
-<h1>Overview</h1>
-<p>If you haven’t read part one of this two-part series on AI, do that first here:</p>
-<p><a href="https://the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/ai_part_one.html" class="uri">https://the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/ai_part_one.html</a></p>
-<p>Last time we looked at three cases where our use of AI aided our productivity and gave us the desired result. In this post, we’ll be looking at the other side of the coin, to situations where AI has struggled and where attempts to pursue its use would hinder our productivity and have us produced errors.</p>
-<p>To demonstrate this, we’ll look through the results of a few published papers and the concepts they introduce. Then, as a wrap of Part 1 and 2, we propose some guidelines that can be used to maximise ones efficiency when using (or thinking about using) AI.</p>
-</section>
-<section id="examples" class="level1">
-<h1>Examples</h1>
-<section id="example-1---jagged-frontier" class="level2">
-<h2 class="anchored" data-anchor-id="example-1---jagged-frontier">Example 1 - Jagged Frontier</h2>
-<p>Our first example is drawn from a 2023 paper which looked at the effect of AI use on productivity and quality of work. You can read the paper here:</p>
-<p><a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4573321" class="uri">https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4573321</a></p>
-<p>It introduces a very helpful concept - the ‘Jagged Frontier’. Below we use ggplot2 to demonstrate this idea.</p>
-<section id="what-is-the-jagged-frontier" class="level3">
-<h3 class="anchored" data-anchor-id="what-is-the-jagged-frontier">What is the Jagged Frontier?</h3>
-<p>Imagine you have 5 tasks to complete today, and you are trying to decide which of these you can delegate to AI (in this case, ChatGPT). You might have in mind that each task has some implicit difficulty associated with it (rated 1- 10), and your perception of current AI technology is that in is capable of tackling tasks up to a difficulty of 5. This is represented by the blue dashed line below.</p>
-<p>Your 5 tasks have various difficulties, represented by the black points. At this point, based on your perception of the difficulty of your tasks and the capability of AI, you would assign tasks 2, 3 and 5 to ChatGPT, since these have a difficulty of &lt;=5.</p>
-<p>Unfortunately, the reality is that our perception of difficulty does not line up well with AI’s capabilities. As we have seen in the last post, it can complete some pretty incredible tasks, such as coding Shiny apps and performing advanced statistical analyses. But as we will also see later, it can struggle with some pretty mundane tasks.</p>
-<p>And so the capability of AI cannot be measured by the blue dashed line, but rather the red, <em>jagged</em> line, a seemingly random level of capability which is unrelated to our ideas of difficulty. This is what is referred to as the “Jagged Frontier”.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/ai_part_two_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="1152"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="why-should-we-care" class="level3">
-<h3 class="anchored" data-anchor-id="why-should-we-care">Why should we care?</h3>
-<p>When a task can successfully be completed using AI, we refer to that task as being ‘Inside the Frontier’; that is, below the red jagged line above. When AI would struggle or be unable to complete a task, we refer to that as being ‘Outside the Frontier’.</p>
-<p>The study above set out to investigate the difference in worker productivity when AI is used for tasks considered ‘Inside the Frontier’ compared with those considered ‘Outside the Frontier’. A large study was set up, with the following methodology:</p>
-<ol type="1">
-<li>All 758 participants (experts in the relevant field) complete a baseline project without any AI use. Speed and quality are measured.</li>
-<li>Participants are randomised into one of four groups (see table below).</li>
-</ol>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<table class="table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">Metric</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Inside.Frontier</th>
-<th style="text-align: right;" data-quarto-table-cell-role="th">Outside.Frontier</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">ChatGPT</td>
-<td style="text-align: right;">189</td>
-<td style="text-align: right;">190</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">ChatGPT + Overview</td>
-<td style="text-align: right;">190</td>
-<td style="text-align: right;">189</td>
-</tr>
-</tbody>
-</table>
-
-
-</div>
-</div>
-</div>
-<ol start="3" type="1">
-<li>Those in the “Inside Frontier” group were assigned a project that had been determined beforehand to be within the capabilities of ChatGPT 3.5. In contrast, the “Outside Frontier” group were assigned a project beyond the capabilities of ChatGPT 3.5.</li>
-<li>The participants were further divided into “ChatGPT” and “ChatGPT + Overview” groups. The latter received some training on prompt engineering (how be to use ChaptGPT) before undertaking the project.</li>
-<li>All participants completed their project, and their speed and quality was compared to their own individual baseline score.</li>
-</ol>
-<p>The results are quite striking:</p>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<table class="table table-sm table-striped small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th style="text-align: left;" data-quarto-table-cell-role="th">Metric</th>
-<th style="text-align: left;" data-quarto-table-cell-role="th">Inside.Frontier</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd" data-grouplength="2">
-<td colspan="2" style="border-bottom: 1px solid"><strong>ChatGPT</strong></td>
-</tr>
-<tr class="even">
-<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Speed</td>
-<td style="text-align: left;">28%</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Quality</td>
-<td style="text-align: left;">38%</td>
-</tr>
-<tr class="even" data-grouplength="2">
-<td colspan="2" style="border-bottom: 1px solid"><strong>ChatGPT + Overview</strong></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Speed</td>
-<td style="text-align: left;">23%</td>
-</tr>
-<tr class="even">
-<td style="text-align: left; padding-left: 2em;" data-indentlevel="1">Quality</td>
-<td style="text-align: left;">43%</td>
-</tr>
-</tbody>
-</table>
-
-
-</div>
-</div>
-</div>
-<p>Using ChatGPT for the project ‘Inside the Frontier’ resulted in considerable improvements in both speed and quality of work, regardless of whether participants received training.</p>
-<p>But perhaps more interestingly, the groups with projects ‘Outside the Frontier’ saw a decrease in quality of work, even though the work was completed faster…</p>
-<p>We will return to these results in the discussion below.</p>
-</section>
-</section>
-<section id="example-2---biostatistical-questions" class="level2">
-<h2 class="anchored" data-anchor-id="example-2---biostatistical-questions">Example 2 - Biostatistical Questions</h2>
-<p>As promised, we are going to investigate some examples of tasks that lie ‘Outside the Frontier’. These examples are drawn from this paper:</p>
-<p><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10646144/" class="uri">https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10646144/</a></p>
-<p>As a brief summary, 10 different biostatistics-related problems were posed to ChatGPT 3.5 and subsequently to ChatGPT 4.0. For each problem, the team attempted up to three times to get the correct answer from the AI. The results are below:</p>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/ai_part_two_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="1152"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>While, ChatGPT 4.0 made significant improvements on 3.5, 40% of answers were still incorrect on the first attempt.</p>
-<p>We attempted to reproduce one of these results, using their Question 2, which was:</p>
-<p><em>“Suppose the probability of surviving from a particular disease is 0.9 and there are 20 patients. The number surviving will follow a Binomial distribution with p=0.9 and n=20. What is the probability that no more than 1 patient dies?”</em></p>
-<p>The expected answer to this question is 39.2%, and there are two ways we could get this answer in R using the <em>pbinom</em> function:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1">size <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">20</span> <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Number of trials</span></span>
-<span id="cb1-2">prob <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.1</span> <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Probability of *dying*</span></span>
-<span id="cb1-3"></span>
-<span id="cb1-4"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">pbinom</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, size, prob)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.391747</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">prob <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.9</span> <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Probability of *surviving*</span></span>
-<span id="cb3-2"></span>
-<span id="cb3-3"><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">pbinom</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">18</span>, size, prob)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.391747</code></pre>
-</div>
-</div>
-<p>Graphically, we can highlight the area of the distribution we are interested in calculating - this will be helpful later to compare with ChatGPT’s responses.</p>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/ai_part_two_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="1056"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="first-attempt" class="level2">
-<h2 class="anchored" data-anchor-id="first-attempt">First Attempt:</h2>
-<p>Below is our prompt history with ChatGPT 4.0 as we attempted to reproduce the results from the paper - namely, using a maximum of three attempts to get the correct answer.</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note.
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Highlighted sections and markings were added for emphasis and to assist with the live presentation that these two blog posts have been adapted from.</p>
-</div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/reproduced_q1.PNG" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>On ChatGPT’s first attempt, it gives us an answer of 87.8%, a far cry from 39.2%! The blue icon at the end of its answer reveals the Python code it used to generate this answer, however we asked it to provide the equivalent code in R:</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/reproduced_q2.PNG" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>We can run the code here to verify the answer:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">n <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">20</span> <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># number of trials</span></span>
-<span id="cb5-2">p <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.9</span> <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># probability of success</span></span>
-<span id="cb5-3"></span>
-<span id="cb5-4">prob <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">pbinom</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">19</span>, n, p)</span>
-<span id="cb5-5"></span>
-<span id="cb5-6">prob</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.8784233</code></pre>
-</div>
-</div>
-<p>Interestingly, the <code>binom</code> package is not actually used!</p>
-<p>The AI has seemingly ‘understood’ the question, as shown by its correct inference that “no more than 1 patient dies” is equivalent to “at least 19 patients surviving” in its code documentation. However, the code provided has gotten things the wrong way around.</p>
-<p>Above, we showed the correct area of the distribution we are interested in. Now we can see this side by side with what the AI code is calculating:</p>
-<div class="cell">
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/ai_part_two_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="1056"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="second-attempt" class="level2">
-<h2 class="anchored" data-anchor-id="second-attempt">Second Attempt</h2>
-<p>In the paper, the way in which ChatGPT was prompted to try again at a particular problem was to simply say “I got <correct answer="">”. We do the same here:</correct></p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/reproduced_q3.PNG" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>We see that the AI has doubled down and is suggesting <strong><em>we</em></strong> have misunderstood the question. It describes the problem back to us perfectly, with one exception:</p>
-<p>“The focus should be on the cumulative probability of having <em>up to</em> 19 survivors.”</p>
-<p>While this is incorrect, it is the first time anything it has <em>said</em> has matched the calculation it carried out.</p>
-</section>
-<section id="third-attempt" class="level2">
-<h2 class="anchored" data-anchor-id="third-attempt">Third Attempt</h2>
-<p>With final attempt, it is up for debate whether the response is correct or not:</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/reproduced_q5.PNG" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/reproduced_q6.PNG" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>The code it provides does give the correct answer now, however there is still a ‘belief’ that 0.392 was and is incorrect.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">n <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">20</span> <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># number of trials</span></span>
-<span id="cb7-2">p <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.9</span> <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># probability of success</span></span>
-<span id="cb7-3"></span>
-<span id="cb7-4">prob_no_more_than_1_dying <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">pbinom</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, n, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> p)</span>
-<span id="cb7-5"></span>
-<span id="cb7-6"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.391747</code></pre>
-</div>
-</div>
-</section>
-<section id="takeaway" class="level2">
-<h2 class="anchored" data-anchor-id="takeaway">Takeaway</h2>
-<p>Without knowing how <code>pbinom</code> works (and even then, noticing it had been implemented incorrectly!), it is likely that a user would trust the initial incorrect answer. The AI showed signs of <em>understanding</em> the question, the code documentation <em>made sense</em>, and the code itself <em>looked</em> completely plausible…</p>
-<p>How much more so for more complicated scenarios?</p>
-</section>
-</section>
-<section id="discussion" class="level1">
-<h1>Discussion</h1>
-<p>When we presented this material to researchers at the Institute, our objective was to steer listeners away from the two extreme attitudes they might take towards AI use in their work.</p>
-<p>The <u>first extreme</u> is to not use AI whatsoever. As we have clearly seen from part one of this blog series, and the results of the ‘jagged frontier’ study, the increases in productivity can be astonishing. If any tool increases our work speed by 30-40% while maintaining or even improving quality, it ought to be used.</p>
-<p>The <u>second extreme</u> is the overuse and/or over-reliance on AI. Some tasks are simply outside the current capabilities of AI (not to say they will remain so in the future). To use AI in such circumstances wastes time at best, and at worst produces inaccuracies that remain unnoticed by us - will the reader of our work know? The worked biostatistics example above shows how easy it is to be convinced by the confident language of AI as it repeats an answer that is patently incorrect.</p>
-<section id="where-to-from-here-our-recommendations" class="level2">
-<h2 class="anchored" data-anchor-id="where-to-from-here-our-recommendations">Where to from here? Our recommendations…</h2>
-<p>The ‘jagged frontier’ of AI is invisible to us, and hence we often cannot know whether the task we are about to delegate is within its capability or not (and it doesn’t know!). For this reason, we propose the following guidelines to ensure you are using AI effectively and responsibly:</p>
-<ol type="1">
-<li>You should be able to verify the output is true/accurate.</li>
-<li>The time it would take to verify the AI output should be less than the time it would take to achieve the same output yourself.</li>
-</ol>
-<p>Looking back at our examples throughout the two posts:</p>
-<section id="weather-plot" class="level3">
-<h3 class="anchored" data-anchor-id="weather-plot">Weather plot</h3>
-<p>In this example, we could verify the more complex plot by visually comparing it to simple plots we coded ourselves. Additionally, we could understand the R code that AI produced. Whether the use of AI in this case was justified or not depends on how quickly we could have remembered all the ggplot2 commands to do this ourselves!</p>
-</section>
-<section id="statistical-analysis" class="level3">
-<h3 class="anchored" data-anchor-id="statistical-analysis">Statistical Analysis</h3>
-<p>For the statistical analysis, we were well-placed to verify the suggestions of ChatGPT. However, this would be a dangerous use-case for someone who is unfamiliar with statistical methodology - advanced or otherwise. We know that the suggested hierarchical mixed models is a good suggestion, but this would not be immediately verifiable to everyone. Therefore we would recommend against this use-case for non-statisticians.</p>
-</section>
-<section id="shiny-app" class="level3">
-<h3 class="anchored" data-anchor-id="shiny-app">Shiny App</h3>
-<p>This is probably the best example of AI saving time and increasing quality. The objective is simple - a Shiny App which takes and randomises data. Even as someone who has never coded a Shiny App before, it is easy to verify whether it works by simply using the app.</p>
-</section>
-<section id="mathematical-questions" class="level3">
-<h3 class="anchored" data-anchor-id="mathematical-questions">Mathematical Questions</h3>
-<p>Finally, we have seen that AI can make mistakes when calculating numerical results, and remain confidently incorrect in the face of correction. To verify the answer requires working line by line through each piece of code to ensure it is doing what we asked. Hence it is unlikely to save us time and seemingly likely to be incorrect.</p>
-</section>
-</section>
-</section>
-<section id="conclusion" class="level1">
-<h1>Conclusion</h1>
-<p>These two posts have been a summation of our thoughts as they have developed through the first year or so of incorporating AI into our workflows. We have sought to experiment with different prompts to see where we can use AI to improve our productivity and where it hampers it. The two guidelines above have been helpful to avoid our over-reliance on AI, and our experiences with effective AI have helped to avoid under-utilisation.</p>
-<p>We’d love to hear your thoughts and ideas on these two posts. Do you disagree with our recommendations and/or conclusions? Or perhaps you have some additional ones you would like to suggest.</p>
-<section id="further-reading" class="level2">
-<h2 class="anchored" data-anchor-id="further-reading">Further reading</h2>
-<p>A similar paper to Example 2, testing responses to a set of 70 medical questions: https://onlinelibrary.wiley.com/doi/full/10.1111/iej.13985</p>
-<p>Despite the humourous title, a fascinating paper on where Artificial Intelligence is, well, intelligent: https://link.springer.com/article/10.1007/s10676-024-09775-5</p>
-
-
-</section>
-</section>
-
- ]]></description>
-  <category>AI</category>
-  <category>R</category>
-  <guid>https://www.the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/ai_part_two.html</guid>
-  <pubDate>Thu, 08 Aug 2024 16:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>AI in Biostatistics - Part 1</title>
-  <dc:creator>Wesley Billingham, Dr Matthew Cooper</dc:creator>
-  <link>https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/ai_part_one.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<section id="overview" class="level1">
-<h1>Overview</h1>
-<p>AI is a hot topic in most fields right now, and biostatistics is no exception! We (the Telethon Kids Institute biostats team) were asked to present at the weekly Institute seminar on the use of AI in statistical workflows.</p>
-<p>The term AI has many meanings depending on the context - in this article we are referring exclusively to (and use the term interchangeably with) large language models (LLMs) such as ChatGPT and Claude. These tools are useful not just for writing sentences and paragraphs of text, but also for writing functioning code!</p>
-<p>Since first investigating the capabilities of ChatGPT in writing R code, our team has been working to utilise it safely and effectively in our everyday workflows.</p>
-<p>The summary of our message to the Institute staff was that we cannot ignore the massive increase in efficiency that AI <strong><em>can</em></strong> bring if used properly. However, we also need to be <u><strong>very</strong></u> aware of its limitations, and the necessary role of human experts in the process of validating any non-trivial output.</p>
-<p>This is Part One in a two-part series. This part will look at the capabilities of AI to benefit our workflows and increase efficiency. The next part will look at some limitations of the technology as it currently exists, including some practical recommendations to identify these issues.</p>
-<section id="format-of-this-post" class="level2">
-<h2 class="anchored" data-anchor-id="format-of-this-post">Format of this post</h2>
-<p>We will work through a couple of practical examples of how we might use AI in an everyday workflow:</p>
-<ol type="1">
-<li><p><strong>Data Visualisation</strong></p></li>
-<li><p><strong>Statistical Analysis</strong></p></li>
-<li><p><strong>Bonus - Shiny App Development</strong></p></li>
-</ol>
-<p>In these examples, we will increasingly take our hands off the wheel and allow AI (in these examples, <a href="https://openai.com/chatgpt/">ChatGPT 4.0</a>) to perform more and more of the task.</p>
-</section>
-</section>
-<section id="example-1---data-visualisation" class="level1">
-<h1>Example 1 - Data Visualisation</h1>
-<p>A couple of summers ago (2021/22) felt unusually hot in Perth, Australia. Specifically, it seemed that the maximum temperature was regularly exceeding round numbers like 35 or 40 degrees Celsius. The most recent summer was starting to feel similar, but as it relates to ‘hot days’, were we seeing more of these? My colleague, being a statistician, wished to contrast this most recent summer to previous summers.</p>
-<p>He whipped up a quick plot using <code>ggplot2</code>, with a focus on the number of ‘summer days’ above a certain maximum (and equally important, ‘hot nights’ that stayed above a certain minimum). Shown below, is data through to mid February 2024:</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/weather_p1.jpeg" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Here we can see the number of days over a certain maximum for each year since 2010. For example, in 2023, Perth had 0 days above 40°C and only 4 above 38°C.</p>
-<p>The sweltering summer in question (2021/22) had a whopping 12 days over 40°C and 23 above 38°C. Since the next highest count since 2010 was 7 and 14 respectively, it’s fair to say this was quite the outlier! And the ‘current’ (at the time) summer was similar to this, but yet to exceed it.</p>
-<p>My colleague felt that the data visualisation could probably be cleaner and more clear, so enlisted ChatGPT for help.</p>
-<section id="providing-the-blueprint" class="level2">
-<h2 class="anchored" data-anchor-id="providing-the-blueprint">Providing the Blueprint</h2>
-<p>ChatGPT allows the user to provide images as a part of the prompt. With that in mind, the image was uploaded first by itself. ChatGPT was able to successfully identify the key elements of the plot just from the image (!), and so the next step was to give some guidance to make the plot more visually appealing.</p>
-<p>With just one prompt: “can you facet wrap the min max data”, in addition to the original plot, it got to work. Once the original data was provided, it returned the requested modifcation - complete with Python code for the plot (R cannot be run within ChatGPT, though we certainly could have requested R code to run ourselves instead).</p>
-<p>Here is the entire prompt history, from beginning to end:</p>
-<ul>
-<li>One image</li>
-<li>One command</li>
-<li>Some (undescribed) data</li>
-</ul>
-<p>was all the context required to understand and return, approximately, the desired output. We say approximately, since some key information such as the counts above certain levels, is absent from this first attempt.</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/weather_p3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/weather_p4.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="end-result-and-discussion" class="level2">
-<h2 class="anchored" data-anchor-id="end-result-and-discussion">End Result and Discussion</h2>
-<p>After some further refinement and back-and-forth, we arrive at a much-improved plot which more closely captures the spirit of the original, while improving the colour scheme and facetting the data.</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/weather_p8.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Plots are a great use-case of AI, since the nitty gritty of colours, panes, text, etc can be a time-consuming hassle to navigate manually. AI in our experience does a good job of translating our descriptive visual prompts into code that achieves the described vision. Furthermore, the output is instantly verifiable (keep this point in mind!) and easy to refine.</p>
-</section>
-</section>
-<section id="example-2---statistical-workflow" class="level1">
-<h1>Example 2 - Statistical Workflow</h1>
-<p>The following example was created specifically for our presentation. We wanted to mimic a researcher with a passing understanding in statistics, but no expertise, as they attempt to run through an entire statistical pipeline from design to analysis. This would involve more careful and lengthy prompting than the previous example.</p>
-<p>For the example, we downloaded a data set contacting simulated lung data for 8528 individuals. It can be found here:</p>
-<p>https://stats.idre.ucla.edu/stat/data/hdp.csv (NOTE clicking the link initiates a download of the data.)</p>
-<p>The data has the following variables of interest for our example:</p>
-<ul>
-<li><strong>Outcome</strong>
-<ul>
-<li>remission (0/1)</li>
-</ul></li>
-<li><strong>Patient-level variables</strong>
-<ul>
-<li>IL6 levels</li>
-<li>CRP levels</li>
-<li>Length of hospital stay</li>
-<li>Family history</li>
-<li>Cancer stage</li>
-</ul></li>
-<li><strong>Physician-level variables</strong>
-<ul>
-<li>Physician experience</li>
-<li>Physician ID</li>
-<li>Hospital ID</li>
-</ul></li>
-</ul>
-<p>We will be very careful to avoid statistical terminology as we prompt ChatGPT, and we can see that there is an implied nesting structure to our data, with patient inside physician inside hospital. With that in mind, and the fact that our outcome is binary, we are hoping that ChatGPT suggests a hierarchical logistic regression.</p>
-<section id="providing-the-problem" class="level2">
-<h2 class="anchored" data-anchor-id="providing-the-problem">Providing the Problem</h2>
-<p>In this example, we provided ChatGPT with a very high-level summary of our data and research question, as seen here:</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/log_reg_1_v2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Again, we have tried to use prompts that anyone with some familiarity with stats and data analysis would be able to replicate and understand. Here, we simply mention to ChatGPT that there are patients, doctors and hospitals (highlighted above).</p>
-</section>
-<section id="the-response" class="level2">
-<h2 class="anchored" data-anchor-id="the-response">The Response</h2>
-<p>Amazingly, especially if you have had limited exposure to AI, these high-level, lay descriptions of our data and research questions were sufficient for ChatGPT to suggest a mixed-effects logistic regression model. It recognised the binary outcome and the hierarchical structure of the data, and proceeded to provide R code to perform the analysis.</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/log_res_2_v2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Here is where we encounter a difference from our previous visualisation example, however. For someone unfamiliar with statistics, would they have known if this answer happened to be incorrect? Broadly, this response is on track, but should Doctor be nested within Hospital? (keep this in mind! #2).</p>
-<p>For now, we do recognise that it has selected an appropriate model to get started. An impressive feat!</p>
-</section>
-<section id="end-result-and-discussion-1" class="level2">
-<h2 class="anchored" data-anchor-id="end-result-and-discussion-1">End Result and Discussion</h2>
-<p>For brevity’s sake, we will not include the whole prompting process here. However, following the model specification, ChatGPT was able to successfully guide us through adding a random slope, and then summarising our model using the <code>broom.mixed</code> package (<code>broom</code> for mixed models, as the name suggests).</p>
-<p>It then gave us code to check the model fit, run model diagnostics, and perform sensitivity analysis. At each stage, it was able to give advice on interpretation and next steps that we could not fault. Here are some highlights:</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/log_reg_6.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/log_reg_4.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-</section>
-<section id="bonus-example---data-anonymising-app" class="level1">
-<h1>Bonus Example - Data Anonymising App</h1>
-<p>One thing that the first example might make you think is, “Great! I’m going to make all my graphs online”. Slow down!</p>
-<p>The data uploaded as part of that example is public data, freely available from the Australia <a href="https://reg.bom.gov.au/climate/data-services/">Bureau of Meteorology</a> website. There are a lot of AI based websites that will draw a graph for you if you provide them data to do so - <a href="https://www.graphmaker.ai/">there are some where</a> that is all they do.</p>
-<p>However. For most researchers, particularly in the health research space, <u><strong>you will not have approval (ethics and/or governance)</strong></u> to upload your data to random websites.</p>
-<p>So, we created an app that will transform your data into a reduced, fully-anonymised dataset that can then be used in online AI tools for assistance with coding up figures or structuring models. This is not just anonymised in the sense of the masking/removing the identifiable data - all values in the dataset are replaced, with data regenerated, and category and variable labels stripped off.</p>
-<p>It looks like this:</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/app_preview.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<section id="why" class="level2">
-<h2 class="anchored" data-anchor-id="why">Why?</h2>
-<p>Well yes, you could just use random data between 0 and 1 - but we (and we presume a lot of people) find less mental load involved when the data being worked with resembles the original data (as in, the values are between 140 and 200 for our “blood pressure” histogram, or between 70 and 130 for the “IQ scores” we’re plotting against values between 1.4m-2.1m for “height” etc).</p>
-</section>
-<section id="how-do-i-access-it" class="level2">
-<h2 class="anchored" data-anchor-id="how-do-i-access-it">How do I access it?</h2>
-<p>It would be ironic if we provided this for you on our website, because then you would be sending your data to our servers. At our Institute, we run this on an internal server that is not accessible from outside our internal network.</p>
-<p>You can <a href="https://github.com/TelethonKids/data_anonymiser">download a copy from our github</a> <em>(it is a Shiny app that runs within R)</em>, and then run it locally on the desktop (or virtual) machine you are working on - anonymising your data without it leaving your analysis environment!</p>
-</section>
-<section id="anything-else" class="level2">
-<h2 class="anchored" data-anchor-id="anything-else">Anything else?</h2>
-<p>Outside of adding the instructional blurb and some minor aesthetic tweaks, <strong>this entire app was written by ChatGPT</strong>. ChatGPT made the code available for download (as a zip file) and worked through a series of prompts (after the initial prompt) to make small tweaks to get the app doing exactly what we wanted.</p>
-<p>We then thoroughly inspected the code (knowing roughly how it should have been written/structured) and tested it with a range of test datasets.</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/app_17_iterations.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="400"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/app_as_zip.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>There is a test dataset (<code>.xlsx</code>) available <a href="https://github.com/TelethonKids/data_anonymiser/blob/main/synthetic_health_dataset_final.xlsx">for download here</a> (click downward arrow on right hand size of the page) alongside the app.</p>
-<p>How was that created? You guessed it!</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/app_synth_req.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/app_synth_req_3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="350"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-</section>
-<section id="end-result-and-discussion-2" class="level1">
-<h1>End Result and Discussion</h1>
-<p>In this, Part One, we have seen how easy to use and powerful AI can be in the area of data analysis and statistical workflows.</p>
-<p>In Part Two, we will look at some pitfalls of AI and some traps we can fall into. We’ll see if we can determine some good rules-of-thumb for its use to ensure our AI-assisted work remains both efficient and accurate.</p>
-
-
-</section>
-
- ]]></description>
-  <category>AI</category>
-  <category>R</category>
-  <guid>https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/ai_part_one.html</guid>
-  <pubDate>Wed, 07 Aug 2024 16:00:00 GMT</pubDate>
-  <media:content url="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/weather_p8.png" medium="image" type="image/png" height="115" width="144"/>
-</item>
+<generator>quarto-1.4.555</generator>
+<lastBuildDate>Sun, 21 Jul 2024 16:00:00 GMT</lastBuildDate>
 <item>
   <title>Analysing pre-post data</title>
   <dc:creator>Dr Matthew Cooper</dc:creator>
@@ -772,7 +107,6 @@ Note.
 <p>Let’s look at the means of the data (remembering what we set them to be).</p>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <div id="awkenskjer" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#awkenskjer table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -1214,7 +548,7 @@ Note.
 }
 </style>
 
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <colgroup>
 <col style="width: 20%">
 <col style="width: 20%">
@@ -1256,7 +590,6 @@ Note.
 
 </table>
 
-</div>
 </div>
 </div>
 </div>
@@ -1409,7 +742,6 @@ font-style: inherit;">"Group"</span>)</span></code></pre></div>
 <p>Let’s reduce the two observations we have per participant into one ‘difference’ (change score: post-value minus pre-value).</p>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <div id="unhdjkjcwc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#unhdjkjcwc table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -1851,7 +1183,7 @@ font-style: inherit;">"Group"</span>)</span></code></pre></div>
 }
 </style>
 
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
@@ -1879,7 +1211,6 @@ font-style: inherit;">"Group"</span>)</span></code></pre></div>
 
 </table>
 
-</div>
 </div>
 </div>
 </div>
@@ -2057,7 +1388,6 @@ font-style: inherit;">"Group"</span>)</span></code></pre></div>
 <p><code>lm(out_post ~ out_pre + group, data = dat)</code></p>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <div id="zmbrshzinm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#zmbrshzinm table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -2499,7 +1829,7 @@ font-style: inherit;">"Group"</span>)</span></code></pre></div>
 }
 </style>
 
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <colgroup>
 <col style="width: 25%">
 <col style="width: 25%">
@@ -2557,7 +1887,6 @@ font-style: inherit;">"Group"</span>)</span></code></pre></div>
 
 </table>
 
-</div>
 </div>
 </div>
 </div>
@@ -3108,7 +2437,6 @@ font-style: inherit;">2.35</span>)) </span></code></pre></div>
 <p><code>lmer(out ~ group*timepoint + (1 | id), data = dat)</code></p>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <div id="gjiywuhjay" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#gjiywuhjay table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -3550,7 +2878,7 @@ font-style: inherit;">2.35</span>)) </span></code></pre></div>
 }
 </style>
 
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
@@ -3623,7 +2951,6 @@ font-style: inherit;">2.35</span>)) </span></code></pre></div>
 
 </table>
 
-</div>
 </div>
 </div>
 </div>
@@ -5945,7 +5272,6 @@ background-color: null;
 font-style: inherit;">"{n}"</span>)</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div>
 <div id="abhvxfqafx" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#abhvxfqafx table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -6387,7 +5713,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
 }
 </style>
 
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
@@ -6451,7 +5777,6 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
 
 </table>
 
-</div>
 </div>
 </div>
 </div>
@@ -7683,7 +7008,6 @@ font-style: inherit;">"{n}"</span>)</span>
 <span id="cb16-15">  )</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div>
 <div id="tgjctjomfb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#tgjctjomfb table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -8125,7 +7449,7 @@ font-style: inherit;">"{n}"</span>)</span>
 }
 </style>
 
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <colgroup>
 <col style="width: 20%">
 <col style="width: 20%">
@@ -8215,7 +7539,6 @@ font-style: inherit;">"{n}"</span>)</span>
 
 </table>
 
-</div>
 </div>
 </div>
 </div>
@@ -9763,7 +9086,6 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<div>
 <div id="bahldkstyb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
 <style>#bahldkstyb table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
@@ -10205,7 +9527,7 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
 }
 </style>
 
-<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
 <colgroup>
 <col style="width: 33%">
 <col style="width: 33%">
@@ -10269,7 +9591,6 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
 
 </table>
 
-</div>
 </div>
 </div>
 </div>
