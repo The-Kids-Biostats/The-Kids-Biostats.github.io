@@ -87,29 +87,29 @@ str(flchain)
 
 This has the following variable types
 
-+--------------+------------------+
-| Continuous   | -   `age`        |
-|              |                  |
-|              | -   `kappa`      |
-|              |                  |
-|              | -   `lambda`     |
-|              |                  |
-|              | -   `futime`     |
-|              |                  |
-|              | -   `creatinine` |
-+--------------+------------------+
-| Ordinal      | -   `sample.yr`  |
-|              |                  |
-|              | -   `death`      |
-|              |                  |
-|              | -   `chapter`    |
-+--------------+------------------+
-| Nominal      | -   `sex`        |
-|              |                  |
-|              | -   `mgus`       |
-|              |                  |
-|              | -   `flc.grp`    |
-+--------------+------------------+
++---------------+------------------+
+| Continuous    | -   `age`        |
+|               |                  |
+|               | -   `kappa`      |
+|               |                  |
+|               | -   `lambda`     |
+|               |                  |
+|               | -   `futime`     |
+|               |                  |
+|               | -   `creatinine` |
++---------------+------------------+
+| Ordinal       | -   `sample.yr`  |
+|               |                  |
+|               | -   `death`      |
+|               |                  |
+|               | -   `chapter`    |
++---------------+------------------+
+| Nominal       | -   `sex`        |
+|               |                  |
+|               | -   `mgus`       |
+|               |                  |
+|               | -   `flc.grp`    |
++---------------+------------------+
 
 <p>
 
@@ -143,7 +143,7 @@ Where any of the above was seemingly not possible, it will be reported in the co
     -   All variables included in the input data are, by default, included in the output. Therefore, the user must select/un-select columns pursuant to what is required.
 
 ```{r echo = T}
-library(gtsummary)
+suppressWarnings(library(gtsummary))
 
 sumtab1 <- flchain %>%
   mutate(death = case_match(death, 
@@ -211,7 +211,8 @@ officer::read_docx() %>%
 ## i) Render table
 
 ```{r}
-library(table1)
+suppressMessages(suppressWarnings(library(table1)))
+
 flchain_mod <- flchain
 
 # Re-code categorical variable levels
@@ -312,7 +313,7 @@ sumtab2
 ## i) Render table
 
 ```{r echo = T}
-library(tableone)
+suppressWarnings(library(tableone))
 
 flchain_mod <- flchain %>%
   mutate(sex = case_match(sex, 
@@ -338,16 +339,17 @@ label(flchain_mod$futime)     <- "Time from enrolment until death (days)"
 label(flchain_mod$chapter)    <- "Primary cause of death"
 
 
-sumtab3 <- flchain %>%
-    mutate(sex = case_match(sex, 
-                          "F" ~ "Female", 
-                          "M" ~ "Male"),
-         mgus = case_match(mgus, 
-                           0 ~ "No", 
-                           1 ~ "Yes"),
-         death = case_match(death, 
-                            0 ~ "Alive at last contact date", 
-                            1 ~ "Dead")) %>%
+sumtab3 <- flchain_mod %>%
+    #mutate(sex = case_match(sex, 
+    #                      "F" ~ "Female", 
+    #                      "M" ~ "Male"),
+    #     mgus = case_match(mgus, 
+    #                       0 ~ "No", 
+    #                       1 ~ "Yes"),
+    #     death = case_match(death, 
+    #                        0 ~ "Alive at last contact date", 
+    #                        1 ~ "Dead")) %>%
+  sjlabelled::label_to_colnames() %>%
   tableone::CreateTableOne(data = .,
                            strata = "death", 
                            test = FALSE,
@@ -504,6 +506,12 @@ sumtab5
 
 <br>
 
+# Conclusions
+
+TBD
+
+<br>
+
 ## Acknowledgements
 
 Thanks to Wesley Billingham, Matt Cooper, and Elizabeth McKinnon for providing feedback on and reviewing this post.
@@ -516,7 +524,7 @@ You can look forward to seeing posts from these other team members here in the c
 
 To access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:
 
-<https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/parallel>
+<https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/>
 
 The session information can also be seen below.
 
