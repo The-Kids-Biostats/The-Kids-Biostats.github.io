@@ -1,5 +1,5 @@
 ---
-title: "Small-sample analysis"
+title: "Final Small-sample analysis"
 format:
   html:
     code-fold: true
