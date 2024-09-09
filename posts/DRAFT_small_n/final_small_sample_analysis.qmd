@@ -255,16 +255,16 @@ es.dat.80$N<-factor(es.dat.80$n,labels=paste0("n=",c(5,10,15)))
 es.dat$N<-factor(es.dat$n,labels=paste0("n=",c(5,10,15)))
 power.plot<-ggplot(data=es.dat,aes(x=eff.size,y=power,colour=N))+
   geom_line(linewidth=1)+
-  geom_point(data=es.dat.80,aes(colour=N),shape=19,size=rel(3))+
-    geom_segment(data=es.dat.80,aes(yend=rep(0,3),colour=N),linetype=2)+
-  geom_segment(data=es.dat.80,aes(xend=rep(0,3),colour=N),linetype=2)+
+ # geom_point(data=es.dat.80,aes(colour=N),shape=19,size=rel(3))+
+#geom_segment(data=es.dat.80,aes(yend=rep(0,3),colour=N),linetype=2)+
+#geom_segment(data=es.dat.80,aes(xend=rep(0,3),colour=N),linetype=2)+
   labs(x="Effect size",y="Power to conclude a difference \nbetween the means of 2 groups",
        title="Power curves for t-test",legend="Sample size")+
   theme_institute(base_size = 18) +
   theme(legend.position="right")
 ```
 
-```{r echo = F, warning = F, fig.width = 8, fig.height = 8, include = T}
+```{r,echo = F, warning = F, fig.width = 8, fig.height = 8, include = T}
 power.plot
 ```
 
@@ -372,4 +372,17 @@ For small-sample studies, as with those based on larger samples, consider if the
 
 **Population sampling:** Consider if there are subtle biases resulting from recruitment strategies that may impact how representative the sample is of the population being characterized.
 
-**Laboratory experiments or animal studies:** Ensure that environmental factors have been adequately controlled and appropriate randomization undertaken so that differences between groups can be confidently attributed to the condition/treatment under study. Small-sample experiments require tight control of between-individual variation to achieve maximum power and appropriate randomization must be undertaken for results to be valid.
+**Laboratory experiments or animal studies:** Ensure that environmental factors have been adequately controlled and appropriate randomization undertaken so that differences between groups can be confidently attributed to the condition/treatment under study. Small-sample experiments require tight control of between-individual variation to achieve maximum power and appropriate randomization must be undertaken for results to be valid.  
+
+
+## Reproducibility Information
+
+To access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, [please visit our GitHub](https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/pre_post):
+
+The session information can also be seen below.
+
+```{r}
+sessionInfo()
+```
+
+
