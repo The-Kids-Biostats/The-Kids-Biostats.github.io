@@ -31,12 +31,12 @@ The sample size in research projects is often limited by practical constraints e
 
 # Sample statistics and sampling variation
 
-To study a population of interest, data is gathered from a representative sample and then summaries statistics such as the sample median, mean, standard deviation or a proportion are derived to characterised that sample. These sample statistics vary about the *(true unknown)* population parameter for which they provide an estimate, and we can calculate confidence intervals to go along with these estimate to give context to a plausible range for this population parameter.
+To study a population of interest, data is gathered from a representative sample and then summaries statistics such as the sample median, mean, standard deviation or a proportion are derived to characterise that sample. These sample statistics vary about the *(true unknown)* population parameter for which they provide an estimate, and we can calculate confidence intervals to go along with these estimates to give context to a plausible range for the population parameters.
 
-The smaller the sample size: 
+The smaller the sample size:
 
-- the larger the distance between the estimate (statistic we have derived) and the *(true unknown)* population parameter is likely to be, and
-- the wider the confidence interval. 
+-   the larger the distance between the estimate (statistic we have derived) and the *(true unknown)* population parameter is likely to be, and
+-   the wider the confidence interval.
 
 This distance and width speaks to sampling error.
 
@@ -70,14 +70,15 @@ p.pop <- do.dist.plot(fem.mice,xlab="Weight (g)",title="Population distribution"
 p.pop +
   theme_institute(base_size = 18)
 ```
+
 ::: column-margin
 **Figure 1**\
 Here, we simulate data to represent a "population" of healthy female C57BL/6J mice who are expected to have a mean weight of 23 grams, with a standard deviation of 2 grams, at 14 weeks of age [The Jackson Laboratory](https://www.jax.org/jax-mice-and-services/strain-data-sheet-pages/body-weight-chart-000664).
 :::
 
-In practice researchers would only have data on a sample (subset) of a *(usually hypothetical)* population, from which to calculate summary statistics as estimates of general population characteristics. There is a potentially obviously and perhaps nuanced point here that needs to be stated, and that is that we do not know the population parameter we are estimating - if we did, we would not be trying to estimate it. 
+In practice researchers would only have data on a sample (subset) of a *(usually hypothetical)* population, from which to calculate summary statistics as estimates of general population characteristics. There is a potentially obvious, but perhaps nuanced, point here that needs to be stated, and that is that we do not know the population parameter we are estimating - if we did, we would not be trying to estimate it.
 
-As may be expected, for larger datasets the calculated summary statistic is more likely to be closer to the  *(true unknown)* population parameter from which the sample was drawn. Let's see how the calculated mean might be expected to vary from sample to sample for our mouse weight example.
+As may be expected, for larger datasets the calculated summary statistic is more likely to be closer to the *(true unknown)* population parameter from which the sample was drawn. Let's see how the calculated mean might be expected to vary from sample to sample for our mouse weight example.
 
 To understand this variability, we'll start by randomly drawing 500 samples that are each of size n=50.
 
@@ -155,17 +156,16 @@ plot_grid(splot50, mplot50,
 ::: column-margin
 **Figure 2**\
 a) The first 5 samples (of 500) with a sample size of 50, from a simulated population with mean=23 and std dev=2.\
-<br>
-b) The distribution of the sample means calculated from each of the 500 draws.
+<br> b) The distribution of the sample means calculated from each of the 500 draws.
 :::
 
-::: {.callout-note}
+::: callout-note
 The mean of the sample means takes a value of `r format(round(mean(meandat50$mean),2),nsmall=2)`, the same value, to 2 decimal places, as the *(in this instance, because we set it, known)* parameter for the population from which the sample was drawn.
 :::
 
-The spread (in Fig 2b) appears much reduced, but that is because it is not the spread of individual observations - it is the spread of sample means.In fact, the standard deviation of the sample means (i.e. the standard error of the mean) is `r round(sd(meandat50$mean),2)`, in line with the expected reduction of the population standard deviation of 2 by a factor of $1/\sqrt{n}$.
- 
-Now let's see what happens as the sample size decreases. 
+The spread (in Fig 2b) appears much reduced, but that is because it is not the spread of individual observations - it is the spread of sample means. In fact, the standard deviation of the sample means (i.e. the standard error of the mean) is `r round(sd(meandat50$mean),2)`, in line with the expected reduction of the population standard deviation of 2 by a factor of $1/\sqrt{n}$.
+
+Now let's see what happens as the sample size decreases.
 
 Here, a sample of n=20.
 
@@ -197,8 +197,7 @@ plot_grid(splot20, mplot20,
 ::: column-margin
 **Figure 3**\
 a) The first 5 samples (of 500) with a sample size of 20, from a simulated population with mean=23 and std dev=2.\
-<br>
-b) The distribution of the sample means calculated from each of the 500 draws.
+<br> b) The distribution of the sample means calculated from each of the 500 draws.
 :::
 
 This spread here (in Fig 3b) does not look too different to that seen above (in Fig 2b).
@@ -214,11 +213,10 @@ plot_grid(splot5, mplot5,
 ::: column-margin
 **Figure 4**\
 a) The first 5 samples (of 500) with a sample size of 5, from a simulated population with mean=23 and std dev=2.\
-<br>
-b) The distribution of the sample means calculated from each of the 500 draws.
+<br> b) The distribution of the sample means calculated from each of the 500 draws.
 :::
 
-It is clear that as the sample size decreases the estimates of the population mean become progressively more variable. This increased variability is taken into account in the formula for calculating the 95% confidence interval which become accordingly wider as precision decreases:
+It is clear that as the sample size decreases the estimates of the population mean become progressively more variable. This increased variability is taken into account in the formula for calculating the 95% confidence interval which becomes accordingly wider as precision decreases:
 
 ```{r echo = F, warning = F, fig.width = 8, fig.height = 10, include = T}
 splot50.ci<-do.samplot(dat=samdat50,mdat=meandat50,add.ci=T,
@@ -239,7 +237,7 @@ Random samples of increasing size, annotated with means and 95% confidence inter
 
 Expanding on these observations, they highlight a major limitation of small-sample studies in that they lack power to detect anything other than large differences or large “effects". This is because the sampling distribution of the test statistic needs to take account of the increased variability of the sample statistics on which the test procedure is based.
 
-For comparisons of mean values (e.g. a t-test) a large effect translates to a large difference between groups means relative to the within-group variation. Power (which relates to Type-II error) is an indication of the probability of a study to observe (or conclude) a difference if a difference (in the underlying populations being compared) truely exists.
+For comparisons of mean values (e.g. a t-test) a large effect translates to a large difference between group means relative to the within-group variation. Power (which relates to Type-II error) is an indication of the probability of a study to observe (or conclude) a difference if a difference (in the underlying populations being compared) truly exists.
 
 ```{r}
 eff.size<-seq(from=0,to=3,by=0.2)
@@ -258,6 +256,8 @@ es.dat$N<-factor(es.dat$n,labels=paste0("n=",c(5,10,15)))
 power.plot<-ggplot(data=es.dat,aes(x=eff.size,y=power,colour=N))+
   geom_line(linewidth=1)+
   geom_point(data=es.dat.80,aes(colour=N),shape=19,size=rel(3))+
+    geom_segment(data=es.dat.80,aes(yend=rep(0,3),colour=N),linetype=2)+
+  geom_segment(data=es.dat.80,aes(xend=rep(0,3),colour=N),linetype=2)+
   labs(x="Effect size",y="Power to conclude a difference \nbetween the means of 2 groups",
        title="Power curves for t-test",legend="Sample size")+
   theme_institute(base_size = 18) +
@@ -273,28 +273,28 @@ power.plot
 Power plots for a 2-sample t-test, with alpha=0.05 and equal sample sizes, assuming equal variances.
 :::
 
-::: {.callout-note}
-If n=5 for both groups, the minimum difference at which a 2-sample t-test has at least 80% power to detect is just over 2 standard deviations. 
+::: callout-note
+If n=5 for both groups, the minimum difference at which a 2-sample t-test has at least 80% power to detect is just over 2 standard deviations.
 
 In line with the example above, if we were comparing weights of 2 treatment groups of mice, and it's reasonable to assume a common SD of 2g, this would correspond to an absolute difference of 4g in the population mean weights - quite a large treatment effect.
 :::
 
-At the design stage of an experiment, it is important to determine the minimum clinically meaningful difference/effect size you want to be able to detect, and power your study accordingly by including a sufficiently large sample. 
+At the design stage of an experiment, it is important to determine the minimum clinically meaningful difference/effect size you want to be able to detect, and power your study accordingly by including a sufficiently large sample.
 
-One could consider increasing power by extending the simple 2-sample approach to a factorial design, where the between treatment group differences are simultaneously examined across one or more factors (eg sex, age group).
+For example, one could consider increasing power by extending the simple 2-sample approach to a factorial design, where the between treatment group differences are simultaneously examined across one or more factors (eg sex, age group).
 
 # Using confidence intervals to guide decision-making
 
-Confidence intervals can be a little tricky to get your head around. They don't provide a range in which XX% (typically 95%) of the data values lie, but rather relate to our belief regarding where the population parameter of interest (e.g. the true mean or proportion) lies. 
+Confidence intervals can be a little tricky to get your head around. They don't provide a range in which XX% (typically 95%) of the data values lie, but rather relate to our belief regarding where the population parameter of interest (e.g. the true mean or proportion) lies.
 
-::: {.callout-important}
+::: callout-important
 The "confidence" comes from **sampling theory**: Suppose we sample the same population *many many times*, and for each sample calculate a 95% confidence interval *around the sample mean*, we would expect that 95% of the time the constructed interval will capture the true population mean.
 :::
 
 Sometimes, just by chance (or bad luck), our whole sample may lie towards one end (the tail) of the population distribution (see S-3 for n=5 in Fig 4a/Fig 5c above) resulting in a 95% CI that happens to "miss" the true value. **The real problem here is that for *our* study - we don't actually know if this has happened!**. This is because, in practice, we *only* have a single sample and don't know the true population parameter for the population from which the sample was drawn; hence, the level of confidence simply reflects a rather nominal degree of plausibility.
 
 ## Example: Proportions
- 
+
 So, we know that for small sample sizes the calculated confidence intervals will be wide. This can be even more evident with proportions. Despite this, the upper and/or lower limits of these confidence intervals can still offer useful bounds in which to aid with decision making.
 
 ```{r message = F, warning = F}
@@ -349,7 +349,7 @@ lims.10 <- plot.limits(ntot=10)
 
 For example, consider patient recruitment to an early-phase clinical trial of a new drug that is under development. Recruitment may cease early if there is sufficient evidence of high toxicity or provisional efficacy - according to *pre-defined* criteria. Here, stopping rules based on one-sided binomial confidence intervals (think, proportions) can inform trial planning and implementation.
 
-Say enrollment into a dose expansion cohort is planned, with dose limiting toxicity assumed to occur at a rate of 40% and treatment efficacy assumed to be at least 50%. Assuming the planned cohort size is 10, Figure 7 presents 80% lower confidence bounds (LCBs) as a reference for response counts, and more conservative 90% upper confidence bounds (UCBs) for toxicity counts .
+Say enrollment into a dose expansion cohort is planned, with an upper threshold of 40% for allowable dose limiting toxicity and treatment efficacy indicated if response rates are at least 50%. Assuming the planned cohort size is 10, Figure 7 presents 80% lower confidence bounds (LCBs) as a reference for response counts, and more conservative 90% upper confidence bounds (UCBs) for toxicity counts .
 
 ```{r echo = F, warning = F, fig.width = 8, fig.height = 7, include = T}
 lims.10

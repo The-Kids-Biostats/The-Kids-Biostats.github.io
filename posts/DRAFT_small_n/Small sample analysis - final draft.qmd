@@ -1,5 +1,5 @@
 ---
-title: "Final Small-sample analysis"
+title: "Small-sample analysis"
 format:
   html:
     code-fold: true
@@ -266,6 +266,8 @@ es.dat$N<-factor(es.dat$n,labels=paste0("n=",c(5,10,15)))
 power.plot<-ggplot(data=es.dat,aes(x=eff.size,y=power,colour=N))+
   geom_line(linewidth=1)+
   geom_point(data=es.dat.80,aes(colour=N),shape=19,size=rel(3))+
+  geom_segment(data=es.dat.80,aes(yend=rep(0,3),colour=N),linetype=2)+
+  geom_segment(data=es.dat.80,aes(xend=rep(0,3),colour=N),linetype=2)+
   labs(x="Effect size",y="Power to conclude a difference \nbetween the means of 2 groups",
        title="Power curves for t-test",legend="Sample size")+
   theme_clean()+theme(legend.position="right",

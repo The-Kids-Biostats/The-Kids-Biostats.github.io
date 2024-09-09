@@ -220,7 +220,7 @@ window.Quarto = {
 </section>
 <section id="sample-statistics-and-sampling-variation" class="level1 page-columns page-full">
 <h1>Sample statistics and sampling variation</h1>
-<p>To study a population of interest, data is gathered from a representative sample and then summaries statistics such as the sample median, mean, standard deviation or a proportion are derived to characterised that sample. These sample statistics vary about the <em>(true unknown)</em> population parameter for which they provide an estimate, and we can calculate confidence intervals to go along with these estimate to give context to a plausible range for this population parameter.</p>
+<p>To study a population of interest, data is gathered from a representative sample and then summaries statistics such as the sample median, mean, standard deviation or a proportion are derived to characterise that sample. These sample statistics vary about the <em>(true unknown)</em> population parameter for which they provide an estimate, and we can calculate confidence intervals to go along with these estimates to give context to a plausible range for the population parameters.</p>
 <p>The smaller the sample size:</p>
 <ul>
 <li>the larger the distance between the estimate (statistic we have derived) and the <em>(true unknown)</em> population parameter is likely to be, and</li>
@@ -243,7 +243,7 @@ window.Quarto = {
 <div class="no-row-height column-margin column-container"><div class="">
 <p><strong>Figure 1</strong><br>
 Here, we simulate data to represent a “population” of healthy female C57BL/6J mice who are expected to have a mean weight of 23 grams, with a standard deviation of 2 grams, at 14 weeks of age <a href="https://www.jax.org/jax-mice-and-services/strain-data-sheet-pages/body-weight-chart-000664">The Jackson Laboratory</a>.</p>
-</div></div><p>In practice researchers would only have data on a sample (subset) of a <em>(usually hypothetical)</em> population, from which to calculate summary statistics as estimates of general population characteristics. There is a potentially obviously and perhaps nuanced point here that needs to be stated, and that is that we do not know the population parameter we are estimating - if we did, we would not be trying to estimate it.</p>
+</div></div><p>In practice researchers would only have data on a sample (subset) of a <em>(usually hypothetical)</em> population, from which to calculate summary statistics as estimates of general population characteristics. There is a potentially obvious, but perhaps nuanced, point here that needs to be stated, and that is that we do not know the population parameter we are estimating - if we did, we would not be trying to estimate it.</p>
 <p>As may be expected, for larger datasets the calculated summary statistic is more likely to be closer to the <em>(true unknown)</em> population parameter from which the sample was drawn. Let’s see how the calculated mean might be expected to vary from sample to sample for our mouse weight example.</p>
 <p>To understand this variability, we’ll start by randomly drawing 500 samples that are each of size n=50.</p>
 <div class="cell">
@@ -273,7 +273,7 @@ Note
 <p>The mean of the sample means takes a value of 23.00, the same value, to 2 decimal places, as the <em>(in this instance, because we set it, known)</em> parameter for the population from which the sample was drawn.</p>
 </div>
 </div>
-<p>The spread (in Fig 2b) appears much reduced, but that is because it is not the spread of individual observations - it is the spread of sample means.In fact, the standard deviation of the sample means (i.e.&nbsp;the standard error of the mean) is 0.3, in line with the expected reduction of the population standard deviation of 2 by a factor of <span class="math inline">\(1/\sqrt{n}\)</span>.</p>
+<p>The spread (in Fig 2b) appears much reduced, but that is because it is not the spread of individual observations - it is the spread of sample means. In fact, the standard deviation of the sample means (i.e.&nbsp;the standard error of the mean) is 0.3, in line with the expected reduction of the population standard deviation of 2 by a factor of <span class="math inline">\(1/\sqrt{n}\)</span>.</p>
 <p>Now let’s see what happens as the sample size decreases.</p>
 <p>Here, a sample of n=20.</p>
 <div class="cell">
@@ -306,7 +306,7 @@ a) The first 5 samples (of 500) with a sample size of 20, from a simulated popul
 <p><strong>Figure 4</strong><br>
 a) The first 5 samples (of 500) with a sample size of 5, from a simulated population with mean=23 and std dev=2.<br>
 <br> b) The distribution of the sample means calculated from each of the 500 draws.</p>
-</div></div><p>It is clear that as the sample size decreases the estimates of the population mean become progressively more variable. This increased variability is taken into account in the formula for calculating the 95% confidence interval which become accordingly wider as precision decreases:</p>
+</div></div><p>It is clear that as the sample size decreases the estimates of the population mean become progressively more variable. This increased variability is taken into account in the formula for calculating the 95% confidence interval which becomes accordingly wider as precision decreases:</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -325,7 +325,7 @@ Random samples of increasing size, annotated with means and 95% confidence inter
 <section id="comparative-studies-with-small-group-sizes" class="level1 page-columns page-full">
 <h1>Comparative studies with small group sizes</h1>
 <p>Expanding on these observations, they highlight a major limitation of small-sample studies in that they lack power to detect anything other than large differences or large “effects”. This is because the sampling distribution of the test statistic needs to take account of the increased variability of the sample statistics on which the test procedure is based.</p>
-<p>For comparisons of mean values (e.g.&nbsp;a t-test) a large effect translates to a large difference between groups means relative to the within-group variation. Power (which relates to Type-II error) is an indication of the probability of a study to observe (or conclude) a difference if a difference (in the underlying populations being compared) truely exists.</p>
+<p>For comparisons of mean values (e.g.&nbsp;a t-test) a large effect translates to a large difference between group means relative to the within-group variation. Power (which relates to Type-II error) is an indication of the probability of a study to observe (or conclude) a difference if a difference (in the underlying populations being compared) truly exists.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -354,7 +354,7 @@ Note
 </div>
 </div>
 <p>At the design stage of an experiment, it is important to determine the minimum clinically meaningful difference/effect size you want to be able to detect, and power your study accordingly by including a sufficiently large sample.</p>
-<p>One could consider increasing power by extending the simple 2-sample approach to a factorial design, where the between treatment group differences are simultaneously examined across one or more factors (eg sex, age group).</p>
+<p>For example, one could consider increasing power by extending the simple 2-sample approach to a factorial design, where the between treatment group differences are simultaneously examined across one or more factors (eg sex, age group).</p>
 </section>
 <section id="using-confidence-intervals-to-guide-decision-making" class="level1 page-columns page-full">
 <h1>Using confidence intervals to guide decision-making</h1>
@@ -377,7 +377,7 @@ Important
 <h2 class="anchored" data-anchor-id="example-proportions">Example: Proportions</h2>
 <p>So, we know that for small sample sizes the calculated confidence intervals will be wide. This can be even more evident with proportions. Despite this, the upper and/or lower limits of these confidence intervals can still offer useful bounds in which to aid with decision making.</p>
 <p>For example, consider patient recruitment to an early-phase clinical trial of a new drug that is under development. Recruitment may cease early if there is sufficient evidence of high toxicity or provisional efficacy - according to <em>pre-defined</em> criteria. Here, stopping rules based on one-sided binomial confidence intervals (think, proportions) can inform trial planning and implementation.</p>
-<p>Say enrollment into a dose expansion cohort is planned, with dose limiting toxicity assumed to occur at a rate of 40% and treatment efficacy assumed to be at least 50%. Assuming the planned cohort size is 10, Figure 7 presents 80% lower confidence bounds (LCBs) as a reference for response counts, and more conservative 90% upper confidence bounds (UCBs) for toxicity counts .</p>
+<p>Say enrollment into a dose expansion cohort is planned, with an upper threshold of 40% for allowable dose limiting toxicity and treatment efficacy indicated if response rates are at least 50%. Assuming the planned cohort size is 10, Figure 7 presents 80% lower confidence bounds (LCBs) as a reference for response counts, and more conservative 90% upper confidence bounds (UCBs) for toxicity counts .</p>
 <div class="cell">
 <div class="cell-output-display">
 <div>
