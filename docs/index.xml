@@ -9,8 +9,283 @@
 <link>https://www.the-kids-biostats.github.io/</link>
 <atom:link href="https://www.the-kids-biostats.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description>Biostats R solutions</description>
-<generator>quarto-1.4.555</generator>
-<lastBuildDate>Thu, 08 Aug 2024 16:00:00 GMT</lastBuildDate>
+<generator>quarto-1.5.56</generator>
+<lastBuildDate>Mon, 09 Sep 2024 16:00:00 GMT</lastBuildDate>
+<item>
+  <title>Small-sample analysis</title>
+  <dc:creator>Dr Bethy McKinnon, Dr Matt Cooper</dc:creator>
+  <link>https://www.the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<p>The sample size in research projects is often limited by practical constraints e.g.&nbsp;cost of equipment, logistics of animal breeding and management, or the (low) prevalence of patients with a particular condition. Group sizes of 3-10 are typical of many animal studies and laboratory experiments, and while small can mean different things to different researchers, we’re going to focus here on sample statistics and sampling variation as the same size in a project heads down into this territory.</p>
+</section>
+<section id="sample-statistics-and-sampling-variation" class="level1 page-columns page-full">
+<h1>Sample statistics and sampling variation</h1>
+<p>To study a population of interest, data is gathered from a representative sample and then summaries statistics such as the sample median, mean, standard deviation or a proportion are derived to characterise that sample. These sample statistics vary about the <em>(true unknown)</em> population parameter for which they provide an estimate, and we can calculate confidence intervals to go along with these estimates to give context to a plausible range for the population parameters.</p>
+<p>The smaller the sample size:</p>
+<ul>
+<li>the larger the distance between the estimate (statistic we have derived) and the <em>(true unknown)</em> population parameter is likely to be, and</li>
+<li>the wider the confidence interval.</li>
+</ul>
+<p>This distance and width speaks to sampling error.</p>
+<p>Consider the following example that demonstrates how sampling variation increases with decreasing sample sizes.</p>
+<section id="example-samples-of-mice" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="example-samples-of-mice">Example: Samples of mice</h2>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://www.the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p><strong>Figure 1</strong><br>
+Here, we simulate data to represent a “population” of healthy female C57BL/6J mice who are expected to have a mean weight of 23 grams, with a standard deviation of 2 grams, at 14 weeks of age <a href="https://www.jax.org/jax-mice-and-services/strain-data-sheet-pages/body-weight-chart-000664">The Jackson Laboratory</a>.</p>
+</div></div><p>In practice researchers would only have data on a sample (subset) of a <em>(usually hypothetical)</em> population, from which to calculate summary statistics as estimates of general population characteristics. There is a potentially obvious, but perhaps nuanced, point here that needs to be stated, and that is that we do not know the population parameter we are estimating - if we did, we would not be trying to estimate it.</p>
+<p>In practice researchers would only have data on a sample (subset) of a <em>(usually hypothetical)</em> population, from which to calculate summary statistics as estimates of general population characteristics. There is a potentially obviously and perhaps nuanced point here that needs to be stated, and that is that we do not know the population parameter we are estimating - if we did, we would not be trying to estimate it.</p>
+<p>As may be expected, for larger datasets the calculated summary statistic is more likely to be closer to the <em>(true unknown)</em> population parameter from which the sample was drawn. Let’s see how the calculated mean might be expected to vary from sample to sample for our mouse weight example.</p>
+<p>To understand this variability, we’ll start by randomly drawing 500 samples that are each of size n=50.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://www.the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p><strong>Figure 2</strong><br>
+a) The first 5 samples (of 500) with a sample size of 50, from a simulated population with mean=23 and std dev=2.<br>
+<br> b) The distribution of the sample means calculated from each of the 500 draws.</p>
+</div></div><div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The mean of the sample means takes a value of 23.00, the same value, to 2 decimal places, as the <em>(in this instance, because we set it, known)</em> parameter for the population from which the sample was drawn.</p>
+</div>
+</div>
+<p>The spread (in Fig 2b) appears much reduced, but that is because it is not the spread of individual observations - it is the spread of sample means. In fact, the standard deviation of the sample means (i.e.&nbsp;the standard error of the mean) is 0.3, in line with the expected reduction of the population standard deviation of 2 by a factor of <img src="https://latex.codecogs.com/png.latex?1/%5Csqrt%7Bn%7D">.</p>
+<p>The spread (in Fig 2b) appears much reduced, but that is because it is not the spread of individual observations - it is the spread of sample means.In fact, the standard deviation of the sample means (i.e.&nbsp;the standard error of the mean) is 0.3, in line with the expected reduction of the population standard deviation of 2 by a factor of <img src="https://latex.codecogs.com/png.latex?1/%5Csqrt%7Bn%7D">.</p>
+<p>Now let’s see what happens as the sample size decreases.</p>
+<p>Here, a sample of n=20.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://www.the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p><strong>Figure 3</strong><br>
+a) The first 5 samples (of 500) with a sample size of 20, from a simulated population with mean=23 and std dev=2.<br>
+<br> b) The distribution of the sample means calculated from each of the 500 draws.</p>
+</div></div><p>This spread here (in Fig 3b) does not look too different to that seen above (in Fig 2b).</p>
+<p>And here, a sample of n=5.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://www.the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p><strong>Figure 4</strong><br>
+a) The first 5 samples (of 500) with a sample size of 5, from a simulated population with mean=23 and std dev=2.<br>
+<br> b) The distribution of the sample means calculated from each of the 500 draws.</p>
+</div></div><p>It is clear that as the sample size decreases the estimates of the population mean become progressively more variable. This increased variability is taken into account in the formula for calculating the 95% confidence interval which becomes accordingly wider as precision decreases:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://www.the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p><strong>Figure 5</strong><br>
+Random samples of increasing size, annotated with means and 95% confidence intervals.</p>
+</div></div></section>
+</section>
+<section id="comparative-studies-with-small-group-sizes" class="level1 page-columns page-full">
+<h1>Comparative studies with small group sizes</h1>
+<p>Expanding on these observations, they highlight a major limitation of small-sample studies in that they lack power to detect anything other than large differences or large “effects”. This is because the sampling distribution of the test statistic needs to take account of the increased variability of the sample statistics on which the test procedure is based.</p>
+<p>For comparisons of mean values (e.g.&nbsp;a t-test) a large effect translates to a large difference between group means relative to the within-group variation. Power (which relates to Type-II error) is an indication of the probability of a study to observe (or conclude) a difference if a difference (in the underlying populations being compared) truly exists.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://www.the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p><strong>Figure 6</strong><br>
+Power plots for a 2-sample t-test, with alpha=0.05 and equal sample sizes, assuming equal variances.</p>
+</div></div><div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If n=5 for both groups, the minimum difference at which a 2-sample t-test has at least 80% power to detect is just over 2 standard deviations.</p>
+<p>In line with the example above, if we were comparing weights of 2 treatment groups of mice, and it’s reasonable to assume a common SD of 2g, this would correspond to an absolute difference of 4g in the population mean weights - quite a large treatment effect.</p>
+</div>
+</div>
+<p>At the design stage of an experiment, it is important to determine the minimum clinically meaningful difference/effect size you want to be able to detect, and power your study accordingly by including a sufficiently large sample.</p>
+<p>For example, one could consider increasing power by extending the simple 2-sample approach to a factorial design, where the between treatment group differences are simultaneously examined across one or more factors (eg sex, age group).</p>
+</section>
+<section id="using-confidence-intervals-to-guide-decision-making" class="level1 page-columns page-full">
+<h1>Using confidence intervals to guide decision-making</h1>
+<p>Confidence intervals can be a little tricky to get your head around. They don’t provide a range in which XX% (typically 95%) of the data values lie, but rather relate to our belief regarding where the population parameter of interest (e.g.&nbsp;the true mean or proportion) lies.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The “confidence” comes from <strong>sampling theory</strong>: Suppose we sample the same population <em>many many times</em>, and for each sample calculate a 95% confidence interval <em>around the sample mean</em>, we would expect that 95% of the time the constructed interval will capture the true population mean.</p>
+</div>
+</div>
+<p>Sometimes, just by chance (or bad luck), our whole sample may lie towards one end (the tail) of the population distribution (see S-3 for n=5 in Fig 4a/Fig 5c above) resulting in a 95% CI that happens to “miss” the true value. <strong>The real problem here is that for <em>our</em> study - we don’t actually know if this has happened!</strong>. This is because, in practice, we <em>only</em> have a single sample and don’t know the true population parameter for the population from which the sample was drawn; hence, the level of confidence simply reflects a rather nominal degree of plausibility.</p>
+<section id="example-proportions" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="example-proportions">Example: Proportions</h2>
+<p>So, we know that for small sample sizes the calculated confidence intervals will be wide. This can be even more evident with proportions. Despite this, the upper and/or lower limits of these confidence intervals can still offer useful bounds in which to aid with decision making.</p>
+<p>For example, consider patient recruitment to an early-phase clinical trial of a new drug that is under development. Recruitment may cease early if there is sufficient evidence of high toxicity or provisional efficacy - according to <em>pre-defined</em> criteria. Here, stopping rules based on one-sided binomial confidence intervals (think, proportions) can inform trial planning and implementation.</p>
+<p>Say enrollment into a dose expansion cohort is planned, with an upper threshold of 40% for allowable dose limiting toxicity and treatment efficacy indicated if response rates are at least 50%. Assuming the planned cohort size is 10, Figure 7 presents 80% lower confidence bounds (LCBs) as a reference for response counts, and more conservative 90% upper confidence bounds (UCBs) for toxicity counts .</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://www.the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p><strong>Figure 7</strong><br>
+90% upper confidence bounds (UCBs, teal) for dose-limiting toxicity (DLT) and 80% lower confidence bounds (LCBs, ochre) for treatment response, for a sample size of 10. Bounds were constructed from one-sided binomial confidence intervals, using the Clopper-Pearson method.</p>
+</div></div><p>The drug would be deemed to have an acceptable toxicity profile if <strong>no more than 1 subject was impacted by a dose-limiting toxicity (DLT)</strong>. Given the small sample size, if there are 2 or more impacted subjects then the confidence interval for the true toxicity rate will be in excess of the 40% threshold, even though the observed rate may be no more than 20%. The stopping rule for unacceptable toxicity would be invoked if a second DLT occurs prior to the final enrollment.</p>
+<p>Similarly, if treatment elicits <strong>an efficacious response in at least 8 patients</strong>, there would be reasonable confidence that the treatment has demonstrated sufficient efficacy to warrant continued investigation, and should this be established prior to enrolment of the complete cohort, the trial may be stopped early.</p>
+<p>Confidence intervals for proportions are notoriously wide, and typically large sample sizes are sought to obtain a required level of precision for <em>(around)</em> the rate that is being estimated. If available resources are limited, it may be that a more efficient experimental could be considered.</p>
+</section>
+</section>
+<section id="further-thoughts" class="level1">
+<h1>Further thoughts</h1>
+<p>For small-sample studies, as with those based on larger samples, consider if the results can be appropriately generalised to fit with the aim of the study.</p>
+<p><strong>Population sampling:</strong> Consider if there are subtle biases resulting from recruitment strategies that may impact how representative the sample is of the population being characterized.</p>
+<p><strong>Laboratory experiments or animal studies:</strong> Ensure that environmental factors have been adequately controlled and appropriate randomization undertaken so that differences between groups can be confidently attributed to the condition/treatment under study. Small-sample experiments require tight control of between-individual variation to achieve maximum power and appropriate randomization must be undertaken for results to be valid.</p>
+<section id="reproducibility-information" class="level2">
+<h2 class="anchored" data-anchor-id="reproducibility-information">Reproducibility Information</h2>
+<p>To access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, <a href="https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/2024-09-10_small_n">please visit our GitHub</a>:</p>
+<p>The session information can also be seen below.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.3.3 (2024-02-29)
+Platform: aarch64-apple-darwin20 (64-bit)
+Running under: macOS Sonoma 14.4.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: Australia/Perth
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] DescTools_0.99.56 pwr_1.3-0         cowplot_1.1.3     ggpubr_0.6.0     
+ [5] biometrics_1.2.4  lubridate_1.9.3   forcats_1.0.0     stringr_1.5.1    
+ [9] dplyr_1.1.4       purrr_1.0.2       readr_2.1.5       tidyr_1.3.1      
+[13] tibble_3.2.1      ggplot2_3.5.1     tidyverse_2.0.0   extrafont_0.19   
+
+loaded via a namespace (and not attached):
+ [1] gld_2.6.6               readxl_1.4.3            rlang_1.1.4            
+ [4] magrittr_2.0.3          snakecase_0.11.1        e1071_1.7-14           
+ [7] compiler_4.3.3          systemfonts_1.1.0       vctrs_0.6.5            
+[10] httpcode_0.3.0          pkgconfig_2.0.3         crayon_1.5.3           
+[13] fastmap_1.2.0           backports_1.5.0         labeling_0.4.3         
+[16] utf8_1.2.4              promises_1.3.0          rmarkdown_2.28         
+[19] tzdb_0.4.0              haven_2.5.4             ragg_1.3.2             
+[22] xfun_0.47               labelled_2.13.0         jsonlite_1.8.8         
+[25] later_1.3.2             uuid_1.2-1              broom_1.0.6            
+[28] R6_2.5.1                stringi_1.8.4           car_3.1-2              
+[31] boot_1.3-30             extrafontdb_1.0         cellranger_1.1.0       
+[34] Rcpp_1.0.13             knitr_1.48              httpuv_1.6.15          
+[37] Matrix_1.6-5            igraph_2.0.3            timechange_0.3.0       
+[40] tidyselect_1.2.1        rstudioapi_0.16.0       abind_1.4-5            
+[43] yaml_2.3.10             curl_5.2.2              lattice_0.22-6         
+[46] shiny_1.9.1             withr_3.0.1             flextable_0.9.6        
+[49] askpass_1.2.0           evaluate_0.24.0         proxy_0.4-27           
+[52] zip_2.3.1               xml2_1.3.6              pillar_1.9.0           
+[55] carData_3.0-5           generics_0.1.3          hms_1.1.3              
+[58] rootSolve_1.8.2.4       munsell_0.5.1           scales_1.3.0           
+[61] xtable_1.8-4            class_7.3-22            glue_1.7.0             
+[64] janitor_2.2.0           gdtools_0.3.7           lmom_3.0               
+[67] tools_4.3.3             gfonts_0.2.0            data.table_1.16.0      
+[70] ggsignif_0.6.4          Exact_3.3               mvtnorm_1.2-6          
+[73] grid_4.3.3              Rttf2pt1_1.3.12         colorspace_2.1-1       
+[76] cli_3.6.3               kableExtra_1.4.0        textshaping_0.4.0      
+[79] officer_0.6.6           fontBitstreamVera_0.1.1 fansi_1.0.6            
+[82] expm_1.0-0              viridisLite_0.4.2       svglite_2.1.3          
+[85] gtable_0.3.5            rstatix_0.7.2           digest_0.6.37          
+[88] fontquiver_0.2.1        crul_1.5.0              farver_2.1.2           
+[91] htmlwidgets_1.6.4       htmltools_0.5.8.1       lifecycle_1.0.4        
+[94] httr_1.4.7              mime_0.12               fontLiberation_0.1.0   
+[97] openssl_2.2.1           MASS_7.3-60.0.1        </code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <category>Small Samples</category>
+  <category>R</category>
+  <guid>https://www.the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis.html</guid>
+  <pubDate>Mon, 09 Sep 2024 16:00:00 GMT</pubDate>
+</item>
 <item>
   <title>AI in Biostatistics - Part 2</title>
   <dc:creator>Wesley Billingham, Dr Matthew Cooper</dc:creator>
@@ -61,8 +336,7 @@
 </ol>
 <div class="cell">
 <div class="cell-output-display">
-<div>
-<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">Metric</th>
@@ -87,7 +361,6 @@
 
 </div>
 </div>
-</div>
 <ol start="3" type="1">
 <li>Those in the “Inside Frontier” group were assigned a project that had been determined beforehand to be within the capabilities of ChatGPT 3.5. In contrast, the “Outside Frontier” group were assigned a project beyond the capabilities of ChatGPT 3.5.</li>
 <li>The participants were further divided into “ChatGPT” and “ChatGPT + Overview” groups. The latter received some training on prompt engineering (how be to use ChaptGPT) before undertaking the project.</li>
@@ -96,8 +369,7 @@
 <p>The results are quite striking:</p>
 <div class="cell">
 <div class="cell-output-display">
-<div>
-<table class="table table-sm table-striped small" data-quarto-postprocess="true">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
 <tr class="header">
 <th style="text-align: left;" data-quarto-table-cell-role="th">Metric</th>
@@ -131,7 +403,6 @@
 </table>
 
 
-</div>
 </div>
 </div>
 <p>Using ChatGPT for the project ‘Inside the Frontier’ resulted in considerable improvements in both speed and quality of work, regardless of whether participants received training.</p>
@@ -424,7 +695,7 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
   <pubDate>Thu, 08 Aug 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
-  <title>AI in Biostatistics</title>
+  <title>AI in Biostatistics - Part 1</title>
   <dc:creator>Wesley Billingham, Dr Matthew Cooper</dc:creator>
   <link>https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/ai_part_one.html</link>
   <description><![CDATA[ 
@@ -436,10 +707,10 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
 <section id="overview" class="level1">
 <h1>Overview</h1>
 <p>AI is a hot topic in most fields right now, and biostatistics is no exception! We (the Telethon Kids Institute biostats team) were asked to present at the weekly Institute seminar on the use of AI in statistical workflows.</p>
-<p>The term AI has many meanings depending on the context - in this article we are referring exclusively to (and use the term interchangeably with) large language models (LLMs) such as ChatGPT and Claude. These tools are useful not just for writing sentences and paragraphs of text, but also functioning code!</p>
-<p>Since first investigating the capabilities of ChatGPT at writing R code, our team has been working to utilise it safely and effectively in our everyday workflows.</p>
+<p>The term AI has many meanings depending on the context - in this article we are referring exclusively to (and use the term interchangeably with) large language models (LLMs) such as ChatGPT and Claude. These tools are useful not just for writing sentences and paragraphs of text, but also for writing functioning code!</p>
+<p>Since first investigating the capabilities of ChatGPT in writing R code, our team has been working to utilise it safely and effectively in our everyday workflows.</p>
 <p>The summary of our message to the Institute staff was that we cannot ignore the massive increase in efficiency that AI <strong><em>can</em></strong> bring if used properly. However, we also need to be <u><strong>very</strong></u> aware of its limitations, and the necessary role of human experts in the process of validating any non-trivial output.</p>
-<p>This is Part One in a two part series. This part will look at the capabilities of AI to benefit our workflows and increase efficiency. The next part will look at some limitations of the technology as it currently exists, including some practical recommendations to identify these issues.</p>
+<p>This is Part One in a two-part series. This part will look at the capabilities of AI to benefit our workflows and increase efficiency. The next part will look at some limitations of the technology as it currently exists, including some practical recommendations to identify these issues.</p>
 <section id="format-of-this-post" class="level2">
 <h2 class="anchored" data-anchor-id="format-of-this-post">Format of this post</h2>
 <p>We will work through a couple of practical examples of how we might use AI in an everyday workflow:</p>
@@ -453,8 +724,8 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
 </section>
 <section id="example-1---data-visualisation" class="level1">
 <h1>Example 1 - Data Visualisation</h1>
-<p>A couple of summers ago (2021/22) felt unusually hot in Perth, Australia. Specifically, it seemed that the maximum temperature was regularly exceeding round numbers like 35 or 40 degrees Celsius. The most recent summer felt similar, but as it relates to ‘hot days’, were we seeing more of these? My colleague, being a statistician, wished to contrast this most recent summer to previous summers.</p>
-<p>He whipped up a quick plot using ggplot2, with a focus on the number of ‘summer days’ above a certain maximum (and equally important, ‘hot nights’ that stayed above certain minimums). Shown below, is data through to mid February 2024:</p>
+<p>A couple of summers ago (2021/22) felt unusually hot in Perth, Australia. Specifically, it seemed that the maximum temperature was regularly exceeding round numbers like 35 or 40 degrees Celsius. The most recent summer was starting to feel similar, but as it relates to ‘hot days’, were we seeing more of these? My colleague, being a statistician, wished to contrast this most recent summer to previous summers.</p>
+<p>He whipped up a quick plot using <code>ggplot2</code>, with a focus on the number of ‘summer days’ above a certain maximum (and equally important, ‘hot nights’ that stayed above a certain minimum). Shown below, is data through to mid February 2024:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -464,12 +735,12 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
 </div>
 </div>
 </div>
-<p>Here we can see the number of days over a certain maximum for each year since 2010. For example, in 2023, Perth had 0 days above 40°C and 4 above 38°C.</p>
-<p>The sweltering summer in question (2021/22) had a whopping 12 days over 40°C and 23 above 38°C. Since the next highest count since 2010 was 7 and 14 respectively, it’s fair to say this was quite the outlier! And the ‘current’ (at the time) summer was similar was to this, but yet to exceed it.</p>
-<p>My colleague felt that the data visualisation could probably be cleaner and more clear, so enlisted ChatGPT for help (for one of the first times!).</p>
+<p>Here we can see the number of days over a certain maximum for each year since 2010. For example, in 2023, Perth had 0 days above 40°C and only 4 above 38°C.</p>
+<p>The sweltering summer in question (2021/22) had a whopping 12 days over 40°C and 23 above 38°C. Since the next highest count since 2010 was 7 and 14 respectively, it’s fair to say this was quite the outlier! And the ‘current’ (at the time) summer was similar to this, but yet to exceed it.</p>
+<p>My colleague felt that the data visualisation could probably be cleaner and more clear, so enlisted ChatGPT for help.</p>
 <section id="providing-the-blueprint" class="level2">
 <h2 class="anchored" data-anchor-id="providing-the-blueprint">Providing the Blueprint</h2>
-<p>ChatGPT allows the user to provide images as a part of prompts. With that in mind, the image was uploaded first by itself. ChatGPT was able to successfully identify the key elements of the plot just from the image (!), and so the next step was to give some guidance to make the plot more visually appealing.</p>
+<p>ChatGPT allows the user to provide images as a part of the prompt. With that in mind, the image was uploaded first by itself. ChatGPT was able to successfully identify the key elements of the plot just from the image (!), and so the next step was to give some guidance to make the plot more visually appealing.</p>
 <p>With just one prompt: “can you facet wrap the min max data”, in addition to the original plot, it got to work. Once the original data was provided, it returned the requested modifcation - complete with Python code for the plot (R cannot be run within ChatGPT, though we certainly could have requested R code to run ourselves instead).</p>
 <p>Here is the entire prompt history, from beginning to end:</p>
 <ul>
@@ -509,7 +780,7 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
 </div>
 </div>
 </div>
-<p>Plots are a great use-case of AI, since the nitty gritty of colours, panes, text, etc can be a time-consuming hassle to do manually. AI in our experience does a good job of translating our descriptive visual prompts into code that achieves the described vision. Furthermore, the output is instantly verifiable (keep this point in mind!) and easy to refine.</p>
+<p>Plots are a great use-case of AI, since the nitty gritty of colours, panes, text, etc can be a time-consuming hassle to navigate manually. AI in our experience does a good job of translating our descriptive visual prompts into code that achieves the described vision. Furthermore, the output is instantly verifiable (keep this point in mind!) and easy to refine.</p>
 </section>
 </section>
 <section id="example-2---statistical-workflow" class="level1">
@@ -538,7 +809,7 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
 <li>Hospital ID</li>
 </ul></li>
 </ul>
-<p>We will be very careful to avoid statistical terminology as we prompt ChatGPT, but we can see that there is an implied nesting structure to our data, with patient inside physician inside hospital. With that in mind, and the fact that our outcome is binary, we are hoping that ChatGPT suggests a hierarchical logistic regression.</p>
+<p>We will be very careful to avoid statistical terminology as we prompt ChatGPT, and we can see that there is an implied nesting structure to our data, with patient inside physician inside hospital. With that in mind, and the fact that our outcome is binary, we are hoping that ChatGPT suggests a hierarchical logistic regression.</p>
 <section id="providing-the-problem" class="level2">
 <h2 class="anchored" data-anchor-id="providing-the-problem">Providing the Problem</h2>
 <p>In this example, we provided ChatGPT with a very high-level summary of our data and research question, as seen here:</p>
@@ -570,7 +841,7 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
 </section>
 <section id="end-result-and-discussion-1" class="level2">
 <h2 class="anchored" data-anchor-id="end-result-and-discussion-1">End Result and Discussion</h2>
-<p>For brevity’s sake, we will not include the whole prompting process here. However, following the model specification, ChatGPT was able to successfully guide us through adding a random slope, and then summarising our model using the <code>broom.mixed</code> package (broom for mixed models, as the name suggests).</p>
+<p>For brevity’s sake, we will not include the whole prompting process here. However, following the model specification, ChatGPT was able to successfully guide us through adding a random slope, and then summarising our model using the <code>broom.mixed</code> package (<code>broom</code> for mixed models, as the name suggests).</p>
 <p>It then gave us code to check the model fit, run model diagnostics, and perform sensitivity analysis. At each stage, it was able to give advice on interpretation and next steps that we could not fault. Here are some highlights:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
@@ -594,9 +865,10 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
 </section>
 <section id="bonus-example---data-anonymising-app" class="level1">
 <h1>Bonus Example - Data Anonymising App</h1>
-<p>One thing that the first example might make you think is, “Great! I’m going to make all my graphs online”. Slow down! The data uploaded as part of that example is public data, freely available from the Australia <a href="https://reg.bom.gov.au/climate/data-services/">Bureau of Meteorology</a> website. There are a lot of AI based websites that will draw a graph for you if you provide them data to do so - <a href="https://www.graphmaker.ai/">there are some where</a> that is all they do.</p>
+<p>One thing that the first example might make you think is, “Great! I’m going to make all my graphs online”. Slow down!</p>
+<p>The data uploaded as part of that example is public data, freely available from the Australia <a href="https://reg.bom.gov.au/climate/data-services/">Bureau of Meteorology</a> website. There are a lot of AI based websites that will draw a graph for you if you provide them data to do so - <a href="https://www.graphmaker.ai/">there are some where</a> that is all they do.</p>
 <p>However. For most researchers, particularly in the health research space, <u><strong>you will not have approval (ethics and/or governance)</strong></u> to upload your data to random websites.</p>
-<p>So, we created an app that will transform your data into a reduced, fully-anonymised dataset that can then be used in online AI tools for assistance with coding up figures or structuring models. This is not just anonymised in the sense of the masking/removing the identifiable data - all <code>values</code> in the dataset are replaced, with numeric data regenerated, and category and variable labels stripped off.</p>
+<p>So, we created an app that will transform your data into a reduced, fully-anonymised dataset that can then be used in online AI tools for assistance with coding up figures or structuring models. This is not just anonymised in the sense of the masking/removing the identifiable data - all values in the dataset are replaced, with data regenerated, and category and variable labels stripped off.</p>
 <p>It looks like this:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
@@ -609,12 +881,12 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
 </div>
 <section id="why" class="level2">
 <h2 class="anchored" data-anchor-id="why">Why?</h2>
-<p>Well yes, you could just use random data between 0 and 1 - but we (and we presume a lot of people) find less mental load involved when the data being worked with resembles the original data (as in, the values are between 140 and 200 for our “blood pressure” histogram, or between 70 and 130 for the “IQ scores” we’re plotting against values between 1.4-2.1 for “height” etc).</p>
+<p>Well yes, you could just use random data between 0 and 1 - but we (and we presume a lot of people) find less mental load involved when the data being worked with resembles the original data (as in, the values are between 140 and 200 for our “blood pressure” histogram, or between 70 and 130 for the “IQ scores” we’re plotting against values between 1.4m-2.1m for “height” etc).</p>
 </section>
 <section id="how-do-i-access-it" class="level2">
 <h2 class="anchored" data-anchor-id="how-do-i-access-it">How do I access it?</h2>
-<p>It would be ironic if we provided this for you on our website, because then you would be sending your data to our servers. At Telethon Kids, we run this on an internal server that is not accessible from outside our internal network.</p>
-<p>You can <a href="https://github.com/TelethonKids/data_anonymiser">download a copy from our github</a> (it is a Shiny app that runs within R), and then run it locally on the desktop (or virtual) machine you are working on - anonymising your data without it leaving your analysis environment.</p>
+<p>It would be ironic if we provided this for you on our website, because then you would be sending your data to our servers. At our Institute, we run this on an internal server that is not accessible from outside our internal network.</p>
+<p>You can <a href="https://github.com/TelethonKids/data_anonymiser">download a copy from our github</a> <em>(it is a Shiny app that runs within R)</em>, and then run it locally on the desktop (or virtual) machine you are working on - anonymising your data without it leaving your analysis environment!</p>
 </section>
 <section id="anything-else" class="level2">
 <h2 class="anchored" data-anchor-id="anything-else">Anything else?</h2>
@@ -638,7 +910,7 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
 </div>
 </div>
 </div>
-<p>There is a test dataset (<code>.xlsx</code>) available <a href="https://github.com/TelethonKids/data_anonymiser/blob/main/synthetic_health_dataset_final.xlsx">for download here</a> (click downward arrow on right hand size of the page) with the app.</p>
+<p>There is a test dataset (<code>.xlsx</code>) available <a href="https://github.com/TelethonKids/data_anonymiser/blob/main/synthetic_health_dataset_final.xlsx">for download here</a> (click downward arrow on right hand size of the page) alongside the app.</p>
 <p>How was that created? You guessed it!</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
@@ -662,7 +934,7 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
 </section>
 <section id="end-result-and-discussion-2" class="level1">
 <h1>End Result and Discussion</h1>
-<p>In this Part One part, we have seen how easy and powerful the use of AI can be in the data analysis and statistical workflow.</p>
+<p>In this, Part One, we have seen how easy to use and powerful AI can be in the area of data analysis and statistical workflows.</p>
 <p>In Part Two, we will look at some pitfalls of AI and some traps we can fall into. We’ll see if we can determine some good rules-of-thumb for its use to ensure our AI-assisted work remains both efficient and accurate.</p>
 
 
@@ -4064,8 +4336,10 @@ font-style: inherit;">data =</span> mtcars)))</span>
 <span id="cb9-6"></span>
 <span id="cb9-7"><span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">in</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
@@ -4132,6 +4406,7 @@ background-color: null;
 font-style: inherit;">2</span>, </span>
 <span id="cb9-25">                       <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(coefs){<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">quantile</span>(coefs, <span class="at" style="color: #657422;
@@ -4293,6 +4568,7 @@ background-color: null;
 font-style: inherit;">2</span>, </span>
 <span id="cb16-12">                       <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(coefs) {<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">quantile</span>(coefs, <span class="at" style="color: #657422;
@@ -4448,6 +4724,7 @@ background-color: null;
 font-style: inherit;">2</span>, </span>
 <span id="cb23-13">                       <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(coefs) {<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">quantile</span>(coefs, <span class="at" style="color: #657422;
@@ -4704,8 +4981,10 @@ background-color: null;
 font-style: inherit;">list</span>()</span>
 <span id="cb32-3"><span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">in</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
@@ -5180,11 +5459,14 @@ font-style: inherit;"># To store our model output</span></span>
 <span id="cb50-3"></span>
 <span id="cb50-4"><span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">in</span> outcome_vars){</span>
 <span id="cb50-5">  <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (i <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -5213,8 +5495,10 @@ font-style: inherit;">data =</span> flights)</span>
 <span id="cb50-8">    </span>
 <span id="cb50-9">  } <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (i <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -5301,6 +5585,7 @@ font-style: inherit;">map</span>(outcome_vars, </span>
 background-color: null;
 font-style: inherit;">~</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -5333,8 +5618,10 @@ font-style: inherit;">summary</span>()</span>
 <span id="cb53-10">        </span>
 <span id="cb53-11">        } <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -5438,6 +5725,7 @@ font-style: inherit;">future_map</span>(outcome_vars, </span>
 background-color: null;
 font-style: inherit;">~</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -5470,8 +5758,10 @@ font-style: inherit;">summary</span>()</span>
 <span id="cb56-12">        </span>
 <span id="cb56-13">        } <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -5585,6 +5875,7 @@ background-color: null;
 font-style: inherit;">%dopar%</span> {</span>
 <span id="cb59-5">  <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (j <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -5612,8 +5903,10 @@ background-color: null;
 font-style: inherit;">data =</span> flights)</span>
 <span id="cb59-8">  } <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (j <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
