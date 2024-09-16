@@ -17,6 +17,7 @@ draft: true
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 suppressMessages(library(tidyverse))
+suppressMessages(library(Hmisc))
 #library(gtsummary)
 #library(summarytools)
 #library(desctable)
@@ -25,33 +26,25 @@ suppressMessages(library(tidyverse))
 
 # Overview
 
-Analysing data will normally always involve generating tables– whether they are the final goal of the analysis or used as an intermediary step to guide further analysis. This blog post will focus on the former, while keeping the latter in the back of our minds. A common use case here might be a "Table 1" from a randomised control trial where we are examining (not testing and generating p-values) a range of summary statistics for each arm of the trial, or perhaps data are collected on a group over three time points and we want to examine a range of summary statistics for each time point.
+Analysing data will normally always involve generating tables– whether they are the final goal of the analysis or used as an intermediary step to guide further analysis. This blog post will focus on the former, while keeping the latter in the back of our minds. Common use cases might be a "Table 1" in a randomised control trial setting where we are describing (not testing and generating p-values) a range of summary statistics for each arm of the trial, or perhaps presenting summary statistics for a longitudinal data set across multiple time periods.
 
-There are *many* `R` packages and functions dedicated to this very task. We will select just a handful that we often come across in our work, and evaluate their effectiveness relative to some pre-set criteria we deem important in our work. Example code and commentary will be presented as we go.
+There are *many* `R` packages and functions dedicated to this very task. We will select just a handful that we often come across in our work, and evaluate their effectiveness relative to some criteria we deem important. Example code and commentary will be presented as we go.
 
-<br>
+
 
 # Assessment Criteria
 
 1.  **Range of customisible summary options**
-
     -   How flexible are the summary functions to different metrics (mean, median, SD, IQR)?
-
     -   How easy is it to apply these changes to different data types (e.g., continuous, dichotomous, ordinal, nominal).
-
 2.  **Flexibility in changing tabling output**
-
     -   Text formatting (italics, bolding, font size, etc.)
-
     -   Specifying order for table elements
-
     -   Rounding
-
 3.  **Rendering across different output types**
-
     -   Are the outputs robust with respect to output form (html, pdf, word)?
 
-<br>
+
 
 # Contenders
 
@@ -59,22 +52,15 @@ Let's define our set of contenting packages. Keep in mind this is not an exhaust
 
 -   [`gtsummary::tbl_summary`](https://www.danieldsjoberg.com/gtsummary/)
 -   [`table1::table1`](https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html)
+-   [`tableone::CreateTableOne`](https://cran.r-project.org/web/packages/tableone/vignettes/introduction.html)
 -   [`desctable::desc_table`](https://cran.r-project.org/web/packages/desctable/vignettes/desctable.html)
 -   [`summarytools::dfSummary`](https://rdrr.io/cran/summarytools/man/dfSummary.html)
--   [`janitor::tabyl`](https://cran.r-project.org/web/packages/janitor/vignettes/tabyls.html)
--   [`stargazer::stargazer`](https://cran.r-project.org/web/packages/stargazer/vignettes/stargazer.pdf)
--   tableone
--   [custom](https://mcfromnz.wordpress.com/2010/09/21/automatic-descriptive-statistic-tables/)
-
-<br>
 
 # Data
 
 ## Sample Dataset
 
-To evaluate the summary table functions, we select a data set and make a few minor changes to ensure it has the right variety of variables types to test all of our required scenarios.
-
-We will use the `flchain` (Assay of serum free light chain for 7874 subjects) dataset from the `survival` package.
+We select the `flchain` dataset from the `survival` package to evaluate each summary table package's performance. This is dataset containing the serum free light chains for 7874 subjects, and contains a variety of common variable types (dichotomous, ordinal, nominal, numeric).
 
 ```{r}
 data(flchain, package = "survival")
@@ -83,54 +69,48 @@ head(flchain)
 str(flchain)
 ```
 
-<p>
 
-This has the following variable types
+
+To summarise these variable types:
 
 +---------------+------------------+
 | Continuous    | -   `age`        |
-|               |                  |
 |               | -   `kappa`      |
-|               |                  |
 |               | -   `lambda`     |
-|               |                  |
 |               | -   `futime`     |
-|               |                  |
 |               | -   `creatinine` |
 +---------------+------------------+
 | Ordinal       | -   `sample.yr`  |
-|               |                  |
-|               | -   `death`      |
-|               |                  |
 |               | -   `chapter`    |
 +---------------+------------------+
-| Nominal       | -   `sex`        |
-|               |                  |
+| Dichotomous   | -   `death`      |
 |               | -   `mgus`       |
-|               |                  |
++---------------+------------------+
+| Nominal       | -   `sex`        |
 |               | -   `flc.grp`    |
 +---------------+------------------+
 
-<p>
 
-## Objectives
 
-For each method, we will:
+## Evaluation Criteria
+
+Below, we detail the framework we will use to evaluate each summary table function. These elements span technical/statistical elements, formatting and output.
 
 -   Stratify results by `sex`.
 -   Report median (interquartile range) for `age` and mean (standard deviation) for all other continuous (numeric) variables.
--   Apply level specifications to ordinal variables (`sample.yr`)
--   Round continuous values to 1 decimal places.
--   Apply nicely formatted labels to all variables
+-   Apply level specifications to ordinal variables (`sample.yr`).
+-   Round continuous values to 1 decimal place.
+-   Apply nicely formatted labels to all variables.
 -   Apply basic statistical to quantify any differences between the stratified death groups.
-    -   Chi-square test for categorical variables
+    -   Chi-square test for categorical variables.
     -   Kruskal-Wallis test for continuous variables.
 -   Add overall summary statistics across all levels of the stratification variable.
 -   Render in html, pdf and word and compare consistency across these.
 
+::: callout-note
 Where any of the above was seemingly not possible, it will be reported in the comments of that method. Comments will also be made on the quality of the documentation for each package and the wealth of online support through StackOverflow, blogs, tutorials, etc.
+:::
 
-<br>
 
 # 1) `gtsummary::tbl_summary`
 
@@ -173,38 +153,24 @@ sumtab1 <- flchain %>%
 
 ## ii) Output table
 
-Print this to html
 
-```{r}
+```{r echo = F}
 sumtab1
 ```
-
-Render to word doc
-
-```{r}
-sumtab1_word <- sumtab1 %>%
-  gtsummary::as_flex_table(.)
-
-officer::read_docx() %>%
-  flextable::body_add_flextable(sumtab1_word) %>%
-  print(target = "sumtab1.docx")
-```
-
-![Word document format](sumtab1_word.png){fig-align="center"}
 
 ## iii) Comments
 
 -   **Pros**
-    -   Massive amount of options/variability in output
-    -   Formatting is very nice in html form.
-    -   Easy to add in and specify arguments to testing.
+    -   Variety of function parameters to customise the output of table.
+    -   Renders nicely to html, Word format.
+    -   Can easily convert to `flextable` object, where a full suite of visual formatting options are possible.
+    -   Extensive documentation, worked examples and online examples.
 -   **Cons**
-    -   Does not render in Word document markdown format (can save output to Word document).
-    -   Can be a bit clumsy when specifying some arguments (must be inside list, etc.)
-    -   Can be annoying when working with high dimensional data (selecting large number of columns).
+    -   The syntax of function arguments can be a learning curve (correct list/vector notation).
     -   When applying multiple tests within a class of variables (e.g., t-test for one continuous variable, Kruskal-Wallis test for another) it is not obvious which test is applied to which. Only the p-value is returned in each instance.
+    -   Can be *slow* for large/complex data sets.
 
-<br>
+
 
 # 2) `table1::table1`
 
@@ -274,16 +240,17 @@ label(flchain_mod$chapter)    <- "Primary cause of death"
 
 # Specify table output
 sumtab2 <- flchain_mod %>%
-  table1::table1(~ age +  
-                   sample.yr + 
-                   kappa + 
-                   lambda + 
-                   flc.grp + 
-                   creatinine + 
-                   mgus + 
-                   futime + 
-                   sex + 
-                   chapter | death, 
+  table1::table1(~. | death, 
+                 #~ age +  
+                 #  sample.yr + 
+                 #  kappa + 
+                 #  lambda + 
+                 #  flc.grp + 
+                 #  creatinine + 
+                 #  mgus + 
+                 #  futime + 
+                 #  sex + 
+                 #  chapter | death, 
                  data = .,
                  overall = c(right = "Overall"),
                  #extra.col = list(`p-value` = pvalue),
@@ -293,7 +260,7 @@ sumtab2 <- flchain_mod %>%
 
 ## ii) Output table
 
-```{r}
+```{r echo = F}
 sumtab2
 ```
 
@@ -306,7 +273,16 @@ sumtab2
 #  print(target = "sumtab1.docx")
 ```
 
-<br>
+## ii) Comments
+
++ **Pros**
+  + 
++ **Cons**
+  + "Formula-style" specification of the table is somewhat cumbersome.
+  + Specifying labels to variables must be done outside of any tabling pipelines.
+  + Specifying any variable levels or summary variables must be done outside of any tabling pipelines.
+  + All formatting must be done in a custom rendering function.
+    + Specifying this rendering function is not necessarily straightforward, and relies still on specific functions of the `table1` package.
 
 # 3) `tableone::CreateTableOne`
 
@@ -378,7 +354,7 @@ sumtab3 <- print(sumtab3,
 
 ## ii) Output table
 
-```{r}
+```{r echo = F}
 sumtab3
 ```
 
@@ -386,15 +362,14 @@ sumtab3
 
 -   **Pros**
     -   Implicitly tests each variable for appropriateness of test (e.g., normal vs. non-normal etc.)
-    -   Seems like a good "first pass" sort of function to apply in cases where we have a lot of variables. Perhaps less so a "publication ready" function.
 -   **Cons**
-    -   Renders nicely to console, not so much to Rmarkdown (relative to above)
+    -   Clunky and difficult to customise output -- requires specifying custom functions.
     -   Clunky to specify testing
         -   Cannot easily tell which test is being applied to which variable (cannot tell whether variable is "normal" vs. "non-normal")
         -   Different arguments specified for approximate vs. exact categorical tests (chi-square vs. Fisher's test) and normal vs. non-normal continuous tests (t-test vs. Kruskal-Wallis Rank-Sum test)
-    -   Output is clunky and cannot be tweaked (decimal places, structure of output)
+    
 
-<br>
+
 
 # 4) `desctable::desc_table`
 
@@ -442,7 +417,7 @@ sumtab4 <- flchain %>%
 
 ## ii) Output table
 
-```{r}
+```{r echo = F}
 sumtab4
 ```
 
@@ -457,7 +432,7 @@ sumtab4
     -   Specification of tests are a little clunky and troublesome with categorical factors.
     -   Specification of statistics between categorical and continuous variables are a little clunky (shows IQR for categorical variables, etc.)
 
-<br>
+
 
 # 5) `summarytools::dfSummary`
 
@@ -492,25 +467,26 @@ sumtab5 <- flchain %>%
 
 ## ii) Output table
 
-```{r}
+```{r echo = F}
 sumtab5
 ```
 
 ## iii) Comments
 
 -   **Pros**
-    -   Has some pretty cool graphs
+    -   Returns a nice visual distribution of the data.
 -   **Cons**
-    -   A bit fiddly to render nicely in RMarkdown. Requires specification of additional arguments in chunk header (`results = asis`)
-    -   Stratification is clunky in output, and requires manual `group_by` argument.
+    -   A bit fiddly to render nicely in RMarkdown. Requires specification of additional arguments in chunk header (`results = asis`).
+    -   Stratification is clunky in output and requires manually specifying a `group_by` argument. Also returns two separate summary tables.
+    -   No ability to customise the summary statistics presented for each variable.
 
-<br>
+
 
 # Conclusions
 
 TBD
 
-<br>
+
 
 ## Acknowledgements
 
@@ -518,7 +494,7 @@ Thanks to Wesley Billingham, Matt Cooper, and Elizabeth McKinnon for providing f
 
 You can look forward to seeing posts from these other team members here in the coming weeks and months.
 
-<br>
+
 
 ## Reproducibility Information
 
@@ -530,8 +506,4 @@ The session information can also be seen below.
 
 ```{r echo = T}
 sessionInfo()
-```
-
-```{r echo = F , warning = F, message = F, error = F}
-rm(trials, results, i, j, model, outcome_vars, input_vars, start, end, ind, bootstrap_results, bootstrap_coefs, bootstrap_cis, mtcars, result, month_dat, flights)
 ```
