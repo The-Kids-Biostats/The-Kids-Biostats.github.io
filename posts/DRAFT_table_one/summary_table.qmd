@@ -108,7 +108,7 @@ Below, we detail the framework we will use to evaluate each summary table functi
 -   Render in html, pdf and word and compare consistency across these.
 
 ::: callout-note
-Where any of the above was seemingly not possible, it will be reported in the comments of that method. Comments will also be made on the quality of the documentation for each package and the wealth of online support through StackOverflow, blogs, tutorials, etc.
+We will report if any of the above are not feasibly possible under using the in-built functionalities of the pacakge. Comments will also be made on the quality of the documentation for each package and the wealth of online support through StackOverflow, blogs, tutorials, etc.
 :::
 
 
@@ -117,7 +117,7 @@ Where any of the above was seemingly not possible, it will be reported in the co
 ## i) Render table
 
 -   Required data structure:
-    -   In general, `tbl_summary` requires data in **long format**. This is consistent across both the `tbl_summary` and `tbl_strata` functions.
+    -   In general, `tbl_summary` requires data in **long format**.
     -   "Columns" in the output are defined by use of the `by =` argument.
     -   "Rows" in the output are defined by columns in the input data set.
     -   All variables included in the input data are, by default, included in the output. Therefore, the user must select/un-select columns pursuant to what is required.
@@ -210,22 +210,6 @@ rndr <- function(x, name, ...) {
   table1::parse.abbrev.render.code(c("", sum_stats))(x)
 }
 
-#pvalue <- function(x, ...) {
-#    # Construct vectors of data y, and groups (strata) g
-#    y <- unlist(x)
-#    g <- factor(rep(1:length(x), times=sapply(x, length)))
-#    if (is.numeric(y)) {
-#        # For numeric variables, perform a standard 2-sample t-test
-#        p <- t.test(y ~ g)$p.value
-#    } else {
-#        # For categorical variables, perform a chi-squared test of independence
-#        p <- chisq.test(table(y, g))$p.value
-#    }
-#    # Format the p-value, using an HTML entity for the less-than sign.
-#    # The initial empty string places the output on the line below the variable #label.
-#    c("", sub("<", "&lt;", format.pval(p, digits=3, eps=0.001)))
-#}
-
 # Specify variable labels
 label(flchain_mod$age)        <-"Age (years)"
 label(flchain_mod$sex)        <- "Sex"
@@ -241,16 +225,6 @@ label(flchain_mod$chapter)    <- "Primary cause of death"
 # Specify table output
 sumtab2 <- flchain_mod %>%
   table1::table1(~. | death, 
-                 #~ age +  
-                 #  sample.yr + 
-                 #  kappa + 
-                 #  lambda + 
-                 #  flc.grp + 
-                 #  creatinine + 
-                 #  mgus + 
-                 #  futime + 
-                 #  sex + 
-                 #  chapter | death, 
                  data = .,
                  overall = c(right = "Overall"),
                  #extra.col = list(`p-value` = pvalue),
@@ -280,9 +254,9 @@ sumtab2
 + **Cons**
   + "Formula-style" specification of the table is somewhat cumbersome.
   + Specifying labels to variables must be done outside of any tabling pipelines.
-  + Specifying any variable levels or summary variables must be done outside of any tabling pipelines.
+  + The specification of variable levels must be done outside of any tabling pipelines.
   + All formatting must be done in a custom rendering function.
-    + Specifying this rendering function is not necessarily straightforward, and relies still on specific functions of the `table1` package.
+    + Specifying this rendering function is not necessarily straightforward, relying still on specific functionalities of the `table1` package.
 
 # 3) `tableone::CreateTableOne`
 
@@ -316,15 +290,6 @@ label(flchain_mod$chapter)    <- "Primary cause of death"
 
 
 sumtab3 <- flchain_mod %>%
-    #mutate(sex = case_match(sex, 
-    #                      "F" ~ "Female", 
-    #                      "M" ~ "Male"),
-    #     mgus = case_match(mgus, 
-    #                       0 ~ "No", 
-    #                       1 ~ "Yes"),
-    #     death = case_match(death, 
-    #                        0 ~ "Alive at last contact date", 
-    #                        1 ~ "Dead")) %>%
   sjlabelled::label_to_colnames() %>%
   tableone::CreateTableOne(data = .,
                            strata = "death", 
@@ -388,6 +353,7 @@ labels <- list(sample.yr  = "Sample Year",
                chapter    = "Primary cause of death")
 
 sumtab4 <- flchain %>% 
+  mutate(sample.yr = factor(sample.yr)) %>%
   group_by(death) %>%
   desctable::desc_table(data = .,
                         .labels = labels) %>% #,
@@ -424,15 +390,14 @@ sumtab4
 ## iii) Comments
 
 -   **Pros**
-    -   Interactive table
-    -   Can copy output directly to clipboard, excel (with interactive button)
+    -   Interactive table, enabling quick/easy sorting of summary statistics.
+    -   Can copy output directly to clipboard, Excel.
 -   **Cons**
-    -   Must specify grouping variables outside of the `desctable` environment
+    -   Must specify grouping variables outside of the `desctable` environment -- returning one very wide table per group.
+    -   Returns a relatively large and *sparse* summary table (with both continuous and categorical variables), with one column allocated to each summary statistic. Can lead to a lot of white space.
+    -   Relatively inflexible specification of *different summary statistics* for *different variables of the same type*. For example, the mean, median, minimum and maximum values are returned for all continuous variables.
     -   Is slooow.
     -   Specification of tests are a little clunky and troublesome with categorical factors.
-    -   Specification of statistics between categorical and continuous variables are a little clunky (shows IQR for categorical variables, etc.)
-
-
 
 # 5) `summarytools::dfSummary`
 
@@ -484,7 +449,7 @@ sumtab5
 
 # Conclusions
 
-TBD
+Overall, the `gtsummary::tbl_summary` is the best summary table function out of those explored in this blog. In general, the range of in-built parameters and helper functions allows for the greatest flexibility in producing a relatively publication-ready summary table. 
 
 
 
@@ -493,8 +458,6 @@ TBD
 Thanks to Wesley Billingham, Matt Cooper, and Elizabeth McKinnon for providing feedback on and reviewing this post.
 
 You can look forward to seeing posts from these other team members here in the coming weeks and months.
-
-
 
 ## Reproducibility Information
 
