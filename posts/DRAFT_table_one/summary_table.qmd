@@ -426,15 +426,12 @@ sumtab5 <- flchain %>%
                           plain.ascii = FALSE, # Recommended when rendering to markdown
                           headings = FALSE, 
                           labels.col = TRUE
-                          ) %>%
-  base::print(., method = "render")
+                          )
 ```
 
 ## ii) Output table
 
-```{r echo = F}
-sumtab5
-```
+*See end of post*
 
 ## iii) Comments
 
@@ -444,6 +441,7 @@ sumtab5
     -   A bit fiddly to render nicely in RMarkdown. Requires specification of additional arguments in chunk header (`results = asis`).
     -   Stratification is clunky in output and requires manually specifying a `group_by` argument. Also returns two separate summary tables.
     -   No ability to customise the summary statistics presented for each variable.
+    -   Seems to overwrite Quarto yaml settings, hence it's relocation to the end of this blog.
 
 
 
@@ -469,4 +467,11 @@ The session information can also be seen below.
 
 ```{r echo = T}
 sessionInfo()
+```
+
+### summarytools Output
+
+```{r echo = F}
+sumtab5 %>%
+  base::print(., method = "render")
 ```
