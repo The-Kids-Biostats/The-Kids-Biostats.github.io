@@ -1,5 +1,5 @@
 ---
-title: "Visualisation for likert data"
+title: "Visualisations for (ordinal) Likert scale data"
 author: "Dr Matt Cooper and Zac Dempsey"
 format:
   html:
@@ -7,11 +7,12 @@ format:
     tabset: true
     toc: true
     toc-location: left
-date: "2024-09-30"
+date: "2024-10-14"
 categories:
   - R
   - Visualisations
-draft: true
+  - Likert
+draft: false
 editor_options: 
   chunk_output_type: console
 execute:
@@ -26,37 +27,39 @@ fig-dpi: 300
 
 # Overview
 
-Likert data are widely found in research, they are useful for getting participants to rate things or to provide an average quantity as a response in situations where asking for the exact quantity is problematic. How can asking for an exact quantity be problematic, well take the example below that we expand upon, very few people drink the exact same amount of water each day, so asking participants "How many (250ml) glasses of water do you drink per day" and getting a response of "3" is typically pointless, there is likely substantial measurement error here and if they the participant drank 4 glasses yesterday (anomaly or otherwise) is the response not just outright incorrect?
+Likert scale variables (and hence data) are widely utilised in research, they are useful for getting participants to rate things or to provide an average quantity as a response in situations where asking for the exact quantity may be problematic. How can asking for an exact quantity be problematic? Well, take the example below that we expand upon that relates to how much water one drinks per day. Very few people drink the exact same amount of water each day, so asking participants "How many (250ml) glasses of water do you drink per day" and getting a response of "3" is typically pointless, there is likely substantial measurement error here and if they drank 3 glasses yesterday (anomaly or otherwise) but 4 glasses the day before, is the response of 3 not just outright incorrect?
 
-The below is nothing ground breaking. We went in search of a concise, succinct, and accurate way to display (specifically) pre-post likert response data, and this is where we are currently at.
+The below is nothing ground breaking. We went in search of a concise, succinct, and accurate way to display (specifically) pre-post Likert data, and this is where we are currently at.
 
 # The data
 
 ## Definitions
 
-Firstly, some definitions. There are two main types of likert data. We are going to refer to them as Ordinal and Bidirectional. 
+Firstly, some definitions. There are two main types of Likert data. We are going to refer to them as Ordinal and Bidirectional.
 
-**Ordinal likert data** *(sometimes called unipolar likert data, or possibly interval likert data)* is category responses that have some natural order (decreasing/increasing) to them, the width of categories and the distance between categories are not always consistent, and they often represent a underlying continuous scale that has been 'binned' into categories.
+**Ordinal Likert data** *(sometimes called unipolar Likert data, or interval Likert data)* involves category responses that have some natural order (decreasing/increasing) to them, the width of categories and the distance between categories are not necessarily consistent, and the categories often represent a underlying continuous scale that has been 'binned' (into the categories).
 
-An example. *"How many glasses of water do you typically drink per day?* with response options:
+An example. *"How many glasses of water do you typically drink per day?"* with response options:
 
-- Less than one glass/day
-- 1-2 glasses/day
-- 3-4 glasses/day
-- 5-6 glasses/day
-- More than 6 glasses/day
+-   Less than one glass/day
+-   1-2 glasses/day
+-   3-4 glasses/day
+-   5-6 glasses/day
+-   More than six glasses/day
 
-**Birectional likert data** *(sometimes called bipolar likert data)* is category responses that have a natural order that goes in two opposing directions - typically negative responses and positive responses - around a central (or neutral) point.
+**Birectional Likert data** *(sometimes called bipolar Likert data)* involves category responses that have a natural order with responses from two opposing directions - typically negative responses and positive responses - around a central (or neutral) point.
 
-An example. *"The amount of reading I do influences how much reading my child does?* with response options:
+An example. *"The amount of reading I do influences how much reading my child does?"* with response options:
 
-- Strongly disagree
-- Disagree
-- Neither agree nor disagree (the neutral midpoint)
-- Agree
-- Strongly agree
+-   Strongly disagree
+-   Disagree
+-   Neither agree nor disagree (the neutral midpoint)
+-   Agree
+-   Strongly agree
 
-# Ordinal
+We'll return to birectional Likert data in a future post, for now we will look at ordinal Likert data.
+
+# Ordinal Likert data
 
 ## Demo data
 
@@ -71,7 +74,7 @@ library(thekidsbiostats) # install with remotes::install_github("The-Kids-Biosta
 
 We're going to use one of our favourite packages to create some sythentic data to use.
 
-We have some `pre` and `post` response data, a `group` identified (intervention or control), and then some labelled response columns.
+We have some `pre` and `post` response data, a `group` identifier (intervention or control), and then some labelled response columns.
 
 ```{r}
 # dat_i is the intervention group
@@ -118,7 +121,7 @@ head(dat, 5) %>%
   thekids_table(colour = "Saffron", padding = 3)
 ```
 
-## Visualisation
+## The visualisation
 
 ```{r}
 max_prop <- dat %>%
@@ -215,14 +218,16 @@ p3 <- dat %>%
   guides(fill = guide_legend(nrow = 1))
 ```
 
-We create the plot as three panels, then use `patchwork` to control the joining together of the panels into one image.
+We create the plot as three panels, and then use `patchwork` to control the joining together of the panels into one image.
 
 ```{r fig.width = 10, fig.height = 5}
 #| column: body-outset
 p1 + p2 + p3 + theme(legend.position = "none")
 ```
 
-I know what you're thinking, i) that looks great, ii) slow down, you had two groups. Correct on both accounts. This is just the intervention group data.
+I know what you're thinking, i) that looks great, ii) slow down, you had two groups. 
+
+Correct on both accounts. This is just the intervention group data.
 
 ```{r}
 q1 <- dat %>% 
@@ -322,7 +327,7 @@ patchwork +
 
 ```
 
-And, we might also like to table some of the 'change' data behind this plot, using our favourite package *(to battle with)* `gtsummary`.
+And, we might also like to table some of the 'change' data that this plot is based on - using our favourite package *(to battle with)* `gtsummary`.
 
 ```{r}
 #| column: body-outset
@@ -364,198 +369,17 @@ tbl_merge(tbls = list(dat %>%
   thekids_table(colour = "Saffron")
 ```
 
-## Comments
+# Closing comments
 
-The above isn't perfect, one could argue that there is no need to duplicate the figure headings and the legend could be handled better. Is a figure ever perfect? 
+The above isn't perfect, one could argue that there is no need to duplicate the figure headings and that the legend could be handled better. Is a figure ever perfect?
 
 This figure does show all the raw data (counts and percentages), clearly delineates the pre and post data, gives some idea of the flow of data between levels, and highlights that in the post period, the intervention group comprised a higher proportion of level 5 responses. Combined with the table that shows the actual proportional movements from each pre (baseline) group - and we're getting somewhere.
 
-# Bidirectional
-
-## Demo data
-
-```{r}
-# Set some simulation parameters
-set.seed(123)  # For reproducibility
- 
-# Parameters
-q   <- 10         # Number of Likert-scale questions
-n_i <- 165        # Number of intervention respondents
-n_c <- 123        # Number of control respondents
-n   <- n_i + n_c  # Total number of participants
- 
-# Define Likert scale labels
-likert_labels <- c("Strongly disagree", "Disagree", "Neutral", "Agree", "Strongly agree")
- 
-# Simulate pre-survey responses (randomly sampled from the Likert scale 1-5)
-pre <- matrix(sample(1:5, n * q, replace = TRUE), 
-              nrow = n, ncol = q)
- 
-# Function to simulate post-survey responses with both improvement and decline possibilities
-simulate_post <- function(pre_response) {
-  # Define possible changes with corresponding probabilities
-  possible_changes <- c(-3, -2, -1, 0, 1, 2, 3)
-  probabilities <- c(0.05, 0.1, 0.15, 0.4, 0.15, 0.1, 0.05)  # "No change" is most likely
-  post_response <- pre_response + sample(possible_changes, 
-                                         1, 
-                                         prob = probabilities)
-  # Ensure post_response remains within the bounds of the Likert scale (1 to 5)
-  post_response <- max(1, min(5, post_response))
-  return(post_response)
-}
- 
-# Simulate post-survey responses
-post <- apply(pre, 2, function(x) sapply(x, simulate_post))
- 
-# Convert numeric values to factors with labels
-pre <- apply(pre, 2, factor, levels = 1:5, labels = likert_labels)
-post <- apply(post, 2, factor, levels = 1:5, labels = likert_labels)
- 
-# Combine the pre and post data
-dat_likert <- data.frame(id = 1:n,
-                         mode = c(rep("Intervention", n_i), rep("Control", n_c)),
-                         pre,
-                         post)
- 
-# Rename the columns to reflect pre and post data
-colnames(dat_likert)[3:(2 + q)] <- paste0("Q", 1:q, "_pre")
-colnames(dat_likert)[(3 + q):(2 + 2 * q)] <- paste0("Q", 1:q, "_post")
- 
-dat_likert <- dat_likert %>%
-  as_tibble() %>%
-  mutate(across(contains("Q"), ~factor(., likert_labels)))
- 
-rm(n, n_i, n_c, q, likert_labels, pre, post)
-```
-
-
-```{r}
-dat_likert <- dat_likert %>% 
-  mutate(mode = case_when(mode == "Control" ~ "Control",
-                          T ~ mode))
-head(dat_likert[, c(1, 2, 3, 13, 4, 14)], 5) %>% 
-  thekids_table(colour = "Saffron", padding = 3)
-```
-
-## Visualisation
-
-
-```{r}
-likert_plot <- function(data, 
-                        variables,
-                        grouping = NULL,
-                        centered = FALSE,
-                        plot.percent.low = FALSE, 
-                        plot.percent.high = FALSE, 
-                        plot.percent.neutral = FALSE,
-                        legend.position = "right",
-                        plot.percents= TRUE,
-                        legend_title = "Response",
-                        legend_reverse = FALSE,
-                        str_width = 40,
-                        facet_ncol = 1){
-  dat_plot <- data %>%
-    as.data.frame()  
-  
-  likert_object <- likert(dat_plot %>% 
-                            select(!!variables),grouping = dat_plot[[grouping]])
-  
-  likert.bar.plot(likert_object,
-                  centered = centered,
-                  plot.percent.low = plot.percent.low, 
-                  plot.percent.high = plot.percent.high, 
-                  plot.percent.neutral = plot.percent.neutral, 
-                  legend.position = legend.position, 
-                  plot.percents = plot.percents) +
-    guides(fill = guide_legend(title = "Response",
-                               reverse = TRUE
-                               )) +
-    geom_hline(yintercept = 50, linetype = "dashed", colour = "red") +
-    theme_institute(base_size = 16) +
-    scale_fill_manual(values = rev(c("#f56b00", "#fab580", "#eeefef","#a5ccef", "#4a99de")))
-}
-```
-
-
-```{r fig.width = 10, fig.height = 5}
-#| column: body-outset
-dat_likert[, c(1, 2, 3, 13, 4, 14)] %>% # CHECK CHECK CHECK
-    pivot_longer(cols = contains("Q"), 
-                 names_to = c("question", "time"), 
-                 names_sep = "_", 
-                 values_to = "value") %>%
-  mutate(time = case_when(time == "pre" ~ "Pre",
-                          T ~ "Post")) %>% 
-    pivot_wider(id_cols = c(id, mode, time), 
-                names_from = question, 
-                values_from = value) %>%
-    mutate(across(contains("Q"), ~forcats::fct_rev(.))) %>%
-    likert_plot(data = .,
-                variables = paste0("Q", 1),
-                grouping = "time") +
-    labs(title = "f") +
-    theme(plot.title = element_text(family = "Barlow",
-                                    size = 18))
-
-
-# CALCULATE THE MIDPOINTS AND PLOT LABEL - NOT WORKING
-# 
-# dat_l_labs <- dat_likert[, c(1, 2, 3, 13)] %>%
-#   pivot_longer(cols = contains("Q"), 
-#                names_to = c("question", "time"), 
-#                names_sep = "_", 
-#                values_to = "value") %>% 
-#   group_by(mode, question, time) %>%
-#   count(value) %>%
-#   mutate(freq = n / sum(n),
-#          per = paste0(round(freq * 100, 1), "%"),
-#          cum_freq = cumsum(freq),                  # Cumulative sum of frequencies
-#          midpoint = cum_freq - (freq / 2)) 
-#
-# geom_text(data = dat_l_labs, 
-#            aes(y = midpoint, label = per, group = value)) 
-```
-
-
-```{r}
-#| column: body-outset
-dat_likert %>%
-  select(id, mode, Q1_pre, Q1_post) %>%
-  mutate(across(contains("Q"), ~case_when(. == "Strongly disagree" ~ 1,
-                                          . == "Disagree" ~ 2,
-                                          . == "Neutral" ~ 3,
-                                          . == "Agree" ~ 4,
-                                          . == "Strongly agree" ~ 5))) %>%
-  mutate(across(ends_with("_pre"), 
-                .names = "{.col}_change",
-                .fns = ~biometrics::fct_case_when(
-                  get(sub("_pre", "_post", cur_column())) < . ~ "Decreased",
-                  get(sub("_pre", "_post", cur_column())) == . ~ "No change",
-                  get(sub("_pre", "_post", cur_column())) > . ~ "Increased"
-                ))) %>%
-  select(id, mode, contains("_change")) %>%
-  left_join(dat_likert %>% select(id, mode, Q1_pre), by = c("id", "mode")) %>%
-  select(-id) %>%
-  
-  tbl_strata(strata = mode, 
-             .tbl_fun = ~.x %>% 
-               tbl_summary(by = Q1_pre,
-                           label = list(Q1_pre_change ~ "Change")) %>%
-               modify_header(all_stat_cols() ~ "**{level}**"),,
-             .combine_with = "tbl_stack") %>%
-  thekids_table(colour = "Saffron", padding = 3) 
-```
-
-
-## Comments
-
-
-# Closing comments
-
+As mentioned, we'll return to bidirection Likert data in a future post.
 
 # Acknowledgements
 
-Thanks to Wesley Billingham for providing feedback on and reviewing this post.
+Thanks to Wesley Billingham and Dr Elizabeth McKinnon for providing feedback on and reviewing this post.
 
 You can look forward to seeing posts from these other team members here in the coming weeks and months.
 
