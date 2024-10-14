@@ -12,6 +12,7 @@ categories:
   - R
   - Visualisations
   - Likert
+  - ggplot
 draft: false
 editor_options: 
   chunk_output_type: console
@@ -27,17 +28,17 @@ fig-dpi: 300
 
 # Overview
 
-Likert scale variables (and hence data) are widely utilised in research, they are useful for getting participants to rate things or to provide an average quantity as a response in situations where asking for the exact quantity may be problematic. How can asking for an exact quantity be problematic? Well, take the example below that we expand upon that relates to how much water one drinks per day. Very few people drink the exact same amount of water each day, so asking participants "How many (250ml) glasses of water do you drink per day" and getting a response of "3" is typically pointless, there is likely substantial measurement error here and if they drank 3 glasses yesterday (anomaly or otherwise) but 4 glasses the day before, is the response of 3 not just outright incorrect?
+Likert scale variables (and hence data) are widely utilised in research—they are useful for getting participants to rate things, or to provide an average quantity as a response in situations where asking for the exact quantity may be problematic. How can asking for an exact quantity be problematic? Well, consider the example below that relates to how much water one drinks per day. Very few people drink the exact same amount of water each day, so asking participants "How many (250ml) glasses of water do you drink per day" and getting a response of "3" is typically pointless—there is likely substantial measurement error, and if they drank 3 glasses yesterday (anomaly or otherwise) but 4 glasses the day before, is the response of 3 not just outright incorrect?
 
-The below is nothing ground breaking. We went in search of a concise, succinct, and accurate way to display (specifically) pre-post Likert data, and this is where we are currently at.
+What is presented below is nothing ground breaking. We went in search of a concise, succinct, and accurate way to display (specifically) "pre/post" Likert data, and this is where we are currently at.
 
 # The data
 
 ## Definitions
 
-Firstly, some definitions. There are two main types of Likert data. We are going to refer to them as Ordinal and Bidirectional.
+Firstly, some definitions. There are two main types of Likert data. We are going to refer to them as "ordinal" and "bidirectional".
 
-**Ordinal Likert data** *(sometimes called unipolar Likert data, or interval Likert data)* involves category responses that have some natural order (decreasing/increasing) to them, the width of categories and the distance between categories are not necessarily consistent, and the categories often represent a underlying continuous scale that has been 'binned' (into the categories).
+**Ordinal Likert data** *(sometimes called unipolar Likert data, or interval Likert data)* involves category responses that have some natural order (decreasing/increasing) to them, the width of categories and the distance between categories are not necessarily consistent, and the categories often represent a underlying continuous scale that has been 'binned' (into the Likert categories).
 
 An example. *"How many glasses of water do you typically drink per day?"* with response options:
 
@@ -47,7 +48,7 @@ An example. *"How many glasses of water do you typically drink per day?"* with r
 -   5-6 glasses/day
 -   More than six glasses/day
 
-**Birectional Likert data** *(sometimes called bipolar Likert data)* involves category responses that have a natural order with responses from two opposing directions - typically negative responses and positive responses - around a central (or neutral) point.
+**Birectional Likert data** *(sometimes called bipolar Likert data)* involves category responses that have a natural order with responses from two opposing directions—typically negative responses and positive responses—around a central (or neutral) point.
 
 An example. *"The amount of reading I do influences how much reading my child does?"* with response options:
 
@@ -57,7 +58,7 @@ An example. *"The amount of reading I do influences how much reading my child do
 -   Agree
 -   Strongly agree
 
-We'll return to birectional Likert data in a future post, for now we will look at ordinal Likert data.
+We'll return to bidirectional Likert data in a future post, for now we will look at ordinal Likert data.
 
 # Ordinal Likert data
 
@@ -72,39 +73,42 @@ library(flextable)
 library(thekidsbiostats) # install with remotes::install_github("The-Kids-Biostats/thekidsbiostats")
 ```
 
-We're going to use one of our favourite packages to create some sythentic data to use.
+We're going to use one of our favourite packages to create some synthetic data to use.
 
-We have some `pre` and `post` response data, a `group` identifier (intervention or control), and then some labelled response columns.
+Specifically, we will simulate some `pre` and `post` response data, a `group` identifier (intervention or control), and then some labelled response columns.
 
 ```{r}
+set.seed(123) # For reproducibility
+
 # dat_i is the intervention group
 n <- 183 # Set the number of individuals
 def <- defData(varname = "pre", formula = "1;5", dist = "uniformInt") # Pre values: uniformly distributed between 1 and 5
 dat_i <- genData(n, def)
 group_probs <- c(0.45, 0.45, 0.10)
-set.seed(123) # For reproducibility
 dat_i$grp <- sample(1:3, n, replace = TRUE, prob = group_probs)
 dat_i$post <- dat_i$pre
 
 dat_i$post[dat_i$grp == 2] <- pmin(dat_i$pre[dat_i$grp == 2] + (rbinom(sum(dat_i$grp == 2), 2, 0.2) + 1), 5) # Increase by 1, max 5
 dat_i$post[dat_i$grp == 3] <- pmax(dat_i$pre[dat_i$grp == 3] - (rbinom(sum(dat_i$grp == 3), 2, 0.2) + 1), 1) # Decrease by 1, min 1
+
 # dat_c is the control group
 n <- 154 # Set the number of individuals
 def <- defData(varname = "pre", formula = "1;5", dist = "uniformInt") # Pre values: uniformly distributed between 1 and 5
 dat_c <- genData(n, def)
 group_probs <- c(0.55, 0.25, 0.20)
-set.seed(123) # For reproducibility
 dat_c$grp <- sample(1:3, n, replace = TRUE, prob = group_probs)
 dat_c$post <- dat_c$pre
 
 dat_c$post[dat_c$grp == 2] <- pmin(dat_c$pre[dat_c$grp == 2] + (rbinom(sum(dat_c$grp == 2), 2, 0.2) + 1), 5) # Increase by 1, max 5
 dat_c$post[dat_c$grp == 3] <- pmax(dat_c$pre[dat_c$grp == 3] - (rbinom(sum(dat_c$grp == 3), 2, 0.2) + 1), 1) # Decrease by 1, min 1
 
+# Combine the control & intervention data into one dataframe
 dat <- rbind(cbind(dat_i, group = "Intervention"), 
              cbind(dat_c, group = "Control")) %>% 
   mutate(post = as.integer(post)) %>% 
   select(-grp)
 
+# Add some factored labels
 dat <- dat %>% 
   mutate(pre_l = fct_case_when(pre == 1 ~ "Less than one cup/day",
                                pre == 2 ~ "About 1-2 cups/day",
@@ -117,6 +121,7 @@ dat <- dat %>%
                                 post == 4 ~ "About 5-6 cups/day",
                                 post == 5 ~ "More than 6 cups/day"))
 
+# Visualise the first few rows of data
 head(dat, 5) %>%
   thekids_table(colour = "Saffron", padding = 3)
 ```
@@ -225,7 +230,7 @@ We create the plot as three panels, and then use `patchwork` to control the join
 p1 + p2 + p3 + theme(legend.position = "none")
 ```
 
-I know what you're thinking, i) that looks great, ii) slow down, you had two groups. 
+I know what you're thinking: i) that looks great, ii) slow down, you had two groups.
 
 Correct on both accounts. This is just the intervention group data.
 
@@ -313,7 +318,7 @@ q3 <- dat %>%
   guides(fill = guide_legend(nrow = 1))
 ```
 
-We can double up the plot, again using `patchwork` to show both groups.
+We can double up the plot, again using `patchwork`, to show both groups.
 
 ```{r fig.width = 10, fig.height = 10}
 #| column: body-outset
@@ -327,7 +332,7 @@ patchwork +
 
 ```
 
-And, we might also like to table some of the 'change' data that this plot is based on - using our favourite package *(to battle with)* `gtsummary`.
+And, we might also like to table some of the 'change' data that this plot is based on—using our favourite package *(to battle with)* `gtsummary`.
 
 ```{r}
 #| column: body-outset
@@ -371,11 +376,11 @@ tbl_merge(tbls = list(dat %>%
 
 # Closing comments
 
-The above isn't perfect, one could argue that there is no need to duplicate the figure headings and that the legend could be handled better. Is a figure ever perfect?
+The above isn't perfect—one could argue that there is no need to duplicate the figure headings and that the legend could be handled better. But is a figure ever perfect?
 
-This figure does show all the raw data (counts and percentages), clearly delineates the pre and post data, gives some idea of the flow of data between levels, and highlights that in the post period, the intervention group comprised a higher proportion of level 5 responses. Combined with the table that shows the actual proportional movements from each pre (baseline) group - and we're getting somewhere.
+The figure does show all the raw data (counts and percentages), clearly delineates the pre and post data, gives some idea of the flow of data between levels, and highlights that in the post period, the intervention group comprised a higher proportion of level 5 responses. Combined with a summary table that shows the actual proportional movements from each pre (baseline) group—we are getting somewhere.
 
-As mentioned, we'll return to bidirection Likert data in a future post.
+As mentioned, we'll return to bidirectional Likert data in a future post.
 
 # Acknowledgements
 
