@@ -1,0 +1,572 @@
+---
+title: "Visualisation for likert data"
+author: "Dr Matt Cooper and Zac Dempsey"
+format:
+  html:
+    code-fold: true
+    tabset: true
+    toc: true
+    toc-location: left
+date: "2024-09-30"
+categories:
+  - R
+  - Visualisations
+draft: true
+editor_options: 
+  chunk_output_type: console
+execute:
+  echo: true
+  warning: false
+  message: false
+  error: true
+fig-align: center
+fig-format: png
+fig-dpi: 300
+---
+
+# Overview
+
+Likert data are widely found in research, they are useful for getting participants to rate things or to provide an average quantity as a response in situations where asking for the exact quantity is problematic. How can asking for an exact quantity be problematic, well take the example below that we expand upon, very few people drink the exact same amount of water each day, so asking participants "How many (250ml) glasses of water do you drink per day" and getting a response of "3" is typically pointless, there is likely substantial measurement error here and if they the participant drank 4 glasses yesterday (anomaly or otherwise) is the response not just outright incorrect?
+
+The below is nothing ground breaking. We went in search of a concise, succinct, and accurate way to display (specifically) pre-post likert response data, and this is where we are currently at.
+
+# The data
+
+## Definitions
+
+Firstly, some definitions. There are two main types of likert data. We are going to refer to them as Ordinal and Bidirectional. 
+
+**Ordinal likert data** *(sometimes called unipolar likert data, or possibly interval likert data)* is category responses that have some natural order (decreasing/increasing) to them, the width of categories and the distance between categories are not always consistent, and they often represent a underlying continuous scale that has been 'binned' into categories.
+
+An example. *"How many glasses of water do you typically drink per day?* with response options:
+
+- Less than one glass/day
+- 1-2 glasses/day
+- 3-4 glasses/day
+- 5-6 glasses/day
+- More than 6 glasses/day
+
+**Birectional likert data** *(sometimes called bipolar likert data)* is category responses that have a natural order that goes in two opposing directions - typically negative responses and positive responses - around a central (or neutral) point.
+
+An example. *"The amount of reading I do influences how much reading my child does?* with response options:
+
+- Strongly disagree
+- Disagree
+- Neither agree nor disagree (the neutral midpoint)
+- Agree
+- Strongly agree
+
+# Ordinal
+
+## Demo data
+
+```{r setup, include = T}
+library(simstudy)
+library(ggsankey); library(ggalluvial)
+library(likert); library(patchwork)
+library(gt); library(gtsummary)
+library(flextable)
+library(thekidsbiostats) # install with remotes::install_github("The-Kids-Biostats/thekidsbiostats")
+```
+
+We're going to use one of our favourite packages to create some sythentic data to use.
+
+We have some `pre` and `post` response data, a `group` identified (intervention or control), and then some labelled response columns.
+
+```{r}
+# dat_i is the intervention group
+n <- 183 # Set the number of individuals
+def <- defData(varname = "pre", formula = "1;5", dist = "uniformInt") # Pre values: uniformly distributed between 1 and 5
+dat_i <- genData(n, def)
+group_probs <- c(0.45, 0.45, 0.10)
+set.seed(123) # For reproducibility
+dat_i$grp <- sample(1:3, n, replace = TRUE, prob = group_probs)
+dat_i$post <- dat_i$pre
+
+dat_i$post[dat_i$grp == 2] <- pmin(dat_i$pre[dat_i$grp == 2] + (rbinom(sum(dat_i$grp == 2), 2, 0.2) + 1), 5) # Increase by 1, max 5
+dat_i$post[dat_i$grp == 3] <- pmax(dat_i$pre[dat_i$grp == 3] - (rbinom(sum(dat_i$grp == 3), 2, 0.2) + 1), 1) # Decrease by 1, min 1
+# dat_c is the control group
+n <- 154 # Set the number of individuals
+def <- defData(varname = "pre", formula = "1;5", dist = "uniformInt") # Pre values: uniformly distributed between 1 and 5
+dat_c <- genData(n, def)
+group_probs <- c(0.55, 0.25, 0.20)
+set.seed(123) # For reproducibility
+dat_c$grp <- sample(1:3, n, replace = TRUE, prob = group_probs)
+dat_c$post <- dat_c$pre
+
+dat_c$post[dat_c$grp == 2] <- pmin(dat_c$pre[dat_c$grp == 2] + (rbinom(sum(dat_c$grp == 2), 2, 0.2) + 1), 5) # Increase by 1, max 5
+dat_c$post[dat_c$grp == 3] <- pmax(dat_c$pre[dat_c$grp == 3] - (rbinom(sum(dat_c$grp == 3), 2, 0.2) + 1), 1) # Decrease by 1, min 1
+
+dat <- rbind(cbind(dat_i, group = "Intervention"), 
+             cbind(dat_c, group = "Control")) %>% 
+  mutate(post = as.integer(post)) %>% 
+  select(-grp)
+
+dat <- dat %>% 
+  mutate(pre_l = fct_case_when(pre == 1 ~ "Less than one cup/day",
+                               pre == 2 ~ "About 1-2 cups/day",
+                               pre == 3 ~ "About 3-4 cups/day",
+                               pre == 4 ~ "About 5-6 cups/day",
+                               pre == 5 ~ "More than 6 cups/day"),
+         post_l = fct_case_when(post == 1 ~ "Less than one cup/day",
+                                post == 2 ~ "About 1-2 cups/day",
+                                post == 3 ~ "About 3-4 cups/day",
+                                post == 4 ~ "About 5-6 cups/day",
+                                post == 5 ~ "More than 6 cups/day"))
+
+head(dat, 5) %>%
+  thekids_table(colour = "Saffron", padding = 3)
+```
+
+## Visualisation
+
+```{r}
+max_prop <- dat %>%
+  select(id, group, pre, post) %>% 
+  pivot_longer(cols = c(pre, post)) %>% 
+  group_by(group, name) %>%
+  count(value) %>%
+  mutate(freq = n / sum(n)) %>% 
+  .$freq %>%
+  max
+
+max_prop <- plyr::round_any(max_prop, 0.05, f = ceiling)
+
+p1 <- dat %>% 
+  filter(group == "Intervention") %>% 
+  group_by(pre) %>% 
+  tally() %>% 
+  mutate(freq = n / sum(n),
+         res = str_c(n, "\n(", round(freq*100, 1), "%)")) %>% 
+  ggplot(aes(x = as.factor(pre), y = freq)) +
+  geom_bar(aes(fill = as.factor(pre)), stat="identity", alpha = 0.8,
+           colour = "black") +
+  theme_institute(base_size = 14) +
+  theme(legend.position = "none",
+        panel.grid.major.x = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_y_continuous(labels = scales::percent_format(),
+                     breaks = seq(0, max_prop, by = 0.05),
+                     expand = expansion(mult = c(0, 0.1))) +
+  coord_cartesian(ylim = c(0, max_prop)) +
+  scale_fill_viridis_d(option = "plasma", end = 0.85, direction = -1) +
+  labs(title = "Pre",
+       fill = "Response",
+       x = "Response", y = "") +
+  geom_text(aes(label = res), vjust = -0.1,
+            family = "Barlow Semi Condensed") +
+  guides(fill = guide_legend(nrow = 1))
+
+
+p2 <- dat %>% 
+  filter(group == "Intervention") %>% 
+  rename(Pre = pre,
+         Post = post) %>% 
+  make_long(Pre, Post) %>% 
+  mutate(node = factor(node, levels = c(7,6,5,4,3,2,1)),
+         next_node = factor(next_node, levels = c(7,6,5,4,3,2,1))) %>% 
+  ggplot(aes(x = x, 
+             next_x = next_x, 
+             node = node, 
+             next_node = next_node,
+             fill = factor(node))) +
+  geom_sankey(alpha = 0.7,
+              node.color = 'black') +
+  geom_sankey_label(aes(label = node), alpha = 0.75,
+                    size = 3, color = "black", fill = "gray80") +
+  scale_x_discrete(expand = c(0.05,0.05)) +
+  theme_institute(base_size = 14) +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks=element_blank(),
+        legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5)) +
+  guides(fill = guide_legend(reverse = T, nrow = 1)) +
+  labs(title = "Pre-post",
+       fill = "Response",
+       x = "")
+
+p3 <- dat %>% 
+  filter(group == "Intervention") %>% 
+  group_by(post) %>% 
+  tally() %>% 
+  mutate(freq = n / sum(n),
+         res = str_c(n, "\n(", round(freq*100, 1), "%)")) %>% 
+  ggplot(aes(x = as.factor(post), y = freq)) +
+  geom_bar(aes(fill = as.factor(post)), stat="identity", alpha = 0.8,
+           colour = "black") +
+  theme_institute(base_size = 14) +
+  theme(legend.position = "none",
+        panel.grid.major.x = element_blank(),
+        plot.background = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_y_continuous(labels = scales::percent_format(),
+                     breaks = seq(0, max_prop, by = 0.05),
+                     expand = expansion(mult = c(0, 0.1))) +
+  coord_cartesian(ylim = c(0, max_prop)) +
+  scale_fill_viridis_d(option = "plasma", end = 0.85, direction = -1) +
+  labs(title = "Post",
+       fill = "Response",
+       x = "Response", y = "") +
+  geom_text(aes(label = res), vjust = -0.1,
+            family = "Barlow Semi Condensed") +
+  guides(fill = guide_legend(nrow = 1))
+```
+
+We create the plot as three panels, then use `patchwork` to control the joining together of the panels into one image.
+
+```{r fig.width = 10, fig.height = 5}
+#| column: body-outset
+p1 + p2 + p3 + theme(legend.position = "none")
+```
+
+I know what you're thinking, i) that looks great, ii) slow down, you had two groups. Correct on both accounts. This is just the intervention group data.
+
+```{r}
+q1 <- dat %>% 
+  filter(group == "Control") %>% 
+  group_by(pre) %>% 
+  tally() %>% 
+  mutate(freq = n / sum(n),
+         res = str_c(n, "\n(", round(freq*100, 1), "%)")) %>% 
+  ggplot(aes(x = as.factor(pre), y = freq)) +
+  geom_bar(aes(fill = as.factor(pre)), stat="identity", alpha = 0.8,
+           colour = "black") +
+  theme_institute(base_size = 14) +
+  theme(legend.position = "none",
+        panel.grid.major.x = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_y_continuous(labels = scales::percent_format(),
+                     breaks = seq(0, max_prop, by = 0.05),
+                     expand = expansion(mult = c(0, 0.1))) +
+  coord_cartesian(ylim = c(0, max_prop)) +
+  scale_fill_viridis_d(option = "plasma", end = 0.85, direction = -1) +
+  labs(title = "Pre",
+       fill = "Response",
+       x = "Response", y = "") +
+  geom_text(aes(label = res), vjust = -0.1,
+            family = "Barlow Semi Condensed") +
+  guides(fill = guide_legend(nrow = 1))
+
+
+q2 <- dat %>% 
+  filter(group == "Control") %>% 
+  rename(Pre = pre,
+         Post = post) %>% 
+  make_long(Pre, Post) %>% 
+  mutate(node = factor(node, levels = c(7,6,5,4,3,2,1)),
+         next_node = factor(next_node, levels = c(7,6,5,4,3,2,1))) %>% 
+  ggplot(aes(x = x, 
+             next_x = next_x, 
+             node = node, 
+             next_node = next_node,
+             fill = factor(node))) +
+  geom_sankey(alpha = 0.7,
+              node.color = 'black') +
+  geom_sankey_label(aes(label = node), alpha = 0.75,
+                    size = 3, color = "black", fill = "gray80") +
+  scale_x_discrete(expand = c(0.05,0.05)) +
+  theme_institute(base_size = 14) +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks=element_blank(),
+        legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5)) +
+  guides(fill = guide_legend(reverse = T, nrow = 1)) +
+  labs(title = "Pre-post",
+       fill = "Response",
+       x = "")
+
+q3 <- dat %>% 
+  filter(group == "Control") %>% 
+  group_by(post) %>% 
+  tally() %>% 
+  mutate(freq = n / sum(n),
+         res = str_c(n, "\n(", round(freq*100, 1), "%)")) %>% 
+  ggplot(aes(x = as.factor(post), y = freq)) +
+  geom_bar(aes(fill = as.factor(post)), stat="identity", alpha = 0.8,
+           colour = "black") +
+  theme_institute(base_size = 14) +
+  theme(legend.position = "none",
+        panel.grid.major.x = element_blank(),
+        plot.background = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_y_continuous(labels = scales::percent_format(),
+                     breaks = seq(0, max_prop, by = 0.05),
+                     expand = expansion(mult = c(0, 0.1))) +
+  coord_cartesian(ylim = c(0, max_prop)) +
+  scale_fill_viridis_d(option = "plasma", end = 0.85, direction = -1) +
+  labs(title = "Post",
+       fill = "Response",
+       x = "Response", y = "") +
+  geom_text(aes(label = res), vjust = -0.1,
+            family = "Barlow Semi Condensed") +
+  guides(fill = guide_legend(nrow = 1))
+```
+
+We can double up the plot, again using `patchwork` to show both groups.
+
+```{r fig.width = 10, fig.height = 10}
+#| column: body-outset
+patchwork <- (p1 + p2 + p3) / (q1 + q2 + q3)
+
+patchwork + 
+  plot_annotation(tag_levels = list(c('Intervention', '', '', 
+                                      'Control', '', ''))) &
+  theme(plot.tag.position = c(0, 1),
+        plot.tag = element_text(face = "bold", hjust = 0, vjust = 0))
+
+```
+
+And, we might also like to table some of the 'change' data behind this plot, using our favourite package *(to battle with)* `gtsummary`.
+
+```{r}
+#| column: body-outset
+dat %>% 
+  mutate(Change = fct_case_when(post < pre ~ "Decrease",
+                                pre == post ~ "No change",
+                                post > pre ~ "Increase")) %>% 
+  select(group, pre_l, Change) %>% 
+  tbl_strata(
+    strata = group,
+    ~.x %>%
+      tbl_summary(
+        by = pre_l) %>%
+      modify_header(all_stat_cols() ~ "**{level}**"),
+    .combine_with = "tbl_stack"
+  ) %>% 
+  thekids_table(colour = "Saffron")
+```
+
+Or perhaps just this will suffice:
+
+```{r}
+#| column: body-outset
+tbl_merge(tbls = list(dat %>% 
+                        mutate("Change in water intake" = fct_case_when(post < pre ~ "Decrease",
+                                                                        pre == post ~ "No change",
+                                                                        post > pre ~ "Increase")) %>% 
+                        filter(group == "Control") %>% 
+                        select("Change in water intake") %>% 
+                        tbl_summary(), 
+                      dat %>% 
+                        mutate("Change in water intake" = fct_case_when(post < pre ~ "Decrease",
+                                                                        pre == post ~ "No change",
+                                                                        post > pre ~ "Increase")) %>% 
+                        filter(group == "Intervention") %>% 
+                        select("Change in water intake") %>% 
+                        tbl_summary()),
+          tab_spanner = c("**Control**", "**Intervention**")) %>% 
+  thekids_table(colour = "Saffron")
+```
+
+## Comments
+
+The above isn't perfect, one could argue that there is no need to duplicate the figure headings and the legend could be handled better. Is a figure ever perfect? 
+
+This figure does show all the raw data (counts and percentages), clearly delineates the pre and post data, gives some idea of the flow of data between levels, and highlights that in the post period, the intervention group comprised a higher proportion of level 5 responses. Combined with the table that shows the actual proportional movements from each pre (baseline) group - and we're getting somewhere.
+
+# Bidirectional
+
+## Demo data
+
+```{r}
+# Set some simulation parameters
+set.seed(123)  # For reproducibility
+ 
+# Parameters
+q   <- 10         # Number of Likert-scale questions
+n_i <- 165        # Number of intervention respondents
+n_c <- 123        # Number of control respondents
+n   <- n_i + n_c  # Total number of participants
+ 
+# Define Likert scale labels
+likert_labels <- c("Strongly disagree", "Disagree", "Neutral", "Agree", "Strongly agree")
+ 
+# Simulate pre-survey responses (randomly sampled from the Likert scale 1-5)
+pre <- matrix(sample(1:5, n * q, replace = TRUE), 
+              nrow = n, ncol = q)
+ 
+# Function to simulate post-survey responses with both improvement and decline possibilities
+simulate_post <- function(pre_response) {
+  # Define possible changes with corresponding probabilities
+  possible_changes <- c(-3, -2, -1, 0, 1, 2, 3)
+  probabilities <- c(0.05, 0.1, 0.15, 0.4, 0.15, 0.1, 0.05)  # "No change" is most likely
+  post_response <- pre_response + sample(possible_changes, 
+                                         1, 
+                                         prob = probabilities)
+  # Ensure post_response remains within the bounds of the Likert scale (1 to 5)
+  post_response <- max(1, min(5, post_response))
+  return(post_response)
+}
+ 
+# Simulate post-survey responses
+post <- apply(pre, 2, function(x) sapply(x, simulate_post))
+ 
+# Convert numeric values to factors with labels
+pre <- apply(pre, 2, factor, levels = 1:5, labels = likert_labels)
+post <- apply(post, 2, factor, levels = 1:5, labels = likert_labels)
+ 
+# Combine the pre and post data
+dat_likert <- data.frame(id = 1:n,
+                         mode = c(rep("Intervention", n_i), rep("Control", n_c)),
+                         pre,
+                         post)
+ 
+# Rename the columns to reflect pre and post data
+colnames(dat_likert)[3:(2 + q)] <- paste0("Q", 1:q, "_pre")
+colnames(dat_likert)[(3 + q):(2 + 2 * q)] <- paste0("Q", 1:q, "_post")
+ 
+dat_likert <- dat_likert %>%
+  as_tibble() %>%
+  mutate(across(contains("Q"), ~factor(., likert_labels)))
+ 
+rm(n, n_i, n_c, q, likert_labels, pre, post)
+```
+
+
+```{r}
+dat_likert <- dat_likert %>% 
+  mutate(mode = case_when(mode == "Control" ~ "Control",
+                          T ~ mode))
+head(dat_likert[, c(1, 2, 3, 13, 4, 14)], 5) %>% 
+  thekids_table(colour = "Saffron", padding = 3)
+```
+
+## Visualisation
+
+
+```{r}
+likert_plot <- function(data, 
+                        variables,
+                        grouping = NULL,
+                        centered = FALSE,
+                        plot.percent.low = FALSE, 
+                        plot.percent.high = FALSE, 
+                        plot.percent.neutral = FALSE,
+                        legend.position = "right",
+                        plot.percents= TRUE,
+                        legend_title = "Response",
+                        legend_reverse = FALSE,
+                        str_width = 40,
+                        facet_ncol = 1){
+  dat_plot <- data %>%
+    as.data.frame()  
+  
+  likert_object <- likert(dat_plot %>% 
+                            select(!!variables),grouping = dat_plot[[grouping]])
+  
+  likert.bar.plot(likert_object,
+                  centered = centered,
+                  plot.percent.low = plot.percent.low, 
+                  plot.percent.high = plot.percent.high, 
+                  plot.percent.neutral = plot.percent.neutral, 
+                  legend.position = legend.position, 
+                  plot.percents = plot.percents) +
+    guides(fill = guide_legend(title = "Response",
+                               reverse = TRUE
+                               )) +
+    geom_hline(yintercept = 50, linetype = "dashed", colour = "red") +
+    theme_institute(base_size = 16) +
+    scale_fill_manual(values = rev(c("#f56b00", "#fab580", "#eeefef","#a5ccef", "#4a99de")))
+}
+```
+
+
+```{r fig.width = 10, fig.height = 5}
+#| column: body-outset
+dat_likert[, c(1, 2, 3, 13, 4, 14)] %>% # CHECK CHECK CHECK
+    pivot_longer(cols = contains("Q"), 
+                 names_to = c("question", "time"), 
+                 names_sep = "_", 
+                 values_to = "value") %>%
+  mutate(time = case_when(time == "pre" ~ "Pre",
+                          T ~ "Post")) %>% 
+    pivot_wider(id_cols = c(id, mode, time), 
+                names_from = question, 
+                values_from = value) %>%
+    mutate(across(contains("Q"), ~forcats::fct_rev(.))) %>%
+    likert_plot(data = .,
+                variables = paste0("Q", 1),
+                grouping = "time") +
+    labs(title = "f") +
+    theme(plot.title = element_text(family = "Barlow",
+                                    size = 18))
+
+
+# CALCULATE THE MIDPOINTS AND PLOT LABEL - NOT WORKING
+# 
+# dat_l_labs <- dat_likert[, c(1, 2, 3, 13)] %>%
+#   pivot_longer(cols = contains("Q"), 
+#                names_to = c("question", "time"), 
+#                names_sep = "_", 
+#                values_to = "value") %>% 
+#   group_by(mode, question, time) %>%
+#   count(value) %>%
+#   mutate(freq = n / sum(n),
+#          per = paste0(round(freq * 100, 1), "%"),
+#          cum_freq = cumsum(freq),                  # Cumulative sum of frequencies
+#          midpoint = cum_freq - (freq / 2)) 
+#
+# geom_text(data = dat_l_labs, 
+#            aes(y = midpoint, label = per, group = value)) 
+```
+
+
+```{r}
+#| column: body-outset
+dat_likert %>%
+  select(id, mode, Q1_pre, Q1_post) %>%
+  mutate(across(contains("Q"), ~case_when(. == "Strongly disagree" ~ 1,
+                                          . == "Disagree" ~ 2,
+                                          . == "Neutral" ~ 3,
+                                          . == "Agree" ~ 4,
+                                          . == "Strongly agree" ~ 5))) %>%
+  mutate(across(ends_with("_pre"), 
+                .names = "{.col}_change",
+                .fns = ~biometrics::fct_case_when(
+                  get(sub("_pre", "_post", cur_column())) < . ~ "Decreased",
+                  get(sub("_pre", "_post", cur_column())) == . ~ "No change",
+                  get(sub("_pre", "_post", cur_column())) > . ~ "Increased"
+                ))) %>%
+  select(id, mode, contains("_change")) %>%
+  left_join(dat_likert %>% select(id, mode, Q1_pre), by = c("id", "mode")) %>%
+  select(-id) %>%
+  
+  tbl_strata(strata = mode, 
+             .tbl_fun = ~.x %>% 
+               tbl_summary(by = Q1_pre,
+                           label = list(Q1_pre_change ~ "Change")) %>%
+               modify_header(all_stat_cols() ~ "**{level}**"),,
+             .combine_with = "tbl_stack") %>%
+  thekids_table(colour = "Saffron", padding = 3) 
+```
+
+
+## Comments
+
+
+# Closing comments
+
+
+# Acknowledgements
+
+Thanks to Wesley Billingham for providing feedback on and reviewing this post.
+
+You can look forward to seeing posts from these other team members here in the coming weeks and months.
+
+## Reproducibility Information
+
+To access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:
+
+<https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/>
+
+The session information can also be seen below.
+
+```{r echo = T}
+sessionInfo()
+```
