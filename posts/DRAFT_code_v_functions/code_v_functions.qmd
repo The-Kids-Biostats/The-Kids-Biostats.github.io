@@ -38,17 +38,17 @@ The only other user on Bluesky at the time commented:
 
 ![The comment](comment.png){fig-align="center" width="80%"}
 
-All of which was correct. It was a good post, and there was a lot of repetition in the code. Which got me thinking about the age old battle in programming...
+All of the points raised were correct. It was a good post, but there was a lot of repetition in the code. Which got me thinking about the age old battle in programming...
 
 # The case for code
 
-There are (always) a lot of people out there learning to use R, and a lot of them love experimenting with R's great visualisation tools. And a lot of those people are still learning to be code savvy. I know this as I cross paths with this type of user multiple times a week, copy and pasting examples from blogs (like this) and using trial and error to learn. It is this large cohort of users that one can appeal to by sharing verbose code.
+There are (always) a lot of people out there learning to use R, and a lot of them love experimenting with the great visualisation tools R has to offer. And a lot of those people are still learning to be code *savvy*. I know this because I cross paths with this type of user multiple times a week—copy and pasting examples from blogs (like this) and/or using trial and error to learn. It is this large cohort of users that one can appeal to by sharing verbose code.
 
 Some benefits of posting code:
 
 -   If one encounters an error, it is easy for someone still learning to run the code in stages to identify where the problem may be,
--   If one wants to make minor changes (colours, line thickness, alpha etc), they can easily see where to dive in and do so,
--   It is crystal clear what and where the code can (successfully) be customised, for example labels, as opposed to wondering if your customisations (passed into a function) will be honoured by the function or if your edits within the function will break it, and
+-   If one wants to make minor changes (colours, line thickness, alpha etc.), they can easily see where to dive in and do so,
+-   It is crystal clear what and where the code can (successfully) be customised. For example, customisations can be made without having to worry whether those arguments will be honoured by the function and not return a deluge of errors, and
 -   It reinforces the amount of work that goes into producing an end result, and
 -   It gives the reader direct line of sight to foundation code concepts and principles, as opposed to these being hidden and/or the outputs appearing seemingly by magic.
 
@@ -84,9 +84,7 @@ p1 <- dat %>%
   guides(fill = guide_legend(nrow = 1))
 ```
 
-Also, in no time at all, one can copy that code into an LLM, and ask it to provide helper text to explain what is happening at each stage. 
-
-That is, of course, assuming the author didn't take the time to do that themselves ...
+Also, in no time at all, one can copy that code into an LLM, and ask it to explain what is happening each step along the way (assuming, of course, the author didn't take the time to do that themselves...).
 
 ```{r eval = F}
 #| code-fold: false
@@ -188,12 +186,12 @@ Of course, this figure was actually used repeatedly multiple times in a report w
 
 Some benefits of posting functions:
 
--   All code is reusable per se, but making the effort to put you code into a function makes it *readily* reuseable,
--   It can remove a barrier to entry, for those who don't want to clutter the `.qmd` files or risk any copying errors, they can load the function in and get on with their day,
+-   All code is reusable, per se, but making the effort to put you code into a function makes it *readily* reuseable,
+-   It can remove a barrier to entry, especially for those who don't want to clutter the `.qmd` files or risk any copying errors—they can load the function in and get on with their day,
 -   It can increase uptake, as more advanced users may view the solution as more robust and flexible (less customised) than they would if it is simply presented as a 'wall of code', and
--   You can reduce the risk of errors, as the process of turning code into a more generic function often reveals areas where hard coded parameters become problematic (or where there might be a copy and paste error) - forcing you to make the code more versatile can reduce the likelihood of hard coded or specific use case errors creeping in.
+-   You can reduce the risk of errors, as the process of turning code into a more generic function often reveals areas where hard coded parameters become problematic (or where there might be a copy and paste error)—forcing you to make the code more versatile can reduce the likelihood of hard coded or specific use case errors creeping in.
 
-So what did this look like in our actual use case? 
+So what did this look like in our actual use case?
 
 Expand the code below to see how our `ordinal_plot()` function was structured.
 
@@ -361,9 +359,9 @@ dat %>%
 
 # Closing comments
 
-When deciding between using basic code or wrapping that code it into functions, it's important to balance simplicity and efficiency - and think of your audience. For R-based visualisations and reproducible research workflows used within in Quarto documents, showing basic code does offer transparency and fosters learning, making it ideal for teaching or exploratory analyses. On the other hand, functions enhance reusability and scalability, streamlining workflows for complex or repeated tasks.
+When deciding between using basic code or wrapping that code it into functions, it's important to balance simplicity and efficiency, and think of your audience. For R-based visualisations and reproducible research workflows used within in Quarto documents, showing basic code offers transparency and fosters learning, making it ideal for teaching or exploratory analyses. On the other hand, functions enhance re-usability and scalability, streamlining workflows for complex or repeated tasks.
 
-By combining both approaches (in a blog post) - sharing foundational coding steps while having a more advanced option to encapsulate repetitive tasks within functions - you can assist both beginners and advanced users to create clear, flexible, and reproducible documents and workflows.
+By combining both approaches (in a blog post)—sharing foundational coding steps while having a more advanced option to encapsulate repetitive tasks within functions—you can assist both beginners and advanced users to create clear, flexible, and reproducible documents and workflows.
 
 # Acknowledgements
 
