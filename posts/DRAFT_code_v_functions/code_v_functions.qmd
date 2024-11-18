@@ -1,0 +1,382 @@
+---
+title: "Sharing - Code v Functions"
+author: "Dr Matt Cooper and Zac Dempsey"
+format:
+  html:
+    code-fold: true
+    tabset: true
+    toc: true
+    toc-location: left
+date: "2024-11-19"
+categories:
+  - R
+  - Visualisations
+  - Likert
+  - ggplot
+draft: true
+editor_options: 
+  chunk_output_type: console
+execute:
+  echo: true
+  warning: false
+  message: false
+  error: true
+fig-align: center
+fig-format: png
+fig-dpi: 300
+---
+
+# Overview
+
+(Lengthy) readable code. Efficient functions comprised of the minimum number of characters necessary. An age old battle in programming.
+
+Way back when there were only a two users on Bluesky, I linked to one of our earlier [blog posts](https://the-kids-biostats.github.io/posts/2024-10-14_likert_visualisation/likert_visualisations.html) where we presented a nice way to visualise pre-post ordinal Likert data.
+
+![The figure](pre_post_plot.png){fig-align="center" width="80%"}
+
+The only other user on Bluesky at the time commented:
+
+![The comment](comment.png){fig-align="center" width="80%"}
+
+All of which was correct. It was a good post, and there was a lot of repetition in the code. Which got me thinking about the age old battle in programming...
+
+# The case for code
+
+There are (always) a lot of people out there learning to use R, and a lot of them love experimenting with R's great visualisation tools. And a lot of those people are still learning to be code savvy. I know this as I cross paths with this type of user multiple times a week, copy and pasting examples from blogs (like this) and using trial and error to learn. It is this large cohort of users that one can appeal to by sharing verbose code.
+
+Some benefits of posting code:
+
+-   If one encounters an error, it is easy for someone still learning to run the code in stages to identify where the problem may be,
+-   If one wants to make minor changes (colours, line thickness, alpha etc), they can easily see where to dive in and do so,
+-   It is crystal clear what and where the code can (successfully) be customised, for example labels, as opposed to wondering if your customisations (passed into a function) will be honoured by the function or if your edits within the function will break it, and
+-   It reinforces the amount of work that goes into producing an end result, and
+-   It gives the reader direct line of sight to foundation code concepts and principles, as opposed to these being hidden and/or the outputs appearing seemingly by magic.
+
+For example:
+
+```{r eval = F}
+#| code-fold: false
+# Code for the first bar plot
+
+p1 <- dat %>% 
+  filter(group == "Intervention") %>% 
+  group_by(pre) %>% 
+  tally() %>% 
+  mutate(freq = n / sum(n),
+         res = str_c(n, "\n(", round(freq*100, 1), "%)")) %>% 
+  ggplot(aes(x = as.factor(pre), y = freq)) +
+  geom_bar(aes(fill = as.factor(pre)), stat="identity", alpha = 0.8,
+           colour = "black") +
+  theme_institute(base_size = 14) +
+  theme(legend.position = "none",
+        panel.grid.major.x = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_y_continuous(labels = scales::percent_format(),
+                     breaks = seq(0, max_prop, by = 0.05),
+                     expand = expansion(mult = c(0, 0.1))) +
+  coord_cartesian(ylim = c(0, max_prop)) +
+  scale_fill_viridis_d(option = "plasma", end = 0.85, direction = -1) +
+  labs(title = "Pre",
+       fill = "Response",
+       x = "Response", y = "") +
+  geom_text(aes(label = res), vjust = -0.1,
+            family = "Barlow Semi Condensed") +
+  guides(fill = guide_legend(nrow = 1))
+```
+
+Also, in no time at all, one can copy that code into an LLM, and ask it to provide helper text to explain what is happening at each stage. 
+
+That is, of course, assuming the author didn't take the time to do that themselves ...
+
+```{r eval = F}
+#| code-fold: false
+# Filter and process data for the "Intervention" group
+p1 <- dat %>% 
+  filter(group == "Intervention") %>%  # Keep only rows where 'group' is "Intervention"
+  group_by(pre) %>%  # Group data by 'pre' variable
+  tally() %>%  # Count the number of occurrences in each 'pre' group
+  mutate(
+    freq = n / sum(n),  # Calculate frequency for each group as a proportion
+    res = str_c(n, "\n(", round(freq * 100, 1), "%)")  # Create label with count and percentage
+  ) %>%
+  # Start plotting the processed data
+  ggplot(aes(x = as.factor(pre), y = freq)) +  # Define x-axis as 'pre' factor and y-axis as frequency
+  # Add bars to the plot
+  geom_bar(
+    aes(fill = as.factor(pre)),  # Use 'pre' as fill color for each bar
+    stat = "identity",  # Use actual values for bar height
+    alpha = 0.8,  # Set transparency of bars
+    colour = "black"  # Add black outline to bars
+  ) +
+...
+...
+```
+
+The full commented code for the above plot is below.
+
+```{r eval = F}
+# Filter and process data for the "Intervention" group
+p1 <- dat %>% 
+  filter(group == "Intervention") %>%  # Keep only rows where 'group' is "Intervention"
+  group_by(pre) %>%  # Group data by 'pre' variable
+  tally() %>%  # Count the number of occurrences in each 'pre' group
+  mutate(
+    freq = n / sum(n),  # Calculate frequency for each group as a proportion
+    res = str_c(n, "\n(", round(freq * 100, 1), "%)")  # Create label with count and percentage
+  ) %>% 
+
+  # Start plotting the processed data
+  ggplot(aes(x = as.factor(pre), y = freq)) +  # Define x-axis as 'pre' factor and y-axis as frequency
+  
+  # Add bars to the plot
+  geom_bar(
+    aes(fill = as.factor(pre)),  # Use 'pre' as fill color for each bar
+    stat = "identity",  # Use actual values for bar height
+    alpha = 0.8,  # Set transparency of bars
+    colour = "black"  # Add black outline to bars
+  ) +
+  
+  # Apply custom theme for aesthetic consistency
+  theme_institute(base_size = 14) +  # Use institute's custom theme with base font size 14
+  theme(
+    legend.position = "none",  # Remove legend from the plot
+    panel.grid.major.x = element_blank(),  # Remove major grid lines on x-axis
+    plot.title = element_text(hjust = 0.5)  # Center-align the plot title
+  ) +
+  
+  # Customize the y-axis scale
+  scale_y_continuous(
+    labels = scales::percent_format(),  # Show y-axis labels as percentages
+    breaks = seq(0, max_prop, by = 0.05),  # Define tick marks on y-axis
+    expand = expansion(mult = c(0, 0.1))  # Add space above the bars for clarity
+  ) +
+  
+  # Set the limits of the y-axis
+  coord_cartesian(ylim = c(0, max_prop)) +  # Constrain y-axis from 0 to 'max_prop'
+  
+  # Define color palette for fill colors
+  scale_fill_viridis_d(
+    option = "plasma",  # Use "plasma" color scheme from the viridis package
+    end = 0.85,  # Limit the color intensity at the end
+    direction = -1  # Reverse the color scale
+  ) +
+  
+  # Add titles and labels
+  labs(
+    title = "Pre",  # Set the main title for the plot
+    fill = "Response",  # Label for the fill legend (not shown since legend is removed)
+    x = "Response",  # Label for x-axis
+    y = ""  # No label for y-axis
+  ) +
+  
+  # Add text labels on top of each bar
+  geom_text(
+    aes(label = res),  # Use 'res' (count and percent label) for text labels
+    vjust = -0.1,  # Position text slightly above each bar
+    family = "Barlow Semi Condensed"  # Use specific font for text labels
+  ) +
+  
+  # Customize the legend layout
+  guides(
+    fill = guide_legend(nrow = 1)  # Arrange legend items in a single row (applies if legend is displayed)
+  )
+```
+
+# The case for functions
+
+Of course, this figure was actually used repeatedly multiple times in a report we were producing, across a range of pre-post ordinal Likert variables. So we wrapped this code into a function so it could be called and used regularly without making our actual report (`.qmd`) incredibly lengthy.
+
+Some benefits of posting functions:
+
+-   All code is reusable per se, but making the effort to put you code into a function makes it *readily* reuseable,
+-   It can remove a barrier to entry, for those who don't want to clutter the `.qmd` files or risk any copying errors, they can load the function in and get on with their day,
+-   It can increase uptake, as more advanced users may view the solution as more robust and flexible (less customised) than they would if it is simply presented as a 'wall of code', and
+-   You can reduce the risk of errors, as the process of turning code into a more generic function often reveals areas where hard coded parameters become problematic (or where there might be a copy and paste error) - forcing you to make the code more versatile can reduce the likelihood of hard coded or specific use case errors creeping in.
+
+So what did this look like in our actual use case? 
+
+Expand the code below to see how our `ordinal_plot()` function was structured.
+
+```{r eval = F}
+ordinal_plot <- function(data,
+                         left_var = "pre",
+                         left_title = "Pre",
+                         left_fill_title = "Response",
+                         left_x_axis_label = "Response",
+                         left_y_axis_label = "",
+                         center_title = "Pre-Post",
+                         center_fill_title = "Response",
+                         center_x_axis_label = "",
+                         center_y_axis_label = "",
+                         right_var = "post",
+                         right_title = "Post",
+                         right_fill_title = "Response",
+                         right_x_axis_label = "Response",
+                         right_y_axis_label = "",
+                         legend.position = "bottom",
+                         id_var = "id") {
+  
+  vars <- c(id_var, left_var, right_var)
+  
+  max_prop <- dat %>%
+    select(all_of(vars)) %>%
+    pivot_longer(cols = c(!!sym(left_var), !!sym(right_var))) %>%
+    group_by(name) %>%
+    count(value) %>%
+    mutate(freq = n / sum(n)) %>%
+    .$freq %>%
+    max
+  
+  max_prop <- plyr::round_any(max_prop, 0.05, f = ceiling)
+
+  p1 <- dat %>%
+    group_by(!!sym(left_var)) %>%
+    tally() %>%
+    mutate(freq = n / sum(n),
+           res = str_c(n, "\n(", round(freq * 100, 1), "%)")) %>%
+    ggplot(aes(x = as.factor(!!sym(left_var)), y = freq)) +
+    geom_bar(
+      aes(fill = as.factor(!!sym(left_var))),
+      stat = "identity",
+      alpha = 0.8,
+      colour = "black"
+    ) +
+    theme_institute(base_size = 14) +
+    theme(
+      legend.position = "none",
+      panel.grid.major.x = element_blank(),
+      plot.title = element_text(hjust = 0.5)
+    ) +
+    scale_y_continuous(
+      labels = scales::percent_format(),
+      breaks = seq(0, max_prop, by = 0.05),
+      expand = expansion(mult = c(0, 0.1))
+    ) +
+    coord_cartesian(ylim = c(0, max_prop)) +
+    scale_fill_viridis_d(option = "plasma",
+                         end = 0.85,
+                         direction = -1) +
+    labs(
+      title = left_title,
+      fill = left_fill_title,
+      x = left_x_axis_label,
+      y = left_y_axis_label
+    ) +
+    geom_text(aes(label = res), vjust = -0.1, family = "Barlow Semi Condensed") +
+    guides(fill = guide_legend(nrow = 1))
+
+  p2 <- dat %>%
+    rename(Pre = !!sym(left_var), Post = !!sym(right_var)) %>%
+    make_long(Pre, Post) %>%
+    mutate(node = factor(node, levels = c(7, 6, 5, 4, 3, 2, 1)),
+           next_node = factor(next_node, levels = c(7, 6, 5, 4, 3, 2, 1))) %>%
+    ggplot(aes(
+      x = x,
+      next_x = next_x,
+      node = node,
+      next_node = next_node,
+      fill = factor(node)
+    ), alpha = 0.8) +
+    geom_sankey(alpha = 0.8, node.color = 'black') +
+    geom_sankey_label(
+      aes(label = node),
+      alpha = 0.8,
+      size = 3,
+      color = "black",
+      fill = "gray80"
+    ) +
+    scale_x_discrete(expand = c(0.05, 0.05)) +
+    theme_institute(base_size = 14) +
+    theme(
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      axis.title.y = element_blank(),
+      axis.text.y = element_blank(),
+      axis.ticks = element_blank(),
+      legend.position = legend.position,
+      plot.title = element_text(hjust = 0.5)
+    ) +
+    guides(fill = guide_legend(reverse = T, nrow = 1)) +
+    labs(title = center_title, fill = center_fill_title, x = center_x_axis_label)
+
+  p3 <- dat %>%
+    group_by(!!sym(right_var)) %>%
+    tally() %>%
+    mutate(freq = n / sum(n),
+           res = str_c(n, "\n(", round(freq * 100, 1), "%)")) %>%
+    ggplot(aes(x = as.factor(!!sym(right_var)), y = freq)) +
+    geom_bar(
+      aes(fill = as.factor(!!sym(right_var))),
+      stat = "identity",
+      alpha = 0.8,
+      colour = "black"
+    ) +
+    theme_institute(base_size = 14) +
+    theme(
+      legend.position = "none",
+      panel.grid.major.x = element_blank(),
+      plot.background = element_blank(),
+      plot.title = element_text(hjust = 0.5)
+    ) +
+    scale_y_continuous(
+      labels = scales::percent_format(),
+      breaks = seq(0, max_prop, by = 0.05),
+      expand = expansion(mult = c(0, 0.1))
+    ) +
+    coord_cartesian(ylim = c(0, max_prop)) +
+    scale_fill_viridis_d(option = "plasma",
+                         end = 0.85,
+                         direction = -1) +
+    labs(
+      title = right_title,
+      fill = right_fill_title,
+      x = right_x_axis_label,
+      y = right_y_axis_label
+    ) +
+    geom_text(aes(label = res), vjust = -0.1, family = "Barlow Semi Condensed") +
+    guides(fill = guide_legend(nrow = 1))
+
+  p1 + p2 + p3
+}
+```
+
+And how did we used it with the report (`.qmd`)?
+
+```{r eval = F}
+#| code-fold: false
+
+...
+source(".../ordinal_plot.R")
+...
+
+# Change in response - intervention group
+
+Some descriptive text ..., and, below is the figure.
+\```{r fig.width = 8, fig.height = 6}
+dat %>% 
+  filter(group == "Intervention") %>% 
+  ordinal_plot()
+\```
+```
+
+# Closing comments
+
+When deciding between using basic code or wrapping that code it into functions, it's important to balance simplicity and efficiency - and think of your audience. For R-based visualisations and reproducible research workflows used within in Quarto documents, showing basic code does offer transparency and fosters learning, making it ideal for teaching or exploratory analyses. On the other hand, functions enhance reusability and scalability, streamlining workflows for complex or repeated tasks.
+
+By combining both approaches (in a blog post) - sharing foundational coding steps while having a more advanced option to encapsulate repetitive tasks within functions - you can assist both beginners and advanced users to create clear, flexible, and reproducible documents and workflows.
+
+# Acknowledgements
+
+Thanks to Wesley Billingham and Dr Elizabeth McKinnon for providing feedback on and reviewing this post.
+
+## Reproducibility Information
+
+To access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:
+
+<https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/>
+
+The session information can also be seen below.
+
+```{r echo = T}
+sessionInfo()
+```

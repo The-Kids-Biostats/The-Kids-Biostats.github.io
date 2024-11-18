@@ -481,5 +481,19 @@
     "title": "The Kids Biostats",
     "section": "",
     "text": "Visualisations for (ordinal) Likert scale data\n\n\n\n\n\n\nR\n\n\nVisualisations\n\n\nLikert\n\n\nggplot\n\n\n\n\n\n\n\n\n\nOct 14, 2024\n\n\nDr Matt Cooper and Zac Dempsey\n\n\n\n\n\n\n\n\n\n\n\n\nSmall-sample analysis\n\n\n\n\n\n\nSmall Samples\n\n\nR\n\n\n\n\n\n\n\n\n\nSep 10, 2024\n\n\nDr Bethy McKinnon, Dr Matt Cooper\n\n\n\n\n\n\n\n\n\n\n\n\nAI in Biostatistics - Part 2\n\n\n\n\n\n\nAI\n\n\nR\n\n\n\n\n\n\n\n\n\nAug 9, 2024\n\n\nWesley Billingham, Dr Matthew Cooper\n\n\n\n\n\n\n\n\n\n\n\n\nAI in Biostatistics - Part 1\n\n\n\n\n\n\nAI\n\n\nR\n\n\n\n\n\n\n\n\n\nAug 8, 2024\n\n\nWesley Billingham, Dr Matthew Cooper\n\n\n\n\n\n\n\n\n\n\n\n\nAnalysing pre-post data\n\n\n\n\n\n\nPre-post\n\n\nMixed Models\n\n\nR\n\n\n\n\n\n\n\n\n\nJul 22, 2024\n\n\nDr Matthew Cooper\n\n\n\n\n\n\n\n\n\n\n\n\nData Anonymiser\n\n\n\n\n\n\nShiny\n\n\nR\n\n\n\n\n\n\n\n\n\nJul 19, 2024\n\n\nDr Matthew Cooper, Wesley Billingham\n\n\n\n\n\n\n\n\n\n\n\n\nParallel Computing in R\n\n\n\n\n\n\nR\n\n\nParallel\n\n\n\n\n\n\n\n\n\nJul 1, 2024\n\n\nZac Dempsey\n\n\n\n\n\n\n\n\n\n\n\n\nHandling Missing Data with LMER\n\n\n\n\n\n\nMissing Data\n\n\nMixed Models\n\n\nR\n\n\n\n\n\n\n\n\n\nJun 7, 2024\n\n\nDr Matthew Cooper\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/DRAFT_code_v_functions/code_v_functions.html",
+    "href": "posts/DRAFT_code_v_functions/code_v_functions.html",
+    "title": "Sharing - Code v Functions",
+    "section": "",
+    "text": "(Lengthy) readable code. Efficient functions comprised of the minimum number of characters necessary. An age old battle in programming.\nWay back when there were only a two users on Bluesky, I linked to one of our earlier blog posts where we presented a nice way to visualise pre-post ordinal Likert data.\n\n\n\nThe figure\n\n\nThe only other user on Bluesky at the time commented:\n\n\n\nThe comment\n\n\nAll of which was correct. It was a good post, and there was a lot of repetition in the code. Which got me thinking about the age old battle in programming…"
+  },
+  {
+    "objectID": "posts/DRAFT_code_v_functions/code_v_functions.html#reproducibility-information",
+    "href": "posts/DRAFT_code_v_functions/code_v_functions.html#reproducibility-information",
+    "title": "Sharing - Code v Functions",
+    "section": "Reproducibility Information",
+    "text": "Reproducibility Information\nTo access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:\nhttps://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/\nThe session information can also be seen below.\n\n\nCode\nsessionInfo()\n\n\nR version 4.3.3 (2024-02-29)\nPlatform: aarch64-apple-darwin20 (64-bit)\nRunning under: macOS Sonoma 14.4.1\n\nMatrix products: default\nBLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib \nLAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0\n\nlocale:\n[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8\n\ntime zone: Australia/Perth\ntzcode source: internal\n\nattached base packages:\n[1] stats     graphics  grDevices utils     datasets  methods   base     \n\nloaded via a namespace (and not attached):\n [1] htmlwidgets_1.6.4 compiler_4.3.3    fastmap_1.2.0     cli_3.6.3        \n [5] tools_4.3.3       htmltools_0.5.8.1 rstudioapi_0.17.1 yaml_2.3.10      \n [9] rmarkdown_2.29    knitr_1.49        jsonlite_1.8.9    xfun_0.49        \n[13] digest_0.6.37     rlang_1.1.4       evaluate_1.0.1"
   }
 ]
