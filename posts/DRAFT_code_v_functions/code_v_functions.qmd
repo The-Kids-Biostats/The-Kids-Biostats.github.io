@@ -30,7 +30,7 @@ fig-dpi: 300
 
 (Lengthy) readable code. Efficient functions comprised of the minimum number of characters necessary. An age old battle in programming.
 
-Way back when there were only a two users on Bluesky, I linked to one of our earlier [blog posts](https://the-kids-biostats.github.io/posts/2024-10-14_likert_visualisation/likert_visualisations.html) where we presented a nice way to visualise pre-post ordinal Likert data.
+Way back when there were only two users on Bluesky, I linked to one of our earlier [blog posts](https://the-kids-biostats.github.io/posts/2024-10-14_likert_visualisation/likert_visualisations.html) where we presented a nice way to visualise pre-post ordinal Likert data.
 
 ![The figure](pre_post_plot.png){fig-align="center" width="80%"}
 
@@ -50,7 +50,7 @@ Some benefits of posting code:
 -   If one wants to make minor changes (colours, line thickness, alpha etc.), they can easily see where to dive in and do so,
 -   It is crystal clear what and where the code can (successfully) be customised. For example, customisations can be made without having to worry whether those arguments will be honoured by the function and not return a deluge of errors, and
 -   It reinforces the amount of work that goes into producing an end result, and
--   It gives the reader direct line of sight to foundation code concepts and principles, as opposed to these being hidden and/or the outputs appearing seemingly by magic.
+-   It gives the reader direct line of sight to foundational code concepts and principles, as opposed to these being hidden and/or the outputs appearing seemingly by magic.
 
 For example:
 
@@ -186,10 +186,10 @@ Of course, this figure was actually used repeatedly multiple times in a report w
 
 Some benefits of posting functions:
 
--   All code is reusable, per se, but making the effort to put you code into a function makes it *readily* reuseable,
+-   All code is reusable, per se, but making the effort to put your code into a function makes it *readily* reuseable,
 -   It can remove a barrier to entry, especially for those who don't want to clutter the `.qmd` files or risk any copying errors—they can load the function in and get on with their day,
 -   It can increase uptake, as more advanced users may view the solution as more robust and flexible (less customised) than they would if it is simply presented as a 'wall of code', and
--   You can reduce the risk of errors, as the process of turning code into a more generic function often reveals areas where hard coded parameters become problematic (or where there might be a copy and paste error)—forcing you to make the code more versatile can reduce the likelihood of hard coded or specific use case errors creeping in.
+-   You can reduce the risk of errors, as the process of turning code into a more generic function often reveals areas where hard coded parameters become problematic (or where there might be a copy and paste error). This can force you to make the code more versatile and reduce the likelihood of hard coded or specific use case errors creeping in.
 
 So what did this look like in our actual use case?
 
