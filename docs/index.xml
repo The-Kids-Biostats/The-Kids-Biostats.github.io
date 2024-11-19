@@ -14,7 +14,7 @@
 <item>
   <title>Sharing - Code v Functions</title>
   <dc:creator>Dr Matt Cooper and Zac Dempsey</dc:creator>
-  <link>https://www.the-kids-biostats.github.io/posts/DRAFT_code_v_functions/code_v_functions.html</link>
+  <link>https://www.the-kids-biostats.github.io/posts/2024-11-19_code_v_functions/code_v_functions.html</link>
   <description><![CDATA[ 
 
 
@@ -27,14 +27,14 @@
 <p>Way back when there were only two users on Bluesky, I linked to one of our earlier <a href="https://the-kids-biostats.github.io/posts/2024-10-14_likert_visualisation/likert_visualisations.html">blog posts</a> where we presented a nice way to visualise pre-post ordinal Likert data.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/DRAFT_code_v_functions/pre_post_plot.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/2024-11-19_code_v_functions/pre_post_plot.png" class="img-fluid figure-img" style="width:80.0%"></p>
 <figcaption>The figure</figcaption>
 </figure>
 </div>
 <p>The only other user on Bluesky at the time commented:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/DRAFT_code_v_functions/comment.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<p><img src="https://www.the-kids-biostats.github.io/posts/2024-11-19_code_v_functions/comment.png" class="img-fluid figure-img" style="width:80.0%"></p>
 <figcaption>The comment</figcaption>
 </figure>
 </div>
@@ -1851,7 +1851,7 @@ loaded via a namespace (and not attached):
   <category>Visualisations</category>
   <category>Likert</category>
   <category>ggplot</category>
-  <guid>https://www.the-kids-biostats.github.io/posts/DRAFT_code_v_functions/code_v_functions.html</guid>
+  <guid>https://www.the-kids-biostats.github.io/posts/2024-11-19_code_v_functions/code_v_functions.html</guid>
   <pubDate>Mon, 18 Nov 2024 16:00:00 GMT</pubDate>
 </item>
 <item>

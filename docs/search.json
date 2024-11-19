@@ -495,5 +495,19 @@
     "title": "Sharing - Code v Functions",
     "section": "Reproducibility Information",
     "text": "Reproducibility Information\nTo access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:\nhttps://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/\nThe session information can also be seen below.\n\n\nCode\nsessionInfo()\n\n\nR version 4.3.3 (2024-02-29)\nPlatform: aarch64-apple-darwin20 (64-bit)\nRunning under: macOS Sonoma 14.4.1\n\nMatrix products: default\nBLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib \nLAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0\n\nlocale:\n[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8\n\ntime zone: Australia/Perth\ntzcode source: internal\n\nattached base packages:\n[1] stats     graphics  grDevices utils     datasets  methods   base     \n\nloaded via a namespace (and not attached):\n [1] htmlwidgets_1.6.4 compiler_4.3.3    fastmap_1.2.0     cli_3.6.3        \n [5] tools_4.3.3       htmltools_0.5.8.1 rstudioapi_0.17.1 yaml_2.3.10      \n [9] rmarkdown_2.29    knitr_1.49        jsonlite_1.8.9    xfun_0.49        \n[13] digest_0.6.37     rlang_1.1.4       evaluate_1.0.1"
+  },
+  {
+    "objectID": "posts/2024-11-19_code_v_functions/code_v_functions.html",
+    "href": "posts/2024-11-19_code_v_functions/code_v_functions.html",
+    "title": "Sharing - Code v Functions",
+    "section": "",
+    "text": "(Lengthy) readable code. Efficient functions comprised of the minimum number of characters necessary. An age old battle in programming.\nWay back when there were only two users on Bluesky, I linked to one of our earlier blog posts where we presented a nice way to visualise pre-post ordinal Likert data.\n\n\n\nThe figure\n\n\nThe only other user on Bluesky at the time commented:\n\n\n\nThe comment\n\n\nAll of the points raised were correct. It was a good post, but there was a lot of repetition in the code. Which got me thinking about the age old battle in programming…"
+  },
+  {
+    "objectID": "posts/2024-11-19_code_v_functions/code_v_functions.html#reproducibility-information",
+    "href": "posts/2024-11-19_code_v_functions/code_v_functions.html#reproducibility-information",
+    "title": "Sharing - Code v Functions",
+    "section": "Reproducibility Information",
+    "text": "Reproducibility Information\nTo access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:\nhttps://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/\nThe session information can also be seen below.\n\n\nCode\nsessionInfo()\n\n\nR version 4.3.3 (2024-02-29)\nPlatform: aarch64-apple-darwin20 (64-bit)\nRunning under: macOS Sonoma 14.4.1\n\nMatrix products: default\nBLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib \nLAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0\n\nlocale:\n[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8\n\ntime zone: Australia/Perth\ntzcode source: internal\n\nattached base packages:\n[1] stats     graphics  grDevices utils     datasets  methods   base     \n\nloaded via a namespace (and not attached):\n [1] htmlwidgets_1.6.4 compiler_4.3.3    fastmap_1.2.0     cli_3.6.3        \n [5] tools_4.3.3       htmltools_0.5.8.1 rstudioapi_0.17.1 yaml_2.3.10      \n [9] rmarkdown_2.29    knitr_1.49        jsonlite_1.8.9    xfun_0.49        \n[13] digest_0.6.37     rlang_1.1.4       evaluate_1.0.1"
   }
 ]
