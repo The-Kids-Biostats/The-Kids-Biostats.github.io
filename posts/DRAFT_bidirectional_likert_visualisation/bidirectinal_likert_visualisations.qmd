@@ -1,0 +1,354 @@
+---
+title: "Visualisations for (bidirectional) Likert scale data"
+author: "Zac Dempsey and Dr Matt Cooper"
+format:
+  html:
+    code-fold: true
+    tabset: true
+    toc: true
+    toc-location: left
+date: "`r format(Sys.time(), '%d %B %Y')`"
+categories:
+  - R
+  - Visualisations
+  - Likert
+  - ggplot
+draft: true
+editor_options: 
+  chunk_output_type: inline
+execute:
+  echo: true
+  warning: false
+  message: false
+  error: true
+fig-align: center
+fig-format: png
+fig-dpi: 300
+---
+
+# Overview
+
+Likert scale variables (and hence data) are widely utilised in research—they are useful for getting participants to rate things, or to provide an average quantity as a response in situations where asking for the exact quantity may be problematic. How can asking for an exact quantity be problematic? Well, consider the example below that relates to how much water one drinks per day. Very few people drink the exact same amount of water each day, so asking participants "How many (250ml) glasses of water do you drink per day" and getting a response of "3" is typically pointless—there is likely substantial measurement error, and if they drank 3 glasses yesterday (anomaly or otherwise) but 4 glasses the day before, is the response of 3 not just outright incorrect?
+
+What is presented below is nothing ground breaking. We went in search of a concise, succinct, and accurate way to display (specifically) "pre/post" Likert data, and this is where we are currently at.
+
+# The data
+
+## Definitions
+
+As defined in our previous [ordinal Likert data blog post](https://the-kids-biostats.github.io/posts/2024-10-14_likert_visualisation/likert_visualisations.html), **bidirectional (bipolar) Likert data** involves category responses that have a natural order with responses from two opposing directions---typically both negative and positive responses---around a central (or neutral) point.
+
+An example. *"The amount of reading I do influences how much reading my child does?"* with response options:
+
++ Strongly disagree
++ Disagree
++ Neither agree nor disagree (the neutral midpoint)
++ Agree
++ Strongly agree
+
+
+# Bidirectional Likert data
+
+## Demo data
+
+```{r setup, include = T}
+library(thekidsbiostats) # install with remotes::install_github("The-Kids-Biostats/thekidsbiostats")
+```
+
+Specifically, we will simulate some `pre` and `post` response data, a `group` identifier (intervention or control), and then some labelled response columns.
+
+```{r}
+set.seed(123) # For reproducibility
+
+# Parameters
+q   <- 1          # Number of bidirectional Likert questions to simulate
+n_o <- 183        # Number of online respondents
+n_p <- 154        # Number of in-person respondents
+n   <- n_o + n_p  # Total number of participants
+
+# Define Likert scale labels
+likert_labels <- c("Strongly disagree", "Disagree", "Neutral", "Agree", "Strongly agree")
+
+# Simulate pre-survey responses (randomly sampled from the Likert scale 1-5)
+pre <- matrix(sample(1:5, n * q, replace = TRUE), 
+              nrow = n, ncol = q)
+
+# Function to simulate post-survey responses with both improvement and decline possibilities
+simulate_post <- function(pre_response) {
+  # Define possible changes with corresponding probabilities
+  possible_changes <- c(-3, -2, -1, 0, 1, 2, 3)
+  probabilities <- c(0.05, 0.1, 0.15, 0.4, 0.15, 0.1, 0.05)  # "No change" is most likely
+  
+  post_response <- pre_response + sample(possible_changes, 
+                                         1, 
+                                         prob = probabilities)
+  
+  # Ensure post_response remains within the bounds of the Likert scale (1 to 5)
+  post_response <- max(1, min(5, post_response))
+  
+  return(post_response)
+}
+
+# Simulate post-survey responses
+post <- apply(pre, 2, function(x) sapply(x, simulate_post))
+
+# Convert numeric values to factors with labels
+pre  <- apply(pre,  2, factor, levels = 1:5, labels = likert_labels)
+post <- apply(post, 2, factor, levels = 1:5, labels = likert_labels)
+
+# Combine the pre and post data
+dat_likert <- data.frame(id = 1:n,
+                         mode = c(rep("Online", n_o), rep("In-person", n_p)),
+                         pre,
+                         post)
+
+# Rename the columns to reflect pre and post data
+colnames(dat_likert)[3:(2 + q)] <- paste0("Q", 1:q, "_pre")
+colnames(dat_likert)[(3 + q):(2 + 2 * q)] <- paste0("Q", 1:q, "_post")
+
+dat_likert <- dat_likert %>%
+  as_tibble %>%
+  pivot_longer(cols = contains("Q1"), names_to = "time", names_prefix = "Q1_", values_to = "Q1") %>%
+  mutate(time = factor(time, c("pre", "post")),
+         Q1 = factor(Q1, likert_labels))
+
+rm(n, n_o, n_p, q, likert_labels, pre, post)
+
+# Visualise the first few rows of data
+head(dat_likert, 5) %>%
+  thekids_table(colour = "Saffron", padding = 3)
+```
+
+## The visualisation
+
+To change things up compared to the ordinal Likert example (and keeping our ["Sharing---Code v Functions"](https://the-kids-biostats.github.io/posts/2024-11-19_code_v_functions/code_v_functions.html) post in mind), let's write a function to visualise the bidirectional style data.
+
+```{r}
+bidirect_plot <- function(data,
+                          grouping_var,
+                          facet_var,
+                          outcome_var,
+                          base_size = 14,
+                          legend_size = base_size - 4,
+                          axis_y_size = base_size,
+                          label_size = 3,
+                          label_threshold = 5,
+                          label_round = 1,
+                          fill_colour = c("#f56b00", "#fab580", "#eeefef","#a5ccef", "#4a99de"),
+                          axis_y_label_wrap = axis_y_label_wrap_width,
+                          axis_y_label_lineheight = 0.6,
+                          legend.position = "bottom",
+                          legend.title.position = "left",
+                          hline = TRUE,
+                          hline_threshold = 50,
+                          ...){
+
+  # Reverse the `grouping_var` factors for consistent colouring
+  data <- data %>%
+    mutate(!!sym(grouping_var) := fct_rev(!!sym(grouping_var)))
+  
+  # Calculate the counts and proportions for each group
+  plot_dat <- data %>%
+    count(!!sym(outcome_var), 
+          !!sym(facet_var), 
+          !!sym(grouping_var)) %>%
+    group_by(!!sym(facet_var), 
+             !!sym(grouping_var)) %>%
+    mutate(prop = 100*n/sum(n),
+           pos = cumsum(prop) - 0.5*prop) %>%
+    ungroup %>%
+    mutate(!!sym(outcome_var) := fct_rev(!!sym(outcome_var)))
+  
+  # Create the plot!
+  suppressMessages({
+    plot <- plot_dat %>%
+      ggplot(aes(x = !!sym(grouping_var), 
+                 y = prop, 
+                 fill = !!sym(outcome_var))) +
+      geom_bar(stat = "identity", 
+               position = "stack",
+               width = 0.7) +
+      geom_text(aes(label = ifelse(prop >= label_threshold, 
+                                   paste0(n, " (", round_vec(prop, label_round), "%)"), ""), 
+                    y = pos),
+                size = label_size,
+                family = "Barlow") +
+      facet_wrap(as.formula(paste("~", facet_var)), 
+                 ncol = 1) +
+      coord_flip() +
+      thekidsbiostats::theme_institute(base_size = base_size, 
+                                       ...) +
+      scale_fill_manual(values = rev(fill_colour)) +
+      scale_y_continuous(expand = c(0, 0)) + # y axis in-line with plot labels (no spacing)
+      scale_x_discrete(expand = expansion(add = c(0.5, 0.5))) + # Spacing between bar and plot area (bottom, top) 
+      
+      guides(fill = guide_legend(title = "Response",
+                                 reverse = TRUE)) +
+      theme(# x axis formatting
+            axis.title.x = element_blank(),
+            axis.ticks.x = element_blank(),
+            axis.text.x = element_blank(),
+            
+            # y axis formatting
+            axis.title.y = element_blank(),
+            axis.text.y = element_text(size = axis_y_size, 
+                                       lineheight = axis_y_label_lineheight),
+            
+            # Legend formatting
+            legend.position = legend.position,
+            legend.title.position = legend.title.position,
+            legend.text = element_text(size = legend_size),
+            
+            # Miscellaneous formatting
+            panel.grid.major.x = element_blank(),
+            plot.margin = margin(t = 10, r = 15, b = 5, l = 15))
+    })
+  
+  if (hline == TRUE){
+    plot <- plot +
+      geom_hline(yintercept = hline_threshold, 
+                 linetype = "dashed", 
+                 colour = "red")
+  } else if (hline == FALSE){
+    plot <- plot
+  }
+  
+  return(plot)
+  }
+```
+
+We can now simply call the function on our bidirectional Likert data:
+
+```{r}
+bidirect_plot(data = dat_likert,
+              outcome_var = "Q1",
+              grouping_var = "time",
+              facet_var = "mode")
+```
+
+
+Similarly, we can write another function to table the changes between the "pre" and "post" time periods.
+
+To begin, let's write a function to classify the change between the "pre" and "post" time periods
+
+```{r}
+bidirect_change <- function(data, 
+                            id_var = "id",
+                            mode_var = "mode",
+                            time_var = "time", 
+                            pre_label = "pre",
+                            post_label = "post",
+                            outcome_var){
+  
+  data %>%
+    pivot_wider(id_cols = c(!!rlang::sym(id_var), 
+                            !!rlang::sym(mode_var)),
+                names_from = !!rlang::sym(time_var),
+                values_from = !!rlang::sym(outcome_var)) %>%
+    mutate(Change = thekidsbiostats::fct_case_when(as.numeric(!!rlang::sym(pre_label)) <  as.numeric(!!rlang::sym(post_label)) ~ "Increase",
+                                                   as.numeric(!!rlang::sym(pre_label)) == as.numeric(!!rlang::sym(post_label)) ~ "No change",
+                                                   as.numeric(!!rlang::sym(pre_label)) >  as.numeric(!!rlang::sym(post_label)) ~ "Decrease"))
+  }
+```
+
+```{r}
+dat_likert_change <- dat_likert %>%
+  bidirect_change(data = ., 
+                  outcome_var = "Q1")
+
+head(dat_likert_change, n = 5) %>%
+  thekids_table(colour = "Saffron", padding = 3)
+```
+
+Now, we can now summarise the change in responses.
+
+```{r}
+dat_likert_change %>%
+  select(mode, Change) %>%
+  tbl_summary(by = mode) %>%
+  thekids_table(colour = "Saffron") 
+```
+
+Or we can contextualise the change in responses by the response selected in the "pre" time period.
+
+
+Let's write a function to nicely stratify these responses:
+
+```{r}
+bidirect_table <- function(data,
+                           labels = labels,
+                           strata_var = "mode",
+                           by_var = "pre",
+                           overall_last = F,
+                           overall_label = "Overall",
+                           str_width = str_char,
+                           .combine_with = "tbl_stack",
+                           convert_zero = TRUE,
+                           spanning_header = TRUE,
+                           spanning_header_label = paste0("Pre response"),
+                           ...){
+  
+    tab <- data %>%
+      tbl_strata(strata = !!rlang::sym(strata_var),
+                 .tbl_fun = ~.x %>%
+                   tbl_summary(by = !!rlang::sym(by_var)) %>%
+                   modify_header(all_stat_cols() ~ "**{level}**") %>%
+                   add_overall(last = overall_last,
+                               col_label = paste0("**", overall_label, "**")),
+                 .header= "{strata} \nN={n}",
+                 .combine_with = .combine_with)
+    
+    tab <- tab %>%  
+      thekidsbiostats::thekids_table(...)
+    
+    # Apply spanning header
+    if (spanning_header == FALSE){
+      tab <- tab
+      
+    } else if (spanning_header == TRUE){
+      overall_ncol <- length(tab$col_keys)
+      stat_ncol <- length(tab$col_keys[str_detect(tab$col_keys, pattern = "stat_")]) - 1
+      
+      tab <- tab %>%
+      flextable::add_header_row(values = c("", spanning_header_label), 
+                                colwidths = c(overall_ncol - stat_ncol, 
+                                              stat_ncol)) %>%
+      flextable::align(align = "left", part = "header", i = 1)  # Set alignment to left
+    }
+    
+    return(tab)
+  }
+```
+
+```{r}
+dat_likert_change %>%
+  select(-c(id, post)) %>%
+  bidirect_table(data = .,
+                 by_var = "pre",
+                 colour = "Saffron")
+```
+
+
+# Closing comments
+
+Again, the above figure is certainly not perfect. The functions have *many* parameters, and more could certainly be added.
+
+The figure does show all the raw data (counts and percentages), clearly delineates the pre and post data, gives some idea of the flow of data between levels, and highlights that in the post period, the intervention group comprised a higher proportion of level 5 responses. Combined with a summary table that shows the actual proportional movements from each pre (baseline) group---we are getting somewhere.
+
+# Acknowledgements
+
+Thanks to Wesley Billingham and Dr Elizabeth McKinnon for providing feedback on and reviewing this post.
+
+You can look forward to seeing posts from these other team members here in the coming weeks and months.
+
+## Reproducibility Information
+
+To access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:
+
+<https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/>
+
+The session information can also be seen below.
+
+```{r echo = T}
+sessionInfo()
+```
