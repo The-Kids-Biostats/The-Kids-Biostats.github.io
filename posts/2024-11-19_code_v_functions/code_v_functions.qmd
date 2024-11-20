@@ -89,6 +89,11 @@ p1 <- dat %>%
   guides(fill = guide_legend(nrow = 1))
 ```
 
+::: column-margin
+The purpose of this post is not really about *running* this code. However, if you are looking to, the code to create the `dat` this relates to can be [found here](https://the-kids-biostats.github.io/posts/2024-10-14_likert_visualisation/likert_visualisations.html).
+:::
+
+
 Also, in no time at all, one can copy that code into an LLM, and ask it to explain what is happening each step along the way (assuming, of course, the author didn't take the time to do that themselves...).
 
 ```{r eval = F}

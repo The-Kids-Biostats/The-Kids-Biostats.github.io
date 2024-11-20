@@ -40,7 +40,7 @@
 </div>
 <p>All of the points raised were correct. It was a good post, but there was a lot of repetition in the code. Which got me thinking about the age old battle in programming…</p>
 </section>
-<section id="the-case-for-code" class="level1">
+<section id="the-case-for-code" class="level1 page-columns page-full">
 <h1>The case for code</h1>
 <p>There are (always) a lot of people out there learning to use R, and a lot of them love experimenting with the great visualisation tools R has to offer. And a lot of those people are still learning to be code <em>savvy</em>. I know this because I cross paths with this type of user multiple times a week—copy and pasting examples from blogs (like this) and/or using trial and error to learn. It is this large cohort of users that one can appeal to by sharing verbose code.</p>
 <p>Some benefits of posting code:</p>
@@ -317,7 +317,10 @@ font-style: inherit;">nrow =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span>))</span></code></pre></div>
 </div>
-<p>Also, in no time at all, one can copy that code into an LLM, and ask it to explain what is happening each step along the way (assuming, of course, the author didn’t take the time to do that themselves…).</p>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>The purpose of this post is not really about <em>running</em> this code. However, if you are looking to, the code to create the <code>dat</code> this relates to can be <a href="https://the-kids-biostats.github.io/posts/2024-10-14_likert_visualisation/likert_visualisations.html">found here</a>.</p>
+</div></div><p>Also, in no time at all, one can copy that code into an LLM, and ask it to explain what is happening each step along the way (assuming, of course, the author didn’t take the time to do that themselves…).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
