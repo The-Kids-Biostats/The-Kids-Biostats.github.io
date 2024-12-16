@@ -13,7 +13,7 @@ categories:
   - Visualisations
   - Likert
   - ggplot
-draft: true
+draft: false
 editor_options: 
   chunk_output_type: inline
 execute:
@@ -28,9 +28,9 @@ fig-dpi: 300
 
 # Overview
 
-Bidirectional Likert-style questions are widely employed as a survey instrument in research settings. Unlike ordinal Likert-style responses, which could be used to broadly obtain quantities/values, bidirectional Likert-style responses are useful in assessing attitudes, perceptions or satisfaction with a particular policy or program.
+Bidirectional Likert-style questions are widely employed as a survey instrument within research. Unlike ordinal Likert-style responses, which are often used to broadly obtain quantities (e.g., "glasses of water per day") or ratings (e.g., "rate the food between 1 and 10"), bidirectional Likert-style responses are useful for assessing attitudes, perceptions or satisfaction with a particular policy or program.
 
-Similar to our [previous blog post](https://the-kids-biostats.github.io/posts/2024-10-14_likert_visualisation/likert_visualisations.html) on ordinal Likert-style data, we are interested in "pre/post" data collected before and after some intervention program, and are aiming to devise a concise way to visualise and summarise responses at each time point, as well as the *change* in responses across time points.
+In this post, similar to our [previous blog post](https://the-kids-biostats.github.io/posts/2024-10-14_likert_visualisation/likert_visualisations.html) on ordinal Likert-style data, we are interested in "pre/post" data (collected before and after some intervention) and we are aiming to find a concise way to visualise and summarise the responses at each time point - as well as the *change* in responses between time points.
 
 # Bidirectional Likert data
 
@@ -48,9 +48,9 @@ An example. *"The amount of reading I do influences how much reading my child do
 
 ## Demo data
 
-Let's start with simulating a single survey question, before (pre) and after (post) an intervention, for participants in either an online or in-person program.
+Let's start with simulating a single survey question, before (`pre`) and after (`post`) an intervention, for participants in either an intervention or control program.
 
-We would like to visualise and summarise the responses both before and after the program (separately), as well as the *change* in responses between time periods (increase/no change/decrease), across both the online and in-person programs.
+We would like to visualise and summarise the responses both before and after the program (separately), as well as the *change* in responses between time periods (increase/no change/decrease), across both the intervention and control programs.
 
 ```{r}
 library(thekidsbiostats) # install with remotes::install_github("The-Kids-Biostats/thekidsbiostats")
@@ -59,9 +59,9 @@ set.seed(123) # For reproducibility
 
 # Parameters
 q   <- 1          # Number of bidirectional Likert questions to simulate
-n_o <- 200        # Number of online respondents
-n_p <- 150        # Number of in-person respondents
-n   <- n_o + n_p  # Total number of participants
+n_i <- 200        # Number of intervention respondents
+n_c <- 150        # Number of control respondents
+n   <- n_i + n_c  # Total number of participants
 
 # Define Likert scale labels
 likert_labels <- c("Strongly disagree", "Disagree", "Neutral", "Agree", "Strongly agree")
@@ -95,7 +95,7 @@ post <- apply(post, 2, factor, levels = 1:5, labels = likert_labels)
 
 # Combine the pre and post data
 dat_likert <- data.frame(id = 1:n,
-                         mode = c(rep("Online", n_o), rep("In-person", n_p)),
+                         mode = c(rep("Intervention", n_i), rep("Control", n_c)),
                          pre,
                          post)
 
@@ -111,7 +111,7 @@ dat_likert <- dat_likert %>%
 ```
 
 ```{r echo = F}
-rm(n, n_o, n_p, q, likert_labels, pre, post)
+rm(n, n_i, n_c, q, likert_labels, pre, post)
 ```
 
 Visualising the first few rows of data:
@@ -124,20 +124,30 @@ head(dat_likert) %>%
 
 ## The visualisation
 
-A function can be defined to visualise how the data looks at each period looks between the online and in-person groups. As we presented in another [previous blog](https://the-kids-biostats.github.io/posts/2024-11-19_code_v_functions/code_v_functions.html)), functions can be a useful way to compartmentalise and generalise code to save on "copy and pasting" (potentially lengthy) chunks that are otherwise largely very similar. Let's call this `bidirect_plot`.
+We have created a function to visualise these data at each period, separately for the intervention and controls groups. As we presented in another [previous blog](https://the-kids-biostats.github.io/posts/2024-11-19_code_v_functions/code_v_functions.html)), functions can be a useful way to compartmentalise and generalise code, and to save on "copy and pasting" (potentially lengthy) chunks that are otherwise largely very similar. 
 
-Some salient parameters to this function:
+This function is `bidirect_plot()`.
 
-+ `grouping_var` -- Variable that defines how to group data, within a single plot, on the y-axis.
-+ `facet_var` -- Variable that defines separate facets (panels) in the plot.
-+ `outcome_var` -- Variable that defines the question of interest.
-+ `label_threshold` -- Minimum proportion threshold (as a percentage) for displaying labels on the bars.
-+ `fill_colour` -- Vector of colours used for the segments of the stacked bars.
-+ `hline` -- A logical flag (TRUE/FALSE) to determine whether a horizontal dashed line should be added to the plot.
-+ `hline_threshold` -- If `hline` is TRUE, the x-axis position of the horizontal line.
-+ `...` -- Additional arguments passed to `thekidsbiostats::theme_institute()`, allowing customization of the plot theme.
+Some of the arguments for this function are:
 
-All other parameters merely control other formatting options such as text size, label rounding, legend positioning, etc.
+-   `grouping_var` -- Variable that defines how to group data, within a single plot, on the y-axis.
+-   `facet_var` -- Variable that defines separate facets (panels) in the plot.
+-   `outcome_var` -- Variable that defines the question of interest.
+-   `label_threshold` -- Minimum proportion threshold (as a percentage) for displaying labels on the bars.
+-   `fill_colour` -- Vector of colours used for the segments of the stacked bars.
+-   `hline` -- A logical flag (TRUE/FALSE) to determine whether a horizontal dashed line should be added to the plot.
+-   `hline_threshold` -- If `hline` is TRUE, the x-axis position of the horizontal line.
+-   `...` -- Additional arguments passed to `thekidsbiostats::theme_institute()`, allowing customization of the plot theme.
+
+::: {.column-margin}
+**Note:**
+
+We called this `hline` even though the line is vertical. That is because within the code, we use `coord_flip()` to turn the originally vertical plot into a horizontal plot. 
+:::
+
+All other arguments merely control other formatting options such as text size, label rounding, legend positioning, etc. 
+
+Click below to expand and review the code within this function.
 
 ```{r}
 bidirect_plot <- function(data,
@@ -232,7 +242,7 @@ bidirect_plot <- function(data,
   }
 ```
 
-Calling this function returns our plot:
+And then, simply calling this function and passing data into it returns our plot:
 
 ```{r echo = T}
 #| code-fold: false
@@ -247,9 +257,9 @@ bidirect_plot(data = dat_likert,
 
 Let's define the change in agreement between time periods as follows:
 
-+ **Increase** -- The individual agrees more *after* the program compared to *before* the program (e.g., a response moving from "disagree" to "strongly agree").
-+ **No change** -- No change in agreement *before* and *after* the program (e.g., responding "neutral" at both time periods).
-+ **Decrease** -- The individual agrees less *after* the program compared to *before* the program (e.g., a response moving from "strongly agree" to "agree").
+-   **Increase** -- The individual agrees more *after* the program compared to *before* the program (e.g., a response moving from "disagree" to "strongly agree").
+-   **No change** -- No change in agreement *before* and *after* the program (e.g., responding "neutral" at both time periods).
+-   **Decrease** -- The individual agrees less *after* the program compared to *before* the program (e.g., a response moving from "strongly agree" to "agree").
 
 To implement this, we will construct another function, `bidirect_change`.
 
@@ -279,7 +289,7 @@ dat_likert_change <- bidirect_change(data = dat_likert,
                                      outcome_var = "Q1")
 ```
 
-Now, summarising the change in responses for the "online" and "in-person" groups:
+Now, summarising the change in responses for the "intervention" and "control" groups:
 
 ```{r}
 dat_likert_change %>%
@@ -288,7 +298,7 @@ dat_likert_change %>%
   thekids_table(colour = "Saffron") 
 ```
 
-We can further contextualise these results by stratifying the change in responses by response selected in the "pre" time period.
+We can further contextualise these results by stratifying the change in responses by response selected in the `pre` time period. This can be really useful to see which `pre` groups are the biggest movers.
 
 To stick with the "function-writing" theme of this blog, let's define another stratified summary table function, `bidirect_table`.
 
@@ -341,9 +351,9 @@ dat_likert_change %>%
 
 # Closing comments
 
-The above figure and tables are certainly not perfect. Each of the functions have quite a few parameters, and more could certainly be added.
+The above figure and tables are certainly not perfect. Each of the functions have quite a few arguments, which adds flexibility, but they may not suit all scenarios (and there is scope for adding even more arguments).
 
-The figure shows all the raw data (counts and percentages), clearly delineates the pre and post data, and gives a broad view of the overall responses before and after the program for each group. We can then unpack how the program might influence participant responses over time further by looking at how participant opinions change (increase/no change/decrease) depending on their response before the program.
+The figure succinctly shows all the raw data (counts and percentages), clearly delineates the `pre` and `post` data, and gives a broad view of the overall responses before and after the program for each group. We can then move to the table to unpack how the intervention might influence participant responses over time further by looking at how participant opinions change (increase/no change/decrease) depending on their response before the program.
 
 # Acknowledgements
 

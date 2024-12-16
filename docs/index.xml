@@ -15459,5 +15459,1550 @@ loaded via a namespace (and not attached):
   <guid>https://www.the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer.html</guid>
   <pubDate>Thu, 06 Jun 2024 16:00:00 GMT</pubDate>
 </item>
+<item>
+  <title>Visualisations for (bidirectional) Likert scale data</title>
+  <dc:creator>Zac Dempsey and Dr Matt Cooper</dc:creator>
+  <link>https://www.the-kids-biostats.github.io/posts/2024-12-16_bidirectional_likert_visualisation/bidirectional_likert_visualisations.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<p>Bidirectional Likert-style questions are widely employed as a survey instrument within research. Unlike ordinal Likert-style responses, which are often used to broadly obtain quantities (e.g., “glasses of water per day”) or ratings (e.g., “rate the food between 1 and 10”), bidirectional Likert-style responses are useful for assessing attitudes, perceptions or satisfaction with a particular policy or program.</p>
+<p>In this post, similar to our <a href="https://the-kids-biostats.github.io/posts/2024-10-14_likert_visualisation/likert_visualisations.html">previous blog post</a> on ordinal Likert-style data, we are interested in “pre/post” data (collected before and after some intervention) and we are aiming to find a concise way to visualise and summarise the responses at each time point - as well as the <em>change</em> in responses between time points.</p>
+</section>
+<section id="bidirectional-likert-data" class="level1 page-columns page-full">
+<h1>Bidirectional Likert data</h1>
+<section id="definitions" class="level2">
+<h2 class="anchored" data-anchor-id="definitions">Definitions</h2>
+<p><strong>Bidirectional (bipolar) Likert data</strong> involves category responses with a natural ordering of responses from two opposing directions—typically both negative and positive responses—around a central (or neutral) point.</p>
+<p>An example. <em>“The amount of reading I do influences how much reading my child does?”</em> with response options:</p>
+<ul>
+<li>Strongly disagree</li>
+<li>Disagree</li>
+<li>Neither agree nor disagree (the neutral midpoint)</li>
+<li>Agree</li>
+<li>Strongly agree</li>
+</ul>
+</section>
+<section id="demo-data" class="level2">
+<h2 class="anchored" data-anchor-id="demo-data">Demo data</h2>
+<p>Let’s start with simulating a single survey question, before (<code>pre</code>) and after (<code>post</code>) an intervention, for participants in either an intervention or control program.</p>
+<p>We would like to visualise and summarise the responses both before and after the program (separately), as well as the <em>change</em> in responses between time periods (increase/no change/decrease), across both the intervention and control programs.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(thekidsbiostats) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># install with remotes::install_github("The-Kids-Biostats/thekidsbiostats")</span></span>
+<span id="cb1-2"></span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">set.seed</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">123</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># For reproducibility</span></span>
+<span id="cb1-4"></span>
+<span id="cb1-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Parameters</span></span>
+<span id="cb1-6">q   <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>          <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Number of bidirectional Likert questions to simulate</span></span>
+<span id="cb1-7">n_i <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">200</span>        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Number of intervention respondents</span></span>
+<span id="cb1-8">n_c <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">150</span>        <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Number of control respondents</span></span>
+<span id="cb1-9">n   <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> n_i <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> n_c  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Total number of participants</span></span>
+<span id="cb1-10"></span>
+<span id="cb1-11"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Define Likert scale labels</span></span>
+<span id="cb1-12">likert_labels <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Strongly disagree"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Disagree"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Neutral"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Agree"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Strongly agree"</span>)</span>
+<span id="cb1-13"></span>
+<span id="cb1-14"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Simulate pre-survey responses (randomly sampled from the Likert scale 1-5)</span></span>
+<span id="cb1-15">pre <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">matrix</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sample</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, n <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> q, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">replace =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>), </span>
+<span id="cb1-16">              <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">nrow =</span> n, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ncol =</span> q)</span>
+<span id="cb1-17"></span>
+<span id="cb1-18"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Function to simulate post-survey responses with both improvement and decline possibilities</span></span>
+<span id="cb1-19">simulate_post <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span>(pre_response) {</span>
+<span id="cb1-20">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Define possible changes with corresponding probabilities</span></span>
+<span id="cb1-21">  possible_changes <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>)</span>
+<span id="cb1-22">  probabilities <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.05</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.1</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.15</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.4</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.15</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.1</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.05</span>)  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># "No change" is most likely</span></span>
+<span id="cb1-23">  </span>
+<span id="cb1-24">  post_response <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> pre_response <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sample</span>(possible_changes, </span>
+<span id="cb1-25">                                         <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, </span>
+<span id="cb1-26">                                         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">prob =</span> probabilities)</span>
+<span id="cb1-27">  </span>
+<span id="cb1-28">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Ensure post_response remains within the bounds of the Likert scale (1 to 5)</span></span>
+<span id="cb1-29">  post_response <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">max</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">min</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, post_response))</span>
+<span id="cb1-30">  </span>
+<span id="cb1-31">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">return</span>(post_response)</span>
+<span id="cb1-32">}</span>
+<span id="cb1-33"></span>
+<span id="cb1-34"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Simulate post-survey responses</span></span>
+<span id="cb1-35">post <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">apply</span>(pre, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span>(x) <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sapply</span>(x, simulate_post))</span>
+<span id="cb1-36"></span>
+<span id="cb1-37"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Convert numeric values to factors with labels</span></span>
+<span id="cb1-38">pre  <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">apply</span>(pre,  <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, factor, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">levels =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> likert_labels)</span>
+<span id="cb1-39">post <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">apply</span>(post, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, factor, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">levels =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> likert_labels)</span>
+<span id="cb1-40"></span>
+<span id="cb1-41"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Combine the pre and post data</span></span>
+<span id="cb1-42">dat_likert <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">data.frame</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">id =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span>n,</span>
+<span id="cb1-43">                         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">mode =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rep</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Intervention"</span>, n_i), <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rep</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Control"</span>, n_c)),</span>
+<span id="cb1-44">                         pre,</span>
+<span id="cb1-45">                         post)</span>
+<span id="cb1-46"></span>
+<span id="cb1-47"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Rename the columns to reflect pre and post data</span></span>
+<span id="cb1-48"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">colnames</span>(dat_likert)[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> q)] <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste0</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Q"</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span>q, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"_pre"</span>)</span>
+<span id="cb1-49"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">colnames</span>(dat_likert)[(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> q)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> q)] <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste0</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Q"</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span>q, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"_post"</span>)</span>
+<span id="cb1-50"></span>
+<span id="cb1-51">dat_likert <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> dat_likert <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb1-52">  as_tibble <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb1-53">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pivot_longer</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">cols =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">contains</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Q1"</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">names_to =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"time"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">names_prefix =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Q1_"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">values_to =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Q1"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb1-54">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">time =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">factor</span>(time, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"pre"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"post"</span>)),</span>
+<span id="cb1-55">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Q1 =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">factor</span>(Q1, likert_labels))</span></code></pre></div>
+</details>
+</div>
+<p>Visualising the first few rows of data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">head</span>(dat_likert) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb2-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">thekids_table</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">colour =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Saffron"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">padding =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-59780784{table-layout:auto;}.cl-5974b14c{font-family:'Barlow';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-5974b160{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-5976245a{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:3pt;padding-top:3pt;padding-left:3pt;padding-right:3pt;line-height: 1.5;background-color:transparent;}.cl-59762464{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:3pt;padding-top:3pt;padding-left:3pt;padding-right:3pt;line-height: 1.5;background-color:transparent;}.cl-5976329c{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5976329d{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5976329e{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-597632a6{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-597632a7{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-597632a8{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-597632a9{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-597632b0{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-597632b1{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-597632b2{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-597632b3{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-597632ba{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-597632bb{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-597632bc{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-597632c4{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-597632c5{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-597632c6{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-597632c7{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-597632ce{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-597632cf{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-597632d0{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-597632d1{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-597632d8{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-597632e2{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-59780784"><thead><tr style="overflow-wrap:break-word;"><th class="cl-5976329c"><p class="cl-5976245a"><span class="cl-5974b14c">id</span></p></th><th class="cl-5976329d"><p class="cl-59762464"><span class="cl-5974b14c">mode</span></p></th><th class="cl-5976329e"><p class="cl-59762464"><span class="cl-5974b14c">time</span></p></th><th class="cl-597632a6"><p class="cl-59762464"><span class="cl-5974b14c">Q1</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-597632a7"><p class="cl-5976245a"><span class="cl-5974b160">1</span></p></td><td class="cl-597632a8"><p class="cl-59762464"><span class="cl-5974b160">Intervention</span></p></td><td class="cl-597632a9"><p class="cl-59762464"><span class="cl-5974b160">pre</span></p></td><td class="cl-597632b0"><p class="cl-59762464"><span class="cl-5974b160">Neutral</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-597632b1"><p class="cl-5976245a"><span class="cl-5974b160">1</span></p></td><td class="cl-597632b2"><p class="cl-59762464"><span class="cl-5974b160">Intervention</span></p></td><td class="cl-597632b3"><p class="cl-59762464"><span class="cl-5974b160">post</span></p></td><td class="cl-597632ba"><p class="cl-59762464"><span class="cl-5974b160">Strongly disagree</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-597632a7"><p class="cl-5976245a"><span class="cl-5974b160">2</span></p></td><td class="cl-597632a8"><p class="cl-59762464"><span class="cl-5974b160">Intervention</span></p></td><td class="cl-597632a9"><p class="cl-59762464"><span class="cl-5974b160">pre</span></p></td><td class="cl-597632b0"><p class="cl-59762464"><span class="cl-5974b160">Neutral</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-597632bb"><p class="cl-5976245a"><span class="cl-5974b160">2</span></p></td><td class="cl-597632bc"><p class="cl-59762464"><span class="cl-5974b160">Intervention</span></p></td><td class="cl-597632c4"><p class="cl-59762464"><span class="cl-5974b160">post</span></p></td><td class="cl-597632c5"><p class="cl-59762464"><span class="cl-5974b160">Agree</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-597632c6"><p class="cl-5976245a"><span class="cl-5974b160">3</span></p></td><td class="cl-597632c7"><p class="cl-59762464"><span class="cl-5974b160">Intervention</span></p></td><td class="cl-597632ce"><p class="cl-59762464"><span class="cl-5974b160">pre</span></p></td><td class="cl-597632cf"><p class="cl-59762464"><span class="cl-5974b160">Disagree</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-597632d0"><p class="cl-5976245a"><span class="cl-5974b160">3</span></p></td><td class="cl-597632d1"><p class="cl-59762464"><span class="cl-5974b160">Intervention</span></p></td><td class="cl-597632d8"><p class="cl-59762464"><span class="cl-5974b160">post</span></p></td><td class="cl-597632e2"><p class="cl-59762464"><span class="cl-5974b160">Strongly disagree</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+</section>
+<section id="the-visualisation" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="the-visualisation">The visualisation</h2>
+<p>We have created a function to visualise these data at each period, separately for the intervention and controls groups. As we presented in another <a href="https://the-kids-biostats.github.io/posts/2024-11-19_code_v_functions/code_v_functions.html">previous blog</a>), functions can be a useful way to compartmentalise and generalise code, and to save on “copy and pasting” (potentially lengthy) chunks that are otherwise largely very similar.</p>
+<p>This function is <code>bidirect_plot()</code>.</p>
+<p>Some of the arguments for this function are:</p>
+<ul>
+<li><code>grouping_var</code> – Variable that defines how to group data, within a single plot, on the y-axis.</li>
+<li><code>facet_var</code> – Variable that defines separate facets (panels) in the plot.</li>
+<li><code>outcome_var</code> – Variable that defines the question of interest.</li>
+<li><code>label_threshold</code> – Minimum proportion threshold (as a percentage) for displaying labels on the bars.</li>
+<li><code>fill_colour</code> – Vector of colours used for the segments of the stacked bars.</li>
+<li><code>hline</code> – A logical flag (TRUE/FALSE) to determine whether a horizontal dashed line should be added to the plot.</li>
+<li><code>hline_threshold</code> – If <code>hline</code> is TRUE, the x-axis position of the horizontal line.</li>
+<li><code>...</code> – Additional arguments passed to <code>thekidsbiostats::theme_institute()</code>, allowing customization of the plot theme.</li>
+</ul>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p><strong>Note:</strong></p>
+<p>We called this <code>hline</code> even though the line is vertical. That is because within the code, we use <code>coord_flip()</code> to turn the originally vertical plot into a horizontal plot.</p>
+</div></div><p>All other arguments merely control other formatting options such as text size, label rounding, legend positioning, etc.</p>
+<p>Click below to expand and review the code within this function.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">bidirect_plot <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span>(data,</span>
+<span id="cb3-2">                          grouping_var,</span>
+<span id="cb3-3">                          facet_var,</span>
+<span id="cb3-4">                          outcome_var,</span>
+<span id="cb3-5">                          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">base_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">14</span>,</span>
+<span id="cb3-6">                          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend_size =</span> base_size <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>,</span>
+<span id="cb3-7">                          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis_y_size =</span> base_size,</span>
+<span id="cb3-8">                          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>,</span>
+<span id="cb3-9">                          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label_threshold =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>,</span>
+<span id="cb3-10">                          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label_round =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,</span>
+<span id="cb3-11">                          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill_colour =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"#f56b00"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"#fab580"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"#eeefef"</span>,<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"#a5ccef"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"#4a99de"</span>),</span>
+<span id="cb3-12">                          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis_y_label_lineheight =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.6</span>,</span>
+<span id="cb3-13">                          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"bottom"</span>,</span>
+<span id="cb3-14">                          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.title.position =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"left"</span>,</span>
+<span id="cb3-15">                          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hline =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>,</span>
+<span id="cb3-16">                          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hline_threshold =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">50</span>,</span>
+<span id="cb3-17">                          ...){</span>
+<span id="cb3-18"></span>
+<span id="cb3-19">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Reverse the `grouping_var` factors for consistent colouring</span></span>
+<span id="cb3-20">  data <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> data <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb3-21">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!!</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sym</span>(grouping_var) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">fct_rev</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!!</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sym</span>(grouping_var)))</span>
+<span id="cb3-22">  </span>
+<span id="cb3-23">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Calculate the counts and proportions for each group</span></span>
+<span id="cb3-24">  plot_dat <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> data <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb3-25">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">count</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!!</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sym</span>(outcome_var), </span>
+<span id="cb3-26">          <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!!</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sym</span>(facet_var), </span>
+<span id="cb3-27">          <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!!</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sym</span>(grouping_var)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb3-28">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">group_by</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!!</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sym</span>(facet_var), </span>
+<span id="cb3-29">             <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!!</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sym</span>(grouping_var)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb3-30">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">prop =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>n<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(n),</span>
+<span id="cb3-31">           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">pos =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cumsum</span>(prop) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span>prop) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb3-32">    ungroup <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb3-33">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!!</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sym</span>(outcome_var) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">fct_rev</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!!</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sym</span>(outcome_var)))</span>
+<span id="cb3-34">  </span>
+<span id="cb3-35">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Create the plot!</span></span>
+<span id="cb3-36">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">suppressMessages</span>({</span>
+<span id="cb3-37">    plot <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> plot_dat <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb3-38">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!!</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sym</span>(grouping_var), </span>
+<span id="cb3-39">                 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> prop, </span>
+<span id="cb3-40">                 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!!</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sym</span>(outcome_var))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb3-41">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_bar</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">stat =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"identity"</span>, </span>
+<span id="cb3-42">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">position =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"stack"</span>,</span>
+<span id="cb3-43">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">width =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.7</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb3-44">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_text</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ifelse</span>(prop <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;=</span> label_threshold, </span>
+<span id="cb3-45">                                   <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste0</span>(n, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">" ("</span>, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">round_vec</span>(prop, label_round), <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"%)"</span>), <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>), </span>
+<span id="cb3-46">                    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> pos),</span>
+<span id="cb3-47">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> label_size,</span>
+<span id="cb3-48">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Barlow"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb3-49">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">facet_wrap</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.formula</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"~"</span>, facet_var)), </span>
+<span id="cb3-50">                 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ncol =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb3-51">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">coord_flip</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb3-52">      thekidsbiostats<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_institute</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">base_size =</span> base_size, </span>
+<span id="cb3-53">                                       ...) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb3-54">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_fill_manual</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">values =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rev</span>(fill_colour)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb3-55">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">expand =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># y axis in-line with plot labels (no spacing)</span></span>
+<span id="cb3-56">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_x_discrete</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">expand =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">expansion</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">add =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Spacing between bar and plot area (bottom, top) </span></span>
+<span id="cb3-57">      </span>
+<span id="cb3-58">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">guides</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">guide_legend</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Response"</span>,</span>
+<span id="cb3-59">                                 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">reverse =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb3-60">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># x axis formatting</span></span>
+<span id="cb3-61">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.title.x =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_blank</span>(),</span>
+<span id="cb3-62">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.ticks.x =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_blank</span>(),</span>
+<span id="cb3-63">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.text.x =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_blank</span>(),</span>
+<span id="cb3-64">            </span>
+<span id="cb3-65">            <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># y axis formatting</span></span>
+<span id="cb3-66">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.title.y =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_blank</span>(),</span>
+<span id="cb3-67">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.text.y =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> axis_y_size, </span>
+<span id="cb3-68">                                       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">lineheight =</span> axis_y_label_lineheight),</span>
+<span id="cb3-69">            </span>
+<span id="cb3-70">            <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Legend formatting</span></span>
+<span id="cb3-71">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.position =</span> legend.position,</span>
+<span id="cb3-72">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.title.position =</span> legend.title.position,</span>
+<span id="cb3-73">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.text =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> legend_size),</span>
+<span id="cb3-74">            </span>
+<span id="cb3-75">            <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Miscellaneous formatting</span></span>
+<span id="cb3-76">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">panel.grid.major.x =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_blank</span>(),</span>
+<span id="cb3-77">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">plot.margin =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">margin</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">t =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">r =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">15</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">b =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">l =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">15</span>))</span>
+<span id="cb3-78">    })</span>
+<span id="cb3-79">  </span>
+<span id="cb3-80">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> (hline <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>){</span>
+<span id="cb3-81">    plot <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> plot <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb3-82">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_hline</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">yintercept =</span> hline_threshold, </span>
+<span id="cb3-83">                 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">linetype =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"dashed"</span>, </span>
+<span id="cb3-84">                 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">colour =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"red"</span>)</span>
+<span id="cb3-85">  } <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span> (hline <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">FALSE</span>){</span>
+<span id="cb3-86">    plot <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> plot</span>
+<span id="cb3-87">  }</span>
+<span id="cb3-88">  </span>
+<span id="cb3-89">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">return</span>(plot)</span>
+<span id="cb3-90">  }</span></code></pre></div>
+</details>
+</div>
+<p>And then, simply calling this function and passing data into it returns our plot:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">bidirect_plot</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> dat_likert,</span>
+<span id="cb4-2">              <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">outcome_var =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Q1"</span>,</span>
+<span id="cb4-3">              <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">grouping_var =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"time"</span>,</span>
+<span id="cb4-4">              <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">facet_var =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"mode"</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://www.the-kids-biostats.github.io/posts/2024-12-16_bidirectional_likert_visualisation/bidirectional_likert_visualisations_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="change-between-time-periods" class="level2">
+<h2 class="anchored" data-anchor-id="change-between-time-periods">Change between time periods</h2>
+<p>Let’s define the change in agreement between time periods as follows:</p>
+<ul>
+<li><strong>Increase</strong> – The individual agrees more <em>after</em> the program compared to <em>before</em> the program (e.g., a response moving from “disagree” to “strongly agree”).</li>
+<li><strong>No change</strong> – No change in agreement <em>before</em> and <em>after</em> the program (e.g., responding “neutral” at both time periods).</li>
+<li><strong>Decrease</strong> – The individual agrees less <em>after</em> the program compared to <em>before</em> the program (e.g., a response moving from “strongly agree” to “agree”).</li>
+</ul>
+<p>To implement this, we will construct another function, <code>bidirect_change</code>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">bidirect_change <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span>(data, </span>
+<span id="cb5-2">                            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">id_var =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"id"</span>,</span>
+<span id="cb5-3">                            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">mode_var =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"mode"</span>,</span>
+<span id="cb5-4">                            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">time_var =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"time"</span>, </span>
+<span id="cb5-5">                            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">pre_label =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"pre"</span>,</span>
+<span id="cb5-6">                            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">post_label =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"post"</span>,</span>
+<span id="cb5-7">                            outcome_var){</span>
+<span id="cb5-8">  </span>
+<span id="cb5-9">  data <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb5-10">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pivot_wider</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">id_cols =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!!</span>rlang<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sym</span>(id_var), </span>
+<span id="cb5-11">                            <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!!</span>rlang<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sym</span>(mode_var)),</span>
+<span id="cb5-12">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">names_from =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!!</span>rlang<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sym</span>(time_var),</span>
+<span id="cb5-13">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">values_from =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!!</span>rlang<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sym</span>(outcome_var)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb5-14">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Change =</span> thekidsbiostats<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">fct_case_when</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!!</span>rlang<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sym</span>(pre_label)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span>  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!!</span>rlang<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sym</span>(post_label)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Increase"</span>,</span>
+<span id="cb5-15">                                                   <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!!</span>rlang<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sym</span>(pre_label)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!!</span>rlang<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sym</span>(post_label)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"No change"</span>,</span>
+<span id="cb5-16">                                                   <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!!</span>rlang<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sym</span>(pre_label)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span>  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!!</span>rlang<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sym</span>(post_label)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Decrease"</span>))</span>
+<span id="cb5-17">  }</span></code></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">dat_likert_change <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">bidirect_change</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> dat_likert, </span>
+<span id="cb6-2">                                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">outcome_var =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Q1"</span>)</span></code></pre></div>
+</div>
+<p>Now, summarising the change in responses for the “intervention” and “control” groups:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">dat_likert_change <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb7-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(mode, Change) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb7-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tbl_summary</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">by =</span> mode) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb7-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">thekids_table</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">colour =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Saffron"</span>) </span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-59fb446e{table-layout:auto;}.cl-59f85c18{font-family:'Barlow';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-59f85c22{font-family:'Barlow';font-size:6.6pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;position: relative;bottom:3.3pt;}.cl-59f85c2c{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-59f85c2d{font-family:'Barlow';font-size:6pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;position: relative;bottom:3pt;}.cl-59f85c2e{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-59f98d54{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2pt;padding-top:2pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-59f98d5e{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2pt;padding-top:2pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-59f98d5f{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-59f98d68{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-59f98d69{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:15pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-59f98d6a{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-59f99948{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-59f99952{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-59f99953{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-59f99954{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-59f99955{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-59f9995c{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-59f9995d{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-59f9995e{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-59f9995f{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-59f99966{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-59f99967{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-59f99968{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-59f99970{background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-59f99971{background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-59f99972{background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-59f9997a{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-59f9997b{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-59f9997c{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-59fb446e"><thead><tr style="overflow-wrap:break-word;"><th class="cl-59f99948"><p class="cl-59f98d54"><span class="cl-59f85c18">Characteristic</span></p></th><th class="cl-59f99952"><p class="cl-59f98d5e"><span class="cl-59f85c18">Control</span><span class="cl-59f85c18">  </span><br><span class="cl-59f85c18">N = 150</span><span class="cl-59f85c22">1</span></p></th><th class="cl-59f99953"><p class="cl-59f98d5e"><span class="cl-59f85c18">Intervention</span><span class="cl-59f85c18">  </span><br><span class="cl-59f85c18">N = 200</span><span class="cl-59f85c22">1</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-59f99954"><p class="cl-59f98d5f"><span class="cl-59f85c2c">Change</span></p></td><td class="cl-59f99955"><p class="cl-59f98d68"><span class="cl-59f85c2c"></span></p></td><td class="cl-59f9995c"><p class="cl-59f98d68"><span class="cl-59f85c2c"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-59f9995d"><p class="cl-59f98d69"><span class="cl-59f85c2c">Increase</span></p></td><td class="cl-59f9995e"><p class="cl-59f98d68"><span class="cl-59f85c2c">35 (23%)</span></p></td><td class="cl-59f9995f"><p class="cl-59f98d68"><span class="cl-59f85c2c">47 (24%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-59f99966"><p class="cl-59f98d69"><span class="cl-59f85c2c">No change</span></p></td><td class="cl-59f99967"><p class="cl-59f98d68"><span class="cl-59f85c2c">78 (52%)</span></p></td><td class="cl-59f99968"><p class="cl-59f98d68"><span class="cl-59f85c2c">103 (52%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-59f99970"><p class="cl-59f98d69"><span class="cl-59f85c2c">Decrease</span></p></td><td class="cl-59f99971"><p class="cl-59f98d68"><span class="cl-59f85c2c">37 (25%)</span></p></td><td class="cl-59f99972"><p class="cl-59f98d68"><span class="cl-59f85c2c">50 (25%)</span></p></td></tr></tbody><tfoot><tr style="overflow-wrap:break-word;"><td colspan="3" class="cl-59f9997a"><p class="cl-59f98d6a"><span class="cl-59f85c2d">1</span><span class="cl-59f85c2e">n (%)</span></p></td></tr></tfoot></table></div>
+</div>
+</div>
+<p>We can further contextualise these results by stratifying the change in responses by response selected in the <code>pre</code> time period. This can be really useful to see which <code>pre</code> groups are the biggest movers.</p>
+<p>To stick with the “function-writing” theme of this blog, let’s define another stratified summary table function, <code>bidirect_table</code>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1">bidirect_table <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span>(data,</span>
+<span id="cb8-2">                           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> labels,</span>
+<span id="cb8-3">                           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">strata_var =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"mode"</span>,</span>
+<span id="cb8-4">                           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">by_var =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"pre"</span>,</span>
+<span id="cb8-5">                           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">overall_last =</span> F,</span>
+<span id="cb8-6">                           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">overall_label =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Overall"</span>,</span>
+<span id="cb8-7">                           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">spanning_header_label =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste0</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Pre response"</span>),</span>
+<span id="cb8-8">                           ...){</span>
+<span id="cb8-9">  </span>
+<span id="cb8-10">    tab <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> data <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb8-11">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tbl_strata</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">strata =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!!</span>rlang<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sym</span>(strata_var),</span>
+<span id="cb8-12">                 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.tbl_fun =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span>.x <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb8-13">                   <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tbl_summary</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">by =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!!</span>rlang<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sym</span>(by_var)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb8-14">                   <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">modify_header</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">all_stat_cols</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"**{level}**"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb8-15">                   <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">add_overall</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">last =</span> overall_last,</span>
+<span id="cb8-16">                               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">col_label =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste0</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"**"</span>, overall_label, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"**"</span>)),</span>
+<span id="cb8-17">                 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.header=</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"{strata} </span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">\n</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">N={n}"</span>,</span>
+<span id="cb8-18">                 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.combine_with =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"tbl_stack"</span>)</span>
+<span id="cb8-19">    </span>
+<span id="cb8-20">    tab <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> tab <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span>  </span>
+<span id="cb8-21">      thekidsbiostats<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">thekids_table</span>(...)</span>
+<span id="cb8-22"></span>
+<span id="cb8-23">    overall_ncol <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">length</span>(tab<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>col_keys)</span>
+<span id="cb8-24">    stat_ncol <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">length</span>(tab<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>col_keys[<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">str_detect</span>(tab<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>col_keys, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">pattern =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"stat_"</span>)]) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span></span>
+<span id="cb8-25">      </span>
+<span id="cb8-26">    tab <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> tab <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb8-27">      flextable<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">add_header_row</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">values =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>, spanning_header_label), </span>
+<span id="cb8-28">                                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">colwidths =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(overall_ncol <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> stat_ncol, </span>
+<span id="cb8-29">                                              stat_ncol)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb8-30">      flextable<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">align</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">align =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"left"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">part =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"header"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">i =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Set alignment to left</span></span>
+<span id="cb8-31">    </span>
+<span id="cb8-32">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">return</span>(tab)</span>
+<span id="cb8-33">  }</span></code></pre></div>
+</details>
+</div>
+<p>This returns:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">dat_likert_change <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb9-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(id, post)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb9-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">bidirect_table</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> .,</span>
+<span id="cb9-4">                 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">by_var =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"pre"</span>,</span>
+<span id="cb9-5">                 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">colour =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Saffron"</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-5aad4d08{table-layout:auto;}.cl-5aaa0df0{font-family:'Barlow';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-5aaa0dfa{font-family:'Barlow';font-size:6.6pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;position: relative;bottom:3.3pt;}.cl-5aaa0dfb{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-5aaa0e04{font-family:'Barlow';font-size:6pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;position: relative;bottom:3pt;}.cl-5aaa0e05{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-5aab4b70{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2pt;padding-top:2pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-5aab4b7a{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2pt;padding-top:2pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-5aab4b7b{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-5aab4b84{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-5aab4b85{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:15pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-5aab4b8e{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-5aab59c6{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab59c7{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab59c8{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab59d0{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab59d1{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab59d2{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab59da{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab59db{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab59dc{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab59dd{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab59e4{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab59e5{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab59e6{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab59ee{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab59ef{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab59f0{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab59f8{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab59f9{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab59fa{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a02{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a03{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a04{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a05{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a0c{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a0d{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a0e{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a0f{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a16{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a17{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a18{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a19{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a20{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a21{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a22{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a2a{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a2b{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a2c{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a34{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a35{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a3e{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a3f{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a40{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a41{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a48{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a49{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a4a{background-color:rgba(248, 218, 154, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a52{background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a53{background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a54{background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a5c{background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a5d{background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a5e{background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a5f{background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a66{background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a67{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a68{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a70{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a71{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a7a{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a7b{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a7c{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-5aab5a7d{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-5aad4d08"><thead><tr style="overflow-wrap:break-word;"><th colspan="3" class="cl-5aab59c6"><p class="cl-5aab4b70"><span class="cl-5aaa0df0"></span></p></th><th colspan="5" class="cl-5aab59d0"><p class="cl-5aab4b70"><span class="cl-5aaa0df0">Pre response</span></p></th></tr><tr style="overflow-wrap:break-word;"><th class="cl-5aab59c6"><p class="cl-5aab4b70"><span class="cl-5aaa0df0">Group</span></p></th><th class="cl-5aab59c7"><p class="cl-5aab4b70"><span class="cl-5aaa0df0">Characteristic</span></p></th><th class="cl-5aab59dc"><p class="cl-5aab4b7a"><span class="cl-5aaa0df0">Overall</span><span class="cl-5aaa0dfa">1</span></p></th><th class="cl-5aab59dd"><p class="cl-5aab4b7a"><span class="cl-5aaa0df0">Strongly disagree</span><span class="cl-5aaa0dfa">1</span></p></th><th class="cl-5aab59e4"><p class="cl-5aab4b7a"><span class="cl-5aaa0df0">Disagree</span><span class="cl-5aaa0dfa">1</span></p></th><th class="cl-5aab59e5"><p class="cl-5aab4b7a"><span class="cl-5aaa0df0">Neutral</span><span class="cl-5aaa0dfa">1</span></p></th><th class="cl-5aab59e6"><p class="cl-5aab4b7a"><span class="cl-5aaa0df0">Agree</span><span class="cl-5aaa0dfa">1</span></p></th><th class="cl-5aab59ee"><p class="cl-5aab4b7a"><span class="cl-5aaa0df0">Strongly agree</span><span class="cl-5aaa0dfa">1</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-5aab59ef"><p class="cl-5aab4b7b"><span class="cl-5aaa0dfb">Control </span><br><span class="cl-5aaa0dfb">N=150</span></p></td><td class="cl-5aab59f0"><p class="cl-5aab4b7b"><span class="cl-5aaa0dfb">Change</span></p></td><td class="cl-5aab59f8"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb"></span></p></td><td class="cl-5aab59f9"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb"></span></p></td><td class="cl-5aab59fa"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb"></span></p></td><td class="cl-5aab5a02"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb"></span></p></td><td class="cl-5aab5a03"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb"></span></p></td><td class="cl-5aab5a04"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-5aab5a05"><p class="cl-5aab4b7b"><span class="cl-5aaa0dfb"></span></p></td><td class="cl-5aab5a0c"><p class="cl-5aab4b85"><span class="cl-5aaa0dfb">Increase</span></p></td><td class="cl-5aab5a0d"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">35 (23%)</span></p></td><td class="cl-5aab5a0e"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">6 (21%)</span></p></td><td class="cl-5aab5a0f"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">13 (36%)</span></p></td><td class="cl-5aab5a16"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">9 (32%)</span></p></td><td class="cl-5aab5a17"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">7 (27%)</span></p></td><td class="cl-5aab5a18"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">0 (0%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-5aab5a19"><p class="cl-5aab4b7b"><span class="cl-5aaa0dfb"></span></p></td><td class="cl-5aab5a20"><p class="cl-5aab4b85"><span class="cl-5aaa0dfb">No change</span></p></td><td class="cl-5aab5a21"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">78 (52%)</span></p></td><td class="cl-5aab5a22"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">22 (79%)</span></p></td><td class="cl-5aab5a2a"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">12 (33%)</span></p></td><td class="cl-5aab5a2b"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">13 (46%)</span></p></td><td class="cl-5aab5a2c"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">9 (35%)</span></p></td><td class="cl-5aab5a34"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">22 (69%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-5aab5a05"><p class="cl-5aab4b7b"><span class="cl-5aaa0dfb"></span></p></td><td class="cl-5aab5a0c"><p class="cl-5aab4b85"><span class="cl-5aaa0dfb">Decrease</span></p></td><td class="cl-5aab5a0d"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">37 (25%)</span></p></td><td class="cl-5aab5a0e"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">0 (0%)</span></p></td><td class="cl-5aab5a0f"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">11 (31%)</span></p></td><td class="cl-5aab5a16"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">6 (21%)</span></p></td><td class="cl-5aab5a17"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">10 (38%)</span></p></td><td class="cl-5aab5a18"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">10 (31%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-5aab5a35"><p class="cl-5aab4b7b"><span class="cl-5aaa0dfb">Intervention </span><br><span class="cl-5aaa0dfb">N=200</span></p></td><td class="cl-5aab5a3e"><p class="cl-5aab4b7b"><span class="cl-5aaa0dfb">Change</span></p></td><td class="cl-5aab5a3f"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb"></span></p></td><td class="cl-5aab5a40"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb"></span></p></td><td class="cl-5aab5a41"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb"></span></p></td><td class="cl-5aab5a48"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb"></span></p></td><td class="cl-5aab5a49"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb"></span></p></td><td class="cl-5aab5a4a"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-5aab5a05"><p class="cl-5aab4b7b"><span class="cl-5aaa0dfb"></span></p></td><td class="cl-5aab5a0c"><p class="cl-5aab4b85"><span class="cl-5aaa0dfb">Increase</span></p></td><td class="cl-5aab5a0d"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">47 (24%)</span></p></td><td class="cl-5aab5a0e"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">13 (28%)</span></p></td><td class="cl-5aab5a0f"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">11 (28%)</span></p></td><td class="cl-5aab5a16"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">14 (38%)</span></p></td><td class="cl-5aab5a17"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">9 (26%)</span></p></td><td class="cl-5aab5a18"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">0 (0%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-5aab5a19"><p class="cl-5aab4b7b"><span class="cl-5aaa0dfb"></span></p></td><td class="cl-5aab5a20"><p class="cl-5aab4b85"><span class="cl-5aaa0dfb">No change</span></p></td><td class="cl-5aab5a21"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">103 (52%)</span></p></td><td class="cl-5aab5a22"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">33 (72%)</span></p></td><td class="cl-5aab5a2a"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">19 (48%)</span></p></td><td class="cl-5aab5a2b"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">8 (22%)</span></p></td><td class="cl-5aab5a2c"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">14 (41%)</span></p></td><td class="cl-5aab5a34"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">29 (67%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-5aab5a52"><p class="cl-5aab4b7b"><span class="cl-5aaa0dfb"></span></p></td><td class="cl-5aab5a53"><p class="cl-5aab4b85"><span class="cl-5aaa0dfb">Decrease</span></p></td><td class="cl-5aab5a54"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">50 (25%)</span></p></td><td class="cl-5aab5a5c"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">0 (0%)</span></p></td><td class="cl-5aab5a5d"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">10 (25%)</span></p></td><td class="cl-5aab5a5e"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">15 (41%)</span></p></td><td class="cl-5aab5a5f"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">11 (32%)</span></p></td><td class="cl-5aab5a66"><p class="cl-5aab4b84"><span class="cl-5aaa0dfb">14 (33%)</span></p></td></tr></tbody><tfoot><tr style="overflow-wrap:break-word;"><td colspan="8" class="cl-5aab5a67"><p class="cl-5aab4b8e"><span class="cl-5aaa0e04">1</span><span class="cl-5aaa0e05">n (%)</span></p></td></tr></tfoot></table></div>
+</div>
+</div>
+</section>
+</section>
+<section id="closing-comments" class="level1">
+<h1>Closing comments</h1>
+<p>The above figure and tables are certainly not perfect. Each of the functions have quite a few arguments, which adds flexibility, but they may not suit all scenarios (and there is scope for adding even more arguments).</p>
+<p>The figure succinctly shows all the raw data (counts and percentages), clearly delineates the <code>pre</code> and <code>post</code> data, and gives a broad view of the overall responses before and after the program for each group. We can then move to the table to unpack how the intervention might influence participant responses over time further by looking at how participant opinions change (increase/no change/decrease) depending on their response before the program.</p>
+</section>
+<section id="acknowledgements" class="level1">
+<h1>Acknowledgements</h1>
+<p>Thanks to Wesley Billingham and Dr Elizabeth McKinnon for providing feedback on and reviewing this post.</p>
+<p>You can look forward to seeing posts from these other team members here in the coming weeks and months.</p>
+<section id="reproducibility-information" class="level2">
+<h2 class="anchored" data-anchor-id="reproducibility-information">Reproducibility Information</h2>
+<p>To access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:</p>
+<p><a href="https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/" class="uri">https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/</a></p>
+<p>The session information can also be seen below.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sessionInfo</span>()</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.3.3 (2024-02-29)
+Platform: aarch64-apple-darwin20 (64-bit)
+Running under: macOS Sonoma 14.4.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: Australia/Perth
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] thekidsbiostats_0.0.1 flextable_0.9.7       gtsummary_2.0.4      
+ [4] lubridate_1.9.3       forcats_1.0.0         stringr_1.5.1        
+ [7] dplyr_1.1.4           purrr_1.0.2           readr_2.1.5          
+[10] tidyr_1.3.1           tibble_3.2.1          ggplot2_3.5.1        
+[13] tidyverse_2.0.0       extrafont_0.19       
+
+loaded via a namespace (and not attached):
+ [1] gtable_0.3.6            xfun_0.49               htmlwidgets_1.6.4      
+ [4] tzdb_0.4.0              vctrs_0.6.5             tools_4.3.3            
+ [7] generics_0.1.3          fansi_1.0.6             pkgconfig_2.0.3        
+[10] data.table_1.16.2       uuid_1.2-1              lifecycle_1.0.4        
+[13] farver_2.1.2            compiler_4.3.3          biometrics_1.2.4       
+[16] textshaping_0.4.0       munsell_0.5.1           janitor_2.2.0          
+[19] snakecase_0.11.1        fontquiver_0.2.1        fontLiberation_0.1.0   
+[22] htmltools_0.5.8.1       yaml_2.3.10             Rttf2pt1_1.3.12        
+[25] pillar_1.9.0            extrafontdb_1.0         openssl_2.2.2          
+[28] fontBitstreamVera_0.1.1 tidyselect_1.2.1        zip_2.3.1              
+[31] digest_0.6.37           stringi_1.8.4           labeling_0.4.3         
+[34] labelled_2.13.0         fastmap_1.2.0           grid_4.3.3             
+[37] colorspace_2.1-1        cli_3.6.3               magrittr_2.0.3         
+[40] cards_0.4.0             utf8_1.2.4              broom_1.0.7            
+[43] withr_3.0.2             backports_1.5.0         gdtools_0.4.1          
+[46] scales_1.3.0            timechange_0.3.0        rmarkdown_2.29         
+[49] officer_0.6.7           igraph_2.1.1            askpass_1.2.1          
+[52] ragg_1.3.3              hms_1.1.3               kableExtra_1.4.0       
+[55] evaluate_1.0.1          knitr_1.49              haven_2.5.4            
+[58] viridisLite_0.4.2       rlang_1.1.4             Rcpp_1.0.13-1          
+[61] glue_1.8.0              xml2_1.3.6              svglite_2.1.3          
+[64] rstudioapi_0.17.1       jsonlite_1.8.9          R6_2.5.1               
+[67] systemfonts_1.1.0      </code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <category>R</category>
+  <category>Visualisations</category>
+  <category>Likert</category>
+  <category>ggplot</category>
+  <guid>https://www.the-kids-biostats.github.io/posts/2024-12-16_bidirectional_likert_visualisation/bidirectional_likert_visualisations.html</guid>
+  <pubDate>Invalid Date</pubDate>
+</item>
 </channel>
 </rss>
