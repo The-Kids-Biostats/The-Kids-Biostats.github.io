@@ -7,7 +7,7 @@ format:
     tabset: true
     toc: true
     toc-location: left
-date: "`r format(Sys.time(), '%d %B %Y')`"
+date: "2024-12-16"
 categories:
   - R
   - Visualisations
@@ -124,7 +124,7 @@ head(dat_likert) %>%
 
 ## The visualisation
 
-We have created a function to visualise these data at each period, separately for the intervention and controls groups. As we presented in another [previous blog](https://the-kids-biostats.github.io/posts/2024-11-19_code_v_functions/code_v_functions.html)), functions can be a useful way to compartmentalise and generalise code, and to save on "copy and pasting" (potentially lengthy) chunks that are otherwise largely very similar. 
+We have created a function to visualise these data at each period, separately for the intervention and controls groups. As we presented in another [previous blog](https://the-kids-biostats.github.io/posts/2024-11-19_code_v_functions/code_v_functions.html)), functions can be a useful way to compartmentalise and generalise code, and to save on "copy and pasting" (potentially lengthy) chunks that are otherwise largely very similar.
 
 This function is `bidirect_plot()`.
 
@@ -139,13 +139,13 @@ Some of the arguments for this function are:
 -   `hline_threshold` -- If `hline` is TRUE, the x-axis position of the horizontal line.
 -   `...` -- Additional arguments passed to `thekidsbiostats::theme_institute()`, allowing customization of the plot theme.
 
-::: {.column-margin}
+::: column-margin
 **Note:**
 
-We called this `hline` even though the line is vertical. That is because within the code, we use `coord_flip()` to turn the originally vertical plot into a horizontal plot. 
+We called this `hline` even though the line is vertical. That is because within the code, we use `coord_flip()` to turn the originally vertical plot into a horizontal plot.
 :::
 
-All other arguments merely control other formatting options such as text size, label rounding, legend positioning, etc. 
+All other arguments merely control other formatting options such as text size, label rounding, legend positioning, etc.
 
 Click below to expand and review the code within this function.
 
