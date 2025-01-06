@@ -42,10 +42,6 @@ He whipped up a quick plot using `ggplot2`, with a focus on the number of 'summe
 
 ![weather1](weather_p1.jpeg)
 
-# ```{r out.width="700px", fig.align='center', echo = F}
-# knitr::include_graphics(path = "weather_p1.jpeg")
-# ```
-
 Here we can see the number of days over a certain maximum for each year since 2010. For example, in 2023, Perth had 0 days above 40°C and only 4 above 38°C.
 
 The sweltering summer in question (2021/22) had a whopping 12 days over 40°C and 23 above 38°C. Since the next highest count since 2010 was 7 and 14 respectively, it's fair to say this was quite the outlier! And the 'current' (at the time) summer was similar to this, but yet to exceed it.
