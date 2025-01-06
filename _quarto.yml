@@ -24,8 +24,7 @@ format:
   html:
     theme: cosmo
     css: styles.css
+    embed-resources: true
 
 editor: visual
-plugins:
-  - jekyll-feed
 
