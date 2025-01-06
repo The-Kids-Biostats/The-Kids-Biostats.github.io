@@ -1,8 +1,6 @@
 project:
   type: website
   output-dir: docs
-  render:
-    - thekids_package.qmd
 
 website:
   title: "The Kids Biostats"
