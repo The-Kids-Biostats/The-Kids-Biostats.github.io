@@ -6679,12 +6679,7 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
 <h1>Example 1 - Data Visualisation</h1>
 <p>A couple of summers ago (2021/22) felt unusually hot in Perth, Australia. Specifically, it seemed that the maximum temperature was regularly exceeding round numbers like 35 or 40 degrees Celsius. The most recent summer was starting to feel similar, but as it relates to ‘hot days’, were we seeing more of these? My colleague, being a statistician, wished to contrast this most recent summer to previous summers.</p>
 <p>He whipped up a quick plot using <code>ggplot2</code>, with a focus on the number of ‘summer days’ above a certain maximum (and equally important, ‘hot nights’ that stayed above a certain minimum). Shown below, is data through to mid February 2024:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/weather_p1.jpeg" class="img-fluid figure-img"></p>
-<figcaption>weather1</figcaption>
-</figure>
-</div>
+<p>&lt;img src=“{{site.url}}/images/weather_p1.jpeg&gt;</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">

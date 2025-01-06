@@ -40,8 +40,6 @@ A couple of summers ago (2021/22) felt unusually hot in Perth, Australia. Specif
 
 He whipped up a quick plot using `ggplot2`, with a focus on the number of 'summer days' above a certain maximum (and equally important, 'hot nights' that stayed above a certain minimum). Shown below, is data through to mid February 2024:
 
-![weather1](weather_p1.jpeg)
-
 ```{r out.width="700px", fig.align='center', echo = F}
 knitr::include_graphics(path = "weather_p1.jpeg")
 ```
