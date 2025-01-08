@@ -64,13 +64,7 @@ was all the context required to understand and return, approximately, the desire
 
 ![](weather_p3.png){fig-alt="This gets lost" fig-align="center" width="601"}
 
-```{r out.width="700px", fig.align='center', echo = F}
-knitr::include_graphics(path = "weather_p3.png")
-```
 
-```{r out.width="700px", fig.align='center', echo = F}
-knitr::include_graphics(path = "weather_p4.png")
-```
 
 ## End Result and Discussion
 

@@ -6697,29 +6697,11 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
 <li>One command</li>
 <li>Some (undescribed) data</li>
 </ul>
-<p>was all the context required to understand and return, approximately, the desired output. We say approximately, since some key information such as the counts above certain levels, is absent from this first attempt.</p>
+<p>was all the context required to understand and return, approximately, the desired output. We say approximately, since some key information such as the counts above certain levels, is absent from this first attempt:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/weather_p3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="This gets lost" width="601"></p>
 </figure>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/weather_p3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/weather_p4.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
-</figure>
-</div>
-</div>
 </div>
 </section>
 <section id="end-result-and-discussion" class="level2">
