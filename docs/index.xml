@@ -6,15 +6,15 @@
       version="2.0">
 <channel>
 <title>The Kids Biostats</title>
-<link>https://www.the-kids-biostats.github.io/</link>
-<atom:link href="https://www.the-kids-biostats.github.io/index.xml" rel="self" type="application/rss+xml"/>
+<link>https://the-kids-biostats.github.io/</link>
+<atom:link href="https://the-kids-biostats.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description>Biostats R solutions</description>
 <generator>quarto-1.6.40</generator>
 <lastBuildDate>Sun, 15 Dec 2024 16:00:00 GMT</lastBuildDate>
 <item>
   <title>Visualisations for (bidirectional) Likert scale data</title>
   <dc:creator>Zac Dempsey and Dr Matt Cooper</dc:creator>
-  <link>https://www.the-kids-biostats.github.io/posts/2024-12-16_bidirectional_likert_visualisation/bidirectional_likert_visualisations.html</link>
+  <link>https://the-kids-biostats.github.io/posts/2024-12-16_bidirectional_likert_visualisation/bidirectional_likert_visualisations.html</link>
   <description><![CDATA[ 
 
 
@@ -1010,7 +1010,7 @@ font-style: inherit;">"mode"</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-12-16_bidirectional_likert_visualisation/bidirectional_likert_visualisations_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-12-16_bidirectional_likert_visualisation/bidirectional_likert_visualisations_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -1553,13 +1553,13 @@ loaded via a namespace (and not attached):
   <category>Visualisations</category>
   <category>Likert</category>
   <category>ggplot</category>
-  <guid>https://www.the-kids-biostats.github.io/posts/2024-12-16_bidirectional_likert_visualisation/bidirectional_likert_visualisations.html</guid>
+  <guid>https://the-kids-biostats.github.io/posts/2024-12-16_bidirectional_likert_visualisation/bidirectional_likert_visualisations.html</guid>
   <pubDate>Sun, 15 Dec 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Sharing - Code v Functions</title>
   <dc:creator>Dr Matt Cooper and Zac Dempsey</dc:creator>
-  <link>https://www.the-kids-biostats.github.io/posts/2024-11-19_code_v_functions/code_v_functions.html</link>
+  <link>https://the-kids-biostats.github.io/posts/2024-11-19_code_v_functions/code_v_functions.html</link>
   <description><![CDATA[ 
 
 
@@ -1572,14 +1572,14 @@ loaded via a namespace (and not attached):
 <p>Way back when there were only two users on Bluesky, I linked to one of our earlier <a href="https://the-kids-biostats.github.io/posts/2024-10-14_likert_visualisation/likert_visualisations.html">blog posts</a> where we presented a nice way to visualise pre-post ordinal Likert data.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-11-19_code_v_functions/pre_post_plot.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-11-19_code_v_functions/pre_post_plot.png" class="img-fluid figure-img" style="width:80.0%"></p>
 <figcaption>The figure</figcaption>
 </figure>
 </div>
 <p>The only other user on Bluesky at the time commented:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-11-19_code_v_functions/comment.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-11-19_code_v_functions/comment.png" class="img-fluid figure-img" style="width:80.0%"></p>
 <figcaption>The comment</figcaption>
 </figure>
 </div>
@@ -3399,13 +3399,13 @@ loaded via a namespace (and not attached):
   <category>Visualisations</category>
   <category>Likert</category>
   <category>ggplot</category>
-  <guid>https://www.the-kids-biostats.github.io/posts/2024-11-19_code_v_functions/code_v_functions.html</guid>
+  <guid>https://the-kids-biostats.github.io/posts/2024-11-19_code_v_functions/code_v_functions.html</guid>
   <pubDate>Mon, 18 Nov 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Visualisations for (ordinal) Likert scale data</title>
   <dc:creator>Dr Matt Cooper and Zac Dempsey</dc:creator>
-  <link>https://www.the-kids-biostats.github.io/posts/2024-10-14_likert_visualisation/likert_visualisations.html</link>
+  <link>https://the-kids-biostats.github.io/posts/2024-10-14_likert_visualisation/likert_visualisations.html</link>
   <description><![CDATA[ 
 
 
@@ -4813,7 +4813,7 @@ font-style: inherit;">"none"</span>)</span></code></pre></div>
 <div class="cell-output-display page-columns page-full">
 <div class="page-columns page-full">
 <figure class="figure page-columns page-full">
-<p class="page-columns page-full"><img src="https://www.the-kids-biostats.github.io/posts/2024-10-14_likert_visualisation/likert_visualisations_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img column-body-outset"></p>
+<p class="page-columns page-full"><img src="https://the-kids-biostats.github.io/posts/2024-10-14_likert_visualisation/likert_visualisations_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img column-body-outset"></p>
 </figure>
 </div>
 </div>
@@ -5637,7 +5637,7 @@ font-style: inherit;">0</span>))</span></code></pre></div>
 <div class="cell-output-display page-columns page-full">
 <div class="page-columns page-full">
 <figure class="figure page-columns page-full">
-<p class="page-columns page-full"><img src="https://www.the-kids-biostats.github.io/posts/2024-10-14_likert_visualisation/likert_visualisations_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img column-body-outset"></p>
+<p class="page-columns page-full"><img src="https://the-kids-biostats.github.io/posts/2024-10-14_likert_visualisation/likert_visualisations_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img column-body-outset"></p>
 </figure>
 </div>
 </div>
@@ -5961,13 +5961,13 @@ loaded via a namespace (and not attached):
   <category>Visualisations</category>
   <category>Likert</category>
   <category>ggplot</category>
-  <guid>https://www.the-kids-biostats.github.io/posts/2024-10-14_likert_visualisation/likert_visualisations.html</guid>
+  <guid>https://the-kids-biostats.github.io/posts/2024-10-14_likert_visualisation/likert_visualisations.html</guid>
   <pubDate>Sun, 13 Oct 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Small-sample analysis</title>
   <dc:creator>Dr Bethy McKinnon, Dr Matt Cooper</dc:creator>
-  <link>https://www.the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis.html</link>
+  <link>https://the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis.html</link>
   <description><![CDATA[ 
 
 
@@ -5994,7 +5994,7 @@ loaded via a namespace (and not attached):
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -6011,7 +6011,7 @@ Here, we simulate data to represent a “population” of healthy female C57BL/6
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -6042,7 +6042,7 @@ Note
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -6058,7 +6058,7 @@ a) The first 5 samples (of 500) with a sample size of 20, from a simulated popul
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -6073,7 +6073,7 @@ a) The first 5 samples (of 500) with a sample size of 5, from a simulated popula
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -6092,7 +6092,7 @@ Random samples of increasing size, annotated with means and 95% confidence inter
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -6144,7 +6144,7 @@ Important
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="768"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -6236,13 +6236,13 @@ loaded via a namespace (and not attached):
  ]]></description>
   <category>Small Samples</category>
   <category>R</category>
-  <guid>https://www.the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis.html</guid>
+  <guid>https://the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis.html</guid>
   <pubDate>Mon, 09 Sep 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>AI in Biostatistics - Part 2</title>
   <dc:creator>Wesley Billingham, Dr Matthew Cooper</dc:creator>
-  <link>https://www.the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/ai_part_two.html</link>
+  <link>https://the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/ai_part_two.html</link>
   <description><![CDATA[ 
 
 
@@ -6273,7 +6273,7 @@ loaded via a namespace (and not attached):
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/ai_part_two_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="1152"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/ai_part_two_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="1152"></p>
 </figure>
 </div>
 </div>
@@ -6372,7 +6372,7 @@ loaded via a namespace (and not attached):
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/ai_part_two_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="1152"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/ai_part_two_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="1152"></p>
 </figure>
 </div>
 </div>
@@ -6433,7 +6433,7 @@ font-style: inherit;">18</span>, size, prob)</span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/ai_part_two_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="1056"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/ai_part_two_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="1056"></p>
 </figure>
 </div>
 </div>
@@ -6459,7 +6459,7 @@ Note.
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/reproduced_q1.PNG" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/reproduced_q1.PNG" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
 </figure>
 </div>
 </div>
@@ -6469,7 +6469,7 @@ Note.
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/reproduced_q2.PNG" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/reproduced_q2.PNG" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
 </figure>
 </div>
 </div>
@@ -6511,7 +6511,7 @@ font-style: inherit;">19</span>, n, p)</span>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/ai_part_two_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="1056"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/ai_part_two_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="1056"></p>
 </figure>
 </div>
 </div>
@@ -6524,7 +6524,7 @@ font-style: inherit;">19</span>, n, p)</span>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/reproduced_q3.PNG" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/reproduced_q3.PNG" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
 </figure>
 </div>
 </div>
@@ -6540,7 +6540,7 @@ font-style: inherit;">19</span>, n, p)</span>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/reproduced_q5.PNG" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/reproduced_q5.PNG" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
 </figure>
 </div>
 </div>
@@ -6549,7 +6549,7 @@ font-style: inherit;">19</span>, n, p)</span>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/reproduced_q6.PNG" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/reproduced_q6.PNG" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
 </figure>
 </div>
 </div>
@@ -6644,13 +6644,13 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
  ]]></description>
   <category>AI</category>
   <category>R</category>
-  <guid>https://www.the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/ai_part_two.html</guid>
+  <guid>https://the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/ai_part_two.html</guid>
   <pubDate>Thu, 08 Aug 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>AI in Biostatistics - Part 1</title>
   <dc:creator>Wesley Billingham, Dr Matthew Cooper</dc:creator>
-  <link>https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/ai_part_one.html</link>
+  <link>https://the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/ai_part_one.html</link>
   <description><![CDATA[ 
 
 
@@ -6681,7 +6681,7 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
 <p>He whipped up a quick plot using <code>ggplot2</code>, with a focus on the number of ‘summer days’ above a certain maximum (and equally important, ‘hot nights’ that stayed above a certain minimum). Shown below, is data through to mid February 2024:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/weather_p1.jpeg" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="This gets lost" width="601"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/weather_p1.jpeg" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="This gets lost" width="601"></p>
 </figure>
 </div>
 <p>Here we can see the number of days over a certain maximum for each year since 2010. For example, in 2023, Perth had 0 days above 40°C and only 4 above 38°C.</p>
@@ -6700,7 +6700,7 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
 <p>was all the context required to understand and return, approximately, the desired output. We say approximately, since some key information such as the counts above certain levels, is absent from this first attempt:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/weather_p3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="This gets lost" width="601"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/weather_p3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="This gets lost" width="601"></p>
 </figure>
 </div>
 </section>
@@ -6711,7 +6711,7 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/weather_p8.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/weather_p8.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
 </figure>
 </div>
 </div>
@@ -6753,7 +6753,7 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/log_reg_1_v2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/log_reg_1_v2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
 </figure>
 </div>
 </div>
@@ -6767,7 +6767,7 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/log_res_2_v2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/log_res_2_v2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
 </figure>
 </div>
 </div>
@@ -6783,7 +6783,7 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/log_reg_6.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/log_reg_6.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
 </figure>
 </div>
 </div>
@@ -6792,7 +6792,7 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/log_reg_4.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/log_reg_4.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
 </figure>
 </div>
 </div>
@@ -6810,7 +6810,7 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/app_preview.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/app_preview.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
 </figure>
 </div>
 </div>
@@ -6832,7 +6832,7 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/app_17_iterations.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="400"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/app_17_iterations.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="400"></p>
 </figure>
 </div>
 </div>
@@ -6841,7 +6841,7 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/app_as_zip.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/app_as_zip.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
 </figure>
 </div>
 </div>
@@ -6852,7 +6852,7 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/app_synth_req.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/app_synth_req.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
 </figure>
 </div>
 </div>
@@ -6861,7 +6861,7 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/app_synth_req_3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="350"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/app_synth_req_3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="350"></p>
 </figure>
 </div>
 </div>
@@ -6879,14 +6879,14 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
  ]]></description>
   <category>AI</category>
   <category>R</category>
-  <guid>https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/ai_part_one.html</guid>
+  <guid>https://the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/ai_part_one.html</guid>
   <pubDate>Wed, 07 Aug 2024 16:00:00 GMT</pubDate>
-  <media:content url="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/weather_p8.png" medium="image" type="image/png" height="115" width="144"/>
+  <media:content url="https://the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/weather_p8.png" medium="image" type="image/png" height="115" width="144"/>
 </item>
 <item>
   <title>Analysing pre-post data</title>
   <dc:creator>Dr Matthew Cooper</dc:creator>
-  <link>https://www.the-kids-biostats.github.io/posts/2024-07-22_pre_post/pre-post.html</link>
+  <link>https://the-kids-biostats.github.io/posts/2024-07-22_pre_post/pre-post.html</link>
   <description><![CDATA[ 
 
 
@@ -7596,7 +7596,7 @@ font-style: inherit;">"Group"</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-07-22_pre_post/pre-post_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-07-22_pre_post/pre-post_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
 </figure>
 </div>
 </div>
@@ -8228,7 +8228,7 @@ font-style: inherit;">"Group"</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-07-22_pre_post/pre-post_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-07-22_pre_post/pre-post_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
 </figure>
 </div>
 </div>
@@ -8985,7 +8985,7 @@ font-style: inherit;">"Group"</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-07-22_pre_post/pre-post_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-07-22_pre_post/pre-post_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
 </figure>
 </div>
 </div>
@@ -9292,7 +9292,7 @@ font-style: inherit;">2.35</span>)) </span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-07-22_pre_post/pre-post_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-07-22_pre_post/pre-post_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="576"></p>
 </figure>
 </div>
 </div>
@@ -9912,13 +9912,13 @@ loaded via a namespace (and not attached):
   <category>Pre-post</category>
   <category>Mixed Models</category>
   <category>R</category>
-  <guid>https://www.the-kids-biostats.github.io/posts/2024-07-22_pre_post/pre-post.html</guid>
+  <guid>https://the-kids-biostats.github.io/posts/2024-07-22_pre_post/pre-post.html</guid>
   <pubDate>Sun, 21 Jul 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Data Anonymiser</title>
   <dc:creator>Dr Matthew Cooper, Wesley Billingham</dc:creator>
-  <link>https://www.the-kids-biostats.github.io/posts/2024-07-19_data_anonymiser/data_anonymiser.html</link>
+  <link>https://the-kids-biostats.github.io/posts/2024-07-19_data_anonymiser/data_anonymiser.html</link>
   <description><![CDATA[ 
 
 
@@ -9934,7 +9934,7 @@ loaded via a namespace (and not attached):
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-07-19_data_anonymiser/example_img.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-07-19_data_anonymiser/example_img.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
 </figure>
 </div>
 </div>
@@ -9947,7 +9947,7 @@ loaded via a namespace (and not attached):
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-07-19_data_anonymiser/app_preview.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-07-19_data_anonymiser/app_preview.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
 </figure>
 </div>
 </div>
@@ -10045,13 +10045,13 @@ loaded via a namespace (and not attached):
  ]]></description>
   <category>Shiny</category>
   <category>R</category>
-  <guid>https://www.the-kids-biostats.github.io/posts/2024-07-19_data_anonymiser/data_anonymiser.html</guid>
+  <guid>https://the-kids-biostats.github.io/posts/2024-07-19_data_anonymiser/data_anonymiser.html</guid>
   <pubDate>Thu, 18 Jul 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Parallel Computing in R</title>
   <dc:creator>Zac Dempsey</dc:creator>
-  <link>https://www.the-kids-biostats.github.io/posts/2024-07-01_parallel/parallel.html</link>
+  <link>https://the-kids-biostats.github.io/posts/2024-07-01_parallel/parallel.html</link>
   <description><![CDATA[ 
 
 
@@ -10149,7 +10149,7 @@ font-style: inherit;">6</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-07-01_parallel/parallel_comps.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-07-01_parallel/parallel_comps.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="700"></p>
 </figure>
 </div>
 </div>
@@ -12005,13 +12005,13 @@ loaded via a namespace (and not attached):
  ]]></description>
   <category>R</category>
   <category>Parallel</category>
-  <guid>https://www.the-kids-biostats.github.io/posts/2024-07-01_parallel/parallel.html</guid>
+  <guid>https://the-kids-biostats.github.io/posts/2024-07-01_parallel/parallel.html</guid>
   <pubDate>Sun, 30 Jun 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Handling Missing Data with LMER</title>
   <dc:creator>Dr Matthew Cooper</dc:creator>
-  <link>https://www.the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer.html</link>
+  <link>https://the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer.html</link>
   <description><![CDATA[ 
 
 
@@ -12761,7 +12761,7 @@ font-style: inherit;">"Wage"</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -12876,7 +12876,7 @@ font-style: inherit;">9</span>))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -13135,7 +13135,7 @@ font-style: inherit;">9</span>))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -13257,7 +13257,7 @@ font-style: inherit;">-&gt;</span> p1</span>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -13592,7 +13592,7 @@ font-style: inherit;">-&gt;</span> p2</span>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -13688,7 +13688,7 @@ font-style: inherit;">"Mixed effects model"</span>))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -14544,7 +14544,7 @@ font-style: inherit;">9</span>)) </span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -14732,7 +14732,7 @@ font-style: inherit;">9</span>))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -15083,7 +15083,7 @@ font-style: inherit;">-&gt;</span> p4</span>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -15576,7 +15576,7 @@ font-style: inherit;">-&gt;</span> p4</span>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -15813,7 +15813,7 @@ font-style: inherit;">'bottom'</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -16655,7 +16655,7 @@ font-style: inherit;">9</span>))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -16873,7 +16873,7 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
+<p><img src="https://the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="960"></p>
 </figure>
 </div>
 </div>
@@ -16984,7 +16984,7 @@ loaded via a namespace (and not attached):
   <category>Missing Data</category>
   <category>Mixed Models</category>
   <category>R</category>
-  <guid>https://www.the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer.html</guid>
+  <guid>https://the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer.html</guid>
   <pubDate>Thu, 06 Jun 2024 16:00:00 GMT</pubDate>
 </item>
 </channel>

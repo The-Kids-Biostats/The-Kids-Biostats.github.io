@@ -5,7 +5,7 @@ project:
 website:
   title: "The Kids Biostats"
   favicon: thekids_logo.png
-  site-url: "https://www.the-kids-biostats.github.io"
+  site-url: "https://the-kids-biostats.github.io"
   description: "Biostats R solutions"
   navbar:
     logo: thekids_logo.png
