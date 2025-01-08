@@ -6681,8 +6681,7 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
 <p>He whipped up a quick plot using <code>ggplot2</code>, with a focus on the number of ‘summer days’ above a certain maximum (and equally important, ‘hot nights’ that stayed above a certain minimum). Shown below, is data through to mid February 2024:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/weather_p1.jpeg" class="img-fluid figure-img" alt="This gets lost"></p>
-<figcaption>weather1</figcaption>
+<p><img src="https://www.the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/weather_p1.jpeg" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="This gets lost" width="601"></p>
 </figure>
 </div>
 <p>Here we can see the number of days over a certain maximum for each year since 2010. For example, in 2023, Perth had 0 days above 40°C and only 4 above 38°C.</p>
