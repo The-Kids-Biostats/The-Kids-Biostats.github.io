@@ -60,7 +60,9 @@ Here is the entire prompt history, from beginning to end:
 -   One command
 -   Some (undescribed) data
 
-was all the context required to understand and return, approximately, the desired output. We say approximately, since some key information such as the counts above certain levels, is absent from this first attempt.
+was all the context required to understand and return, approximately, the desired output. We say approximately, since some key information such as the counts above certain levels, is absent from this first attempt:
+
+![](weather_p3.png){fig-alt="This gets lost" fig-align="center" width="601"}
 
 ```{r out.width="700px", fig.align='center', echo = F}
 knitr::include_graphics(path = "weather_p3.png")
