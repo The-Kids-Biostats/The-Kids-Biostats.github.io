@@ -9,8 +9,703 @@
 <link>https://the-kids-biostats.github.io/</link>
 <atom:link href="https://the-kids-biostats.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description>Biostats R solutions</description>
-<generator>quarto-1.6.40</generator>
-<lastBuildDate>Sun, 15 Dec 2024 16:00:00 GMT</lastBuildDate>
+<generator>quarto-1.4.555</generator>
+<lastBuildDate>Thu, 09 Jan 2025 16:00:00 GMT</lastBuildDate>
+<item>
+  <title>Models - Condensed code and output</title>
+  <dc:creator>Dr Matt Cooper and Wesley Billingham</dc:creator>
+  <link>https://the-kids-biostats.github.io/posts/2025-01-10_model_function/model_function.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<p>We are constantly working on the appearance of the reports we generate for our colleagues and collaborators. This includes managing <code>.html</code> and <code>.docx</code> output for different use cases, all while navigating the move from <a href="https://rmarkdown.rstudio.com/">R Markdown</a> to <a href="https://quarto.org/">Quarto</a>. At this stage, we have all but completely abandoned the idea of rendering directly to <code>.pdf</code> as we find <code>.docx</code> more friendly (tracking changes with collaborators, certain output manipulating functions) and it is readily ‘pdf-able’ - but more on all that in a future post.</p>
+<p>Our primary report output format is <code>.html</code> and we have been looking for ways to harness certain Quarto features to improve both the aesthetic of our reports as well as our use of real estate. Often, we are presenting output for a range of models separated by narration. It is important that all models are presented with sufficient context (as opposed to output just dumped on a page) and we’ve settled on what we think is a nice way to ensure relevant information (like model diagnostics) are readily available (and digestable) to the reader, as opposed to being tucked away at the end - or worse - left out altogether.</p>
+<p>Below, we present the way we currently present output from a linear regression in our <code>.html</code> reports.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://the-kids-biostats.github.io/posts/2025-01-10_model_function/function_output.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</section>
+<section id="model-output---presentation" class="level1 page-columns page-full">
+<h1>Model Output - Presentation</h1>
+<section id="presentation-overview" class="level2">
+<h2 class="anchored" data-anchor-id="presentation-overview">Presentation overview</h2>
+<p>We use a combination of <a href="https://quarto.org/docs/interactive/layout.html#tabset-panel">tabset panels</a> (implemented with <code>.panel-tabset</code>) and <a href="https://quarto.org/docs/authoring/article-layout.html#margin-content">margin content</a> (implemented with <code>.column-margin</code>) to achieve what we think is a nice balance between real estate utilisation and content compartmentalisation.</p>
+</section>
+<section id="data-for-the-demonstration" class="level2">
+<h2 class="anchored" data-anchor-id="data-for-the-demonstration">Data for the demonstration</h2>
+<p>To demonstrate, we will use a slightly modified dataset of Birth Weight data (read more with <code>?MASS::birthwt</code>) from the <code>MASS</code> package (<code>MASS::birthwt</code>).</p>
+<p>The dataset has 189 observations (rows) and in the code below we just tidy up some variables prior to running the model.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1">dat_bwt <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> MASS<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span>birthwt</span>
+<span id="cb1-2">dat_bwt <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> dat_bwt <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb1-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tibble</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb1-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">smoke =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">factor</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">case_when</span>(smoke <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Yes"</span>,</span>
+<span id="cb1-5">                                  smoke <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"No"</span>,</span>
+<span id="cb1-6">                                  T <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NA_character_</span>)),</span>
+<span id="cb1-7">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ht =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">factor</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">case_when</span>(ht <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Yes"</span>,</span>
+<span id="cb1-8">                               ht <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"No"</span>,</span>
+<span id="cb1-9">                               T <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NA_character_</span>)))</span></code></pre></div>
+</details>
+</div>
+<p>We then implement the following linear regression (<code>lm</code>) model:</p>
+<ul>
+<li><p><strong>Outcome:</strong> infant birth weight (<code>bwt</code>).</p></li>
+<li><p><strong>Exposure of interest:</strong> maternal smoking status during pregnancy (<code>smoke</code>).</p></li>
+<li><p><strong>Covariates:</strong> maternal age (<code>age</code>) and history of hypertension (<code>ht</code>).</p></li>
+</ul>
+</section>
+<section id="demonstration" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="demonstration">Demonstration</h2>
+<section id="running-the-function" class="level3">
+<h3 class="anchored" data-anchor-id="running-the-function">Running the function</h3>
+<p>We can run our function using the code below:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">mod_bwt <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> dat_bwt <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb2-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">thekids_model</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"bwt"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"smoke"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">formula =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"age + ht"</span>)</span></code></pre></div>
+</div>
+<p>In this, we have passed (piped) the data into the first argument, specified the outcome variable in the next argument, the exposure of interest in the next argument, and finally the remainder of the models formula (that is, the covariates we are looking to have in our model).</p>
+<p>Alternatively, we could run our model in the ‘normal’ way and pass it to our output processing function - which is really the workhorse of the above function - and this would look something like the following:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">my_model <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lm</span>(bwt <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> smoke <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> age <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> ht, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> dat_bwt)</span>
+<span id="cb3-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">thekids_model_output</span>(my_model, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">by =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"smoke"</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># still need to specify our exposure of interest</span></span></code></pre></div>
+</div>
+<p>The objects defined above (<code>mod_bwt</code>, <code>my_model</code>) are lists that contain outputs relating to our selected model type.</p>
+<p>Now, we see how the output would appear in an <code>.html</code> report.</p>
+</section>
+<section id="function-output" class="level3 page-columns page-full">
+<h3 class="anchored" data-anchor-id="function-output">Function output</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs"><li class="nav-item"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" aria-controls="tabset-1-1" aria-selected="true">Desc stats</a></li><li class="nav-item"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" aria-controls="tabset-1-2" aria-selected="false">Model diag</a></li><li class="nav-item"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" aria-controls="tabset-1-3" aria-selected="false">Model output</a></li><li class="nav-item"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" aria-controls="tabset-1-4" aria-selected="false">Model effect</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" aria-labelledby="tabset-1-1-tab">
+<p>The table below shows summary statistics for all variables in the model by the primary exposure variable (maternal smoking status in pregnancy).</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-ccb7fc12{table-layout:auto;}.cl-ccadfbfe{font-family:'Barlow';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-ccadfc1c{font-family:'Barlow';font-size:6.6pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;position: relative;bottom:3.3pt;}.cl-ccadfc1d{font-family:'Barlow';font-size:10pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-ccadfc26{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-ccadfc27{font-family:'Barlow';font-size:6pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;position: relative;bottom:3pt;}.cl-ccadfc28{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-ccb19e8a{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2pt;padding-top:2pt;padding-left:10pt;padding-right:10pt;line-height: 1.5;background-color:transparent;}.cl-ccb19ea8{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2pt;padding-top:2pt;padding-left:10pt;padding-right:10pt;line-height: 1.5;background-color:transparent;}.cl-ccb19ea9{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:10pt;padding-right:10pt;line-height: 1.5;background-color:transparent;}.cl-ccb19eaa{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:10pt;padding-right:10pt;line-height: 1.5;background-color:transparent;}.cl-ccb19eb2{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:10pt;padding-right:10pt;line-height: 1.5;background-color:transparent;}.cl-ccb1bb4a{background-color:rgba(0, 128, 122, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ccb1bb5e{background-color:rgba(0, 128, 122, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ccb1bb5f{background-color:rgba(0, 128, 122, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ccb1bb60{background-color:rgba(0, 128, 122, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ccb1bb68{background-color:rgba(128, 192, 189, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ccb1bb69{background-color:rgba(128, 192, 189, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ccb1bb6a{background-color:rgba(128, 192, 189, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ccb1bb72{background-color:rgba(128, 192, 189, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ccb1bb73{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ccb1bb74{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ccb1bb7c{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ccb1bb7d{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ccb1bb7e{background-color:rgba(128, 192, 189, 1.00);vertical-align: top;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ccb1bb86{background-color:rgba(128, 192, 189, 1.00);vertical-align: top;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ccb1bb87{background-color:rgba(128, 192, 189, 1.00);vertical-align: top;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ccb1bb88{background-color:rgba(128, 192, 189, 1.00);vertical-align: top;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ccb1bb90{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ccb1bb91{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ccb1bb92{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ccb1bb9a{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-ccb7fc12"><thead><tr style="overflow-wrap:break-word;"><th class="cl-ccb1bb4a"><p class="cl-ccb19e8a"><span class="cl-ccadfbfe">smoke</span></p></th><th class="cl-ccb1bb5e"><p class="cl-ccb19ea8"><span class="cl-ccadfbfe">No</span><span class="cl-ccadfbfe">  </span><br><span class="cl-ccadfbfe">N = 115</span><span class="cl-ccadfc1c">1</span></p></th><th class="cl-ccb1bb5f"><p class="cl-ccb19ea8"><span class="cl-ccadfbfe">Yes</span><span class="cl-ccadfbfe">  </span><br><span class="cl-ccadfbfe">N = 74</span><span class="cl-ccadfc1c">1</span></p></th><th class="cl-ccb1bb60"><p class="cl-ccb19ea8"><span class="cl-ccadfbfe">p-value</span><span class="cl-ccadfc1c">2</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-ccb1bb68"><p class="cl-ccb19ea9"><span class="cl-ccadfc1d">bwt</span></p></td><td class="cl-ccb1bb69"><p class="cl-ccb19eaa"><span class="cl-ccadfc26">3,056 (753) [115]</span></p></td><td class="cl-ccb1bb6a"><p class="cl-ccb19eaa"><span class="cl-ccadfc26">2,772 (660) [74]</span></p></td><td class="cl-ccb1bb72"><p class="cl-ccb19eaa"><span class="cl-ccadfc26">0.007</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ccb1bb73"><p class="cl-ccb19ea9"><span class="cl-ccadfc1d">age</span></p></td><td class="cl-ccb1bb74"><p class="cl-ccb19eaa"><span class="cl-ccadfc26">23 (5) [115]</span></p></td><td class="cl-ccb1bb7c"><p class="cl-ccb19eaa"><span class="cl-ccadfc26">23 (5) [74]</span></p></td><td class="cl-ccb1bb7d"><p class="cl-ccb19eaa"><span class="cl-ccadfc26">0.5</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ccb1bb7e"><p class="cl-ccb19ea9"><span class="cl-ccadfc1d">ht</span></p></td><td class="cl-ccb1bb86"><p class="cl-ccb19eaa"><span class="cl-ccadfc26">7 (6.1%)</span></p></td><td class="cl-ccb1bb87"><p class="cl-ccb19eaa"><span class="cl-ccadfc26">5 (6.8%)</span></p></td><td class="cl-ccb1bb88"><p class="cl-ccb19eaa"><span class="cl-ccadfc26">&gt;0.9</span></p></td></tr></tbody><tfoot><tr style="overflow-wrap:break-word;"><td colspan="4" class="cl-ccb1bb90"><p class="cl-ccb19eb2"><span class="cl-ccadfc27">1</span><span class="cl-ccadfc28">Mean (SD) [N Non-missing]; n (%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td colspan="4" class="cl-ccb1bb90"><p class="cl-ccb19eb2"><span class="cl-ccadfc27">2</span><span class="cl-ccadfc28">Wilcoxon rank sum test; Fisher's exact test</span></p></td></tr></tfoot></table></div>
+</div>
+</div>
+<p>The figure below shows the distribution of the primary outcome variable (infant birth weight) by the primary exposure variable (maternal smoking status in pregnancy).</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://the-kids-biostats.github.io/posts/2025-01-10_model_function/model_function_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" aria-labelledby="tabset-1-2-tab">
+<p>The four panel plot below shows diagnostic plots that can aid in determining if the required assumptions of model are met.</p>
+<p><strong>Based on the below,</strong> the model fit is deemed to be good.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://the-kids-biostats.github.io/posts/2025-01-10_model_function/model_function_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Broadly, what we are looking for (and why) in these plots are:</p>
+<ul>
+<li><em>(top-left)</em> relatively even bands of points around a flat line at 0 as we move from left to right | linear relationship check,</li>
+<li><em>(top right)</em> the points to fall close to the diagonal line | normal distribution of errors check,</li>
+<li><em>(bottom-right)</em> the points to funnel close to 0 as we move from left to right with no extreme values in the top right or bottom right corners | influential observations check, and</li>
+<li><em>(bottom-left)</em> checking residuals are relatively evenly spread across the range of predictions | homoscedasticity check.</li>
+</ul>
+</div>
+<div id="tabset-1-3" class="tab-pane" aria-labelledby="tabset-1-3-tab">
+<p>The table below shows the model output for the linear regression model, including the beta coefficient (and 95% confidence interval) and p-value associated with each variable in the model.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-cddc3fd6{table-layout:auto;}.cl-cdcdbb8c{font-family:'Barlow';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-cdcdbb96{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-cdd337c4{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2pt;padding-top:2pt;padding-left:10pt;padding-right:10pt;line-height: 1.5;background-color:transparent;}.cl-cdd337ce{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2pt;padding-top:2pt;padding-left:10pt;padding-right:10pt;line-height: 1.5;background-color:transparent;}.cl-cdd337d8{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:10pt;padding-right:10pt;line-height: 1.5;background-color:transparent;}.cl-cdd337e2{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:10pt;padding-right:10pt;line-height: 1.5;background-color:transparent;}.cl-cdd337e3{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:15pt;padding-right:10pt;line-height: 1.5;background-color:transparent;}.cl-cdd35f2e{background-color:rgba(0, 128, 122, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-cdd35f38{background-color:rgba(0, 128, 122, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-cdd35f39{background-color:rgba(0, 128, 122, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-cdd35f42{background-color:rgba(128, 192, 189, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-cdd35f43{background-color:rgba(128, 192, 189, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-cdd35f4c{background-color:rgba(128, 192, 189, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-cdd35f4d{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-cdd35f4e{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-cdd35f56{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-cdd35f57{background-color:rgba(128, 192, 189, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-cdd35f60{background-color:rgba(128, 192, 189, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-cdd35f61{background-color:rgba(128, 192, 189, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-cdd35f6a{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-cdd35f6b{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-cdd35f6c{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-cdd35f74{background-color:rgba(128, 192, 189, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-cdd35f75{background-color:rgba(128, 192, 189, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-cdd35f76{background-color:rgba(128, 192, 189, 1.00);vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-cdd35f7e{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-cdd35f7f{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-cdd35f88{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-cdd35f89{background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-cdd35f92{background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-cdd35f93{background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-cddc3fd6"><thead><tr style="overflow-wrap:break-word;"><th class="cl-cdd35f2e"><p class="cl-cdd337c4"><span class="cl-cdcdbb8c">Characteristic</span></p></th><th class="cl-cdd35f38"><p class="cl-cdd337ce"><span class="cl-cdcdbb8c">Beta</span></p></th><th class="cl-cdd35f39"><p class="cl-cdd337ce"><span class="cl-cdcdbb8c">p-value</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-cdd35f42"><p class="cl-cdd337d8"><span class="cl-cdcdbb96">(Intercept)</span></p></td><td class="cl-cdd35f43"><p class="cl-cdd337e2"><span class="cl-cdcdbb96">2,824.1 (2,351.4, 3,296.7)</span></p></td><td class="cl-cdd35f4c"><p class="cl-cdd337e2"><span class="cl-cdcdbb96">0.000</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-cdd35f4d"><p class="cl-cdd337d8"><span class="cl-cdcdbb96">smoke</span></p></td><td class="cl-cdd35f4e"><p class="cl-cdd337e2"><span class="cl-cdcdbb96"></span></p></td><td class="cl-cdd35f56"><p class="cl-cdd337e2"><span class="cl-cdcdbb96"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-cdd35f57"><p class="cl-cdd337e3"><span class="cl-cdcdbb96">No</span></p></td><td class="cl-cdd35f60"><p class="cl-cdd337e2"><span class="cl-cdcdbb96">—</span></p></td><td class="cl-cdd35f61"><p class="cl-cdd337e2"><span class="cl-cdcdbb96"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-cdd35f6a"><p class="cl-cdd337e3"><span class="cl-cdcdbb96">Yes</span></p></td><td class="cl-cdd35f6b"><p class="cl-cdd337e2"><span class="cl-cdcdbb96">-275.7 (-485.1, -66.2)</span></p></td><td class="cl-cdd35f6c"><p class="cl-cdd337e2"><span class="cl-cdcdbb96">0.010</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-cdd35f74"><p class="cl-cdd337d8"><span class="cl-cdcdbb96">age</span></p></td><td class="cl-cdd35f75"><p class="cl-cdd337e2"><span class="cl-cdcdbb96">11.0 (-8.4, 30.3)</span></p></td><td class="cl-cdd35f76"><p class="cl-cdd337e2"><span class="cl-cdcdbb96">0.264</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-cdd35f7e"><p class="cl-cdd337d8"><span class="cl-cdcdbb96">ht</span></p></td><td class="cl-cdd35f7f"><p class="cl-cdd337e2"><span class="cl-cdcdbb96"></span></p></td><td class="cl-cdd35f88"><p class="cl-cdd337e2"><span class="cl-cdcdbb96"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-cdd35f57"><p class="cl-cdd337e3"><span class="cl-cdcdbb96">No</span></p></td><td class="cl-cdd35f60"><p class="cl-cdd337e2"><span class="cl-cdcdbb96">—</span></p></td><td class="cl-cdd35f61"><p class="cl-cdd337e2"><span class="cl-cdcdbb96"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-cdd35f89"><p class="cl-cdd337e3"><span class="cl-cdcdbb96">Yes</span></p></td><td class="cl-cdd35f92"><p class="cl-cdd337e2"><span class="cl-cdcdbb96">-424.2 (-843.0, -5.4)</span></p></td><td class="cl-cdd35f93"><p class="cl-cdd337e2"><span class="cl-cdcdbb96">0.047</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+</div>
+<div id="tabset-1-4" class="tab-pane" aria-labelledby="tabset-1-4-tab">
+<p>The figure and table below show the predicted value (also known as the estimated marginal mean) for the outcome variable (infant birth weight) for each level of the exposure of interest (here, no maternal smoking in pregnancy or maternal smoking in pregnancy), along with a 95% confidence interval. Note, see table footnote for the values used for the other variables in the model.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://the-kids-biostats.github.io/posts/2025-01-10_model_function/model_function_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<!-- preamble start -->
+
+    <script>
+
+      function styleCell_1ho2k7sufi24c1b8svw5(i, j, css_id) {
+          var table = document.getElementById("tinytable_1ho2k7sufi24c1b8svw5");
+          var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
+          if (cell) {
+              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
+              cell.classList.add(css_id);
+          } else {
+              console.warn(`Cell at (${i}, ${j}) not found.`);
+          }
+      }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_1ho2k7sufi24c1b8svw5');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_1ho2k7sufi24c1b8svw5(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_1ho2k7sufi24c1b8svw5");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 },  ], css_id: 'tinytable_css_ymhzssaleqb46wtvpj6a',}, 
+          { positions: [ { i: 2, j: 0 }, { i: 2, j: 1 }, { i: 2, j: 2 },  ], css_id: 'tinytable_css_xt0r0qxe33x3o7qr8c38',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  styleCell_1ho2k7sufi24c1b8svw5(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <style>
+      /* tinytable css entries after */
+      .table td.tinytable_css_ymhzssaleqb46wtvpj6a, .table th.tinytable_css_ymhzssaleqb46wtvpj6a { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_xt0r0qxe33x3o7qr8c38, .table th.tinytable_css_xt0r0qxe33x3o7qr8c38 { border-bottom: solid #d3d8dc 0.1em; }
+    </style>
+    <div class="container">
+      <table class="table table-borderless" id="tinytable_1ho2k7sufi24c1b8svw5" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <thead>
+        </thead><caption>Predicted values of bwt</caption>
+              <tbody><tr>
+                <th scope="col">smoke</th>
+                <th scope="col">Predicted</th>
+                <th scope="col">95% CI</th>
+              </tr>
+        
+        </tbody><tfoot><tr><td colspan="3"><div style="font-size: 0.9em; color: #666666">Adjusted for: age = 23.00,  ht =    No</div></td></tr></tfoot>
+        <tbody>
+                <tr>
+                  <td>No </td>
+                  <td>3076.84</td>
+                  <td>2943.20, 3210.47</td>
+                </tr>
+                <tr>
+                  <td>Yes</td>
+                  <td>2801.18</td>
+                  <td>2635.57, 2966.79</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p><strong>Summary</strong></p>
+<ul>
+<li>There is evidence to suggest that smoking during pregnancy is associated with reduced birth weight.</li>
+<li>Maternal smoking during pregnancy is associated with a -275.66g lower birth weight (95% CI: -485.1,-66.2).</li>
+</ul>
+</div></div><p>The code to generate this can be viewed below:</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ::: panel-tabset</span></span>
+<span id="cb4-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ## Desc stats</span></span>
+<span id="cb4-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># </span></span>
+<span id="cb4-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># The table below shows summary statistics for all variables in the model by the primary exposure variable (maternal smoking status in pregnancy).</span></span>
+<span id="cb4-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># </span></span>
+<span id="cb4-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ```{r}</span></span>
+<span id="cb4-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># mod_bwt$mod_desc %&gt;% </span></span>
+<span id="cb4-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#   thekids_table(colour = "DarkTeal",</span></span>
+<span id="cb4-9"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#                 padding.left = 10, padding.right = 10)</span></span>
+<span id="cb4-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ```</span></span>
+<span id="cb4-11"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># </span></span>
+<span id="cb4-12"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># The figure below shows the distribution of the primary outcome variable (infant birth weight) by the primary exposure variable (maternal smoking status in pregnancy).</span></span>
+<span id="cb4-13"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># </span></span>
+<span id="cb4-14"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ```{r fig.height=5, fig.width=5, fig.align='center'}</span></span>
+<span id="cb4-15"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># mod_bwt$mod_desc_plot</span></span>
+<span id="cb4-16"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ```</span></span>
+<span id="cb4-17"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># </span></span>
+<span id="cb4-18"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ## Model diag</span></span>
+<span id="cb4-19"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># </span></span>
+<span id="cb4-20"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># The four panel plot below shows diagnostic plots that can aid in determining if the required assumptions of model are met.</span></span>
+<span id="cb4-21"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># </span></span>
+<span id="cb4-22"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># **Based on the below,** the model fit is deemed to be good. </span></span>
+<span id="cb4-23"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># </span></span>
+<span id="cb4-24"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ```{r fig.height=6, fig.width=6, fig.align='center'}</span></span>
+<span id="cb4-25"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># mod_bwt$mod_diag</span></span>
+<span id="cb4-26"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ```</span></span>
+<span id="cb4-27"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># </span></span>
+<span id="cb4-28"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Broadly, what we are looking for (and why) in these plots are: </span></span>
+<span id="cb4-29"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># </span></span>
+<span id="cb4-30"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># + *(top-left)* relatively even bands of points around a flat line at 0 as we move from left to right | linear relationship check, </span></span>
+<span id="cb4-31"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># + *(top right)* the points to fall close to the diagonal line | normal distribution of errors check, </span></span>
+<span id="cb4-32"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># + *(bottom-right)* the points to funnel close to 0 as we move from left to right with no extreme values in the top right or bottom right corners | influential observations check, and </span></span>
+<span id="cb4-33"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># + *(bottom-left)* checking residuals are relatively evenly spread across the range of predictions | homoscedasticity check.</span></span>
+<span id="cb4-34"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># </span></span>
+<span id="cb4-35"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ## Model output</span></span>
+<span id="cb4-36"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># </span></span>
+<span id="cb4-37"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># The table below shows the model output for the linear regression model, including the beta coefficient (and 95% confidence interval) and p-value associated with each variable in the model.</span></span>
+<span id="cb4-38"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># </span></span>
+<span id="cb4-39"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ```{r}</span></span>
+<span id="cb4-40"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># mod_bwt$mod_output %&gt;% </span></span>
+<span id="cb4-41"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#   thekids_table(colour = "DarkTeal",</span></span>
+<span id="cb4-42"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#                 padding.left = 10, padding.right = 10)</span></span>
+<span id="cb4-43"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ```</span></span>
+<span id="cb4-44"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># </span></span>
+<span id="cb4-45"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ## Model effect</span></span>
+<span id="cb4-46"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># </span></span>
+<span id="cb4-47"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># The figure and table below show the predicted value (also known as the estimated marginal mean) for the outcome variable (infant birth weight) for each level of the exposure of interest (here, no maternal smoking in pregnancy or maternal smoking in pregnancy), along with a 95% confidence interval. Note, see table footnote for the values used for the other variables in the model.</span></span>
+<span id="cb4-48"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># </span></span>
+<span id="cb4-49"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ```{r fig.height=4.5, fig.width=5, fig.align='center'}</span></span>
+<span id="cb4-50"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># mod_bwt$mod %&gt;% </span></span>
+<span id="cb4-51"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#   ggeffects::predict_response("smoke") %&gt;% </span></span>
+<span id="cb4-52"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#   plot</span></span>
+<span id="cb4-53"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ```</span></span>
+<span id="cb4-54"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># </span></span>
+<span id="cb4-55"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ```{r}</span></span>
+<span id="cb4-56"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># mod_bwt$mod %&gt;% </span></span>
+<span id="cb4-57"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#   ggeffects::predict_response("smoke") %&gt;% </span></span>
+<span id="cb4-58"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#   ggeffects::print_html()</span></span>
+<span id="cb4-59"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ```</span></span>
+<span id="cb4-60"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># :::</span></span>
+<span id="cb4-61"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># </span></span>
+<span id="cb4-62"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># ::: column-margin</span></span>
+<span id="cb4-63"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># **Summary**</span></span>
+<span id="cb4-64"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># </span></span>
+<span id="cb4-65"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># + There is evidence to suggest that smoking during pregnancy is associated with reduced birth weight.</span></span>
+<span id="cb4-66"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># + Maternal smoking during pregnancy is associated with a `r round(coef(mod_bwt$mod)[2],2)`g lower birth weight (95% CI: `r round(confint(mod_bwt$mod)[2,1],1)`,`r round(confint(mod_bwt$mod)[2,2],1)`).</span></span>
+<span id="cb4-67"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># :::</span></span></code></pre></div>
+</details>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>If you copy all this code, you can then select all, and use ctrl+C (or command+c) to uncomment the code.</p>
+</div></div></section>
+</section>
+<section id="pros-and-cons" class="level2">
+<h2 class="anchored" data-anchor-id="pros-and-cons">Pros and cons</h2>
+<p>The motivation behind this was really to reduce the length of code in our <a href="https://quarto.org/">Quarto</a> reports and to reduce the scroll in our rendered <code>.html</code> reports, without having to hideaway important information (like diagnostics) in a supplementary report, along with <em>forcing</em> (is that too strong?) the reader to engage with the raw data (and it’s distribution) a little before just seeing the model output.</p>
+<p>We acknowledge this is still a work in progress.</p>
+<section id="pros" class="level3">
+<h3 class="anchored" data-anchor-id="pros">Pros</h3>
+<ul>
+<li>Concise code and concise report output</li>
+<li>Maintain ready access to the model and the data (for additional processing, if required)</li>
+<li>Reduce indecision (ad nauseam) over how to format your model output (which package(s) to use)</li>
+</ul>
+</section>
+<section id="cons" class="level3">
+<h3 class="anchored" data-anchor-id="cons">Cons</h3>
+<ul>
+<li>Multiple copies of the dataset are created, which will be problematic with large data</li>
+<li>Limited functionality as it relates to different (more complex) model types</li>
+<li>Yet another function to learn and engage with</li>
+</ul>
+<p>Our view, again as it speaks to the motivation here, is that we often run these sorts of models - which may not even be our final model - but may be informative on the pathway to specifying the final model. And, along the way, there is a lot value in having all of this output structured and readily available.</p>
+</section>
+</section>
+<section id="accessing-the-function" class="level2">
+<h2 class="anchored" data-anchor-id="accessing-the-function">Accessing the function</h2>
+<p>The above two functions (<code>thekids_model</code> and <code>thekids_model_output</code>) are now available in our package <code>thekidsbiostats</code>, which you can install by running the following code:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">remotes<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install_github</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"The-Kids-Biostats/thekidsbiostats"</span>)</span></code></pre></div>
+</div>
+<p>The help documentation (<code>?thekids_model</code>) is there to walk you through the relevant arguments.</p>
+</section>
+</section>
+<section id="next-steps" class="level1">
+<h1>Next steps</h1>
+<p>In line with some of the thoughts in <a href="https://the-kids-biostats.github.io/posts/2024-11-19_code_v_functions/code_v_functions.html">this previous post</a>, we are only in the early stages of turning this code into a truly generic function. We have, for some time, been using modified ‘project specific’ versions of this function (or a version of this function - often with marginal effect estimates embedded). However, as noted, this wrapper function only currently works with basic linear regression models.</p>
+<p>We have plans to add (at least) the following functionalities:</p>
+<ul>
+<li>The handling of logistic regression, negative binomial regression, and quantile regression models,</li>
+<li>The handling of multiple models at the same time (for example two models with different sets of covariates),</li>
+<li>The passing of additional arguments through to the functions used within our functions (e.g., <code>exp = T</code>), and</li>
+<li>Increased (and automated) narration (of the output).</li>
+</ul>
+</section>
+<section id="closing-comments" class="level1">
+<h1>Closing comments</h1>
+<p>The <code>thekids_model</code> function marks a step forward (at least for us) in streamlining how we present model output, improving both code efficiency and report clarity. By balancing aesthetics with accessibility, we aim to make diagnostic checks and key outputs seamlessly available without overwhelming the reader. While there’s still room to expand the functions functionality, we believe our approach provides a solid foundation to build upon (without overreaching).</p>
+<p>We’d love to hear your thoughts or suggestions on how we could refine this function further.</p>
+</section>
+<section id="acknowledgements" class="level1">
+<h1>Acknowledgements</h1>
+<p>Thanks to Zac Dempsey and Dr Elizabeth McKinnon for providing feedback on and reviewing this post.</p>
+<section id="reproducibility-information" class="level2">
+<h2 class="anchored" data-anchor-id="reproducibility-information">Reproducibility Information</h2>
+<p>To access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:</p>
+<p><a href="https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/" class="uri">https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/</a></p>
+<p>The session information can also be seen below.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sessionInfo</span>()</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.4.1 (2024-06-14 ucrt)
+Platform: x86_64-w64-mingw32/x64
+Running under: Windows 10 x64 (build 19045)
+
+Matrix products: default
+
+
+locale:
+[1] LC_COLLATE=English_Australia.utf8  LC_CTYPE=English_Australia.utf8   
+[3] LC_MONETARY=English_Australia.utf8 LC_NUMERIC=C                      
+[5] LC_TIME=English_Australia.utf8    
+
+time zone: Australia/Perth
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] thekidsbiostats_0.0.1 flextable_0.9.7       gtsummary_2.0.4      
+ [4] lubridate_1.9.4       forcats_1.0.0         stringr_1.5.1        
+ [7] dplyr_1.1.4           purrr_1.0.2           readr_2.1.5          
+[10] tidyr_1.3.1           tibble_3.2.1          ggplot2_3.5.1        
+[13] tidyverse_2.0.0       extrafont_0.19       
+
+loaded via a namespace (and not attached):
+ [1] tidyselect_1.2.1        sjlabelled_1.2.0        viridisLite_0.4.2      
+ [4] ggfortify_0.4.17        farver_2.1.2            fastmap_1.2.0          
+ [7] fontquiver_0.2.1        janitor_2.2.1           broom.helpers_1.17.0   
+[10] labelled_2.14.0         digest_0.6.37           timechange_0.3.0       
+[13] lifecycle_1.0.4         magrittr_2.0.3          compiler_4.4.1         
+[16] rlang_1.1.4             tools_4.4.1             igraph_2.1.2           
+[19] yaml_2.3.10             data.table_1.16.4       knitr_1.49             
+[22] askpass_1.2.1           labeling_0.4.3          htmlwidgets_1.6.4      
+[25] xml2_1.3.6              tinytable_0.6.1         withr_3.0.2            
+[28] grid_4.4.1              datawizard_0.13.0       fansi_1.0.6            
+[31] gdtools_0.4.1           colorspace_2.1-1        extrafontdb_1.0        
+[34] scales_1.3.0            MASS_7.3-64             insight_1.0.0          
+[37] cli_3.6.3               rmarkdown_2.29          ragg_1.3.3             
+[40] generics_0.1.3          rstudioapi_0.17.1       tzdb_0.4.0             
+[43] vctrs_0.6.5             jsonlite_1.8.9          fontBitstreamVera_0.1.1
+[46] hms_1.1.3               systemfonts_1.1.0       glue_1.8.0             
+[49] stringi_1.8.4           gtable_0.3.6            ggeffects_2.0.0        
+[52] munsell_0.5.1           pillar_1.10.1           htmltools_0.5.8.1      
+[55] biometrics_1.2.4        openssl_2.2.2           R6_2.5.1               
+[58] textshaping_0.4.1       evaluate_1.0.1          kableExtra_1.4.0       
+[61] haven_2.5.4             backports_1.5.0         cards_0.4.0            
+[64] broom_1.0.7             snakecase_0.11.1        fontLiberation_0.1.0   
+[67] Rcpp_1.0.13-1           cardx_0.2.2             zip_2.3.1              
+[70] uuid_1.2-1              svglite_2.1.3           gridExtra_2.3          
+[73] Rttf2pt1_1.3.12         officer_0.6.7           xfun_0.49              
+[76] pkgconfig_2.0.3        </code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <category>R</category>
+  <category>Modelling</category>
+  <category>Quarto</category>
+  <guid>https://the-kids-biostats.github.io/posts/2025-01-10_model_function/model_function.html</guid>
+  <pubDate>Thu, 09 Jan 2025 16:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Visualisations for (bidirectional) Likert scale data</title>
   <dc:creator>Zac Dempsey and Dr Matt Cooper</dc:creator>
@@ -147,7 +842,6 @@ font-style: inherit;"># Function to simulate post-survey responses with both imp
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(pre_response) {</span>
 <span id="cb1-20">  <span class="co" style="color: #5E5E5E;
 background-color: null;
@@ -244,7 +938,6 @@ font-style: inherit;">apply</span>(pre, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">2</span>, <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(x) <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">sapply</span>(x, simulate_post))</span>
@@ -475,7 +1168,6 @@ font-style: inherit;">3</span>)</span></code></pre></div>
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(data,</span>
 <span id="cb3-2">                          grouping_var,</span>
 <span id="cb3-3">                          facet_var,</span>
@@ -937,7 +1629,6 @@ font-style: inherit;">15</span>))</span>
 <span id="cb3-79">  </span>
 <span id="cb3-80">  <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (hline <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="cn" style="color: #8f5902;
@@ -965,10 +1656,8 @@ background-color: null;
 font-style: inherit;">"red"</span>)</span>
 <span id="cb3-85">  } <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (hline <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="cn" style="color: #8f5902;
@@ -1032,7 +1721,6 @@ font-style: inherit;">"mode"</span>)</span></code></pre></div>
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(data, </span>
 <span id="cb5-2">                            <span class="at" style="color: #657422;
 background-color: null;
@@ -1238,7 +1926,6 @@ font-style: inherit;">"Saffron"</span>) </span></code></pre></div>
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(data,</span>
 <span id="cb8-2">                           <span class="at" style="color: #657422;
 background-color: null;
@@ -2387,7 +3074,6 @@ font-style: inherit;"># Arrange legend items in a single row (applies if legend 
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(data,</span>
 <span id="cb4-2">                         <span class="at" style="color: #657422;
 background-color: null;
@@ -7429,12 +8115,12 @@ Note.
 <col style="width: 20%">
 </colgroup>
 <thead>
-<tr class="gt_col_headings gt_spanner_row header">
+<tr class="header gt_col_headings gt_spanner_row">
 <th rowspan="2" id="<strong>Variable</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Variable</strong></th>
 <th colspan="2" id="<strong>control</strong>, N = 394" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><span class="gt_column_spanner"><strong>control</strong>, N = 394</span></th>
 <th colspan="2" id="<strong>treatment</strong>, N = 408" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><span class="gt_column_spanner"><strong>treatment</strong>, N = 408</span></th>
 </tr>
-<tr class="gt_col_headings even">
+<tr class="odd gt_col_headings">
 <th id="<em>pre</em><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><em>pre</em><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
 <th id="<em>post</em><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><em>post</em><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
 <th id="<em>pre</em><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><em>pre</em><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
@@ -8062,7 +8748,7 @@ font-style: inherit;">"Group"</span>)</span></code></pre></div>
 <col style="width: 33%">
 </colgroup>
 <thead>
-<tr class="gt_col_headings header">
+<tr class="header gt_col_headings">
 <th id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
 <th id="<strong>control</strong>, N = 197<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>control</strong>, N = 197<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
 <th id="<strong>treatment</strong>, N = 204<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>treatment</strong>, N = 204<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
@@ -8075,7 +8761,7 @@ font-style: inherit;">"Group"</span>)</span></code></pre></div>
 <td class="gt_row gt_center" headers="stat_2">50.24 (4.5) [204]</td>
 </tr>
 </tbody><tfoot class="gt_footnotes">
-<tr class="odd">
+<tr class="even">
 <td colspan="3" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> Mean (SD)<br>
 [No. obs.]</td>
 </tr>
@@ -8709,7 +9395,7 @@ font-style: inherit;">"Group"</span>)</span></code></pre></div>
 <col style="width: 25%">
 </colgroup>
 <thead>
-<tr class="gt_col_headings header">
+<tr class="header gt_col_headings">
 <th id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
 <th id="<strong>Beta</strong>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Beta</strong></th>
 <th id="<strong>95% CI</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
@@ -8752,7 +9438,7 @@ font-style: inherit;">"Group"</span>)</span></code></pre></div>
 <td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
 </tr>
 </tbody><tfoot class="gt_footnotes">
-<tr class="odd">
+<tr class="even">
 <td colspan="4" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> CI = Confidence Interval</td>
 </tr>
 </tfoot>
@@ -9757,7 +10443,7 @@ font-style: inherit;">2.35</span>)) </span></code></pre></div>
 <col style="width: 33%">
 </colgroup>
 <thead>
-<tr class="gt_col_headings header">
+<tr class="header gt_col_headings">
 <th id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
 <th id="<strong>Beta</strong>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Beta</strong></th>
 <th id="<strong>95% CI</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
@@ -9816,7 +10502,7 @@ font-style: inherit;">2.35</span>)) </span></code></pre></div>
 <td class="gt_row gt_center" headers="ci">29.00, 30.81</td>
 </tr>
 </tbody><tfoot class="gt_footnotes">
-<tr class="odd">
+<tr class="even">
 <td colspan="3" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> CI = Confidence Interval</td>
 </tr>
 </tfoot>
@@ -10272,10 +10958,8 @@ font-style: inherit;">data =</span> mtcars)))</span>
 <span id="cb9-6"></span>
 <span id="cb9-7"><span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">in</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
@@ -10342,7 +11026,6 @@ background-color: null;
 font-style: inherit;">2</span>, </span>
 <span id="cb9-25">                       <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(coefs){<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">quantile</span>(coefs, <span class="at" style="color: #657422;
@@ -10504,7 +11187,6 @@ background-color: null;
 font-style: inherit;">2</span>, </span>
 <span id="cb16-12">                       <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(coefs) {<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">quantile</span>(coefs, <span class="at" style="color: #657422;
@@ -10660,7 +11342,6 @@ background-color: null;
 font-style: inherit;">2</span>, </span>
 <span id="cb23-13">                       <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(coefs) {<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">quantile</span>(coefs, <span class="at" style="color: #657422;
@@ -10917,10 +11598,8 @@ background-color: null;
 font-style: inherit;">list</span>()</span>
 <span id="cb32-3"><span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">in</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
@@ -11395,14 +12074,11 @@ font-style: inherit;"># To store our model output</span></span>
 <span id="cb50-3"></span>
 <span id="cb50-4"><span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">in</span> outcome_vars){</span>
 <span id="cb50-5">  <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (i <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -11431,10 +12107,8 @@ font-style: inherit;">data =</span> flights)</span>
 <span id="cb50-8">    </span>
 <span id="cb50-9">  } <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (i <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -11521,7 +12195,6 @@ font-style: inherit;">map</span>(outcome_vars, </span>
 background-color: null;
 font-style: inherit;">~</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -11554,10 +12227,8 @@ font-style: inherit;">summary</span>()</span>
 <span id="cb53-10">        </span>
 <span id="cb53-11">        } <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -11661,7 +12332,6 @@ font-style: inherit;">future_map</span>(outcome_vars, </span>
 background-color: null;
 font-style: inherit;">~</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -11694,10 +12364,8 @@ font-style: inherit;">summary</span>()</span>
 <span id="cb56-12">        </span>
 <span id="cb56-13">        } <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -11811,7 +12479,6 @@ background-color: null;
 font-style: inherit;">%dopar%</span> {</span>
 <span id="cb59-5">  <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (j <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -11839,10 +12506,8 @@ background-color: null;
 font-style: inherit;">data =</span> flights)</span>
 <span id="cb59-8">  } <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (j <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -12613,7 +13278,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
 <col style="width: 33%">
 </colgroup>
 <thead>
-<tr class="gt_col_headings header">
+<tr class="header gt_col_headings">
 <th id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
 <th id="<strong>Male</strong>, N = 3,696<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Male</strong>, N = 3,696<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
 <th id="<strong>Female</strong>, N = 469<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Female</strong>, N = 469<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
@@ -14351,12 +15016,12 @@ font-style: inherit;">"{n}"</span>)</span>
 <col style="width: 20%">
 </colgroup>
 <thead>
-<tr class="gt_col_headings gt_spanner_row header">
+<tr class="header gt_col_headings gt_spanner_row">
 <th rowspan="2" id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
 <th colspan="2" id="<strong>Before</strong>" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><span class="gt_column_spanner"><strong>Before</strong></span></th>
 <th colspan="2" id="<strong>After</strong>" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><span class="gt_column_spanner"><strong>After</strong></span></th>
 </tr>
-<tr class="gt_col_headings even">
+<tr class="odd gt_col_headings">
 <th id="<strong>Male</strong>, N = 3,696<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Male</strong>, N = 3,696<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
 <th id="<strong>Female</strong>, N = 469<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Female</strong>, N = 469<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
 <th id="<strong>Male</strong>, N = 2,651<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Male</strong>, N = 2,651<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
@@ -14425,7 +15090,7 @@ font-style: inherit;">"{n}"</span>)</span>
 <td class="gt_row gt_center" headers="stat_2_2">56</td>
 </tr>
 </tbody><tfoot class="gt_footnotes">
-<tr class="odd">
+<tr class="even">
 <td colspan="5" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> n</td>
 </tr>
 </tfoot>
@@ -16427,7 +17092,7 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
 <col style="width: 33%">
 </colgroup>
 <thead>
-<tr class="gt_col_headings header">
+<tr class="header gt_col_headings">
 <th id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
 <th id="<strong>Male</strong>, N = 2,804<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Male</strong>, N = 2,804<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
 <th id="<strong>Female</strong>, N = 352<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Female</strong>, N = 352<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>

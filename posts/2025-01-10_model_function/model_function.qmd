@@ -7,12 +7,12 @@ format:
     tabset: true
     toc: true
     toc-location: left
-date: "2025-01-22"
+date: "2025-01-10"
 categories:
   - R
   - Modelling
   - Quarto
-draft: true
+draft: false
 editor_options: 
   chunk_output_type: console
 execute:
@@ -28,11 +28,11 @@ fig-format: png
 library(thekidsbiostats) # install with remotes::install_github("The-Kids-Biostats/thekidsbiostats")
 ```
 
-We are constantly working on the appearance of the reports we generate for our colleagues and collaborators. This includes managing `.html` and `.docx` output for different use cases, all while navigating the move from [R Markdown](https://rmarkdown.rstudio.com/) to [Quarto](https://quarto.org/). At this stage, we have all but abandoned the idea of rendering direct to `.pdf` as we find `.docx` more friendly (tracking changes with collaborators, certain output manipulating functions) and it is readily 'pdf-able' - but more on all that in a future post.
+We are constantly working on the appearance of the reports we generate for our colleagues and collaborators. This includes managing `.html` and `.docx` output for different use cases, all while navigating the move from [R Markdown](https://rmarkdown.rstudio.com/) to [Quarto](https://quarto.org/). At this stage, we have all but completely abandoned the idea of rendering directly to `.pdf` as we find `.docx` more friendly (tracking changes with collaborators, certain output manipulating functions) and it is readily 'pdf-able' - but more on all that in a future post.
 
-Our primary report output format is `.html` and we have been looking for ways to harness certain Quarto features to improve both the aesthetic of our reports as well as our use of real estate. Often, we are presenting output for a range of models separated by narration. It is important that all models are presented with sufficient context (as opposed to just output dumped on a page) and we've settled on what we think is a nice way to ensure relevant information (like model diagnostics) are readily available to the reader, as opposed to being tucked away at the end - or worse - left out altogether.
+Our primary report output format is `.html` and we have been looking for ways to harness certain Quarto features to improve both the aesthetic of our reports as well as our use of real estate. Often, we are presenting output for a range of models separated by narration. It is important that all models are presented with sufficient context (as opposed to output just dumped on a page) and we've settled on what we think is a nice way to ensure relevant information (like model diagnostics) are readily available (and digestable) to the reader, as opposed to being tucked away at the end - or worse - left out altogether.
 
-Below, we present the current way we present output from a linear regression within our `.html` reports.
+Below, we present the way we currently present output from a linear regression in our `.html` reports.
 
 ![](function_output.png){fig-align="center" width="80%"}
 
@@ -40,19 +40,13 @@ Below, we present the current way we present output from a linear regression wit
 
 ## Presentation overview
 
-We use a combination of [tabset panels](https://quarto.org/docs/interactive/layout.html#tabset-panel) (implemented with `.panel-tabset`) and [margin content](https://quarto.org/docs/authoring/article-layout.html#margin-content) (implemented with `.column-margin`) to achieve what we think is a nice balance of real estate utilisation and content compartmentalisation.
+We use a combination of [tabset panels](https://quarto.org/docs/interactive/layout.html#tabset-panel) (implemented with `.panel-tabset`) and [margin content](https://quarto.org/docs/authoring/article-layout.html#margin-content) (implemented with `.column-margin`) to achieve what we think is a nice balance between real estate utilisation and content compartmentalisation.
 
 ## Data for the demonstration
 
-To demonstrate, we will use a slightly modified dataset containing Birth Weight data (read more with `?MASS::birthwt`) from the `MASS` package (`MASS::birthwt`).
+To demonstrate, we will use a slightly modified dataset of Birth Weight data (read more with `?MASS::birthwt`) from the `MASS` package (`MASS::birthwt`).
 
-The dataset has 189 observations (rows) and in the code below we just tidy up some variables prior to running the model; we implement a linear regression (`lm`) model.
-
-**Outcome:** infant birth weight (`bwt`).
-
-**Exposure of interest:** maternal smoking status during pregnancy (`smoke`).
-
-**Covariates:** maternal age (`age`) and history of hypertension (`ht`).
+The dataset has 189 observations (rows) and in the code below we just tidy up some variables prior to running the model.
 
 ```{r echo=TRUE}
 dat_bwt <- MASS::birthwt
@@ -66,19 +60,27 @@ dat_bwt <- dat_bwt %>%
                                T ~ NA_character_)))
 ```
 
+We then implement the following linear regression (`lm`) model:
+
+-   **Outcome:** infant birth weight (`bwt`).
+
+-   **Exposure of interest:** maternal smoking status during pregnancy (`smoke`).
+
+-   **Covariates:** maternal age (`age`) and history of hypertension (`ht`).
+
 ## Demonstration
 
 ### Running the function
 
-We can run our function as per the code below.
+We can run our function using the code below:
 
 ```{r echo=TRUE}
 #| code-fold: false
 mod_bwt <- dat_bwt %>% 
-  thekids_model("bwt", "smoke", "age + ht")
+  thekids_model(y = "bwt", x = "smoke", formula = "age + ht")
 ```
 
-In this, we have passed (piped) the data into the first argument, specified the outcome variable in the next argument, specified the exposure of interest in the next argument, and finally specified the remainder of the models formula (that is, any covariates we are looking to have in our model).
+In this, we have passed (piped) the data into the first argument, specified the outcome variable in the next argument, the exposure of interest in the next argument, and finally the remainder of the models formula (that is, the covariates we are looking to have in our model).
 
 Alternatively, we could run our model in the 'normal' way and pass it to our output processing function - which is really the workhorse of the above function - and this would look something like the following:
 
@@ -87,6 +89,8 @@ Alternatively, we could run our model in the 'normal' way and pass it to our out
 my_model <- lm(bwt ~ smoke + age + ht, data = dat_bwt)
 thekids_model_output(my_model, by = "smoke") # still need to specify our exposure of interest
 ```
+
+The objects defined above (`mod_bwt`, `my_model`) are lists that contain outputs relating to our selected model type.
 
 Now, we see how the output would appear in an `.html` report.
 
@@ -160,7 +164,7 @@ mod_bwt$mod %>%
 -   Maternal smoking during pregnancy is associated with a `r round(coef(mod_bwt$mod)[2],2)`g lower birth weight (95% CI: `r round(confint(mod_bwt$mod)[2,1],1)`,`r round(confint(mod_bwt$mod)[2,2],1)`).
 :::
 
-The code to generate this can be viewed below.
+The code to generate this can be viewed below:
 
 ```{r echo = T, eval=F}
 # ::: panel-tabset
@@ -233,20 +237,20 @@ The code to generate this can be viewed below.
 ```
 
 ::: column-margin
-If you copy all this code, you can then select all, and use ctrl+C (or command+c) to uncomment the code. 
+If you copy all this code, you can then select all, and use ctrl+C (or command+c) to uncomment the code.
 :::
 
 ## Pros and cons
 
 The motivation behind this was really to reduce the length of code in our [Quarto](https://quarto.org/) reports and to reduce the scroll in our rendered `.html` reports, without having to hideaway important information (like diagnostics) in a supplementary report, along with *forcing* (is that too strong?) the reader to engage with the raw data (and it's distribution) a little before just seeing the model output.
 
-We acknowledge, this is still a work in progress.
+We acknowledge this is still a work in progress.
 
 ### Pros
 
 -   Concise code and concise report output
--   Maintain ready access to the model and the data (for additional processing if required)
--   Reduce indecision (ad nauseam) over how to format your model output (which package to use)
+-   Maintain ready access to the model and the data (for additional processing, if required)
+-   Reduce indecision (ad nauseam) over how to format your model output (which package(s) to use)
 
 ### Cons
 
@@ -254,13 +258,13 @@ We acknowledge, this is still a work in progress.
 -   Limited functionality as it relates to different (more complex) model types
 -   Yet another function to learn and engage with
 
-Our view, again as it speaks to the motivation here, is that we are often run these sorts of models, they may not even be our final model but they may be informative on the pathway to specifying the final model. And during that process, there is a lot value in having all this output structured and readily available.
+Our view, again as it speaks to the motivation here, is that we often run these sorts of models - which may not even be our final model - but may be informative on the pathway to specifying the final model. And, along the way, there is a lot value in having all of this output structured and readily available.
 
 ## Accessing the function
 
-The above two functions (`thekids_model` and `thekids_model_output`) are now available in our package `thekidsbiostats`, which you [can install]() by running the following code:
+The above two functions (`thekids_model` and `thekids_model_output`) are now available in our package `thekidsbiostats`, which you can install by running the following code:
 
-```{r echo=TRUE, execute = F}
+```{r echo=TRUE, eval=F}
 #| code-fold: false
 remotes::install_github("The-Kids-Biostats/thekidsbiostats")
 ```
@@ -269,20 +273,20 @@ The help documentation (`?thekids_model`) is there to walk you through the relev
 
 # Next steps
 
-In line with some of the thoughts in [this previous post](https://the-kids-biostats.github.io/posts/2024-11-19_code_v_functions/code_v_functions.html)), we are only in the early stages of turning this code into a truly generic function. We have, for some time, been using modified 'project specific' versions of this function (or a version of this function - often with marginal effect estimates embedded). However as noted, currently this wrapper function only works with basic linear regression models.
+In line with some of the thoughts in [this previous post](https://the-kids-biostats.github.io/posts/2024-11-19_code_v_functions/code_v_functions.html), we are only in the early stages of turning this code into a truly generic function. We have, for some time, been using modified 'project specific' versions of this function (or a version of this function - often with marginal effect estimates embedded). However, as noted, this wrapper function only currently works with basic linear regression models.
 
-We have plans to add (at least) the following functionality:
+We have plans to add (at least) the following functionalities:
 
 -   The handling of logistic regression, negative binomial regression, and quantile regression models,
 -   The handling of multiple models at the same time (for example two models with different sets of covariates),
 -   The passing of additional arguments through to the functions used within our functions (e.g., `exp = T`), and
--   Add increased (and automated) narration (of the output).
+-   Increased (and automated) narration (of the output).
 
 # Closing comments
 
 The `thekids_model` function marks a step forward (at least for us) in streamlining how we present model output, improving both code efficiency and report clarity. By balancing aesthetics with accessibility, we aim to make diagnostic checks and key outputs seamlessly available without overwhelming the reader. While there’s still room to expand the functions functionality, we believe our approach provides a solid foundation to build upon (without overreaching).
 
-We’d love to hear your thoughts or suggestions for how we could refine this function further.
+We’d love to hear your thoughts or suggestions on how we could refine this function further.
 
 # Acknowledgements
 
