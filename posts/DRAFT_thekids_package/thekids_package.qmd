@@ -246,7 +246,7 @@ The thekidsbiostats package significantly simplifies repetitive tasks, standardi
 
 There are plenty of arguments we didn't go other in the this post, however they are all described in the [documentation](https://github.com/The-Kids-Biostats/thekidsbiostats/tree/main/man) 
 
-We hope you'll give the package a go and find it useful. Please feel free to contact us at biostatistics@thekids.org.au if you encounter any bugs or wish to suggest additional features for any of our functions. 
+We hope you'll give the package a try and find some or all of the functions useful in your own workflow. Please feel free to contact us at biostatistics@thekids.org.au if you encounter any bugs or wish to suggest additional features for any of our functions. 
 
 ## Acknowledgements
 
