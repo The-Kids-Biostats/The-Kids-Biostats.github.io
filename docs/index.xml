@@ -9,7 +9,7 @@
 <link>https://the-kids-biostats.github.io/</link>
 <atom:link href="https://the-kids-biostats.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description>Biostats R solutions</description>
-<generator>quarto-1.6.40</generator>
+<generator>quarto-1.4.555</generator>
 <lastBuildDate>Thu, 09 Jan 2025 16:00:00 GMT</lastBuildDate>
 <item>
   <title>Models - Condensed code and output</title>
@@ -842,7 +842,6 @@ font-style: inherit;"># Function to simulate post-survey responses with both imp
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(pre_response) {</span>
 <span id="cb1-20">  <span class="co" style="color: #5E5E5E;
 background-color: null;
@@ -939,7 +938,6 @@ font-style: inherit;">apply</span>(pre, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">2</span>, <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(x) <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">sapply</span>(x, simulate_post))</span>
@@ -1170,7 +1168,6 @@ font-style: inherit;">3</span>)</span></code></pre></div>
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(data,</span>
 <span id="cb3-2">                          grouping_var,</span>
 <span id="cb3-3">                          facet_var,</span>
@@ -1632,7 +1629,6 @@ font-style: inherit;">15</span>))</span>
 <span id="cb3-79">  </span>
 <span id="cb3-80">  <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (hline <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="cn" style="color: #8f5902;
@@ -1660,10 +1656,8 @@ background-color: null;
 font-style: inherit;">"red"</span>)</span>
 <span id="cb3-85">  } <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (hline <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="cn" style="color: #8f5902;
@@ -1727,7 +1721,6 @@ font-style: inherit;">"mode"</span>)</span></code></pre></div>
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(data, </span>
 <span id="cb5-2">                            <span class="at" style="color: #657422;
 background-color: null;
@@ -1933,7 +1926,6 @@ font-style: inherit;">"Saffron"</span>) </span></code></pre></div>
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(data,</span>
 <span id="cb8-2">                           <span class="at" style="color: #657422;
 background-color: null;
@@ -3082,7 +3074,6 @@ font-style: inherit;"># Arrange legend items in a single row (applies if legend 
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(data,</span>
 <span id="cb4-2">                         <span class="at" style="color: #657422;
 background-color: null;
@@ -10967,10 +10958,8 @@ font-style: inherit;">data =</span> mtcars)))</span>
 <span id="cb9-6"></span>
 <span id="cb9-7"><span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">in</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
@@ -11037,7 +11026,6 @@ background-color: null;
 font-style: inherit;">2</span>, </span>
 <span id="cb9-25">                       <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(coefs){<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">quantile</span>(coefs, <span class="at" style="color: #657422;
@@ -11199,7 +11187,6 @@ background-color: null;
 font-style: inherit;">2</span>, </span>
 <span id="cb16-12">                       <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(coefs) {<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">quantile</span>(coefs, <span class="at" style="color: #657422;
@@ -11355,7 +11342,6 @@ background-color: null;
 font-style: inherit;">2</span>, </span>
 <span id="cb23-13">                       <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(coefs) {<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">quantile</span>(coefs, <span class="at" style="color: #657422;
@@ -11612,10 +11598,8 @@ background-color: null;
 font-style: inherit;">list</span>()</span>
 <span id="cb32-3"><span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">in</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
@@ -12090,14 +12074,11 @@ font-style: inherit;"># To store our model output</span></span>
 <span id="cb50-3"></span>
 <span id="cb50-4"><span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">in</span> outcome_vars){</span>
 <span id="cb50-5">  <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (i <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -12126,10 +12107,8 @@ font-style: inherit;">data =</span> flights)</span>
 <span id="cb50-8">    </span>
 <span id="cb50-9">  } <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (i <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -12216,7 +12195,6 @@ font-style: inherit;">map</span>(outcome_vars, </span>
 background-color: null;
 font-style: inherit;">~</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -12249,10 +12227,8 @@ font-style: inherit;">summary</span>()</span>
 <span id="cb53-10">        </span>
 <span id="cb53-11">        } <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -12356,7 +12332,6 @@ font-style: inherit;">future_map</span>(outcome_vars, </span>
 background-color: null;
 font-style: inherit;">~</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -12389,10 +12364,8 @@ font-style: inherit;">summary</span>()</span>
 <span id="cb56-12">        </span>
 <span id="cb56-13">        } <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -12506,7 +12479,6 @@ background-color: null;
 font-style: inherit;">%dopar%</span> {</span>
 <span id="cb59-5">  <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (j <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -12534,10 +12506,8 @@ background-color: null;
 font-style: inherit;">data =</span> flights)</span>
 <span id="cb59-8">  } <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (j <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;

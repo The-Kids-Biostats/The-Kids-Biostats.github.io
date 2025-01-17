@@ -29,38 +29,39 @@ suppressMessages(library(kableExtra))
 
 We created a package!
 
-A major attraction of the R programming language is its vast library of free packages, which can be found on both CRAN (the Comprehensive R Archive Network) and hosted on other sites such as GitHub. These packages can provide ready-made functions, datasets and/or templates for all kinds of applications (some staggeringly niche). In the field of statistics and data analysis, it is rare to encounter any methodology, model and/or algorithm which has not also been implemented in an R package somewhere.
+A major attraction of the R programming language is its vast library of free packages, which can be found on both CRAN (the Comprehensive R Archive Network) or hosted on other sites such as GitHub. These packages can provide ready-made functions, datasets and/or templates for all kinds of applications (some staggeringly niche). In the field of statistics and data analysis, it is rare to encounter any methodology, model and/or algorithm which has not also been implemented somewhere in some R package.
 
 Packages can also be easily developed for use within teams or individual use, to automate or simplify tasks which appear often.
 
 ## What does `thekidsbiostats` do?
 
-The purpose of the package can be summed up as to provide:
+In summary, the package provides:
 
-1.  Functions to automate and/or simplify regular tasks in our workflow.
+1.  Functions to automate and/or simplify regular/routine tasks in our workflow.
 2.  Functions and Quarto templates which apply consistent formatting and theming to documents, ggplots, tables, etc.
 
 A complete list of functions, with brief descriptions, is found in the table below. The rest of this post will provide some worked examples for many of the functions in this list.
 
-```{r echo = F}
+```{r echo = F, message=FALSE}
 data.frame(
   Function = ls("package:thekidsbiostats")[c(2:4, 7:11, 14:15, 18:20)],
   Description = c(
     "Cleans REDCap data exports by applying factor levels and converting column classes per a REDCap data dictionary.",
-    "Creates a folder structure for a new project, as well as an R Project file and basic R scripts",
-    "Creates a Quarto document from one of several template (extention) choices",
-    "Like dplyr::case_when but the output variable is of class factor, ordered based on the order entered into the case_when statement",
-    "Rounds all numeric columns in a data frame or tibble, keeping trailing zeroes",
-    "Rounds all values in a vector, keeping trailing zeroes",
-    "ggplot scale_color theme for applying \"The Kids\"-themed colours",
-    "ggplot scale_fill theme for applying \"The Kids\"-themed colours",
-    "Generates a collection of informative model output in a structured list when provided data and model specification",
-    "Generates a collection of informative model output in a structured list when provided with an existing model object",
-    "Creates a formatted flextable with \"The Kids\" themed colours and fonts",
-    "Applies \"The Kids\" theme to a ggplot object, including colours, fonts and changes to other elements for a cleaner look",
-    "Like thekids_theme, but for historical projects done under the Telethon Kids Institute style guide"
+    "Creates a folder structure for a new project, as well as an R Project file and basic R scripts. [Example](#eg_create_project).",
+    "Creates a Quarto document from one of several template (extention) choices. [Example](#eg_create_template).",
+    "Like dplyr::case_when but the output variable is of class factor, ordered based on the order entered into the case_when statement. [Example](#eg_fct_case_when).",
+    "Rounds all numeric columns in a data frame or tibble, preserving trailing zeroes. [Example](#eg_round).",
+    "Rounds all values in a vector, preserving trailing zeroes. [Example](#eg_round).",
+    "ggplot scale_color theme for applying \"The Kids\"-themed colours.",
+    "ggplot scale_fill theme for applying \"The Kids\"-themed colours.",
+    "Generates a collection of informative model output in a structured list when provided data and model specification. [Example](#eg_thekids_model).",
+    "Generates a collection of informative model output in a structured list when provided with an existing model object.",
+    "Creates a formatted flextable with \"The Kids\" themed colours and fonts. [Example](#eg_thekids_table).",
+    "Applies \"The Kids\" theme to a ggplot object, including colours, fonts and changes to other elements for a cleaner look. [Example](#eg_thekids_theme).",
+    "Like thekids_theme, but for historical projects completed using the Telethon Kids Institute style guide."
   ) 
-) %>% thekids_table(colour = "Saffron")
+) %>% thekids_table(colour = "Saffron") %>%
+  ftExtra::colformat_md(j = "Description")
 ```
 
 ::: callout-note
@@ -69,7 +70,7 @@ While the formatting functions and templates are designed for The Kids Research 
 
 ## How to Install the Package
 
-The package (and all of its code!) are available here: https://github.com/The-Kids-Biostats/thekidsbiostats
+The package (and all of its code!) are available here: [https://github.com/The-Kids-Biostats/thekidsbiostats](https://github.com/The-Kids-Biostats/thekidsbiostats).
 
 If you would like to follow along with the examples below, simply run the code below:
 
@@ -81,9 +82,11 @@ library(thekidsbiostats)
 
 # Examples
 
-## create_project
+## Helper Functions
 
-This is the first function called when we begin a new project. It creates a folder structure based on parameters it is given and an R Project file. The real power of this function comes from the ext_name parameter, which allows various templates (or 'extensions') to be used for the project. So far, we have a 'basic' extension and a 'targets' extension (which adds files and folders used by the `targets` package). Other extensions are in the works for specific types of projects.
+### `create_project` {#eg_create_project}
+
+This is the first function called when we begin a new project. It creates a folder structure based on parameters it is given, and an R Project file. The real power of this function comes from the `ext_name` parameter, which allows various templates (or 'extensions') to be used for the project. So far, we have a 'basic' extension and a 'targets' extension (which adds files and folders used by the [`targets`](https://cran.r-project.org/web/packages/targets/index.html) package). Other extensions are in the works for specific types of projects.
 
 Upon calling `create_project()`, a pop-up will appear allowing the user to choose where the new project should be located:
 
@@ -94,19 +97,19 @@ create_project(project_name = "package_demo", ext_name = "targets",
 
 ![](project1.PNG)
 
-In this instance, we create a project called "package_demo". Both the parent directory and the Rproj file take this name. We choose the "targets" extension, which means our directory starts with a "\_targets.R" file and a "scripts" folder (Had we chosen the "basic" extension, neither of these would be included.)
+In this instance, we create a project called "package_demo". Both the parent directory and the R project (.Rproj) file take this name. We choose the "targets" extension, which means our directory starts with a "\_targets.R" file and a "scripts" folder (had we chosen the "basic" extension, neither of these objects would be created).
 
 ![](project2.PNG)
 
-Additionally, the function has the *data*, *data-raw*, *admin*, *reports* and *docs* parameters. These can be set to either TRUE or FALSE to include these folders in the project directory or not (default for all is TRUE). Note that we set "docs" to FALSE and so it does not appear in our directory above. 
+Additionally, the function has the *data*, *data-raw*, *admin*, *reports* and *docs* parameters. These can be set to either TRUE or FALSE to include these folders in the project directory or not (default for all is TRUE). Note that we set "docs" to FALSE and so it does not appear in our directory above.
 
 The "reports" directory created by `create_project()` is the default location for Quarto templates to be placed when calling `create_template()`, which we look at now...
 
-## create_template
+### `create_template` {#eg_create_template}
 
-The purpose of `create_template()` is to generate ready-to-populate Quarto templates with The Kids styling already applied. Two templates are possible using the `ext_name` parameter: html and word, corresponding to the format that will be rendered by the Quarto document.
+The purpose of `create_template()` is to generate ready-to-populate Quarto templates with "The Kids styling" already applied. Two templates are possible using the `ext_name` parameter: html and word, corresponding to the report format that we desire.
 
-We can call it below, telling it to create the document in the "package_demo/reports" folder we created using `create_project()` above. 
+We can call it below, telling it to create the document in the "package_demo/reports" folder we created using `create_project()` above.
 
 ```{r message = F, message = F, eval = F}
 create_template(file_name = "demo_report", directory = "package_demo/reports/")
@@ -114,22 +117,21 @@ create_template(file_name = "demo_report", directory = "package_demo/reports/")
 
 The resulting quarto document looks like this:
 
-![](report1.PNG)
-![](report2.PNG)
+![](report1.PNG) ![](report2.PNG)
 
 And rendered:
 
 ![](report3.PNG)
 
-## thekids_model
+### `thekids_model` {#eg_thekids_model}
 
 We have a dedicated [post](https://the-kids-biostats.github.io/posts/2025-01-10_model_function/model_function.html) exploring the use of `thekids_model`.
 
-Briefly, this function provides a standardised list of outputs for commonly used models in R. This includes the model itself, diagnostics, marginal means, and clean tables of typical model output (coefficients, confidence intervals, p-values etc). To see how to display these nicely in a Quarto html document, see the blog post above. 
+Briefly, this function provides a standardised list of outputs for commonly used models in R. This includes the model itself, diagnostics, marginal means, and clean tables of typical model output (coefficients, confidence intervals, p-values etc). The above blog post details exactly how to display these nicely in a Quarto html document.
 
-## round_vec and round_df
+### `round_vec` and `round_df` {#eg_round}
 
-These two functions are examples where the sole purpose is keep code concise and to the point. Often when we present figures whether it is in plots, tables or in written form, we wish to keep trailing zeroes when rounding numbers to a x decimal places.
+These two functions are examples where the sole purpose is keep code concise and to the point. Often when we present figures whether it is in plots, tables or in written form, we wish to preserve trailing zeroes when rounding numbers to a x decimal places.
 
 Below we demonstrate the difference between the base R `round()` and `round_vec()` when rounding to decimal places.
 
@@ -149,11 +151,11 @@ data.frame(
 
 `round_vec()` consistently has 2 decimal places, whereas `round()` drops any trailing zeroes, which is often undesirable for presentation.
 
-`round_df()` can be called on a data frame or tibble to round every numeric column in that object at once. 
+`round_df()` can be called on a data frame or tibble to round every numeric column in that object at once.
 
-## fct_case_when
+### `fct_case_when` {#eg_fct_case_when}
 
-In a similar vein to the above function, fct_case_when is essentially case_when from the `dplyr` package but with one handy addition: the resulting vector is a factor where the levels are ordered in the same order they are defined within the case_when statement. 
+In a similar vein to the above function, `fct_case_when` is essentially `dplyr::case_when` but with one handy addition: the resulting vector is a factor where the levels are ordered in the same order they are defined within the case_when statement.
 
 The factor levels are the result of the default `case_when()` function combined with `as.factor()`, and are simply ordered alphabetically.
 
@@ -179,12 +181,11 @@ thekidsbiostats::fct_case_when(
 ) %>% levels
 ```
 
-
 ## Theming
 
-Using functions that automatically apply a set of formatting options to plots and tables saves time, allowing us to focus on the analysis and interpretation. Code also looks a lot cleaner when those 10 lines of ggplot per plot are automated away. Importantly, these functions also ensure a polished and consistent appearance across our team, so that output looks the same no matter who generated it.
+Using functions that automatically apply a set of formatting options to plots and tables saves time, allowing us to focus on the analysis and interpretation. Code also looks a lot cleaner when those 10 lines of ggplot per plot are automated away. Importantly, these functions also ensure a polished and consistent appearance across our team, so that output looks the same irrespective of who generated it.
 
-## thekids_theme
+### `thekids_theme` {#eg_thekids_theme}
 
 The `thekids_theme()` function applies consistent theming to ggplot2 visualizations. It uses a clean, minimal aesthetic with fonts and colors that align with The Kids branding. Here’s an example of a plot before themeing:
 
@@ -194,7 +195,6 @@ ggplot(mtcars, aes(x = mpg, y = wt, col = factor(cyl))) +
   labs(x = "Miles per Gallon", y = "Weight", col = "Cylinders")
 ```
 
-
 ```{r}
 ggplot(mtcars, aes(x = mpg, y = wt, col = factor(cyl))) +
   geom_point(size = 3) +
@@ -203,7 +203,7 @@ ggplot(mtcars, aes(x = mpg, y = wt, col = factor(cyl))) +
 
 ```
 
-## thekids_table
+### `thekids_table` {#eg_thekids_table}
 
 `thekids_table()` produces tables styled with The Kids branding and is powered by the `flextable` package. This includes by default applying the Barlow font, compact formatting, and zebra-striping for readability, though these can all be altered/disabled via parameters.
 
@@ -213,7 +213,7 @@ For example, a raw table output from the mtcars dataset looks like this:
 head(mtcars, 5)
 ```
 
-Now, applying thekids_table() transforms it into a clean, visually appealing format with branding elements:
+Now, applying `thekids_table()` transforms it into a clean, visually appealing format with branding elements:
 
 ```{r}
 head(mtcars, 5) %>%
@@ -228,25 +228,23 @@ head(mtcars, 5) %>%
   thekids_table(colour = "Saffron", font.size = 10, padding = 4, striped = F)
 ```
 
+Both `thekids_theme()` and `thekids_table` provide a host of options via parameters given to the functions.
 
-Both `thekids_theme()` and `thekids_table` provide a host of options via parameters given to the functions. 
-
-:::{.callout-note}
+::: callout-note
 If we wish to use only the colours for any reason (such as some non-ggplot visualisation that accepts a colour argument) we can access them directly:
 
 ```{r}
 thekidsbiostats::thekids_colours
 ```
-
 :::
 
 # Conclusions
 
-The thekidsbiostats package significantly simplifies repetitive tasks, standardizes formatting, and enhances workflows. While tailored for The Kids Research Institute, many of its features can be readily adapted to other contexts, providing a robust framework for data analysis and reporting. 
+The `thekidsbiostats` package significantly simplifies repetitive tasks, standardizes formatting, and enhances workflows. While tailored for use at The Kids Research Institute Australia, many of its features can be readily adapted to other contexts, providing a robust framework for data analysis and reporting.
 
-There are plenty of arguments we didn't go other in the this post, however they are all described in the [documentation](https://github.com/The-Kids-Biostats/thekidsbiostats/tree/main/man) 
+There are plenty of arguments we didn't go other in the this post, however they are all described in the [documentation](https://github.com/The-Kids-Biostats/thekidsbiostats/tree/main/man).
 
-We hope you'll give the package a try and find some or all of the functions useful in your own workflow. Please feel free to contact us at biostatistics@thekids.org.au if you encounter any bugs or wish to suggest additional features for any of our functions. 
+We hope you'll give the package a try and find some or all of the functions useful in your own workflow. Please feel free to contact us at biostatistics\@thekids.org.au (or raise an issue on our [Github repository](https://github.com/The-Kids-Biostats/thekidsbiostats)) if you encounter any bugs or would like to suggest additional features for any of our functions.
 
 ## Acknowledgements
 
@@ -263,4 +261,3 @@ The session information can also be seen below.
 ```{r echo = T}
 sessionInfo()
 ```
-
