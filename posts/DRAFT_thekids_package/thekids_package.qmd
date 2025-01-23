@@ -10,7 +10,7 @@ date: "2025-01-15"
 categories:
   - R
   - Summary
-draft: true
+draft: false
 ---
 
 ```{r setup, include=FALSE}
@@ -97,7 +97,7 @@ create_project(project_name = "package_demo", ext_name = "targets",
 
 ![](project1.PNG)
 
-In this instance, we create a project called "package_demo". Both the parent directory and the R project (.Rproj) file take this name. We choose the "targets" extension, which means our directory starts with a "\_targets.R" file and a "scripts" folder (had we chosen the "basic" extension, neither of these objects would be created).
+In this instance, we create a project called "package_demo". Both the project directory and the R project (.Rproj) file take this name. We choose the "targets" extension, which means our directory starts with a "\_targets.R" file and a "scripts" folder (had we chosen the "basic" extension, neither of these objects would be created).
 
 ![](project2.PNG)
 
@@ -181,6 +181,10 @@ thekidsbiostats::fct_case_when(
 ) %>% levels
 ```
 
+::: {.callout-tip}
+This is really handy for ensuring variables appear in the desired order rather than alphabetical, without the need for double handling!
+:::
+
 ## Theming
 
 Using functions that automatically apply a set of formatting options to plots and tables saves time, allowing us to focus on the analysis and interpretation. Code also looks a lot cleaner when those 10 lines of ggplot per plot are automated away. Importantly, these functions also ensure a polished and consistent appearance across our team, so that output looks the same irrespective of who generated it.
@@ -205,7 +209,7 @@ ggplot(mtcars, aes(x = mpg, y = wt, col = factor(cyl))) +
 
 ### `thekids_table` {#eg_thekids_table}
 
-`thekids_table()` produces tables styled with The Kids branding and is powered by the `flextable` package. This includes by default applying the Barlow font, compact formatting, and zebra-striping for readability, though these can all be altered/disabled via parameters.
+`thekids_table()` produces tables styled with The Kids branding and is powered by the `flextable` package. This includes by default applying the Barlow font, compact formatting (our preference!), and zebra-striping for readability, though these can all be altered/disabled via parameters.
 
 For example, a raw table output from the mtcars dataset looks like this:
 
@@ -240,7 +244,7 @@ thekidsbiostats::thekids_colours
 
 # Conclusions
 
-The `thekidsbiostats` package significantly simplifies repetitive tasks, standardizes formatting, and enhances workflows. While tailored for use at The Kids Research Institute Australia, many of its features can be readily adapted to other contexts, providing a robust framework for data analysis and reporting.
+The `thekidsbiostats` package significantly simplifies repetitive tasks, standardises formatting, and speeds up workflows. While tailored for use at The Kids Research Institute Australia, many of its features can be readily adapted to other contexts, providing a ready-to-go framework for data analysis and reporting.
 
 There are plenty of arguments we didn't go other in the this post, however they are all described in the [documentation](https://github.com/The-Kids-Biostats/thekidsbiostats/tree/main/man).
 
@@ -249,6 +253,10 @@ We hope you'll give the package a try and find some or all of the functions usef
 ## Acknowledgements
 
 Thanks to Matt Cooper, Zac Dempsey and Elizabeth McKinnon for providing feedback on and reviewing this post.
+
+### AI Usage Note
+
+The majority of this post and code were produced by the author. AI tools were used to refine the structure and wording. 
 
 ## Reproducibility Information
 

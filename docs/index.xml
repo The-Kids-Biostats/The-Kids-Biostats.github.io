@@ -9,8 +9,592 @@
 <link>https://the-kids-biostats.github.io/</link>
 <atom:link href="https://the-kids-biostats.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description>Biostats R solutions</description>
-<generator>quarto-1.4.555</generator>
-<lastBuildDate>Thu, 09 Jan 2025 16:00:00 GMT</lastBuildDate>
+<generator>quarto-1.6.40</generator>
+<lastBuildDate>Tue, 14 Jan 2025 16:00:00 GMT</lastBuildDate>
+<item>
+  <title>An Overview of our R Package: ‘thekidsbiostats’</title>
+  <dc:creator>Wesley Billingham</dc:creator>
+  <link>https://the-kids-biostats.github.io/posts/DRAFT_thekids_package/thekids_package.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<p>We created a package!</p>
+<p>A major attraction of the R programming language is its vast library of free packages, which can be found on both CRAN (the Comprehensive R Archive Network) or hosted on other sites such as GitHub. These packages can provide ready-made functions, datasets and/or templates for all kinds of applications (some staggeringly niche). In the field of statistics and data analysis, it is rare to encounter any methodology, model and/or algorithm which has not also been implemented somewhere in some R package.</p>
+<p>Packages can also be easily developed for use within teams or individual use, to automate or simplify tasks which appear often.</p>
+<section id="what-does-thekidsbiostats-do" class="level2">
+<h2 class="anchored" data-anchor-id="what-does-thekidsbiostats-do">What does <code>thekidsbiostats</code> do?</h2>
+<p>In summary, the package provides:</p>
+<ol type="1">
+<li>Functions to automate and/or simplify regular/routine tasks in our workflow.</li>
+<li>Functions and Quarto templates which apply consistent formatting and theming to documents, ggplots, tables, etc.</li>
+</ol>
+<p>A complete list of functions, with brief descriptions, is found in the table below. The rest of this post will provide some worked examples for many of the functions in this list.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-a6f5fa3e{table-layout:auto;}.cl-a6eda6f4{font-family:'Barlow';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-a6eda712{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-a6eda713{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 255, 1.00);background-color:transparent;}.cl-a6f09c1a{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-a6f0b358{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a6f0b359{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a6f0b362{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a6f0b363{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a6f0b364{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a6f0b365{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a6f0b36c{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a6f0b36d{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a6f0b36e{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a6f0b36f{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a6f0b376{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a6f0b377{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a6f0b378{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a6f0b379{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a6f0b37a{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a6f0b380{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a6f0b381{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a6f0b38a{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-a6f5fa3e"><thead><tr style="overflow-wrap:break-word;"><th class="cl-a6f0b358"><p class="cl-a6f09c1a"><span class="cl-a6eda6f4">Function</span></p></th><th class="cl-a6f0b359"><p class="cl-a6f09c1a"><span class="cl-a6eda6f4">Description</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-a6f0b362"><p class="cl-a6f09c1a"><span class="cl-a6eda712">clean_REDCap</span></p></td><td class="cl-a6f0b363"><p class="cl-a6f09c1a"><span class="cl-a6eda712">Cleans</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">REDCap</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">data</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">exports</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">by</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">applying</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">factor</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">levels</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">and</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">converting</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">column</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">classes</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">per</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">a</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">REDCap</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">data</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">dictionary.</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a6f0b364"><p class="cl-a6f09c1a"><span class="cl-a6eda712">create_project</span></p></td><td class="cl-a6f0b365"><p class="cl-a6f09c1a"><span class="cl-a6eda712">Creates</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">a</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">folder</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">structure</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">for</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">a</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">new</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">project,</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">as</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">well</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">as</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">an</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">R</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">Project</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">file</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">and</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">basic</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">R</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">scripts.</span><span class="cl-a6eda712"> </span><span class="cl-a6eda713">Example</span><span class="cl-a6eda712">.</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a6f0b36c"><p class="cl-a6f09c1a"><span class="cl-a6eda712">create_template</span></p></td><td class="cl-a6f0b36d"><p class="cl-a6f09c1a"><span class="cl-a6eda712">Creates</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">a</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">Quarto</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">document</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">from</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">one</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">of</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">several</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">template</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">(extention)</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">choices.</span><span class="cl-a6eda712"> </span><span class="cl-a6eda713">Example</span><span class="cl-a6eda712">.</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a6f0b36e"><p class="cl-a6f09c1a"><span class="cl-a6eda712">fct_case_when</span></p></td><td class="cl-a6f0b36f"><p class="cl-a6f09c1a"><span class="cl-a6eda712">Like</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">dplyr::case_when</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">but</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">the</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">output</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">variable</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">is</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">of</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">class</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">factor,</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">ordered</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">based</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">on</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">the</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">order</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">entered</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">into</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">the</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">case_when</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">statement.</span><span class="cl-a6eda712"> </span><span class="cl-a6eda713">Example</span><span class="cl-a6eda712">.</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a6f0b36c"><p class="cl-a6f09c1a"><span class="cl-a6eda712">round_df</span></p></td><td class="cl-a6f0b36d"><p class="cl-a6f09c1a"><span class="cl-a6eda712">Rounds</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">all</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">numeric</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">columns</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">in</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">a</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">data</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">frame</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">or</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">tibble,</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">preserving</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">trailing</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">zeroes.</span><span class="cl-a6eda712"> </span><span class="cl-a6eda713">Example</span><span class="cl-a6eda712">.</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a6f0b376"><p class="cl-a6f09c1a"><span class="cl-a6eda712">round_vec</span></p></td><td class="cl-a6f0b377"><p class="cl-a6f09c1a"><span class="cl-a6eda712">Rounds</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">all</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">values</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">in</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">a</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">vector,</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">preserving</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">trailing</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">zeroes.</span><span class="cl-a6eda712"> </span><span class="cl-a6eda713">Example</span><span class="cl-a6eda712">.</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a6f0b362"><p class="cl-a6f09c1a"><span class="cl-a6eda712">scale_color_thekids</span></p></td><td class="cl-a6f0b363"><p class="cl-a6f09c1a"><span class="cl-a6eda712">ggplot</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">scale_color</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">theme</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">for</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">applying</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">“</span><span class="cl-a6eda712">The</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">Kids</span><span class="cl-a6eda712">”</span><span class="cl-a6eda712">-themed</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">colours.</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a6f0b378"><p class="cl-a6f09c1a"><span class="cl-a6eda712">scale_fill_thekids</span></p></td><td class="cl-a6f0b379"><p class="cl-a6f09c1a"><span class="cl-a6eda712">ggplot</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">scale_fill</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">theme</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">for</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">applying</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">“</span><span class="cl-a6eda712">The</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">Kids</span><span class="cl-a6eda712">”</span><span class="cl-a6eda712">-themed</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">colours.</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a6f0b36c"><p class="cl-a6f09c1a"><span class="cl-a6eda712">thekids_model</span></p></td><td class="cl-a6f0b36d"><p class="cl-a6f09c1a"><span class="cl-a6eda712">Generates</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">a</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">collection</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">of</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">informative</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">model</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">output</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">in</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">a</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">structured</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">list</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">when</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">provided</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">data</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">and</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">model</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">specification.</span><span class="cl-a6eda712"> </span><span class="cl-a6eda713">Example</span><span class="cl-a6eda712">.</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a6f0b37a"><p class="cl-a6f09c1a"><span class="cl-a6eda712">thekids_model_output</span></p></td><td class="cl-a6f0b380"><p class="cl-a6f09c1a"><span class="cl-a6eda712">Generates</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">a</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">collection</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">of</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">informative</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">model</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">output</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">in</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">a</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">structured</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">list</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">when</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">provided</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">with</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">an</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">existing</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">model</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">object.</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a6f0b36c"><p class="cl-a6f09c1a"><span class="cl-a6eda712">thekids_table</span></p></td><td class="cl-a6f0b36d"><p class="cl-a6f09c1a"><span class="cl-a6eda712">Creates</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">a</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">formatted</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">flextable</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">with</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">“</span><span class="cl-a6eda712">The</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">Kids</span><span class="cl-a6eda712">”</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">themed</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">colours</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">and</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">fonts.</span><span class="cl-a6eda712"> </span><span class="cl-a6eda713">Example</span><span class="cl-a6eda712">.</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a6f0b364"><p class="cl-a6f09c1a"><span class="cl-a6eda712">thekids_theme</span></p></td><td class="cl-a6f0b365"><p class="cl-a6f09c1a"><span class="cl-a6eda712">Applies</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">“</span><span class="cl-a6eda712">The</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">Kids</span><span class="cl-a6eda712">”</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">theme</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">to</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">a</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">ggplot</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">object,</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">including</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">colours,</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">fonts</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">and</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">changes</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">to</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">other</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">elements</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">for</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">a</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">cleaner</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">look.</span><span class="cl-a6eda712"> </span><span class="cl-a6eda713">Example</span><span class="cl-a6eda712">.</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a6f0b381"><p class="cl-a6f09c1a"><span class="cl-a6eda712">theme_institute</span></p></td><td class="cl-a6f0b38a"><p class="cl-a6f09c1a"><span class="cl-a6eda712">Like</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">thekids_theme,</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">but</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">for</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">historical</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">projects</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">completed</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">using</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">the</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">Telethon</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">Kids</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">Institute</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">style</span><span class="cl-a6eda712"> </span><span class="cl-a6eda712">guide.</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>While the formatting functions and templates are designed for The Kids Research Institute Australia (TKRIA) within the guidelines of its style guide, they should be readily adjustable for use in other contexts with changes to specific fonts, colours, etc.</p>
+</div>
+</div>
+</section>
+<section id="how-to-install-the-package" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-install-the-package">How to Install the Package</h2>
+<p>The package (and all of its code!) are available here: <a href="https://github.com/The-Kids-Biostats/thekidsbiostats">https://github.com/The-Kids-Biostats/thekidsbiostats</a>.</p>
+<p>If you would like to follow along with the examples below, simply run the code below:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1">remotes<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install_github</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://github.com/The-Kids-Biostats/thekidsbiostats"</span>)</span>
+<span id="cb1-2"></span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(thekidsbiostats)</span></code></pre></div>
+</div>
+</section>
+</section>
+<section id="examples" class="level1">
+<h1>Examples</h1>
+<section id="helper-functions" class="level2">
+<h2 class="anchored" data-anchor-id="helper-functions">Helper Functions</h2>
+<section id="eg_create_project" class="level3">
+<h3 class="anchored" data-anchor-id="eg_create_project"><code>create_project</code></h3>
+<p>This is the first function called when we begin a new project. It creates a folder structure based on parameters it is given, and an R Project file. The real power of this function comes from the <code>ext_name</code> parameter, which allows various templates (or ‘extensions’) to be used for the project. So far, we have a ‘basic’ extension and a ‘targets’ extension (which adds files and folders used by the <a href="https://cran.r-project.org/web/packages/targets/index.html"><code>targets</code></a> package). Other extensions are in the works for specific types of projects.</p>
+<p>Upon calling <code>create_project()</code>, a pop-up will appear allowing the user to choose where the new project should be located:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">create_project</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">project_name =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"package_demo"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ext_name =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"targets"</span>,</span>
+<span id="cb2-2">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">docs =</span> F)</span></code></pre></div>
+</div>
+<p><img src="https://the-kids-biostats.github.io/posts/DRAFT_thekids_package/project1.PNG" class="img-fluid"></p>
+<p>In this instance, we create a project called “package_demo”. Both the project directory and the R project (.Rproj) file take this name. We choose the “targets” extension, which means our directory starts with a “_targets.R” file and a “scripts” folder (had we chosen the “basic” extension, neither of these objects would be created).</p>
+<p><img src="https://the-kids-biostats.github.io/posts/DRAFT_thekids_package/project2.PNG" class="img-fluid"></p>
+<p>Additionally, the function has the <em>data</em>, <em>data-raw</em>, <em>admin</em>, <em>reports</em> and <em>docs</em> parameters. These can be set to either TRUE or FALSE to include these folders in the project directory or not (default for all is TRUE). Note that we set “docs” to FALSE and so it does not appear in our directory above.</p>
+<p>The “reports” directory created by <code>create_project()</code> is the default location for Quarto templates to be placed when calling <code>create_template()</code>, which we look at now…</p>
+</section>
+<section id="eg_create_template" class="level3">
+<h3 class="anchored" data-anchor-id="eg_create_template"><code>create_template</code></h3>
+<p>The purpose of <code>create_template()</code> is to generate ready-to-populate Quarto templates with “The Kids styling” already applied. Two templates are possible using the <code>ext_name</code> parameter: html and word, corresponding to the report format that we desire.</p>
+<p>We can call it below, telling it to create the document in the “package_demo/reports” folder we created using <code>create_project()</code> above.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">create_template</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">file_name =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"demo_report"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">directory =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"package_demo/reports/"</span>)</span></code></pre></div>
+</div>
+<p>The resulting quarto document looks like this:</p>
+<p><img src="https://the-kids-biostats.github.io/posts/DRAFT_thekids_package/report1.PNG" class="img-fluid"> <img src="https://the-kids-biostats.github.io/posts/DRAFT_thekids_package/report2.PNG" class="img-fluid"></p>
+<p>And rendered:</p>
+<p><img src="https://the-kids-biostats.github.io/posts/DRAFT_thekids_package/report3.PNG" class="img-fluid"></p>
+</section>
+<section id="eg_thekids_model" class="level3">
+<h3 class="anchored" data-anchor-id="eg_thekids_model"><code>thekids_model</code></h3>
+<p>We have a dedicated <a href="https://the-kids-biostats.github.io/posts/2025-01-10_model_function/model_function.html">post</a> exploring the use of <code>thekids_model</code>.</p>
+<p>Briefly, this function provides a standardised list of outputs for commonly used models in R. This includes the model itself, diagnostics, marginal means, and clean tables of typical model output (coefficients, confidence intervals, p-values etc). The above blog post details exactly how to display these nicely in a Quarto html document.</p>
+</section>
+<section id="eg_round" class="level3">
+<h3 class="anchored" data-anchor-id="eg_round"><code>round_vec</code> and <code>round_df</code></h3>
+<p>These two functions are examples where the sole purpose is keep code concise and to the point. Often when we present figures whether it is in plots, tables or in written form, we wish to preserve trailing zeroes when rounding numbers to a x decimal places.</p>
+<p>Below we demonstrate the difference between the base R <code>round()</code> and <code>round_vec()</code> when rounding to decimal places.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-a72d20b8{table-layout:auto;}.cl-a7269a2c{font-family:'Barlow';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-a7269a36{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-a7291090{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-a729109a{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-a72929a4{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a72929a5{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a72929ae{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a72929af{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a72929b0{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a72929b8{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a72929b9{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a72929ba{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a72929bb{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a72929c2{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a72929c3{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a72929cc{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-a72d20b8"><thead><tr style="overflow-wrap:break-word;"><th class="cl-a72929a4"><p class="cl-a7291090"><span class="cl-a7269a2c">original</span></p></th><th class="cl-a72929a5"><p class="cl-a729109a"><span class="cl-a7269a2c">round</span></p></th><th class="cl-a72929ae"><p class="cl-a729109a"><span class="cl-a7269a2c">round_vec</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-a72929af"><p class="cl-a7291090"><span class="cl-a7269a36">1.8003</span></p></td><td class="cl-a72929b0"><p class="cl-a729109a"><span class="cl-a7269a36">1.8</span></p></td><td class="cl-a72929b8"><p class="cl-a729109a"><span class="cl-a7269a36">1.80</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a72929b9"><p class="cl-a7291090"><span class="cl-a7269a36">1.9998</span></p></td><td class="cl-a72929ba"><p class="cl-a729109a"><span class="cl-a7269a36">2</span></p></td><td class="cl-a72929bb"><p class="cl-a729109a"><span class="cl-a7269a36">2.00</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a72929c2"><p class="cl-a7291090"><span class="cl-a7269a36">2.5812</span></p></td><td class="cl-a72929c3"><p class="cl-a729109a"><span class="cl-a7269a36">2.58</span></p></td><td class="cl-a72929cc"><p class="cl-a729109a"><span class="cl-a7269a36">2.58</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+<p><code>round_vec()</code> consistently has 2 decimal places, whereas <code>round()</code> drops any trailing zeroes, which is often undesirable for presentation.</p>
+<p><code>round_df()</code> can be called on a data frame or tibble to round every numeric column in that object at once.</p>
+</section>
+<section id="eg_fct_case_when" class="level3">
+<h3 class="anchored" data-anchor-id="eg_fct_case_when"><code>fct_case_when</code></h3>
+<p>In a similar vein to the above function, <code>fct_case_when</code> is essentially <code>dplyr::case_when</code> but with one handy addition: the resulting vector is a factor where the levels are ordered in the same order they are defined within the case_when statement.</p>
+<p>The factor levels are the result of the default <code>case_when()</code> function combined with <code>as.factor()</code>, and are simply ordered alphabetically.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">x <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">50</span></span>
+<span id="cb4-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">case_when</span>(</span>
+<span id="cb4-3">  x <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%%</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">35</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"fizz buzz"</span>,</span>
+<span id="cb4-4">  x <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%%</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"fizz"</span>,</span>
+<span id="cb4-5">  x <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%%</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">7</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"buzz"</span>,</span>
+<span id="cb4-6">  <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"everything else"</span></span>
+<span id="cb4-7">) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> as.factor <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> levels</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "buzz"            "everything else" "fizz"            "fizz buzz"      </code></pre>
+</div>
+</div>
+<p>In comparision, <code>fct_case_when()</code> orders the factor levels based on the order of their appearance in the argument:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">x <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">50</span></span>
+<span id="cb6-2">thekidsbiostats<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">fct_case_when</span>(</span>
+<span id="cb6-3">  x <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%%</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">35</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"fizz buzz"</span>,</span>
+<span id="cb6-4">  x <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%%</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"fizz"</span>,</span>
+<span id="cb6-5">  x <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%%</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">7</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"buzz"</span>,</span>
+<span id="cb6-6">  <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"everything else"</span></span>
+<span id="cb6-7">) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> levels</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "fizz buzz"       "fizz"            "buzz"            "everything else"</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This is really handy for ensuring variables appear in the desired order rather than alphabetical, without the need for double handling!</p>
+</div>
+</div>
+</section>
+</section>
+<section id="theming" class="level2">
+<h2 class="anchored" data-anchor-id="theming">Theming</h2>
+<p>Using functions that automatically apply a set of formatting options to plots and tables saves time, allowing us to focus on the analysis and interpretation. Code also looks a lot cleaner when those 10 lines of ggplot per plot are automated away. Importantly, these functions also ensure a polished and consistent appearance across our team, so that output looks the same irrespective of who generated it.</p>
+<section id="eg_thekids_theme" class="level3">
+<h3 class="anchored" data-anchor-id="eg_thekids_theme"><code>thekids_theme</code></h3>
+<p>The <code>thekids_theme()</code> function applies consistent theming to ggplot2 visualizations. It uses a clean, minimal aesthetic with fonts and colors that align with The Kids branding. Here’s an example of a plot before themeing:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(mtcars, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> mpg, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> wt, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">col =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">factor</span>(cyl))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb8-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb8-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Miles per Gallon"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Weight"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">col =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Cylinders"</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://the-kids-biostats.github.io/posts/DRAFT_thekids_package/thekids_package_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(mtcars, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> mpg, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> wt, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">col =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">factor</span>(cyl))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb9-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb9-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Miles per Gallon"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Weight"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">col =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Cylinders"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb9-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">thekids_theme</span>()</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://the-kids-biostats.github.io/posts/DRAFT_thekids_package/thekids_package_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="eg_thekids_table" class="level3">
+<h3 class="anchored" data-anchor-id="eg_thekids_table"><code>thekids_table</code></h3>
+<p><code>thekids_table()</code> produces tables styled with The Kids branding and is powered by the <code>flextable</code> package. This includes by default applying the Barlow font, compact formatting (our preference!), and zebra-striping for readability, though these can all be altered/disabled via parameters.</p>
+<p>For example, a raw table output from the mtcars dataset looks like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">head</span>(mtcars, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                   mpg cyl disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2</code></pre>
+</div>
+</div>
+<p>Now, applying <code>thekids_table()</code> transforms it into a clean, visually appealing format with branding elements:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">head</span>(mtcars, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb12-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">thekids_table</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">colour =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Saffron"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">font.size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-a7d25b8c{table-layout:auto;}.cl-a7c90942{font-family:'Barlow';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-a7c9094c{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-a7cbfe22{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-a7cc17c2{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc17cc{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc17cd{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc17ce{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc17d6{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc17d7{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc17d8{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc17e0{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc17e1{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc17e2{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc17e3{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc17ea{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc17eb{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc17f4{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc17f5{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc17f6{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc17fe{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc17ff{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1800{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1808{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1809{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc180a{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc180b{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1812{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1813{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1814{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1815{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc181c{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc181d{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc181e{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc181f{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1826{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1827{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1828{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1830{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1831{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1832{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1833{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1834{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc183a{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc183b{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc183c{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc183d{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1844{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1845{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1846{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc184e{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc184f{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1850{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1858{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1859{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc185a{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1862{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1863{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1864{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc186c{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc186d{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1876{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1877{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1878{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1879{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1880{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1881{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1882{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc1883{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7cc188a{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-a7d25b8c"><thead><tr style="overflow-wrap:break-word;"><th class="cl-a7cc17c2"><p class="cl-a7cbfe22"><span class="cl-a7c90942">mpg</span></p></th><th class="cl-a7cc17cc"><p class="cl-a7cbfe22"><span class="cl-a7c90942">cyl</span></p></th><th class="cl-a7cc17cd"><p class="cl-a7cbfe22"><span class="cl-a7c90942">disp</span></p></th><th class="cl-a7cc17ce"><p class="cl-a7cbfe22"><span class="cl-a7c90942">hp</span></p></th><th class="cl-a7cc17d6"><p class="cl-a7cbfe22"><span class="cl-a7c90942">drat</span></p></th><th class="cl-a7cc17d7"><p class="cl-a7cbfe22"><span class="cl-a7c90942">wt</span></p></th><th class="cl-a7cc17d8"><p class="cl-a7cbfe22"><span class="cl-a7c90942">qsec</span></p></th><th class="cl-a7cc17e0"><p class="cl-a7cbfe22"><span class="cl-a7c90942">vs</span></p></th><th class="cl-a7cc17e1"><p class="cl-a7cbfe22"><span class="cl-a7c90942">am</span></p></th><th class="cl-a7cc17e2"><p class="cl-a7cbfe22"><span class="cl-a7c90942">gear</span></p></th><th class="cl-a7cc17e3"><p class="cl-a7cbfe22"><span class="cl-a7c90942">carb</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-a7cc17ea"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">21.0</span></p></td><td class="cl-a7cc17eb"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">6</span></p></td><td class="cl-a7cc17f4"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">160</span></p></td><td class="cl-a7cc17f5"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">110</span></p></td><td class="cl-a7cc17f6"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">3.90</span></p></td><td class="cl-a7cc17fe"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">2.620</span></p></td><td class="cl-a7cc17ff"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">16.46</span></p></td><td class="cl-a7cc1800"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">0</span></p></td><td class="cl-a7cc1808"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">1</span></p></td><td class="cl-a7cc1809"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">4</span></p></td><td class="cl-a7cc180a"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">4</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a7cc180b"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">21.0</span></p></td><td class="cl-a7cc1812"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">6</span></p></td><td class="cl-a7cc1813"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">160</span></p></td><td class="cl-a7cc1814"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">110</span></p></td><td class="cl-a7cc1815"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">3.90</span></p></td><td class="cl-a7cc181c"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">2.875</span></p></td><td class="cl-a7cc181d"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">17.02</span></p></td><td class="cl-a7cc181e"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">0</span></p></td><td class="cl-a7cc181f"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">1</span></p></td><td class="cl-a7cc1826"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">4</span></p></td><td class="cl-a7cc1827"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">4</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a7cc1828"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">22.8</span></p></td><td class="cl-a7cc1830"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">4</span></p></td><td class="cl-a7cc1831"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">108</span></p></td><td class="cl-a7cc1832"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">93</span></p></td><td class="cl-a7cc1833"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">3.85</span></p></td><td class="cl-a7cc1834"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">2.320</span></p></td><td class="cl-a7cc183a"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">18.61</span></p></td><td class="cl-a7cc183b"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">1</span></p></td><td class="cl-a7cc183c"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">1</span></p></td><td class="cl-a7cc183d"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">4</span></p></td><td class="cl-a7cc1844"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">1</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a7cc1845"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">21.4</span></p></td><td class="cl-a7cc1846"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">6</span></p></td><td class="cl-a7cc184e"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">258</span></p></td><td class="cl-a7cc184f"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">110</span></p></td><td class="cl-a7cc1850"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">3.08</span></p></td><td class="cl-a7cc1858"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">3.215</span></p></td><td class="cl-a7cc1859"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">19.44</span></p></td><td class="cl-a7cc185a"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">1</span></p></td><td class="cl-a7cc1862"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">0</span></p></td><td class="cl-a7cc1863"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">3</span></p></td><td class="cl-a7cc1864"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">1</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a7cc186c"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">18.7</span></p></td><td class="cl-a7cc186d"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">8</span></p></td><td class="cl-a7cc1876"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">360</span></p></td><td class="cl-a7cc1877"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">175</span></p></td><td class="cl-a7cc1878"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">3.15</span></p></td><td class="cl-a7cc1879"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">3.440</span></p></td><td class="cl-a7cc1880"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">17.02</span></p></td><td class="cl-a7cc1881"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">0</span></p></td><td class="cl-a7cc1882"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">0</span></p></td><td class="cl-a7cc1883"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">3</span></p></td><td class="cl-a7cc188a"><p class="cl-a7cbfe22"><span class="cl-a7c9094c">2</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+<p>This outputs a compact, zebra-striped table ready for inclusion in Word or HTML reports. However, the <em>padding</em> and <em>striped</em> options can be changed if we would prefer some more space without any stripes:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">head</span>(mtcars, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb13-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">thekids_table</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">colour =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Saffron"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">font.size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">padding =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">striped =</span> F)</span></code></pre></div>
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-a7fbb982{table-layout:auto;}.cl-a7f2e488{font-family:'Barlow';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-a7f2e492{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-a7f6c530{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:4pt;padding-top:4pt;padding-left:4pt;padding-right:4pt;line-height: 1.5;background-color:transparent;}.cl-a7f6dfb6{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6dfb7{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6dfc0{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6dfc1{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6dfca{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6dfcb{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6dfd4{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6dfd5{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6dfd6{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6dfd7{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6dfde{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6dfdf{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6dfe8{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6dfe9{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6dff2{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6dff3{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6dff4{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6dffc{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6dffd{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6dffe{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6e006{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6e007{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6e010{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6e011{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6e012{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6e013{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6e01a{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6e01b{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6e024{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6e025{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6e026{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6e027{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6e02e{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6e02f{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6e038{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6e039{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6e042{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6e043{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6e04c{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6e04d{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6e056{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6e057{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6e060{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a7f6e061{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-a7fbb982"><thead><tr style="overflow-wrap:break-word;"><th class="cl-a7f6dfb6"><p class="cl-a7f6c530"><span class="cl-a7f2e488">mpg</span></p></th><th class="cl-a7f6dfb7"><p class="cl-a7f6c530"><span class="cl-a7f2e488">cyl</span></p></th><th class="cl-a7f6dfc0"><p class="cl-a7f6c530"><span class="cl-a7f2e488">disp</span></p></th><th class="cl-a7f6dfc1"><p class="cl-a7f6c530"><span class="cl-a7f2e488">hp</span></p></th><th class="cl-a7f6dfca"><p class="cl-a7f6c530"><span class="cl-a7f2e488">drat</span></p></th><th class="cl-a7f6dfcb"><p class="cl-a7f6c530"><span class="cl-a7f2e488">wt</span></p></th><th class="cl-a7f6dfd4"><p class="cl-a7f6c530"><span class="cl-a7f2e488">qsec</span></p></th><th class="cl-a7f6dfd5"><p class="cl-a7f6c530"><span class="cl-a7f2e488">vs</span></p></th><th class="cl-a7f6dfd6"><p class="cl-a7f6c530"><span class="cl-a7f2e488">am</span></p></th><th class="cl-a7f6dfd7"><p class="cl-a7f6c530"><span class="cl-a7f2e488">gear</span></p></th><th class="cl-a7f6dfde"><p class="cl-a7f6c530"><span class="cl-a7f2e488">carb</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-a7f6dfdf"><p class="cl-a7f6c530"><span class="cl-a7f2e492">21.0</span></p></td><td class="cl-a7f6dfe8"><p class="cl-a7f6c530"><span class="cl-a7f2e492">6</span></p></td><td class="cl-a7f6dfe9"><p class="cl-a7f6c530"><span class="cl-a7f2e492">160</span></p></td><td class="cl-a7f6dff2"><p class="cl-a7f6c530"><span class="cl-a7f2e492">110</span></p></td><td class="cl-a7f6dff3"><p class="cl-a7f6c530"><span class="cl-a7f2e492">3.90</span></p></td><td class="cl-a7f6dff4"><p class="cl-a7f6c530"><span class="cl-a7f2e492">2.620</span></p></td><td class="cl-a7f6dffc"><p class="cl-a7f6c530"><span class="cl-a7f2e492">16.46</span></p></td><td class="cl-a7f6dffd"><p class="cl-a7f6c530"><span class="cl-a7f2e492">0</span></p></td><td class="cl-a7f6dffe"><p class="cl-a7f6c530"><span class="cl-a7f2e492">1</span></p></td><td class="cl-a7f6e006"><p class="cl-a7f6c530"><span class="cl-a7f2e492">4</span></p></td><td class="cl-a7f6e007"><p class="cl-a7f6c530"><span class="cl-a7f2e492">4</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a7f6dfdf"><p class="cl-a7f6c530"><span class="cl-a7f2e492">21.0</span></p></td><td class="cl-a7f6dfe8"><p class="cl-a7f6c530"><span class="cl-a7f2e492">6</span></p></td><td class="cl-a7f6dfe9"><p class="cl-a7f6c530"><span class="cl-a7f2e492">160</span></p></td><td class="cl-a7f6dff2"><p class="cl-a7f6c530"><span class="cl-a7f2e492">110</span></p></td><td class="cl-a7f6dff3"><p class="cl-a7f6c530"><span class="cl-a7f2e492">3.90</span></p></td><td class="cl-a7f6dff4"><p class="cl-a7f6c530"><span class="cl-a7f2e492">2.875</span></p></td><td class="cl-a7f6dffc"><p class="cl-a7f6c530"><span class="cl-a7f2e492">17.02</span></p></td><td class="cl-a7f6dffd"><p class="cl-a7f6c530"><span class="cl-a7f2e492">0</span></p></td><td class="cl-a7f6dffe"><p class="cl-a7f6c530"><span class="cl-a7f2e492">1</span></p></td><td class="cl-a7f6e006"><p class="cl-a7f6c530"><span class="cl-a7f2e492">4</span></p></td><td class="cl-a7f6e007"><p class="cl-a7f6c530"><span class="cl-a7f2e492">4</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a7f6e010"><p class="cl-a7f6c530"><span class="cl-a7f2e492">22.8</span></p></td><td class="cl-a7f6e011"><p class="cl-a7f6c530"><span class="cl-a7f2e492">4</span></p></td><td class="cl-a7f6e012"><p class="cl-a7f6c530"><span class="cl-a7f2e492">108</span></p></td><td class="cl-a7f6e013"><p class="cl-a7f6c530"><span class="cl-a7f2e492">93</span></p></td><td class="cl-a7f6e01a"><p class="cl-a7f6c530"><span class="cl-a7f2e492">3.85</span></p></td><td class="cl-a7f6e01b"><p class="cl-a7f6c530"><span class="cl-a7f2e492">2.320</span></p></td><td class="cl-a7f6e024"><p class="cl-a7f6c530"><span class="cl-a7f2e492">18.61</span></p></td><td class="cl-a7f6e025"><p class="cl-a7f6c530"><span class="cl-a7f2e492">1</span></p></td><td class="cl-a7f6e026"><p class="cl-a7f6c530"><span class="cl-a7f2e492">1</span></p></td><td class="cl-a7f6e027"><p class="cl-a7f6c530"><span class="cl-a7f2e492">4</span></p></td><td class="cl-a7f6e02e"><p class="cl-a7f6c530"><span class="cl-a7f2e492">1</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a7f6e010"><p class="cl-a7f6c530"><span class="cl-a7f2e492">21.4</span></p></td><td class="cl-a7f6e011"><p class="cl-a7f6c530"><span class="cl-a7f2e492">6</span></p></td><td class="cl-a7f6e012"><p class="cl-a7f6c530"><span class="cl-a7f2e492">258</span></p></td><td class="cl-a7f6e013"><p class="cl-a7f6c530"><span class="cl-a7f2e492">110</span></p></td><td class="cl-a7f6e01a"><p class="cl-a7f6c530"><span class="cl-a7f2e492">3.08</span></p></td><td class="cl-a7f6e01b"><p class="cl-a7f6c530"><span class="cl-a7f2e492">3.215</span></p></td><td class="cl-a7f6e024"><p class="cl-a7f6c530"><span class="cl-a7f2e492">19.44</span></p></td><td class="cl-a7f6e025"><p class="cl-a7f6c530"><span class="cl-a7f2e492">1</span></p></td><td class="cl-a7f6e026"><p class="cl-a7f6c530"><span class="cl-a7f2e492">0</span></p></td><td class="cl-a7f6e027"><p class="cl-a7f6c530"><span class="cl-a7f2e492">3</span></p></td><td class="cl-a7f6e02e"><p class="cl-a7f6c530"><span class="cl-a7f2e492">1</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a7f6e02f"><p class="cl-a7f6c530"><span class="cl-a7f2e492">18.7</span></p></td><td class="cl-a7f6e038"><p class="cl-a7f6c530"><span class="cl-a7f2e492">8</span></p></td><td class="cl-a7f6e039"><p class="cl-a7f6c530"><span class="cl-a7f2e492">360</span></p></td><td class="cl-a7f6e042"><p class="cl-a7f6c530"><span class="cl-a7f2e492">175</span></p></td><td class="cl-a7f6e043"><p class="cl-a7f6c530"><span class="cl-a7f2e492">3.15</span></p></td><td class="cl-a7f6e04c"><p class="cl-a7f6c530"><span class="cl-a7f2e492">3.440</span></p></td><td class="cl-a7f6e04d"><p class="cl-a7f6c530"><span class="cl-a7f2e492">17.02</span></p></td><td class="cl-a7f6e056"><p class="cl-a7f6c530"><span class="cl-a7f2e492">0</span></p></td><td class="cl-a7f6e057"><p class="cl-a7f6c530"><span class="cl-a7f2e492">0</span></p></td><td class="cl-a7f6e060"><p class="cl-a7f6c530"><span class="cl-a7f2e492">3</span></p></td><td class="cl-a7f6e061"><p class="cl-a7f6c530"><span class="cl-a7f2e492">2</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+<p>Both <code>thekids_theme()</code> and <code>thekids_table</code> provide a host of options via parameters given to the functions.</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If we wish to use only the colours for any reason (such as some non-ggplot visualisation that accepts a colour argument) we can access them directly:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1">thekidsbiostats<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span>thekids_colours</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        Saffron         Pumpkin            Teal        DarkTeal   CelestialBlue 
+      "#F1B434"       "#F56B00"       "#00A39C"       "#00807A"       "#4A99DE" 
+      AzureBlue    MidnightBlue       Saffron50       Pumpkin50          Teal50 
+      "#426EA8"       "#1F3B73"       "#F8DA9A"       "#FAB580"       "#80D1CE" 
+CelestialBlue50  MidnightBlue50        CoolGrey      CoolGrey50      CoolGrey20 
+      "#A5CCEF"       "#8F9DB9"       "#565F5F"       "#ABAFAF"       "#EEEFEF" </code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="conclusions" class="level1">
+<h1>Conclusions</h1>
+<p>The <code>thekidsbiostats</code> package significantly simplifies repetitive tasks, standardises formatting, and speeds up workflows. While tailored for use at The Kids Research Institute Australia, many of its features can be readily adapted to other contexts, providing a ready-to-go framework for data analysis and reporting.</p>
+<p>There are plenty of arguments we didn’t go other in the this post, however they are all described in the <a href="https://github.com/The-Kids-Biostats/thekidsbiostats/tree/main/man">documentation</a>.</p>
+<p>We hope you’ll give the package a try and find some or all of the functions useful in your own workflow. Please feel free to contact us at biostatistics@thekids.org.au (or raise an issue on our <a href="https://github.com/The-Kids-Biostats/thekidsbiostats">Github repository</a>) if you encounter any bugs or would like to suggest additional features for any of our functions.</p>
+<section id="acknowledgements" class="level2">
+<h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
+<p>Thanks to Matt Cooper, Zac Dempsey and Elizabeth McKinnon for providing feedback on and reviewing this post.</p>
+<section id="ai-usage-note" class="level3">
+<h3 class="anchored" data-anchor-id="ai-usage-note">AI Usage Note</h3>
+<p>The majority of this post and code were produced by the author. AI tools were used to refine the structure and wording.</p>
+</section>
+</section>
+<section id="reproducibility-information" class="level2">
+<h2 class="anchored" data-anchor-id="reproducibility-information">Reproducibility Information</h2>
+<p>To access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:</p>
+<p><a href="https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/" class="uri">https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/</a></p>
+<p>The session information can also be seen below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sessionInfo</span>()</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.4.2 (2024-10-31 ucrt)
+Platform: x86_64-w64-mingw32/x64
+Running under: Windows 10 x64 (build 19044)
+
+Matrix products: default
+
+
+locale:
+[1] LC_COLLATE=English_Australia.utf8  LC_CTYPE=English_Australia.utf8   
+[3] LC_MONETARY=English_Australia.utf8 LC_NUMERIC=C                      
+[5] LC_TIME=English_Australia.utf8    
+
+time zone: Australia/Perth
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] kableExtra_1.4.0      thekidsbiostats_0.0.1 flextable_0.9.7      
+ [4] gtsummary_2.0.4       extrafont_0.19        Hmisc_5.2-1          
+ [7] lubridate_1.9.4       forcats_1.0.0         stringr_1.5.1        
+[10] dplyr_1.1.4           purrr_1.0.2           readr_2.1.5          
+[13] tidyr_1.3.1           tibble_3.2.1          ggplot2_3.5.1        
+[16] tidyverse_2.0.0      
+
+loaded via a namespace (and not attached):
+ [1] gtable_0.3.6            xfun_0.49               htmlwidgets_1.6.4      
+ [4] tzdb_0.4.0              vctrs_0.6.5             tools_4.4.2            
+ [7] generics_0.1.3          cluster_2.1.6           pkgconfig_2.0.3        
+[10] data.table_1.16.4       checkmate_2.3.2         uuid_1.2-1             
+[13] lifecycle_1.0.4         farver_2.1.2            compiler_4.4.2         
+[16] textshaping_0.4.1       munsell_0.5.1           janitor_2.2.1          
+[19] snakecase_0.11.1        fontquiver_0.2.1        fontLiberation_0.1.0   
+[22] htmltools_0.5.8.1       yaml_2.3.10             Rttf2pt1_1.3.12        
+[25] htmlTable_2.4.3         Formula_1.2-5           pillar_1.10.1          
+[28] extrafontdb_1.0         openssl_2.3.0           rpart_4.1.23           
+[31] fontBitstreamVera_0.1.1 zip_2.3.1               tidyselect_1.2.1       
+[34] digest_0.6.37           stringi_1.8.4           labeling_0.4.3         
+[37] labelled_2.14.0         fastmap_1.2.0           grid_4.4.2             
+[40] ftExtra_0.6.4           colorspace_2.1-1        cli_3.6.3              
+[43] magrittr_2.0.3          base64enc_0.1-3         foreign_0.8-87         
+[46] withr_3.0.2             gdtools_0.4.1           scales_1.3.0           
+[49] backports_1.5.0         timechange_0.3.0        rmarkdown_2.29         
+[52] officer_0.6.7           nnet_7.3-19             gridExtra_2.3          
+[55] ragg_1.3.3              askpass_1.2.1           hms_1.1.3              
+[58] evaluate_1.0.1          haven_2.5.4             knitr_1.49             
+[61] viridisLite_0.4.2       rlang_1.1.4             Rcpp_1.0.13-1          
+[64] glue_1.8.0              xml2_1.3.6              svglite_2.1.3          
+[67] rstudioapi_0.17.1       jsonlite_1.8.9          R6_2.5.1               
+[70] systemfonts_1.1.0      </code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <category>R</category>
+  <category>Summary</category>
+  <guid>https://the-kids-biostats.github.io/posts/DRAFT_thekids_package/thekids_package.html</guid>
+  <pubDate>Tue, 14 Jan 2025 16:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Models - Condensed code and output</title>
   <dc:creator>Dr Matt Cooper and Wesley Billingham</dc:creator>
@@ -842,6 +1426,7 @@ font-style: inherit;"># Function to simulate post-survey responses with both imp
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(pre_response) {</span>
 <span id="cb1-20">  <span class="co" style="color: #5E5E5E;
 background-color: null;
@@ -938,6 +1523,7 @@ font-style: inherit;">apply</span>(pre, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">2</span>, <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(x) <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">sapply</span>(x, simulate_post))</span>
@@ -1168,6 +1754,7 @@ font-style: inherit;">3</span>)</span></code></pre></div>
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(data,</span>
 <span id="cb3-2">                          grouping_var,</span>
 <span id="cb3-3">                          facet_var,</span>
@@ -1629,6 +2216,7 @@ font-style: inherit;">15</span>))</span>
 <span id="cb3-79">  </span>
 <span id="cb3-80">  <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (hline <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="cn" style="color: #8f5902;
@@ -1656,8 +2244,10 @@ background-color: null;
 font-style: inherit;">"red"</span>)</span>
 <span id="cb3-85">  } <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (hline <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="cn" style="color: #8f5902;
@@ -1721,6 +2311,7 @@ font-style: inherit;">"mode"</span>)</span></code></pre></div>
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(data, </span>
 <span id="cb5-2">                            <span class="at" style="color: #657422;
 background-color: null;
@@ -1926,6 +2517,7 @@ font-style: inherit;">"Saffron"</span>) </span></code></pre></div>
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(data,</span>
 <span id="cb8-2">                           <span class="at" style="color: #657422;
 background-color: null;
@@ -3074,6 +3666,7 @@ font-style: inherit;"># Arrange legend items in a single row (applies if legend 
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(data,</span>
 <span id="cb4-2">                         <span class="at" style="color: #657422;
 background-color: null;
@@ -6707,10 +7300,10 @@ Here, we simulate data to represent a “population” of healthy female C57BL/6
 <p><strong>Figure 2</strong><br>
 a) The first 5 samples (of 500) with a sample size of 50, from a simulated population with mean=23 and std dev=2.<br>
 <br> b) The distribution of the sample means calculated from each of the 500 draws.</p>
-</div></div><div class="callout callout-style-default callout-note callout-titled">
+</div></div><div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon"></i>
+<i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 Note
@@ -6787,10 +7380,10 @@ Random samples of increasing size, annotated with means and 95% confidence inter
 <div class="no-row-height column-margin column-container"><div class="">
 <p><strong>Figure 6</strong><br>
 Power plots for a 2-sample t-test, with alpha=0.05 and equal sample sizes, assuming equal variances.</p>
-</div></div><div class="callout callout-style-default callout-note callout-titled">
+</div></div><div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon"></i>
+<i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 Note
@@ -6807,10 +7400,10 @@ Note
 <section id="using-confidence-intervals-to-guide-decision-making" class="level1 page-columns page-full">
 <h1>Using confidence intervals to guide decision-making</h1>
 <p>Confidence intervals can be a little tricky to get your head around. They don’t provide a range in which XX% (typically 95%) of the data values lie, but rather relate to our belief regarding where the population parameter of interest (e.g.&nbsp;the true mean or proportion) lies.</p>
-<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout callout-style-default callout-important no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon"></i>
+<i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 Important
@@ -7128,10 +7721,10 @@ font-style: inherit;">18</span>, size, prob)</span></code></pre></div>
 <section id="first-attempt" class="level2">
 <h2 class="anchored" data-anchor-id="first-attempt">First Attempt:</h2>
 <p>Below is our prompt history with ChatGPT 4.0 as we attempted to reproduce the results from the paper - namely, using a maximum of three attempts to get the correct answer.</p>
-<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon"></i>
+<i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 Note.
@@ -7611,10 +8204,10 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
 </ul>
 <p>There are a number of nuanced variations on these methods to be aware of. This post is not strictly focused on randomised controlled trials, for which a lot of <a href="https://bmcmedresmethodol.biomedcentral.com/articles/10.1186/s12874-021-01323-9">methodological literature</a> <a href="https://psycnet.apa.org/doiLanding?doi=10.1037%2Fh0025105">addressing this</a> <a href="https://onlinelibrary.wiley.com/doi/10.1002/sim.2682">decision exists</a> - it is intended to be a light, applied look at model implementation and interpretation (in light of examining the raw data).</p>
 <p>Linear regression (ANCOVA framework) is <a href="https://doi.org/10.4172%2F2155-6180.1000334">typically* the recommended approach</a>, but varied disciplines can lean more towards the other two methods.</p>
-<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon"></i>
+<i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 Note.
@@ -8115,12 +8708,12 @@ Note.
 <col style="width: 20%">
 </colgroup>
 <thead>
-<tr class="header gt_col_headings gt_spanner_row">
+<tr class="gt_col_headings gt_spanner_row header">
 <th rowspan="2" id="<strong>Variable</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Variable</strong></th>
 <th colspan="2" id="<strong>control</strong>, N = 394" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><span class="gt_column_spanner"><strong>control</strong>, N = 394</span></th>
 <th colspan="2" id="<strong>treatment</strong>, N = 408" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><span class="gt_column_spanner"><strong>treatment</strong>, N = 408</span></th>
 </tr>
-<tr class="odd gt_col_headings">
+<tr class="gt_col_headings even">
 <th id="<em>pre</em><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><em>pre</em><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
 <th id="<em>post</em><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><em>post</em><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
 <th id="<em>pre</em><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><em>pre</em><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
@@ -8748,7 +9341,7 @@ font-style: inherit;">"Group"</span>)</span></code></pre></div>
 <col style="width: 33%">
 </colgroup>
 <thead>
-<tr class="header gt_col_headings">
+<tr class="gt_col_headings header">
 <th id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
 <th id="<strong>control</strong>, N = 197<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>control</strong>, N = 197<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
 <th id="<strong>treatment</strong>, N = 204<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>treatment</strong>, N = 204<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
@@ -8761,7 +9354,7 @@ font-style: inherit;">"Group"</span>)</span></code></pre></div>
 <td class="gt_row gt_center" headers="stat_2">50.24 (4.5) [204]</td>
 </tr>
 </tbody><tfoot class="gt_footnotes">
-<tr class="even">
+<tr class="odd">
 <td colspan="3" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> Mean (SD)<br>
 [No. obs.]</td>
 </tr>
@@ -9395,7 +9988,7 @@ font-style: inherit;">"Group"</span>)</span></code></pre></div>
 <col style="width: 25%">
 </colgroup>
 <thead>
-<tr class="header gt_col_headings">
+<tr class="gt_col_headings header">
 <th id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
 <th id="<strong>Beta</strong>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Beta</strong></th>
 <th id="<strong>95% CI</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
@@ -9438,7 +10031,7 @@ font-style: inherit;">"Group"</span>)</span></code></pre></div>
 <td class="gt_row gt_center" headers="p.value">&lt;0.001</td>
 </tr>
 </tbody><tfoot class="gt_footnotes">
-<tr class="even">
+<tr class="odd">
 <td colspan="4" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> CI = Confidence Interval</td>
 </tr>
 </tfoot>
@@ -10443,7 +11036,7 @@ font-style: inherit;">2.35</span>)) </span></code></pre></div>
 <col style="width: 33%">
 </colgroup>
 <thead>
-<tr class="header gt_col_headings">
+<tr class="gt_col_headings header">
 <th id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
 <th id="<strong>Beta</strong>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Beta</strong></th>
 <th id="<strong>95% CI</strong><span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>95% CI</strong><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
@@ -10502,7 +11095,7 @@ font-style: inherit;">2.35</span>)) </span></code></pre></div>
 <td class="gt_row gt_center" headers="ci">29.00, 30.81</td>
 </tr>
 </tbody><tfoot class="gt_footnotes">
-<tr class="even">
+<tr class="odd">
 <td colspan="3" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> CI = Confidence Interval</td>
 </tr>
 </tfoot>
@@ -10958,8 +11551,10 @@ font-style: inherit;">data =</span> mtcars)))</span>
 <span id="cb9-6"></span>
 <span id="cb9-7"><span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">in</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
@@ -11026,6 +11621,7 @@ background-color: null;
 font-style: inherit;">2</span>, </span>
 <span id="cb9-25">                       <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(coefs){<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">quantile</span>(coefs, <span class="at" style="color: #657422;
@@ -11097,10 +11693,10 @@ font-style: inherit;">print</span>(time1)</span></code></pre></div>
   4.201   0.014   4.309 </code></pre>
 </div>
 </div>
-<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
-<i class="callout-icon"></i>
+<i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
 <code>proc.time</code> components
@@ -11187,6 +11783,7 @@ background-color: null;
 font-style: inherit;">2</span>, </span>
 <span id="cb16-12">                       <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(coefs) {<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">quantile</span>(coefs, <span class="at" style="color: #657422;
@@ -11342,6 +11939,7 @@ background-color: null;
 font-style: inherit;">2</span>, </span>
 <span id="cb23-13">                       <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(coefs) {<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">quantile</span>(coefs, <span class="at" style="color: #657422;
@@ -11598,8 +12196,10 @@ background-color: null;
 font-style: inherit;">list</span>()</span>
 <span id="cb32-3"><span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">in</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
@@ -12074,11 +12674,14 @@ font-style: inherit;"># To store our model output</span></span>
 <span id="cb50-3"></span>
 <span id="cb50-4"><span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">in</span> outcome_vars){</span>
 <span id="cb50-5">  <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (i <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -12107,8 +12710,10 @@ font-style: inherit;">data =</span> flights)</span>
 <span id="cb50-8">    </span>
 <span id="cb50-9">  } <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (i <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -12195,6 +12800,7 @@ font-style: inherit;">map</span>(outcome_vars, </span>
 background-color: null;
 font-style: inherit;">~</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -12227,8 +12833,10 @@ font-style: inherit;">summary</span>()</span>
 <span id="cb53-10">        </span>
 <span id="cb53-11">        } <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -12332,6 +12940,7 @@ font-style: inherit;">future_map</span>(outcome_vars, </span>
 background-color: null;
 font-style: inherit;">~</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -12364,8 +12973,10 @@ font-style: inherit;">summary</span>()</span>
 <span id="cb56-12">        </span>
 <span id="cb56-13">        } <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -12479,6 +13090,7 @@ background-color: null;
 font-style: inherit;">%dopar%</span> {</span>
 <span id="cb59-5">  <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (j <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -12506,8 +13118,10 @@ background-color: null;
 font-style: inherit;">data =</span> flights)</span>
 <span id="cb59-8">  } <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (j <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -13278,7 +13892,7 @@ font-style: inherit;">"{n}"</span>)</span></code></pre></div>
 <col style="width: 33%">
 </colgroup>
 <thead>
-<tr class="header gt_col_headings">
+<tr class="gt_col_headings header">
 <th id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
 <th id="<strong>Male</strong>, N = 3,696<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Male</strong>, N = 3,696<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
 <th id="<strong>Female</strong>, N = 469<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Female</strong>, N = 469<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
@@ -15016,12 +15630,12 @@ font-style: inherit;">"{n}"</span>)</span>
 <col style="width: 20%">
 </colgroup>
 <thead>
-<tr class="header gt_col_headings gt_spanner_row">
+<tr class="gt_col_headings gt_spanner_row header">
 <th rowspan="2" id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
 <th colspan="2" id="<strong>Before</strong>" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><span class="gt_column_spanner"><strong>Before</strong></span></th>
 <th colspan="2" id="<strong>After</strong>" class="gt_center gt_columns_top_border gt_column_spanner_outer" data-quarto-table-cell-role="th" scope="colgroup"><span class="gt_column_spanner"><strong>After</strong></span></th>
 </tr>
-<tr class="odd gt_col_headings">
+<tr class="gt_col_headings even">
 <th id="<strong>Male</strong>, N = 3,696<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Male</strong>, N = 3,696<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
 <th id="<strong>Female</strong>, N = 469<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Female</strong>, N = 469<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
 <th id="<strong>Male</strong>, N = 2,651<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Male</strong>, N = 2,651<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
@@ -15090,7 +15704,7 @@ font-style: inherit;">"{n}"</span>)</span>
 <td class="gt_row gt_center" headers="stat_2_2">56</td>
 </tr>
 </tbody><tfoot class="gt_footnotes">
-<tr class="even">
+<tr class="odd">
 <td colspan="5" class="gt_footnote"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span> n</td>
 </tr>
 </tfoot>
@@ -17092,7 +17706,7 @@ font-style: inherit;">NA</span>, mlwage)) </span></code></pre></div>
 <col style="width: 33%">
 </colgroup>
 <thead>
-<tr class="header gt_col_headings">
+<tr class="gt_col_headings header">
 <th id="<strong>Characteristic</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col"><strong>Characteristic</strong></th>
 <th id="<strong>Male</strong>, N = 2,804<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Male</strong>, N = 2,804<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
 <th id="<strong>Female</strong>, N = 352<span class=&quot;gt_footnote_marks&quot; style=&quot;white-space:nowrap;font-style:italic;font-weight:normal;&quot;><sup>1</sup></span>" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col"><strong>Female</strong>, N = 352<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;"><sup>1</sup></span></th>
