@@ -6,7 +6,7 @@ format:
     tabset: true
     toc: true
     toc-location: left
-date: "2025-01-15"
+date: "2025-01-23"
 categories:
   - R
   - Summary
@@ -70,7 +70,7 @@ While the formatting functions and templates are designed for The Kids Research 
 
 ## How to Install the Package
 
-The package (and all of its code!) are available here: [https://github.com/The-Kids-Biostats/thekidsbiostats](https://github.com/The-Kids-Biostats/thekidsbiostats).
+The package (and all of its code!) are available here: <https://github.com/The-Kids-Biostats/thekidsbiostats>.
 
 If you would like to follow along with the examples below, simply run the code below:
 
@@ -181,7 +181,7 @@ thekidsbiostats::fct_case_when(
 ) %>% levels
 ```
 
-::: {.callout-tip}
+::: callout-tip
 This is really handy for ensuring variables appear in the desired order rather than alphabetical, without the need for double handling!
 :::
 
@@ -256,7 +256,7 @@ Thanks to Matt Cooper, Zac Dempsey and Elizabeth McKinnon for providing feedback
 
 ### AI Usage Note
 
-The majority of this post and code were produced by the author. AI tools were used to refine the structure and wording. 
+The majority of this post and code were produced by the author. AI tools were used to refine the structure and wording.
 
 ## Reproducibility Information
 
