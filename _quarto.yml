@@ -18,8 +18,10 @@ website:
         href: index.xml
       - icon: twitter
         href: "https://x.com/telethonkids"
-      - text: "R-bloggers"
-        href: https://www.r-bloggers.com
+      - text: "Our Package"
+        href: https://github.com/The-Kids-Biostats/thekidsbiostats
+      - text: "Model Guides"
+        href: https://the-kids-biostats.github.io/model_guides/
 format:
   html:
     theme: cosmo

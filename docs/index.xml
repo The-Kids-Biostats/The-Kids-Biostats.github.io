@@ -9,7 +9,7 @@
 <link>https://the-kids-biostats.github.io/</link>
 <atom:link href="https://the-kids-biostats.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description>Biostats R solutions</description>
-<generator>quarto-1.5.56</generator>
+<generator>quarto-1.6.40</generator>
 <lastBuildDate>Wed, 22 Jan 2025 16:00:00 GMT</lastBuildDate>
 <item>
   <title>An Overview of our R Package: ‘thekidsbiostats’</title>
