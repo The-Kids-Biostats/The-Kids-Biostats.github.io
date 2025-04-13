@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.555">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Zac Dempsey and Dr Matt Cooper">
+<meta name="dcterms.date" content="2025-04-14">
+
+<title>The Kids Biostats - Managing RStudio addins using the rsam package</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../thekids_logo.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="../../site_libs/tabwid-1.1.3/tabwid.css" rel="stylesheet">
+
+<script src="../../site_libs/tabwid-1.1.3/tabwid.js"></script>
+
+
+
+<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="_extensions/html/styles.css">
+</head>
+
+<body class="floating nav-fixed slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../thekids_logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">The Kids Biostats</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/telethonkids"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://www.r-bloggers.com"> 
+<span class="menu-text">R-bloggers</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Managing RStudio addins using the <code>rsam</code> package</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">R</div>
+                <div class="quarto-category">RStudio</div>
+                <div class="quarto-category">addins</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Zac Dempsey and Dr Matt Cooper </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">April 14, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a>
+  <ul class="collapse">
+  <li><a href="#addins-within-rstudio" id="toc-addins-within-rstudio" class="nav-link" data-scroll-target="#addins-within-rstudio">Addins within RStudio</a></li>
+  <li><a href="#the-usecase-for-rsam" id="toc-the-usecase-for-rsam" class="nav-link" data-scroll-target="#the-usecase-for-rsam">The usecase for <code>rsam</code></a></li>
+  </ul></li>
+  <li><a href="#step-1-rsam-installation-and-setup" id="toc-step-1-rsam-installation-and-setup" class="nav-link" data-scroll-target="#step-1-rsam-installation-and-setup">Step 1: <code>rsam</code> installation and setup</a>
+  <ul class="collapse">
+  <li><a href="#loading-the-package" id="toc-loading-the-package" class="nav-link" data-scroll-target="#loading-the-package">Loading the Package</a></li>
+  </ul></li>
+  <li><a href="#step-2-managing-your-addins" id="toc-step-2-managing-your-addins" class="nav-link" data-scroll-target="#step-2-managing-your-addins">Step 2: Managing your addins</a>
+  <ul class="collapse">
+  <li><a href="#result" id="toc-result" class="nav-link" data-scroll-target="#result">Result</a></li>
+  </ul></li>
+  <li><a href="#closing-comments" id="toc-closing-comments" class="nav-link" data-scroll-target="#closing-comments">Closing comments</a></li>
+  <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements">Acknowledgements</a>
+  <ul class="collapse">
+  <li><a href="#reproducibility-information" id="toc-reproducibility-information" class="nav-link" data-scroll-target="#reproducibility-information">Reproducibility Information</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block page-columns page-full" id="quarto-document-content">
+
+
+
+
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(thekidsbiostats) <span class="co"># install with remotes::install_github("The-Kids-Biostats/thekidsbiostats", build_vignettes = TRUE)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<p><a href="https://rstudio.github.io/rstudio-extensions/rstudio_addins.html">RStudio addins</a> are a useful (and likely underutilised) feature that allow users to execute various pre-set R commands with a simple click. They can take many forms—allowing users to run a function, automate repetitive tasks, insert a snippet of text or code, or launch an interactive GUI (e.g., Shiny application). Addins are a component of packages (from a development and installation perspective); any package may have any number of addins.</p>
+<p>As the number of packages you have installed grows, so too does the number of addins in your addin drop down menu—and, inevitably, the <em>number of addins we are unlikely to use</em> regularly, if at all, leading to more scrolling!</p>
+<section id="addins-within-rstudio" class="level2">
+<h2 class="anchored" data-anchor-id="addins-within-rstudio">Addins within RStudio</h2>
+<p>Addins are accessed in the top toolbar in RStudio. <a href="#fig-1" class="quarto-xref">Figure&nbsp;1</a> shows the (long) list of addins offered by various packages—most of which, we suspect, will not regularly (or ever) be used.</p>
+<div id="fig-1" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01-addins-pre.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Existing RStudio addins.
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="the-usecase-for-rsam" class="level2">
+<h2 class="anchored" data-anchor-id="the-usecase-for-rsam">The usecase for <code>rsam</code></h2>
+<p>Despite this, RStudio offers no in-built functionalities to manage this list. That is where the <a href="https://github.com/yonicd/rsam/tree/master"><code>rsam</code></a> package comes in handy—a relatively old and little-known package enabling users to curate their addins list, meaning you can trim the drop down menu to include <strong><em>only</em></strong> those addins you intend to use. In doing so, addins will become more readily available (easier to find) meaning they can be more efficiently incorporated into one’s workflows.</p>
+<p>For the Biostatistics team at The Kids Research Institute Australia, we have a number of addins in <a href="https://github.com/The-Kids-Biostats/thekidsbiostats">our package</a> to automate routine elements of our workflows. Therefore, we preference having these addins readily accessible.</p>
+<p>This post will walk through:</p>
+<ol type="1">
+<li>Installation of the package, and</li>
+<li>Managing addins using the <code>rsam</code> interface.</li>
+</ol>
+</section>
+</section>
+<section id="step-1-rsam-installation-and-setup" class="level1 page-columns page-full">
+<h1>Step 1: <code>rsam</code> installation and setup</h1>
+<p><code>rsam</code> is hosted only on Github and can be installed easily using the <a href="https://cran.r-project.org/web/packages/remotes/index.html"><code>remotes</code></a> package.</p>
+
+<div class="no-row-height column-margin column-container"><div class="" title="Note">
+<p>The package code hasn’t actually changed or been updated for 8 years, at the time of writing.</p>
+</div></div><div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="at">repo =</span> <span class="st">"yonicd/rsam"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="loading-the-package" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="loading-the-package">Loading the Package</h2>
+<p>Now we can load the package:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rsam)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Upon loading, we must explicitly allow the package to write to disk. We feel you can safely accept both of these request, acknowledging this is a personal choice to be made.</p>
+<div id="fig-2" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="02-load_package.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Allowing package permissions.
+</figcaption>
+</figure>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="" title="Note">
+<p>These numeric values (and labels) swap around each time the package is loaded. This stops the user from simply parsing over the permissions each time without actively reading them!</p>
+</div></div><p>While the dropdown menu shows us a list of the available addins, we can use the <code>fetch_addins</code> function from <code>rsam</code> to view these in a table format alongside some additional information about their functionality.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fetch_addins</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">thekids_table</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div style="max-height: 400px; overflow-y: auto;">
+<style></style>
+<div class="tabwid"><style>.cl-c20dc552{table-layout:auto;}.cl-c2012086{font-family:'Barlow';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-c201209a{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-c2066eb0{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-c2066eba{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-c2068f08{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f12{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f13{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f14{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f1c{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f26{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f27{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f28{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f30{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f31{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f32{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f3a{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f3b{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f44{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f45{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f46{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f47{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f4e{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f4f{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f58{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f59{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f5a{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f62{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f63{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f64{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f6c{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f6d{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f76{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f77{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f78{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f80{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f81{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f8a{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f8b{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f8c{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f94{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f95{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f96{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f9e{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068f9f{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068fa0{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068fa8{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068fa9{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068faa{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068fab{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068fb2{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068fb3{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068fb4{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068fbc{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068fbd{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068fc6{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068fc7{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068fc8{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068fc9{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068fd0{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c2068fd1{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-c20dc552"><thead><tr style="overflow-wrap:break-word;"><th class="cl-c2068f08"><p class="cl-c2066eb0"><span class="cl-c2012086">Package</span></p></th><th class="cl-c2068f12"><p class="cl-c2066eb0"><span class="cl-c2012086">Name</span></p></th><th class="cl-c2068f13"><p class="cl-c2066eb0"><span class="cl-c2012086">Description</span></p></th><th class="cl-c2068f14"><p class="cl-c2066eb0"><span class="cl-c2012086">Binding</span></p></th><th class="cl-c2068f1c"><p class="cl-c2066eb0"><span class="cl-c2012086">Interactive</span></p></th><th class="cl-c2068f26"><p class="cl-c2066eb0"><span class="cl-c2012086">Key</span></p></th><th class="cl-c2068f27"><p class="cl-c2066eb0"><span class="cl-c2012086">libpath</span></p></th><th class="cl-c2068f28"><p class="cl-c2066eba"><span class="cl-c2012086">Shortcut</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-c2068f30"><p class="cl-c2066eb0"><span class="cl-c201209a">clipr</span></p></td><td class="cl-c2068f31"><p class="cl-c2066eb0"><span class="cl-c201209a">Value to clipboard</span></p></td><td class="cl-c2068f32"><p class="cl-c2066eb0"><span class="cl-c201209a">Copies the results of a selected expression to the system clipboard</span></p></td><td class="cl-c2068f3a"><p class="cl-c2066eb0"><span class="cl-c201209a">clipr_result</span></p></td><td class="cl-c2068f3b"><p class="cl-c2066eb0"><span class="cl-c201209a">false</span></p></td><td class="cl-c2068f44"><p class="cl-c2066eb0"><span class="cl-c201209a">clipr::clipr_result</span></p></td><td class="cl-c2068f45"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/clipr/rstudio/_addins.dcf</span></p></td><td class="cl-c2068f46"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068f30"><p class="cl-c2066eb0"><span class="cl-c201209a">clipr</span></p></td><td class="cl-c2068f31"><p class="cl-c2066eb0"><span class="cl-c201209a">Output to clipboard</span></p></td><td class="cl-c2068f32"><p class="cl-c2066eb0"><span class="cl-c201209a">Copies the console output of a selected expression to the system clipboard</span></p></td><td class="cl-c2068f3a"><p class="cl-c2066eb0"><span class="cl-c201209a">clipr_output</span></p></td><td class="cl-c2068f3b"><p class="cl-c2066eb0"><span class="cl-c201209a">false</span></p></td><td class="cl-c2068f44"><p class="cl-c2066eb0"><span class="cl-c201209a">clipr::clipr_output</span></p></td><td class="cl-c2068f45"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/clipr/rstudio/_addins.dcf</span></p></td><td class="cl-c2068f46"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068f47"><p class="cl-c2066eb0"><span class="cl-c201209a">devtools</span></p></td><td class="cl-c2068f4e"><p class="cl-c2066eb0"><span class="cl-c201209a">Run a test file</span></p></td><td class="cl-c2068f4f"><p class="cl-c2066eb0"><span class="cl-c201209a">Run the current test file, using `devtools::test_active_file()`.</span></p></td><td class="cl-c2068f58"><p class="cl-c2066eb0"><span class="cl-c201209a">test_active_file</span></p></td><td class="cl-c2068f59"><p class="cl-c2066eb0"><span class="cl-c201209a">true</span></p></td><td class="cl-c2068f5a"><p class="cl-c2066eb0"><span class="cl-c201209a">devtools::test_active_file</span></p></td><td class="cl-c2068f62"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/devtools/rstudio/_addins.dcf</span></p></td><td class="cl-c2068f63"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068f47"><p class="cl-c2066eb0"><span class="cl-c201209a">devtools</span></p></td><td class="cl-c2068f4e"><p class="cl-c2066eb0"><span class="cl-c201209a">Report test coverage for a file</span></p></td><td class="cl-c2068f4f"><p class="cl-c2066eb0"><span class="cl-c201209a">Calculate and report test coverage for the current test file, using `devtools::test_coverage_active_file()`.</span></p></td><td class="cl-c2068f58"><p class="cl-c2066eb0"><span class="cl-c201209a">test_coverage_active_file</span></p></td><td class="cl-c2068f59"><p class="cl-c2066eb0"><span class="cl-c201209a">true</span></p></td><td class="cl-c2068f5a"><p class="cl-c2066eb0"><span class="cl-c201209a">devtools::test_coverage_active_file</span></p></td><td class="cl-c2068f62"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/devtools/rstudio/_addins.dcf</span></p></td><td class="cl-c2068f63"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068f47"><p class="cl-c2066eb0"><span class="cl-c201209a">devtools</span></p></td><td class="cl-c2068f4e"><p class="cl-c2066eb0"><span class="cl-c201209a">Report test coverage for a package</span></p></td><td class="cl-c2068f4f"><p class="cl-c2066eb0"><span class="cl-c201209a">Calculate and report the test coverage for the current package, using `devtools::test_coverage()`.</span></p></td><td class="cl-c2068f58"><p class="cl-c2066eb0"><span class="cl-c201209a">test_coverage</span></p></td><td class="cl-c2068f59"><p class="cl-c2066eb0"><span class="cl-c201209a">true</span></p></td><td class="cl-c2068f5a"><p class="cl-c2066eb0"><span class="cl-c201209a">devtools::test_coverage</span></p></td><td class="cl-c2068f62"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/devtools/rstudio/_addins.dcf</span></p></td><td class="cl-c2068f63"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068f64"><p class="cl-c2066eb0"><span class="cl-c201209a">devtools</span></p></td><td class="cl-c2068f6c"><p class="cl-c2066eb0"><span class="cl-c201209a">Document a package</span></p></td><td class="cl-c2068f6d"><p class="cl-c2066eb0"><span class="cl-c201209a">A wrapper for `roxygen`'s `roxygen2::roxygenize()`</span></p></td><td class="cl-c2068f76"><p class="cl-c2066eb0"><span class="cl-c201209a">document</span></p></td><td class="cl-c2068f77"><p class="cl-c2066eb0"><span class="cl-c201209a">true</span></p></td><td class="cl-c2068f78"><p class="cl-c2066eb0"><span class="cl-c201209a">devtools::document</span></p></td><td class="cl-c2068f80"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/devtools/rstudio/_addins.dcf</span></p></td><td class="cl-c2068f81"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068f47"><p class="cl-c2066eb0"><span class="cl-c201209a">devtools</span></p></td><td class="cl-c2068f4e"><p class="cl-c2066eb0"><span class="cl-c201209a">Run examples</span></p></td><td class="cl-c2068f4f"><p class="cl-c2066eb0"><span class="cl-c201209a">Runs R code in examples using `devtools::run_examples()`</span></p></td><td class="cl-c2068f58"><p class="cl-c2066eb0"><span class="cl-c201209a">run_examples</span></p></td><td class="cl-c2068f59"><p class="cl-c2066eb0"><span class="cl-c201209a">true</span></p></td><td class="cl-c2068f5a"><p class="cl-c2066eb0"><span class="cl-c201209a">devtools::run_examples</span></p></td><td class="cl-c2068f62"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/devtools/rstudio/_addins.dcf</span></p></td><td class="cl-c2068f63"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068f30"><p class="cl-c2066eb0"><span class="cl-c201209a">pkgdown</span></p></td><td class="cl-c2068f31"><p class="cl-c2066eb0"><span class="cl-c201209a">Build full site</span></p></td><td class="cl-c2068f32"><p class="cl-c2066eb0"><span class="cl-c201209a">Build website for current package</span></p></td><td class="cl-c2068f3a"><p class="cl-c2066eb0"><span class="cl-c201209a">build_site</span></p></td><td class="cl-c2068f3b"><p class="cl-c2066eb0"><span class="cl-c201209a">true</span></p></td><td class="cl-c2068f44"><p class="cl-c2066eb0"><span class="cl-c201209a">pkgdown::build_site</span></p></td><td class="cl-c2068f45"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/pkgdown/rstudio/_addins.dcf</span></p></td><td class="cl-c2068f46"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068f8a"><p class="cl-c2066eb0"><span class="cl-c201209a">ProjectTemplate</span></p></td><td class="cl-c2068f8b"><p class="cl-c2066eb0"><span class="cl-c201209a">Load Project</span></p></td><td class="cl-c2068f8c"><p class="cl-c2066eb0"><span class="cl-c201209a">Load data and packages in the project.</span></p></td><td class="cl-c2068f94"><p class="cl-c2066eb0"><span class="cl-c201209a">loadproject_addin</span></p></td><td class="cl-c2068f95"><p class="cl-c2066eb0"><span class="cl-c201209a">false</span></p></td><td class="cl-c2068f96"><p class="cl-c2066eb0"><span class="cl-c201209a">ProjectTemplate::loadproject_addin</span></p></td><td class="cl-c2068f9e"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/ProjectTemplate/rstudio/_addins.dcf</span></p></td><td class="cl-c2068f9f"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068f8a"><p class="cl-c2066eb0"><span class="cl-c201209a">ProjectTemplate</span></p></td><td class="cl-c2068f8b"><p class="cl-c2066eb0"><span class="cl-c201209a">Reload Project</span></p></td><td class="cl-c2068f8c"><p class="cl-c2066eb0"><span class="cl-c201209a">Clear the global environment and reload the project.</span></p></td><td class="cl-c2068f94"><p class="cl-c2066eb0"><span class="cl-c201209a">reloadproject_addin</span></p></td><td class="cl-c2068f95"><p class="cl-c2066eb0"><span class="cl-c201209a">false</span></p></td><td class="cl-c2068f96"><p class="cl-c2066eb0"><span class="cl-c201209a">ProjectTemplate::reloadproject_addin</span></p></td><td class="cl-c2068f9e"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/ProjectTemplate/rstudio/_addins.dcf</span></p></td><td class="cl-c2068f9f"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068f30"><p class="cl-c2066eb0"><span class="cl-c201209a">Rdpack</span></p></td><td class="cl-c2068f31"><p class="cl-c2066eb0"><span class="cl-c201209a">Reprompt</span></p></td><td class="cl-c2068f32"><p class="cl-c2066eb0"><span class="cl-c201209a">Updates Rd file based on editor contents</span></p></td><td class="cl-c2068f3a"><p class="cl-c2066eb0"><span class="cl-c201209a">RStudio_reprompt</span></p></td><td class="cl-c2068f3b"><p class="cl-c2066eb0"><span class="cl-c201209a">false</span></p></td><td class="cl-c2068f44"><p class="cl-c2066eb0"><span class="cl-c201209a">Rdpack::RStudio_reprompt</span></p></td><td class="cl-c2068f45"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/Rdpack/rstudio/_addins.dcf</span></p></td><td class="cl-c2068f46"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068f47"><p class="cl-c2066eb0"><span class="cl-c201209a">reprex</span></p></td><td class="cl-c2068f4e"><p class="cl-c2066eb0"><span class="cl-c201209a">Render reprex...</span></p></td><td class="cl-c2068f4f"><p class="cl-c2066eb0"><span class="cl-c201209a">Run `reprex::reprex()` to prepare a reproducible example for sharing.</span></p></td><td class="cl-c2068f58"><p class="cl-c2066eb0"><span class="cl-c201209a">reprex_addin</span></p></td><td class="cl-c2068f59"><p class="cl-c2066eb0"><span class="cl-c201209a">true</span></p></td><td class="cl-c2068f5a"><p class="cl-c2066eb0"><span class="cl-c201209a">reprex::reprex_addin</span></p></td><td class="cl-c2068f62"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/reprex/rstudio/_addins.dcf</span></p></td><td class="cl-c2068f63"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068f30"><p class="cl-c2066eb0"><span class="cl-c201209a">reprex</span></p></td><td class="cl-c2068f31"><p class="cl-c2066eb0"><span class="cl-c201209a">Reprex selection</span></p></td><td class="cl-c2068f32"><p class="cl-c2066eb0"><span class="cl-c201209a">Prepare reprex from current selection</span></p></td><td class="cl-c2068f3a"><p class="cl-c2066eb0"><span class="cl-c201209a">reprex_selection</span></p></td><td class="cl-c2068f3b"><p class="cl-c2066eb0"><span class="cl-c201209a">false</span></p></td><td class="cl-c2068f44"><p class="cl-c2066eb0"><span class="cl-c201209a">reprex::reprex_selection</span></p></td><td class="cl-c2068f45"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/reprex/rstudio/_addins.dcf</span></p></td><td class="cl-c2068f46"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068f30"><p class="cl-c2066eb0"><span class="cl-c201209a">rhandsontable</span></p></td><td class="cl-c2068f31"><p class="cl-c2066eb0"><span class="cl-c201209a">Edit a Data Frame</span></p></td><td class="cl-c2068f32"><p class="cl-c2066eb0"><span class="cl-c201209a">Interactively edit a data frame.</span></p></td><td class="cl-c2068f3a"><p class="cl-c2066eb0"><span class="cl-c201209a">editAddin</span></p></td><td class="cl-c2068f3b"><p class="cl-c2066eb0"><span class="cl-c201209a">true</span></p></td><td class="cl-c2068f44"><p class="cl-c2066eb0"><span class="cl-c201209a">rhandsontable::editAddin</span></p></td><td class="cl-c2068f45"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/rhandsontable/rstudio/_addins.dcf</span></p></td><td class="cl-c2068f46"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068fa0"><p class="cl-c2066eb0"><span class="cl-c201209a">rsam</span></p></td><td class="cl-c2068fa8"><p class="cl-c2066eb0"><span class="cl-c201209a">lla1</span></p></td><td class="cl-c2068fa9"><p class="cl-c2066eb0"><span class="cl-c201209a">Wrap any global objects in rsam_fn_1() and use this addin to run them.</span></p></td><td class="cl-c2068faa"><p class="cl-c2066eb0"><span class="cl-c201209a">lla1</span></p></td><td class="cl-c2068fab"><p class="cl-c2066eb0"><span class="cl-c201209a">true</span></p></td><td class="cl-c2068fb2"><p class="cl-c2066eb0"><span class="cl-c201209a">rsam::lla1</span></p></td><td class="cl-c2068fb3"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/rsam/rstudio/_addins.dcf</span></p></td><td class="cl-c2068fb4"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068fa0"><p class="cl-c2066eb0"><span class="cl-c201209a">rsam</span></p></td><td class="cl-c2068fa8"><p class="cl-c2066eb0"><span class="cl-c201209a">lla2</span></p></td><td class="cl-c2068fa9"><p class="cl-c2066eb0"><span class="cl-c201209a">Wrap any global objects in rsam_fn_2() and use this addin to run them.</span></p></td><td class="cl-c2068faa"><p class="cl-c2066eb0"><span class="cl-c201209a">lla2</span></p></td><td class="cl-c2068fab"><p class="cl-c2066eb0"><span class="cl-c201209a">true</span></p></td><td class="cl-c2068fb2"><p class="cl-c2066eb0"><span class="cl-c201209a">rsam::lla2</span></p></td><td class="cl-c2068fb3"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/rsam/rstudio/_addins.dcf</span></p></td><td class="cl-c2068fb4"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068fa0"><p class="cl-c2066eb0"><span class="cl-c201209a">rsam</span></p></td><td class="cl-c2068fa8"><p class="cl-c2066eb0"><span class="cl-c201209a">lla3</span></p></td><td class="cl-c2068fa9"><p class="cl-c2066eb0"><span class="cl-c201209a">Wrap any global objects in rsam_fn_3() and use this addin to run them.</span></p></td><td class="cl-c2068faa"><p class="cl-c2066eb0"><span class="cl-c201209a">lla3</span></p></td><td class="cl-c2068fab"><p class="cl-c2066eb0"><span class="cl-c201209a">true</span></p></td><td class="cl-c2068fb2"><p class="cl-c2066eb0"><span class="cl-c201209a">rsam::lla3</span></p></td><td class="cl-c2068fb3"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/rsam/rstudio/_addins.dcf</span></p></td><td class="cl-c2068fb4"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068f30"><p class="cl-c2066eb0"><span class="cl-c201209a">targets</span></p></td><td class="cl-c2068f31"><p class="cl-c2066eb0"><span class="cl-c201209a">Edit _targets.R</span></p></td><td class="cl-c2068f32"><p class="cl-c2066eb0"><span class="cl-c201209a">Open the file _targets.R for editing. Requires the usethis package.</span></p></td><td class="cl-c2068f3a"><p class="cl-c2066eb0"><span class="cl-c201209a">tar_edit</span></p></td><td class="cl-c2068f3b"><p class="cl-c2066eb0"><span class="cl-c201209a">false</span></p></td><td class="cl-c2068f44"><p class="cl-c2066eb0"><span class="cl-c201209a">targets::tar_edit</span></p></td><td class="cl-c2068f45"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/targets/rstudio/_addins.dcf</span></p></td><td class="cl-c2068f46"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068f47"><p class="cl-c2066eb0"><span class="cl-c201209a">targets</span></p></td><td class="cl-c2068f4e"><p class="cl-c2066eb0"><span class="cl-c201209a">Run a targets pipeline in the foreground</span></p></td><td class="cl-c2068f4f"><p class="cl-c2066eb0"><span class="cl-c201209a">Calls tar_make() in the current R process. Requires a _targets.R configuration file.</span></p></td><td class="cl-c2068f58"><p class="cl-c2066eb0"><span class="cl-c201209a">tar_make</span></p></td><td class="cl-c2068f59"><p class="cl-c2066eb0"><span class="cl-c201209a">false</span></p></td><td class="cl-c2068f5a"><p class="cl-c2066eb0"><span class="cl-c201209a">targets::tar_make</span></p></td><td class="cl-c2068f62"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/targets/rstudio/_addins.dcf</span></p></td><td class="cl-c2068f63"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068f47"><p class="cl-c2066eb0"><span class="cl-c201209a">targets</span></p></td><td class="cl-c2068f4e"><p class="cl-c2066eb0"><span class="cl-c201209a">Run a targets pipeline in the background</span></p></td><td class="cl-c2068f4f"><p class="cl-c2066eb0"><span class="cl-c201209a">Calls tar_make() in a background process. Requires a _targets.R configuration file.</span></p></td><td class="cl-c2068f58"><p class="cl-c2066eb0"><span class="cl-c201209a">rstudio_addin_tar_make_bg</span></p></td><td class="cl-c2068f59"><p class="cl-c2066eb0"><span class="cl-c201209a">false</span></p></td><td class="cl-c2068f5a"><p class="cl-c2066eb0"><span class="cl-c201209a">targets::rstudio_addin_tar_make_bg</span></p></td><td class="cl-c2068f62"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/targets/rstudio/_addins.dcf</span></p></td><td class="cl-c2068f63"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068f64"><p class="cl-c2066eb0"><span class="cl-c201209a">targets</span></p></td><td class="cl-c2068f6c"><p class="cl-c2066eb0"><span class="cl-c201209a">Launch app to watch progress</span></p></td><td class="cl-c2068f6d"><p class="cl-c2066eb0"><span class="cl-c201209a">Calls tar_watch(). Requires a _targets.R file and packages bslib, pingr, shiny, and visNetwork.</span></p></td><td class="cl-c2068f76"><p class="cl-c2066eb0"><span class="cl-c201209a">tar_watch</span></p></td><td class="cl-c2068f77"><p class="cl-c2066eb0"><span class="cl-c201209a">false</span></p></td><td class="cl-c2068f78"><p class="cl-c2066eb0"><span class="cl-c201209a">targets::tar_watch</span></p></td><td class="cl-c2068f80"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/targets/rstudio/_addins.dcf</span></p></td><td class="cl-c2068f81"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068f47"><p class="cl-c2066eb0"><span class="cl-c201209a">targets</span></p></td><td class="cl-c2068f4e"><p class="cl-c2066eb0"><span class="cl-c201209a">Visualize a targets pipeline</span></p></td><td class="cl-c2068f4f"><p class="cl-c2066eb0"><span class="cl-c201209a">Calls tar_visnetwork(). Requires a _targets.R configuration file and the visNetwork package.</span></p></td><td class="cl-c2068f58"><p class="cl-c2066eb0"><span class="cl-c201209a">rstudio_addin_tar_visnetwork</span></p></td><td class="cl-c2068f59"><p class="cl-c2066eb0"><span class="cl-c201209a">false</span></p></td><td class="cl-c2068f5a"><p class="cl-c2066eb0"><span class="cl-c201209a">targets::rstudio_addin_tar_visnetwork</span></p></td><td class="cl-c2068f62"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/targets/rstudio/_addins.dcf</span></p></td><td class="cl-c2068f63"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068f47"><p class="cl-c2066eb0"><span class="cl-c201209a">targets</span></p></td><td class="cl-c2068f4e"><p class="cl-c2066eb0"><span class="cl-c201209a">Glimpse a targets pipeline</span></p></td><td class="cl-c2068f4f"><p class="cl-c2066eb0"><span class="cl-c201209a">Calls tar_glimpse(). Requires a _targets.R configuration file and the visNetwork package.</span></p></td><td class="cl-c2068f58"><p class="cl-c2066eb0"><span class="cl-c201209a">rstudio_addin_tar_glimpse</span></p></td><td class="cl-c2068f59"><p class="cl-c2066eb0"><span class="cl-c201209a">false</span></p></td><td class="cl-c2068f5a"><p class="cl-c2066eb0"><span class="cl-c201209a">targets::rstudio_addin_tar_glimpse</span></p></td><td class="cl-c2068f62"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/targets/rstudio/_addins.dcf</span></p></td><td class="cl-c2068f63"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068f47"><p class="cl-c2066eb0"><span class="cl-c201209a">targets</span></p></td><td class="cl-c2068f4e"><p class="cl-c2066eb0"><span class="cl-c201209a">See outdated targets</span></p></td><td class="cl-c2068f4f"><p class="cl-c2066eb0"><span class="cl-c201209a">Calls tar_outdated(). Requries a _targets.R configuration file</span></p></td><td class="cl-c2068f58"><p class="cl-c2066eb0"><span class="cl-c201209a">rstudio_addin_tar_outdated</span></p></td><td class="cl-c2068f59"><p class="cl-c2066eb0"><span class="cl-c201209a">false</span></p></td><td class="cl-c2068f5a"><p class="cl-c2066eb0"><span class="cl-c201209a">targets::rstudio_addin_tar_outdated</span></p></td><td class="cl-c2068f62"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/targets/rstudio/_addins.dcf</span></p></td><td class="cl-c2068f63"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068f47"><p class="cl-c2066eb0"><span class="cl-c201209a">targets</span></p></td><td class="cl-c2068f4e"><p class="cl-c2066eb0"><span class="cl-c201209a">Print recent progress</span></p></td><td class="cl-c2068f4f"><p class="cl-c2066eb0"><span class="cl-c201209a">Run tar_progress() and print the tail() of the result.</span></p></td><td class="cl-c2068f58"><p class="cl-c2066eb0"><span class="cl-c201209a">rstudio_addin_tar_progress</span></p></td><td class="cl-c2068f59"><p class="cl-c2066eb0"><span class="cl-c201209a">false</span></p></td><td class="cl-c2068f5a"><p class="cl-c2066eb0"><span class="cl-c201209a">targets::rstudio_addin_tar_progress</span></p></td><td class="cl-c2068f62"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/targets/rstudio/_addins.dcf</span></p></td><td class="cl-c2068f63"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068f30"><p class="cl-c2066eb0"><span class="cl-c201209a">targets</span></p></td><td class="cl-c2068f31"><p class="cl-c2066eb0"><span class="cl-c201209a">Load target at cursor</span></p></td><td class="cl-c2068f32"><p class="cl-c2066eb0"><span class="cl-c201209a">Load the target identified by the symbol at the cursor position from the _targets data store.</span></p></td><td class="cl-c2068f3a"><p class="cl-c2066eb0"><span class="cl-c201209a">rstudio_addin_tar_load</span></p></td><td class="cl-c2068f3b"><p class="cl-c2066eb0"><span class="cl-c201209a">false</span></p></td><td class="cl-c2068f44"><p class="cl-c2066eb0"><span class="cl-c201209a">targets::rstudio_addin_tar_load</span></p></td><td class="cl-c2068f45"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/targets/rstudio/_addins.dcf</span></p></td><td class="cl-c2068f46"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068f30"><p class="cl-c2066eb0"><span class="cl-c201209a">targets</span></p></td><td class="cl-c2068f31"><p class="cl-c2066eb0"><span class="cl-c201209a">Read target at cursor</span></p></td><td class="cl-c2068f32"><p class="cl-c2066eb0"><span class="cl-c201209a">Read the target identified by the symbol at the cursor position from the _targets data store.</span></p></td><td class="cl-c2068f3a"><p class="cl-c2066eb0"><span class="cl-c201209a">rstudio_addin_tar_read</span></p></td><td class="cl-c2068f3b"><p class="cl-c2066eb0"><span class="cl-c201209a">false</span></p></td><td class="cl-c2068f44"><p class="cl-c2066eb0"><span class="cl-c201209a">targets::rstudio_addin_tar_read</span></p></td><td class="cl-c2068f45"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/targets/rstudio/_addins.dcf</span></p></td><td class="cl-c2068f46"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068f47"><p class="cl-c2066eb0"><span class="cl-c201209a">targets</span></p></td><td class="cl-c2068f4e"><p class="cl-c2066eb0"><span class="cl-c201209a">Write target at cursor</span></p></td><td class="cl-c2068f4f"><p class="cl-c2066eb0"><span class="cl-c201209a">Write tar_target() at the cursor position.</span></p></td><td class="cl-c2068f58"><p class="cl-c2066eb0"><span class="cl-c201209a">rstudio_addin_tar_target</span></p></td><td class="cl-c2068f59"><p class="cl-c2066eb0"><span class="cl-c201209a">false</span></p></td><td class="cl-c2068f5a"><p class="cl-c2066eb0"><span class="cl-c201209a">targets::rstudio_addin_tar_target</span></p></td><td class="cl-c2068f62"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/targets/rstudio/_addins.dcf</span></p></td><td class="cl-c2068f63"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068f30"><p class="cl-c2066eb0"><span class="cl-c201209a">thekidsbiostats</span></p></td><td class="cl-c2068f31"><p class="cl-c2066eb0"><span class="cl-c201209a">Insert Callout</span></p></td><td class="cl-c2068f32"><p class="cl-c2066eb0"><span class="cl-c201209a">Inserts a Quarto callout at the current cursor position.</span></p></td><td class="cl-c2068f3a"><p class="cl-c2066eb0"><span class="cl-c201209a">insert_callout</span></p></td><td class="cl-c2068f3b"><p class="cl-c2066eb0"><span class="cl-c201209a">true</span></p></td><td class="cl-c2068f44"><p class="cl-c2066eb0"><span class="cl-c201209a">thekidsbiostats::insert_callout</span></p></td><td class="cl-c2068f45"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/thekidsbiostats/rstudio/_addins.dcf</span></p></td><td class="cl-c2068f46"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068f30"><p class="cl-c2066eb0"><span class="cl-c201209a">thekidsbiostats</span></p></td><td class="cl-c2068f31"><p class="cl-c2066eb0"><span class="cl-c201209a">Insert Margin Comment</span></p></td><td class="cl-c2068f32"><p class="cl-c2066eb0"><span class="cl-c201209a">Inserts a Quarto margin comment at the current cursor position.</span></p></td><td class="cl-c2068f3a"><p class="cl-c2066eb0"><span class="cl-c201209a">insert_margin</span></p></td><td class="cl-c2068f3b"><p class="cl-c2066eb0"><span class="cl-c201209a">true</span></p></td><td class="cl-c2068f44"><p class="cl-c2066eb0"><span class="cl-c201209a">thekidsbiostats::insert_margin</span></p></td><td class="cl-c2068f45"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/thekidsbiostats/rstudio/_addins.dcf</span></p></td><td class="cl-c2068f46"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068fa0"><p class="cl-c2066eb0"><span class="cl-c201209a">thekidsbiostats</span></p></td><td class="cl-c2068fa8"><p class="cl-c2066eb0"><span class="cl-c201209a">Create Project (Shiny)</span></p></td><td class="cl-c2068fa9"><p class="cl-c2066eb0"><span class="cl-c201209a">Launch a Shiny app to create a new project with a structured directory.</span></p></td><td class="cl-c2068faa"><p class="cl-c2066eb0"><span class="cl-c201209a">create_project_addin</span></p></td><td class="cl-c2068fab"><p class="cl-c2066eb0"><span class="cl-c201209a">true</span></p></td><td class="cl-c2068fb2"><p class="cl-c2066eb0"><span class="cl-c201209a">thekidsbiostats::create_project_addin</span></p></td><td class="cl-c2068fb3"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/thekidsbiostats/rstudio/_addins.dcf</span></p></td><td class="cl-c2068fb4"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c2068fbc"><p class="cl-c2066eb0"><span class="cl-c201209a">thekidsbiostats</span></p></td><td class="cl-c2068fbd"><p class="cl-c2066eb0"><span class="cl-c201209a">Insert Model Panel Tabset</span></p></td><td class="cl-c2068fc6"><p class="cl-c2066eb0"><span class="cl-c201209a">Insert Quarto tabset for model output with optional explanations</span></p></td><td class="cl-c2068fc7"><p class="cl-c2066eb0"><span class="cl-c201209a">insert_model_tabset</span></p></td><td class="cl-c2068fc8"><p class="cl-c2066eb0"><span class="cl-c201209a">true</span></p></td><td class="cl-c2068fc9"><p class="cl-c2066eb0"><span class="cl-c201209a">thekidsbiostats::insert_model_tabset</span></p></td><td class="cl-c2068fd0"><p class="cl-c2066eb0"><span class="cl-c201209a">C:/Users/zdempsey/AppData/Local/R/win-library/4.4/thekidsbiostats/rstudio/_addins.dcf</span></p></td><td class="cl-c2068fd1"><p class="cl-c2066eba"><span class="cl-c201209a"></span></p></td></tr></tbody></table></div>
+</div>
+</section>
+</section>
+<section id="step-2-managing-your-addins" class="level1">
+<h1>Step 2: Managing your addins</h1>
+<p>Now, we call <code>rsam()</code>. This opens a Shiny app in the Viewer pane, where we can simply “tick” the addins we wish to preserve, and then click “Update”.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rsam</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="fig-3" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="03-select_addins.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Select addins to preserve
+</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We must restart our RStudio IDE for these changes to take effect.</p>
+</div>
+</div>
+<section id="result" class="level2">
+<h2 class="anchored" data-anchor-id="result">Result</h2>
+<p>Now, back in the addins toolbar in RStudio, we can see only the ones we selected (I chose to preserve only the <code>targets</code> and <code>thekidsbiostats</code> addins).</p>
+<div id="fig-4" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="05-result.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Trimmed down list of addins
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="closing-comments" class="level1">
+<h1>Closing comments</h1>
+<p>Using the <code>rsam</code> package, we can manage and personalise the addins we see in RStudio—preferencing those we routinely use and masking those we do not. In doing so, we can have the addins we want at our fingertips to more easily and efficiently incorporate those addins into our everyday workflows.</p>
+</section>
+<section id="acknowledgements" class="level1">
+<h1>Acknowledgements</h1>
+<p>Thanks to Wesley Billingham, Dr Robin Cook and Dr Elizabeth McKinnon for providing feedback on and reviewing this post.</p>
+<section id="reproducibility-information" class="level2">
+<h2 class="anchored" data-anchor-id="reproducibility-information">Reproducibility Information</h2>
+<p>To access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:</p>
+<p><a href="https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/" class="uri">https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/</a></p>
+<p>The session information can also be seen below.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.4.1 (2024-06-14 ucrt)
+Platform: x86_64-w64-mingw32/x64
+Running under: Windows 10 x64 (build 19045)
+
+Matrix products: default
+
+
+locale:
+[1] LC_COLLATE=English_Australia.utf8  LC_CTYPE=English_Australia.utf8   
+[3] LC_MONETARY=English_Australia.utf8 LC_NUMERIC=C                      
+[5] LC_TIME=English_Australia.utf8    
+
+time zone: Australia/Sydney
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] thekidsbiostats_0.0.2 flextable_0.9.7       gtsummary_2.1.0      
+ [4] lubridate_1.9.4       forcats_1.0.0         stringr_1.5.1        
+ [7] dplyr_1.1.4           purrr_1.0.4           readr_2.1.5          
+[10] tidyr_1.3.1           tibble_3.2.1          ggplot2_3.5.2        
+[13] tidyverse_2.0.0       extrafont_0.19       
+
+loaded via a namespace (and not attached):
+ [1] gtable_0.3.6            xfun_0.52               htmlwidgets_1.6.4      
+ [4] tzdb_0.5.0              vctrs_0.6.5             tools_4.4.1            
+ [7] generics_0.1.3          pkgconfig_2.0.3         data.table_1.17.0      
+[10] uuid_1.2-1              lifecycle_1.0.4         farver_2.1.2           
+[13] compiler_4.4.1          textshaping_1.0.0       munsell_0.5.1          
+[16] janitor_2.2.1           snakecase_0.11.1        httpuv_1.6.15          
+[19] fontquiver_0.2.1        fontLiberation_0.1.0    htmltools_0.5.8.1      
+[22] yaml_2.3.10             Rttf2pt1_1.3.12         pillar_1.10.2          
+[25] later_1.4.2             extrafontdb_1.0         openssl_2.3.2          
+[28] mime_0.13               fontBitstreamVera_0.1.1 tidyselect_1.2.1       
+[31] zip_2.3.2               digest_0.6.37           stringi_1.8.7          
+[34] labelled_2.14.0         fastmap_1.2.0           grid_4.4.1             
+[37] colorspace_2.1-1        cli_3.6.4               magrittr_2.0.3         
+[40] patchwork_1.3.0         withr_3.0.2             gdtools_0.4.2          
+[43] scales_1.3.0            promises_1.3.2          timechange_0.3.0       
+[46] rmarkdown_2.29          officer_0.6.8           askpass_1.2.1          
+[49] ragg_1.3.3              hms_1.1.3               shiny_1.10.0           
+[52] evaluate_1.0.3          haven_2.5.4             knitr_1.50             
+[55] rlang_1.1.5             Rcpp_1.0.14             xtable_1.8-4           
+[58] glue_1.8.0              xml2_1.3.8              rstudioapi_0.17.1      
+[61] jsonlite_2.0.0          R6_2.6.1                systemfonts_1.2.2      
+[64] fs_1.6.5                shinyFiles_0.9.3       </code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/the-kids-biostats\.github\.io");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

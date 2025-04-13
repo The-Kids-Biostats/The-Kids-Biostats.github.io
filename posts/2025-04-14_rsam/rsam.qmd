@@ -7,12 +7,12 @@ format:
     tabset: true
     toc: true
     toc-location: left
-date: "2025-04-11"
+date: "2025-04-14"
 categories:
   - R
   - RStudio
   - addins
-draft: true
+draft: false
 css: _extensions/html/styles.css
 editor_options: 
   chunk_output_type: console
@@ -32,7 +32,7 @@ library(thekidsbiostats) # install with remotes::install_github("The-Kids-Biosta
 
 [RStudio addins](https://rstudio.github.io/rstudio-extensions/rstudio_addins.html) are a useful (and likely underutilised) feature that allow users to execute various pre-set R commands with a simple click. They can take many forms---allowing users to run a function, automate repetitive tasks, insert a snippet of text or code, or launch an interactive GUI (e.g., Shiny application). Addins are a component of packages (from a development and installation perspective); any package may have any number of addins.
 
-As the number of packages you have installed grows, so too does the number of addins in your addin drop down menu---and, inevitably, the *number of addins we are unlikely to use* regularly, if at all, leading to more scrolling!.
+As the number of packages you have installed grows, so too does the number of addins in your addin drop down menu---and, inevitably, the *number of addins we are unlikely to use* regularly, if at all, leading to more scrolling!
 
 ## Addins within RStudio
 
@@ -53,10 +53,10 @@ This post will walk through:
 
 # Step 1: `rsam` installation and setup
 
-`rsam` is hosted only on Github and can be installed easily using the [`remotes`](https://cran.r-project.org/web/packages/remotes/index.html) package. Noting the package code hasn't changed (or had updates) for 8 years (at the time or writing.
+`rsam` is hosted only on Github and can be installed easily using the [`remotes`](https://cran.r-project.org/web/packages/remotes/index.html) package.
 
 ::: {.column-margin title="Note"}
-The package code hasn't actually changed (e.g., been updated) for 8 years - at the time of writing.
+The package code hasn't actually changed or been updated for 8 years, at the time of writing.
 :::
 
 ```{r echo=TRUE, eval=FALSE}
@@ -83,7 +83,7 @@ Upon loading, we must explicitly allow the package to write to disk. We feel you
 These numeric values (and labels) swap around each time the package is loaded. This stops the user from simply parsing over the permissions each time without actively reading them!
 :::
 
-While the dropdown menu shows us a list of the available addins, we can use the `fetch_addins` function from `rsam` to view these in a table format alongside some additional information about their functionality. 
+While the dropdown menu shows us a list of the available addins, we can use the `fetch_addins` function from `rsam` to view these in a table format alongside some additional information about their functionality.
 
 ```{r echo=TRUE, eval=FALSE}
 #| code-fold: false
