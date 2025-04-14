@@ -648,14 +648,14 @@
     "href": "posts/2025-04-14_rsam/rsam.html#addins-within-rstudio",
     "title": "Managing RStudio addins using the rsam package",
     "section": "Addins within RStudio",
-    "text": "Addins within RStudio\nAddins are accessed in the top toolbar in RStudio. Figure 1 shows the (long) list of addins offered by various packages—most of which, we suspect, will not regularly (or ever) be used.\n\n\n\n\n\n\nFigure 1: Existing RStudio addins."
+    "text": "Addins within RStudio\nAddins are accessed in the top toolbar in RStudio. Figure 1 shows the (long) list of addins offered by various packages—most of which, we suspect, will not regularly (or ever) be used by the average user.\n\n\n\n\n\n\nFigure 1: Existing RStudio addins."
   },
   {
     "objectID": "posts/2025-04-14_rsam/rsam.html#the-usecase-for-rsam",
     "href": "posts/2025-04-14_rsam/rsam.html#the-usecase-for-rsam",
     "title": "Managing RStudio addins using the rsam package",
     "section": "The usecase for rsam",
-    "text": "The usecase for rsam\nDespite this, RStudio offers no in-built functionalities to manage this list. That is where the rsam package comes in handy—a relatively old and little-known package enabling users to curate their addins list, meaning you can trim the drop down menu to include only those addins you intend to use. In doing so, addins will become more readily available (easier to find) meaning they can be more efficiently incorporated into one’s workflows.\nFor the Biostatistics team at The Kids Research Institute Australia, we have a number of addins in our package to automate routine elements of our workflows. Therefore, we preference having these addins readily accessible.\nThis post will walk through:\n\nInstallation of the package, and\nManaging addins using the rsam interface."
+    "text": "The usecase for rsam\nDespite this, RStudio offers no in-built functionalities to manage this list. That is where the rsam package comes in handy—a relatively old and little-known package enabling users to curate their addins list, meaning you can trim the drop down menu to include only those addins you intend to use. In doing so, addins will become more readily available (easier to find) meaning they can be more efficiently incorporated into your workflow.\nFor the Biostatistics team at The Kids Research Institute Australia, we have a number of addins in our package to automate routine elements of our workflows. Therefore, we preference having these addins readily accessible.\nThis post will walk through:\n\nInstallation of the package, and\nManaging addins using the rsam interface."
   },
   {
     "objectID": "posts/2025-04-14_rsam/rsam.html#loading-the-package",
