@@ -30,19 +30,19 @@ library(thekidsbiostats) # install with remotes::install_github("The-Kids-Biosta
 
 # Overview
 
-[RStudio addins](https://rstudio.github.io/rstudio-extensions/rstudio_addins.html) are a useful (and likely underutilised) feature that allow users to execute various pre-set R commands with a simple click. They can take many forms---allowing users to run a function, automate repetitive tasks, insert a snippet of text or code, or launch an interactive GUI (e.g., Shiny application). Addins are a component of packages (from a development and installation perspective); any package may have any number of addins.
+[RStudio addins](https://rstudio.github.io/rstudio-extensions/rstudio_addins.html) are a useful (and likely underutilised) feature that allow users to execute various pre-set R commands with a simple click from a drop down menu. They can take many forms---allowing users to run a function, automate repetitive tasks, insert a snippet of text or code, or launch an interactive GUI (e.g., Shiny application). Addins are a component of packages (from a development and installation perspective); any package may have any number of addins.
 
-As the number of packages you have installed grows, so too does the number of addins in your addin drop down menu---and, inevitably, the *number of addins we are unlikely to use* regularly, if at all, leading to more scrolling!
+As the number of packages you have installed grows, so too does the number of addins in your drop down menu, especially since addins are available even when their corresponding package is not loaded. Inevitably, the *number of addins we are unlikely to use* regularly (if at all!) grows, leading to unnecessary scrolling to find the ones we want. 
 
 ## Addins within RStudio
 
-Addins are accessed in the top toolbar in RStudio. @fig-1 shows the (long) list of addins offered by various packages---most of which, we suspect, will not regularly (or ever) be used.
+Addins are accessed in the top toolbar in RStudio. Figure 1 shows the (long) list of addins offered by various packages---most of which, we suspect, will not regularly (or ever) be used by the average user.
 
 ![Existing RStudio addins.](01-addins-pre.png){#fig-1 width="100%" fig-align="center"}
 
 ## The usecase for `rsam`
 
-Despite this, RStudio offers no in-built functionalities to manage this list. That is where the [`rsam`](https://github.com/yonicd/rsam/tree/master) package comes in handy---a relatively old and little-known package enabling users to curate their addins list, meaning you can trim the drop down menu to include ***only*** those addins you intend to use. In doing so, addins will become more readily available (easier to find) meaning they can be more efficiently incorporated into one's workflows.
+Despite this, RStudio offers no in-built functionalities to manage this list. That is where the [`rsam`](https://github.com/yonicd/rsam/tree/master) package comes in handy---a relatively old and little-known package enabling users to curate their addins list, meaning you can trim the drop down menu to include ***only*** those addins you intend to use. In doing so, addins will become more readily available (easier to find) meaning they can be more efficiently incorporated into your workflow.
 
 For the Biostatistics team at The Kids Research Institute Australia, we have a number of addins in [our package](https://github.com/The-Kids-Biostats/thekidsbiostats) to automate routine elements of our workflows. Therefore, we preference having these addins readily accessible.
 
