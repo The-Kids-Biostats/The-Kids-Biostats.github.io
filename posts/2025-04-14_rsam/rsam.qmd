@@ -1,0 +1,143 @@
+---
+title: "Managing RStudio addins using the `rsam` package"
+author: "Zac Dempsey and Dr Matt Cooper"
+format:
+  html:
+    code-fold: true
+    tabset: true
+    toc: true
+    toc-location: left
+date: "2025-04-14"
+categories:
+  - R
+  - RStudio
+  - addins
+draft: false
+css: _extensions/html/styles.css
+editor_options: 
+  chunk_output_type: console
+execute:
+  echo: false
+  warning: false 
+fig-align: center
+fig-format: png
+---
+
+```{r echo=TRUE}
+#| code-fold: false
+library(thekidsbiostats) # install with remotes::install_github("The-Kids-Biostats/thekidsbiostats", build_vignettes = TRUE)
+```
+
+# Overview
+
+[RStudio addins](https://rstudio.github.io/rstudio-extensions/rstudio_addins.html) are a useful (and likely underutilised) feature that allow users to execute various pre-set R commands with a simple click from a drop down menu. They can take many forms---allowing users to run a function, automate repetitive tasks, insert a snippet of text or code, or launch an interactive GUI (e.g., Shiny application). Addins are a component of packages (from a development and installation perspective); any package may have any number of addins.
+
+As the number of packages you have installed grows, so too does the number of addins in your drop down menu, especially since addins are available even when their corresponding package is not loaded. Inevitably, the *number of addins we are unlikely to use* regularly (if at all!) grows, leading to unnecessary scrolling to find the ones we want. 
+
+## Addins within RStudio
+
+Addins are accessed in the top toolbar in RStudio. Figure 1 shows the (long) list of addins offered by various packages---most of which, we suspect, will not regularly (or ever) be used by the average user.
+
+![Existing RStudio addins.](01-addins-pre.png){#fig-1 width="100%" fig-align="center"}
+
+## The usecase for `rsam`
+
+Despite this, RStudio offers no in-built functionalities to manage this list. That is where the [`rsam`](https://github.com/yonicd/rsam/tree/master) package comes in handy---a relatively old and little-known package enabling users to curate their addins list, meaning you can trim the drop down menu to include ***only*** those addins you intend to use. In doing so, addins will become more readily available (easier to find) meaning they can be more efficiently incorporated into your workflow.
+
+For the Biostatistics team at The Kids Research Institute Australia, we have a number of addins in [our package](https://github.com/The-Kids-Biostats/thekidsbiostats) to automate routine elements of our workflows. Therefore, we preference having these addins readily accessible.
+
+This post will walk through:
+
+1)  Installation of the package, and
+2)  Managing addins using the `rsam` interface.
+
+# Step 1: `rsam` installation and setup
+
+`rsam` is hosted only on Github and can be installed easily using the [`remotes`](https://cran.r-project.org/web/packages/remotes/index.html) package.
+
+::: {.column-margin title="Note"}
+The package code hasn't actually changed or been updated for 8 years, at the time of writing.
+:::
+
+```{r echo=TRUE, eval=FALSE}
+#| code-fold: false
+
+remotes::install_github(repo = "yonicd/rsam")
+```
+
+## Loading the Package
+
+Now we can load the package:
+
+```{r echo=TRUE, eval=FALSE}
+#| code-fold: false
+
+library(rsam)
+```
+
+Upon loading, we must explicitly allow the package to write to disk. We feel you can safely accept both of these request, acknowledging this is a personal choice to be made.
+
+![Allowing package permissions.](02-load_package.png){#fig-2 width="100%" fig-align="center"}
+
+::: {.column-margin title="Note"}
+These numeric values (and labels) swap around each time the package is loaded. This stops the user from simply parsing over the permissions each time without actively reading them!
+:::
+
+While the dropdown menu shows us a list of the available addins, we can use the `fetch_addins` function from `rsam` to view these in a table format alongside some additional information about their functionality.
+
+```{r echo=TRUE, eval=FALSE}
+#| code-fold: false
+fetch_addins() %>%
+  thekids_table()
+```
+
+```{r results='asis'}
+load(file = "all_addins.RData")
+all_addins <- all_addins %>%
+  thekids_table()
+
+htmltools::div(style = "max-height: 400px; overflow-y: auto;", 
+               flextable::htmltools_value(all_addins))
+```
+
+# Step 2: Managing your addins
+
+Now, we call `rsam()`. This opens a Shiny app in the Viewer pane, where we can simply "tick" the addins we wish to preserve, and then click "Update".
+
+```{r echo=TRUE, eval=FALSE}
+#| code-fold: false
+
+rsam()
+```
+
+![Select addins to preserve](03-select_addins.png){#fig-3 width="100%" fig-align="center"}
+
+::: callout-important
+We must restart our RStudio IDE for these changes to take effect.
+:::
+
+## Result
+
+Now, back in the addins toolbar in RStudio, we can see only the ones we selected (I chose to preserve only the `targets` and `thekidsbiostats` addins).
+
+![Trimmed down list of addins](05-result.png){#fig-4 width="100%" fig-align="center"}
+
+# Closing comments
+
+Using the `rsam` package, we can manage and personalise the addins we see in RStudio---preferencing those we routinely use and masking those we do not. In doing so, we can have the addins we want at our fingertips to more easily and efficiently incorporate those addins into our everyday workflows.
+
+# Acknowledgements
+
+Thanks to Wesley Billingham, Dr Robin Cook and Dr Elizabeth McKinnon for providing feedback on and reviewing this post.
+
+## Reproducibility Information
+
+To access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:
+
+<https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/>
+
+The session information can also be seen below.
+
+```{r echo = T}
+sessionInfo()
+```
