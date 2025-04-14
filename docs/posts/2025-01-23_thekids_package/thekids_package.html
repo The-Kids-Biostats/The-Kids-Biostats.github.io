@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.555">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Wesley Billingham">
+<meta name="dcterms.date" content="2025-01-23">
+
+<title>The Kids Biostats - An Overview of our R Package: ‘thekidsbiostats’</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../thekids_logo.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="../../site_libs/tabwid-1.1.3/tabwid.css" rel="stylesheet">
+
+<script src="../../site_libs/tabwid-1.1.3/tabwid.js"></script>
+
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../thekids_logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">The Kids Biostats</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/telethonkids"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/The-Kids-Biostats/thekidsbiostats"> 
+<span class="menu-text">Our Package</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://the-kids-biostats.github.io/model_guides/"> 
+<span class="menu-text">Model Guides</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">An Overview of our R Package: ‘thekidsbiostats’</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">R</div>
+                <div class="quarto-category">Summary</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Wesley Billingham </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">January 23, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a>
+  <ul class="collapse">
+  <li><a href="#what-does-thekidsbiostats-do" id="toc-what-does-thekidsbiostats-do" class="nav-link" data-scroll-target="#what-does-thekidsbiostats-do">What does <code>thekidsbiostats</code> do?</a></li>
+  <li><a href="#how-to-install-the-package" id="toc-how-to-install-the-package" class="nav-link" data-scroll-target="#how-to-install-the-package">How to Install the Package</a></li>
+  </ul></li>
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a>
+  <ul class="collapse">
+  <li><a href="#helper-functions" id="toc-helper-functions" class="nav-link" data-scroll-target="#helper-functions">Helper Functions</a>
+  <ul class="collapse">
+  <li><a href="#eg_create_project" id="toc-eg_create_project" class="nav-link" data-scroll-target="#eg_create_project"><code>create_project</code></a></li>
+  <li><a href="#eg_create_template" id="toc-eg_create_template" class="nav-link" data-scroll-target="#eg_create_template"><code>create_template</code></a></li>
+  <li><a href="#eg_thekids_model" id="toc-eg_thekids_model" class="nav-link" data-scroll-target="#eg_thekids_model"><code>thekids_model</code></a></li>
+  <li><a href="#eg_round" id="toc-eg_round" class="nav-link" data-scroll-target="#eg_round"><code>round_vec</code> and <code>round_df</code></a></li>
+  <li><a href="#eg_fct_case_when" id="toc-eg_fct_case_when" class="nav-link" data-scroll-target="#eg_fct_case_when"><code>fct_case_when</code></a></li>
+  </ul></li>
+  <li><a href="#theming" id="toc-theming" class="nav-link" data-scroll-target="#theming">Theming</a>
+  <ul class="collapse">
+  <li><a href="#eg_thekids_theme" id="toc-eg_thekids_theme" class="nav-link" data-scroll-target="#eg_thekids_theme"><code>thekids_theme</code></a></li>
+  <li><a href="#eg_thekids_table" id="toc-eg_thekids_table" class="nav-link" data-scroll-target="#eg_thekids_table"><code>thekids_table</code></a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions">Conclusions</a>
+  <ul class="collapse">
+  <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements">Acknowledgements</a>
+  <ul class="collapse">
+  <li><a href="#ai-usage-note" id="toc-ai-usage-note" class="nav-link" data-scroll-target="#ai-usage-note">AI Usage Note</a></li>
+  </ul></li>
+  <li><a href="#reproducibility-information" id="toc-reproducibility-information" class="nav-link" data-scroll-target="#reproducibility-information">Reproducibility Information</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<p>We created a package!</p>
+<p>A major attraction of the R programming language is its vast library of free packages, which can be found on both CRAN (the Comprehensive R Archive Network) or hosted on other sites such as GitHub. These packages can provide ready-made functions, datasets and/or templates for all kinds of applications (some staggeringly niche). In the field of statistics and data analysis, it is rare to encounter any methodology, model and/or algorithm which has not also been implemented somewhere in some R package.</p>
+<p>Packages can also be easily developed for use within teams or individual use, to automate or simplify tasks which appear often.</p>
+<section id="what-does-thekidsbiostats-do" class="level2">
+<h2 class="anchored" data-anchor-id="what-does-thekidsbiostats-do">What does <code>thekidsbiostats</code> do?</h2>
+<p>In summary, the package provides:</p>
+<ol type="1">
+<li>Functions to automate and/or simplify regular/routine tasks in our workflow.</li>
+<li>Functions and Quarto templates which apply consistent formatting and theming to documents, ggplots, tables, etc.</li>
+</ol>
+<p>A complete list of functions, with brief descriptions, is found in the table below. The rest of this post will provide some worked examples for many of the functions in this list.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-83cf157a{table-layout:auto;}.cl-83cbbb6e{font-family:'Barlow';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-83cbbb82{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-83cbbb83{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 255, 1.00);background-color:transparent;}.cl-83cd367e{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-83cd4470{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83cd4471{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83cd4472{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83cd4473{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83cd447a{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83cd447b{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83cd447c{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83cd4484{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83cd4485{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83cd4486{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83cd448e{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83cd448f{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83cd4490{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83cd4491{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83cd4498{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83cd4499{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83cd449a{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83cd449b{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-83cf157a"><thead><tr style="overflow-wrap:break-word;"><th class="cl-83cd4470"><p class="cl-83cd367e"><span class="cl-83cbbb6e">Function</span></p></th><th class="cl-83cd4471"><p class="cl-83cd367e"><span class="cl-83cbbb6e">Description</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-83cd4472"><p class="cl-83cd367e"><span class="cl-83cbbb82">clean_REDCap</span></p></td><td class="cl-83cd4473"><p class="cl-83cd367e"><span class="cl-83cbbb82">Cleans</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">REDCap</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">data</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">exports</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">by</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">applying</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">factor</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">levels</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">and</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">converting</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">column</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">classes</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">per</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">a</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">REDCap</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">data</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">dictionary.</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-83cd447a"><p class="cl-83cd367e"><span class="cl-83cbbb82">create_project</span></p></td><td class="cl-83cd447b"><p class="cl-83cd367e"><span class="cl-83cbbb82">Creates</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">a</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">folder</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">structure</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">for</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">a</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">new</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">project,</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">as</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">well</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">as</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">an</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">R</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">Project</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">file</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">and</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">basic</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">R</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">scripts.</span><span class="cl-83cbbb82"> </span><a href="#eg_create_project"><span class="cl-83cbbb83">Example</span></a><span class="cl-83cbbb82">.</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-83cd447c"><p class="cl-83cd367e"><span class="cl-83cbbb82">create_template</span></p></td><td class="cl-83cd4484"><p class="cl-83cd367e"><span class="cl-83cbbb82">Creates</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">a</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">Quarto</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">document</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">from</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">one</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">of</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">several</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">template</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">(extention)</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">choices.</span><span class="cl-83cbbb82"> </span><a href="#eg_create_template"><span class="cl-83cbbb83">Example</span></a><span class="cl-83cbbb82">.</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-83cd4485"><p class="cl-83cd367e"><span class="cl-83cbbb82">fct_case_when</span></p></td><td class="cl-83cd4486"><p class="cl-83cd367e"><span class="cl-83cbbb82">Like</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">dplyr::case_when</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">but</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">the</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">output</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">variable</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">is</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">of</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">class</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">factor,</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">ordered</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">based</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">on</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">the</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">order</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">entered</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">into</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">the</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">case_when</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">statement.</span><span class="cl-83cbbb82"> </span><a href="#eg_fct_case_when"><span class="cl-83cbbb83">Example</span></a><span class="cl-83cbbb82">.</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-83cd447c"><p class="cl-83cd367e"><span class="cl-83cbbb82">round_df</span></p></td><td class="cl-83cd4484"><p class="cl-83cd367e"><span class="cl-83cbbb82">Rounds</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">all</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">numeric</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">columns</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">in</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">a</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">data</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">frame</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">or</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">tibble,</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">preserving</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">trailing</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">zeroes.</span><span class="cl-83cbbb82"> </span><a href="#eg_round"><span class="cl-83cbbb83">Example</span></a><span class="cl-83cbbb82">.</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-83cd448e"><p class="cl-83cd367e"><span class="cl-83cbbb82">round_vec</span></p></td><td class="cl-83cd448f"><p class="cl-83cd367e"><span class="cl-83cbbb82">Rounds</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">all</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">values</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">in</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">a</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">vector,</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">preserving</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">trailing</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">zeroes.</span><span class="cl-83cbbb82"> </span><a href="#eg_round"><span class="cl-83cbbb83">Example</span></a><span class="cl-83cbbb82">.</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-83cd4472"><p class="cl-83cd367e"><span class="cl-83cbbb82">scale_color_thekids</span></p></td><td class="cl-83cd4473"><p class="cl-83cd367e"><span class="cl-83cbbb82">ggplot</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">scale_color</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">theme</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">for</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">applying</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">“</span><span class="cl-83cbbb82">The</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">Kids</span><span class="cl-83cbbb82">”</span><span class="cl-83cbbb82">-themed</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">colours.</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-83cd4490"><p class="cl-83cd367e"><span class="cl-83cbbb82">scale_fill_thekids</span></p></td><td class="cl-83cd4491"><p class="cl-83cd367e"><span class="cl-83cbbb82">ggplot</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">scale_fill</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">theme</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">for</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">applying</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">“</span><span class="cl-83cbbb82">The</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">Kids</span><span class="cl-83cbbb82">”</span><span class="cl-83cbbb82">-themed</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">colours.</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-83cd447c"><p class="cl-83cd367e"><span class="cl-83cbbb82">thekids_model</span></p></td><td class="cl-83cd4484"><p class="cl-83cd367e"><span class="cl-83cbbb82">Generates</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">a</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">collection</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">of</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">informative</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">model</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">output</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">in</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">a</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">structured</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">list</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">when</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">provided</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">data</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">and</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">model</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">specification.</span><span class="cl-83cbbb82"> </span><a href="#eg_thekids_model"><span class="cl-83cbbb83">Example</span></a><span class="cl-83cbbb82">.</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-83cd4498"><p class="cl-83cd367e"><span class="cl-83cbbb82">thekids_model_output</span></p></td><td class="cl-83cd4499"><p class="cl-83cd367e"><span class="cl-83cbbb82">Generates</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">a</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">collection</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">of</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">informative</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">model</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">output</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">in</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">a</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">structured</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">list</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">when</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">provided</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">with</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">an</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">existing</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">model</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">object.</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-83cd447c"><p class="cl-83cd367e"><span class="cl-83cbbb82">thekids_table</span></p></td><td class="cl-83cd4484"><p class="cl-83cd367e"><span class="cl-83cbbb82">Creates</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">a</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">formatted</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">flextable</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">with</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">“</span><span class="cl-83cbbb82">The</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">Kids</span><span class="cl-83cbbb82">”</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">themed</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">colours</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">and</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">fonts.</span><span class="cl-83cbbb82"> </span><a href="#eg_thekids_table"><span class="cl-83cbbb83">Example</span></a><span class="cl-83cbbb82">.</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-83cd447a"><p class="cl-83cd367e"><span class="cl-83cbbb82">thekids_theme</span></p></td><td class="cl-83cd447b"><p class="cl-83cd367e"><span class="cl-83cbbb82">Applies</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">“</span><span class="cl-83cbbb82">The</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">Kids</span><span class="cl-83cbbb82">”</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">theme</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">to</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">a</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">ggplot</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">object,</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">including</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">colours,</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">fonts</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">and</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">changes</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">to</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">other</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">elements</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">for</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">a</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">cleaner</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">look.</span><span class="cl-83cbbb82"> </span><a href="#eg_thekids_theme"><span class="cl-83cbbb83">Example</span></a><span class="cl-83cbbb82">.</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-83cd449a"><p class="cl-83cd367e"><span class="cl-83cbbb82">theme_institute</span></p></td><td class="cl-83cd449b"><p class="cl-83cd367e"><span class="cl-83cbbb82">Like</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">thekids_theme,</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">but</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">for</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">historical</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">projects</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">completed</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">using</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">the</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">Telethon</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">Kids</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">Institute</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">style</span><span class="cl-83cbbb82"> </span><span class="cl-83cbbb82">guide.</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>While the formatting functions and templates are designed for The Kids Research Institute Australia (TKRIA) within the guidelines of its style guide, they should be readily adjustable for use in other contexts with changes to specific fonts, colours, etc.</p>
+</div>
+</div>
+</section>
+<section id="how-to-install-the-package" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-install-the-package">How to Install the Package</h2>
+<p>The package (and all of its code!) are available here: <a href="https://github.com/The-Kids-Biostats/thekidsbiostats" class="uri">https://github.com/The-Kids-Biostats/thekidsbiostats</a>.</p>
+<p>If you would like to follow along with the examples below, simply run the code below:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"https://github.com/The-Kids-Biostats/thekidsbiostats"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(thekidsbiostats)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="examples" class="level1">
+<h1>Examples</h1>
+<section id="helper-functions" class="level2">
+<h2 class="anchored" data-anchor-id="helper-functions">Helper Functions</h2>
+<section id="eg_create_project" class="level3">
+<h3 class="anchored" data-anchor-id="eg_create_project"><code>create_project</code></h3>
+<p>This is the first function called when we begin a new project. It creates a folder structure based on parameters it is given, and an R Project file. The real power of this function comes from the <code>ext_name</code> parameter, which allows various templates (or ‘extensions’) to be used for the project. So far, we have a ‘basic’ extension and a ‘targets’ extension (which adds files and folders used by the <a href="https://cran.r-project.org/web/packages/targets/index.html"><code>targets</code></a> package). Other extensions are in the works for specific types of projects.</p>
+<p>Upon calling <code>create_project()</code>, a pop-up will appear allowing the user to choose where the new project should be located:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">create_project</span>(<span class="at">project_name =</span> <span class="st">"package_demo"</span>, <span class="at">ext_name =</span> <span class="st">"targets"</span>,</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">docs =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="project1.PNG" class="img-fluid"></p>
+<p>In this instance, we create a project called “package_demo”. Both the project directory and the R project (.Rproj) file take this name. We choose the “targets” extension, which means our directory starts with a “_targets.R” file and a “scripts” folder (had we chosen the “basic” extension, neither of these objects would be created).</p>
+<p><img src="project2.PNG" class="img-fluid"></p>
+<p>Additionally, the function has the <em>data</em>, <em>data-raw</em>, <em>admin</em>, <em>reports</em> and <em>docs</em> parameters. These can be set to either TRUE or FALSE to include these folders in the project directory or not (default for all is TRUE). Note that we set “docs” to FALSE and so it does not appear in our directory above.</p>
+<p>The “reports” directory created by <code>create_project()</code> is the default location for Quarto templates to be placed when calling <code>create_template()</code>, which we look at now…</p>
+</section>
+<section id="eg_create_template" class="level3">
+<h3 class="anchored" data-anchor-id="eg_create_template"><code>create_template</code></h3>
+<p>The purpose of <code>create_template()</code> is to generate ready-to-populate Quarto templates with “The Kids styling” already applied. Two templates are possible using the <code>ext_name</code> parameter: html and word, corresponding to the report format that we desire.</p>
+<p>We can call it below, telling it to create the document in the “package_demo/reports” folder we created using <code>create_project()</code> above.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">create_template</span>(<span class="at">file_name =</span> <span class="st">"demo_report"</span>, <span class="at">directory =</span> <span class="st">"package_demo/reports/"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The resulting quarto document looks like this:</p>
+<p><img src="report1.PNG" class="img-fluid"> <img src="report2.PNG" class="img-fluid"></p>
+<p>And rendered:</p>
+<p><img src="report3.PNG" class="img-fluid"></p>
+</section>
+<section id="eg_thekids_model" class="level3">
+<h3 class="anchored" data-anchor-id="eg_thekids_model"><code>thekids_model</code></h3>
+<p>We have a dedicated <a href="https://the-kids-biostats.github.io/posts/2025-01-10_model_function/model_function.html">post</a> exploring the use of <code>thekids_model</code>.</p>
+<p>Briefly, this function provides a standardised list of outputs for commonly used models in R. This includes the model itself, diagnostics, marginal means, and clean tables of typical model output (coefficients, confidence intervals, p-values etc). The above blog post details exactly how to display these nicely in a Quarto html document.</p>
+</section>
+<section id="eg_round" class="level3">
+<h3 class="anchored" data-anchor-id="eg_round"><code>round_vec</code> and <code>round_df</code></h3>
+<p>These two functions are examples where the sole purpose is keep code concise and to the point. Often when we present figures whether it is in plots, tables or in written form, we wish to preserve trailing zeroes when rounding numbers to a x decimal places.</p>
+<p>Below we demonstrate the difference between the base R <code>round()</code> and <code>round_vec()</code> when rounding to decimal places.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-83e6c7a6{table-layout:auto;}.cl-83e3b7d2{font-family:'Barlow';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-83e3b7dc{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-83e53940{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-83e5394a{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-83e5443a{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83e5443b{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83e5443c{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83e5443d{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83e5443e{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83e5443f{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83e54444{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83e54445{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83e54446{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83e54447{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83e54448{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-83e5444e{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-83e6c7a6"><thead><tr style="overflow-wrap:break-word;"><th class="cl-83e5443a"><p class="cl-83e53940"><span class="cl-83e3b7d2">original</span></p></th><th class="cl-83e5443b"><p class="cl-83e5394a"><span class="cl-83e3b7d2">round</span></p></th><th class="cl-83e5443c"><p class="cl-83e5394a"><span class="cl-83e3b7d2">round_vec</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-83e5443d"><p class="cl-83e53940"><span class="cl-83e3b7dc">1.8003</span></p></td><td class="cl-83e5443e"><p class="cl-83e5394a"><span class="cl-83e3b7dc">1.8</span></p></td><td class="cl-83e5443f"><p class="cl-83e5394a"><span class="cl-83e3b7dc">1.80</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-83e54444"><p class="cl-83e53940"><span class="cl-83e3b7dc">1.9998</span></p></td><td class="cl-83e54445"><p class="cl-83e5394a"><span class="cl-83e3b7dc">2</span></p></td><td class="cl-83e54446"><p class="cl-83e5394a"><span class="cl-83e3b7dc">2.00</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-83e54447"><p class="cl-83e53940"><span class="cl-83e3b7dc">2.5812</span></p></td><td class="cl-83e54448"><p class="cl-83e5394a"><span class="cl-83e3b7dc">2.58</span></p></td><td class="cl-83e5444e"><p class="cl-83e5394a"><span class="cl-83e3b7dc">2.58</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+<p><code>round_vec()</code> consistently has 2 decimal places, whereas <code>round()</code> drops any trailing zeroes, which is often undesirable for presentation.</p>
+<p><code>round_df()</code> can be called on a data frame or tibble to round every numeric column in that object at once.</p>
+</section>
+<section id="eg_fct_case_when" class="level3">
+<h3 class="anchored" data-anchor-id="eg_fct_case_when"><code>fct_case_when</code></h3>
+<p>In a similar vein to the above function, <code>fct_case_when</code> is essentially <code>dplyr::case_when</code> but with one handy addition: the resulting vector is a factor where the levels are ordered in the same order they are defined within the case_when statement.</p>
+<p>The factor levels are the result of the default <code>case_when()</code> function combined with <code>as.factor()</code>, and are simply ordered alphabetically.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">50</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">case_when</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  x <span class="sc">%%</span> <span class="dv">35</span> <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"fizz buzz"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  x <span class="sc">%%</span> <span class="dv">5</span> <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"fizz"</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  x <span class="sc">%%</span> <span class="dv">7</span> <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"buzz"</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"everything else"</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> as.factor <span class="sc">%&gt;%</span> levels</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "buzz"            "everything else" "fizz"            "fizz buzz"      </code></pre>
+</div>
+</div>
+<p>In comparision, <code>fct_case_when()</code> orders the factor levels based on the order of their appearance in the argument:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">50</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>thekidsbiostats<span class="sc">::</span><span class="fu">fct_case_when</span>(</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  x <span class="sc">%%</span> <span class="dv">35</span> <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"fizz buzz"</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  x <span class="sc">%%</span> <span class="dv">5</span> <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"fizz"</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  x <span class="sc">%%</span> <span class="dv">7</span> <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"buzz"</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"everything else"</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> levels</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "fizz buzz"       "fizz"            "buzz"            "everything else"</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This is really handy for ensuring variables appear in the desired order rather than alphabetical, without the need for double handling!</p>
+</div>
+</div>
+</section>
+</section>
+<section id="theming" class="level2">
+<h2 class="anchored" data-anchor-id="theming">Theming</h2>
+<p>Using functions that automatically apply a set of formatting options to plots and tables saves time, allowing us to focus on the analysis and interpretation. Code also looks a lot cleaner when those 10 lines of ggplot per plot are automated away. Importantly, these functions also ensure a polished and consistent appearance across our team, so that output looks the same irrespective of who generated it.</p>
+<section id="eg_thekids_theme" class="level3">
+<h3 class="anchored" data-anchor-id="eg_thekids_theme"><code>thekids_theme</code></h3>
+<p>The <code>thekids_theme()</code> function applies consistent theming to ggplot2 visualizations. It uses a clean, minimal aesthetic with fonts and colors that align with The Kids branding. Here’s an example of a plot before themeing:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x =</span> mpg, <span class="at">y =</span> wt, <span class="at">col =</span> <span class="fu">factor</span>(cyl))) <span class="sc">+</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Miles per Gallon"</span>, <span class="at">y =</span> <span class="st">"Weight"</span>, <span class="at">col =</span> <span class="st">"Cylinders"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="thekids_package_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x =</span> mpg, <span class="at">y =</span> wt, <span class="at">col =</span> <span class="fu">factor</span>(cyl))) <span class="sc">+</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Miles per Gallon"</span>, <span class="at">y =</span> <span class="st">"Weight"</span>, <span class="at">col =</span> <span class="st">"Cylinders"</span>) <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">thekids_theme</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="thekids_package_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="eg_thekids_table" class="level3">
+<h3 class="anchored" data-anchor-id="eg_thekids_table"><code>thekids_table</code></h3>
+<p><code>thekids_table()</code> produces tables styled with The Kids branding and is powered by the <code>flextable</code> package. This includes by default applying the Barlow font, compact formatting (our preference!), and zebra-striping for readability, though these can all be altered/disabled via parameters.</p>
+<p>For example, a raw table output from the mtcars dataset looks like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(mtcars, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                   mpg cyl disp  hp drat    wt  qsec vs am gear carb
+Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2</code></pre>
+</div>
+</div>
+<p>Now, applying <code>thekids_table()</code> transforms it into a clean, visually appealing format with branding elements:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(mtcars, <span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">thekids_table</span>(<span class="at">colour =</span> <span class="st">"Saffron"</span>, <span class="at">font.size =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-842c9042{table-layout:auto;}.cl-842983b6{font-family:'Barlow';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-842983c0{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-842aadb8{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-842ab9e8{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842ab9f2{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842ab9f3{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842ab9fc{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842ab9fd{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842ab9fe{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba06{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba07{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba08{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba09{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba0a{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba10{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba11{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba12{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba13{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba1a{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba1b{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba1c{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba1d{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba24{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba25{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba26{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba27{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba2e{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba2f{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba30{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba38{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba39{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba3a{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba3b{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba42{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba43{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba44{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba45{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba4c{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba4d{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba56{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba57{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba58{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba59{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba5a{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba60{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba61{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba62{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba6a{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba6b{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba6c{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba6d{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba74{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba75{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba76{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba77{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba78{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba7e{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba7f{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba88{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba89{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba8a{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba92{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba93{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba94{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba9c{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842aba9d{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842abaa6{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842abaa7{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-842abaa8{background-color:rgba(248, 218, 154, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-842c9042"><thead><tr style="overflow-wrap:break-word;"><th class="cl-842ab9e8"><p class="cl-842aadb8"><span class="cl-842983b6">mpg</span></p></th><th class="cl-842ab9f2"><p class="cl-842aadb8"><span class="cl-842983b6">cyl</span></p></th><th class="cl-842ab9f3"><p class="cl-842aadb8"><span class="cl-842983b6">disp</span></p></th><th class="cl-842ab9fc"><p class="cl-842aadb8"><span class="cl-842983b6">hp</span></p></th><th class="cl-842ab9fd"><p class="cl-842aadb8"><span class="cl-842983b6">drat</span></p></th><th class="cl-842ab9fe"><p class="cl-842aadb8"><span class="cl-842983b6">wt</span></p></th><th class="cl-842aba06"><p class="cl-842aadb8"><span class="cl-842983b6">qsec</span></p></th><th class="cl-842aba07"><p class="cl-842aadb8"><span class="cl-842983b6">vs</span></p></th><th class="cl-842aba08"><p class="cl-842aadb8"><span class="cl-842983b6">am</span></p></th><th class="cl-842aba09"><p class="cl-842aadb8"><span class="cl-842983b6">gear</span></p></th><th class="cl-842aba0a"><p class="cl-842aadb8"><span class="cl-842983b6">carb</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-842aba10"><p class="cl-842aadb8"><span class="cl-842983c0">21.0</span></p></td><td class="cl-842aba11"><p class="cl-842aadb8"><span class="cl-842983c0">6</span></p></td><td class="cl-842aba12"><p class="cl-842aadb8"><span class="cl-842983c0">160</span></p></td><td class="cl-842aba13"><p class="cl-842aadb8"><span class="cl-842983c0">110</span></p></td><td class="cl-842aba1a"><p class="cl-842aadb8"><span class="cl-842983c0">3.90</span></p></td><td class="cl-842aba1b"><p class="cl-842aadb8"><span class="cl-842983c0">2.620</span></p></td><td class="cl-842aba1c"><p class="cl-842aadb8"><span class="cl-842983c0">16.46</span></p></td><td class="cl-842aba1d"><p class="cl-842aadb8"><span class="cl-842983c0">0</span></p></td><td class="cl-842aba24"><p class="cl-842aadb8"><span class="cl-842983c0">1</span></p></td><td class="cl-842aba25"><p class="cl-842aadb8"><span class="cl-842983c0">4</span></p></td><td class="cl-842aba26"><p class="cl-842aadb8"><span class="cl-842983c0">4</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-842aba27"><p class="cl-842aadb8"><span class="cl-842983c0">21.0</span></p></td><td class="cl-842aba2e"><p class="cl-842aadb8"><span class="cl-842983c0">6</span></p></td><td class="cl-842aba2f"><p class="cl-842aadb8"><span class="cl-842983c0">160</span></p></td><td class="cl-842aba30"><p class="cl-842aadb8"><span class="cl-842983c0">110</span></p></td><td class="cl-842aba38"><p class="cl-842aadb8"><span class="cl-842983c0">3.90</span></p></td><td class="cl-842aba39"><p class="cl-842aadb8"><span class="cl-842983c0">2.875</span></p></td><td class="cl-842aba3a"><p class="cl-842aadb8"><span class="cl-842983c0">17.02</span></p></td><td class="cl-842aba3b"><p class="cl-842aadb8"><span class="cl-842983c0">0</span></p></td><td class="cl-842aba42"><p class="cl-842aadb8"><span class="cl-842983c0">1</span></p></td><td class="cl-842aba43"><p class="cl-842aadb8"><span class="cl-842983c0">4</span></p></td><td class="cl-842aba44"><p class="cl-842aadb8"><span class="cl-842983c0">4</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-842aba45"><p class="cl-842aadb8"><span class="cl-842983c0">22.8</span></p></td><td class="cl-842aba4c"><p class="cl-842aadb8"><span class="cl-842983c0">4</span></p></td><td class="cl-842aba4d"><p class="cl-842aadb8"><span class="cl-842983c0">108</span></p></td><td class="cl-842aba56"><p class="cl-842aadb8"><span class="cl-842983c0">93</span></p></td><td class="cl-842aba57"><p class="cl-842aadb8"><span class="cl-842983c0">3.85</span></p></td><td class="cl-842aba58"><p class="cl-842aadb8"><span class="cl-842983c0">2.320</span></p></td><td class="cl-842aba59"><p class="cl-842aadb8"><span class="cl-842983c0">18.61</span></p></td><td class="cl-842aba5a"><p class="cl-842aadb8"><span class="cl-842983c0">1</span></p></td><td class="cl-842aba60"><p class="cl-842aadb8"><span class="cl-842983c0">1</span></p></td><td class="cl-842aba61"><p class="cl-842aadb8"><span class="cl-842983c0">4</span></p></td><td class="cl-842aba62"><p class="cl-842aadb8"><span class="cl-842983c0">1</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-842aba6a"><p class="cl-842aadb8"><span class="cl-842983c0">21.4</span></p></td><td class="cl-842aba6b"><p class="cl-842aadb8"><span class="cl-842983c0">6</span></p></td><td class="cl-842aba6c"><p class="cl-842aadb8"><span class="cl-842983c0">258</span></p></td><td class="cl-842aba6d"><p class="cl-842aadb8"><span class="cl-842983c0">110</span></p></td><td class="cl-842aba74"><p class="cl-842aadb8"><span class="cl-842983c0">3.08</span></p></td><td class="cl-842aba75"><p class="cl-842aadb8"><span class="cl-842983c0">3.215</span></p></td><td class="cl-842aba76"><p class="cl-842aadb8"><span class="cl-842983c0">19.44</span></p></td><td class="cl-842aba77"><p class="cl-842aadb8"><span class="cl-842983c0">1</span></p></td><td class="cl-842aba78"><p class="cl-842aadb8"><span class="cl-842983c0">0</span></p></td><td class="cl-842aba7e"><p class="cl-842aadb8"><span class="cl-842983c0">3</span></p></td><td class="cl-842aba7f"><p class="cl-842aadb8"><span class="cl-842983c0">1</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-842aba88"><p class="cl-842aadb8"><span class="cl-842983c0">18.7</span></p></td><td class="cl-842aba89"><p class="cl-842aadb8"><span class="cl-842983c0">8</span></p></td><td class="cl-842aba8a"><p class="cl-842aadb8"><span class="cl-842983c0">360</span></p></td><td class="cl-842aba92"><p class="cl-842aadb8"><span class="cl-842983c0">175</span></p></td><td class="cl-842aba93"><p class="cl-842aadb8"><span class="cl-842983c0">3.15</span></p></td><td class="cl-842aba94"><p class="cl-842aadb8"><span class="cl-842983c0">3.440</span></p></td><td class="cl-842aba9c"><p class="cl-842aadb8"><span class="cl-842983c0">17.02</span></p></td><td class="cl-842aba9d"><p class="cl-842aadb8"><span class="cl-842983c0">0</span></p></td><td class="cl-842abaa6"><p class="cl-842aadb8"><span class="cl-842983c0">0</span></p></td><td class="cl-842abaa7"><p class="cl-842aadb8"><span class="cl-842983c0">3</span></p></td><td class="cl-842abaa8"><p class="cl-842aadb8"><span class="cl-842983c0">2</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+<p>This outputs a compact, zebra-striped table ready for inclusion in Word or HTML reports. However, the <em>padding</em> and <em>striped</em> options can be changed if we would prefer some more space without any stripes:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(mtcars, <span class="dv">5</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">thekids_table</span>(<span class="at">colour =</span> <span class="st">"Saffron"</span>, <span class="at">font.size =</span> <span class="dv">10</span>, <span class="at">padding =</span> <span class="dv">4</span>, <span class="at">striped =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-843d1084{table-layout:auto;}.cl-8439b66e{font-family:'Barlow';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-8439b678{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-843b4524{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:4pt;padding-top:4pt;padding-left:4pt;padding-right:4pt;line-height: 1.5;background-color:transparent;}.cl-843b523a{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b5244{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b5245{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b5246{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b524e{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b524f{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b5250{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b5251{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b5258{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b5259{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b525a{background-color:rgba(241, 180, 52, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b525b{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b525c{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b5262{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b5263{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b5264{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b526c{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b526d{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b526e{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b5276{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b5277{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b5278{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b5279{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b5280{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b5281{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b5282{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b5283{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b528a{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b528b{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b528c{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b528d{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b5294{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b5295{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b5296{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b5297{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b5298{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b529e{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b529f{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b52a0{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b52a8{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b52a9{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b52aa{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b52ab{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-843b52ac{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-843d1084"><thead><tr style="overflow-wrap:break-word;"><th class="cl-843b523a"><p class="cl-843b4524"><span class="cl-8439b66e">mpg</span></p></th><th class="cl-843b5244"><p class="cl-843b4524"><span class="cl-8439b66e">cyl</span></p></th><th class="cl-843b5245"><p class="cl-843b4524"><span class="cl-8439b66e">disp</span></p></th><th class="cl-843b5246"><p class="cl-843b4524"><span class="cl-8439b66e">hp</span></p></th><th class="cl-843b524e"><p class="cl-843b4524"><span class="cl-8439b66e">drat</span></p></th><th class="cl-843b524f"><p class="cl-843b4524"><span class="cl-8439b66e">wt</span></p></th><th class="cl-843b5250"><p class="cl-843b4524"><span class="cl-8439b66e">qsec</span></p></th><th class="cl-843b5251"><p class="cl-843b4524"><span class="cl-8439b66e">vs</span></p></th><th class="cl-843b5258"><p class="cl-843b4524"><span class="cl-8439b66e">am</span></p></th><th class="cl-843b5259"><p class="cl-843b4524"><span class="cl-8439b66e">gear</span></p></th><th class="cl-843b525a"><p class="cl-843b4524"><span class="cl-8439b66e">carb</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-843b525b"><p class="cl-843b4524"><span class="cl-8439b678">21.0</span></p></td><td class="cl-843b525c"><p class="cl-843b4524"><span class="cl-8439b678">6</span></p></td><td class="cl-843b5262"><p class="cl-843b4524"><span class="cl-8439b678">160</span></p></td><td class="cl-843b5263"><p class="cl-843b4524"><span class="cl-8439b678">110</span></p></td><td class="cl-843b5264"><p class="cl-843b4524"><span class="cl-8439b678">3.90</span></p></td><td class="cl-843b526c"><p class="cl-843b4524"><span class="cl-8439b678">2.620</span></p></td><td class="cl-843b526d"><p class="cl-843b4524"><span class="cl-8439b678">16.46</span></p></td><td class="cl-843b526e"><p class="cl-843b4524"><span class="cl-8439b678">0</span></p></td><td class="cl-843b5276"><p class="cl-843b4524"><span class="cl-8439b678">1</span></p></td><td class="cl-843b5277"><p class="cl-843b4524"><span class="cl-8439b678">4</span></p></td><td class="cl-843b5278"><p class="cl-843b4524"><span class="cl-8439b678">4</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-843b525b"><p class="cl-843b4524"><span class="cl-8439b678">21.0</span></p></td><td class="cl-843b525c"><p class="cl-843b4524"><span class="cl-8439b678">6</span></p></td><td class="cl-843b5262"><p class="cl-843b4524"><span class="cl-8439b678">160</span></p></td><td class="cl-843b5263"><p class="cl-843b4524"><span class="cl-8439b678">110</span></p></td><td class="cl-843b5264"><p class="cl-843b4524"><span class="cl-8439b678">3.90</span></p></td><td class="cl-843b526c"><p class="cl-843b4524"><span class="cl-8439b678">2.875</span></p></td><td class="cl-843b526d"><p class="cl-843b4524"><span class="cl-8439b678">17.02</span></p></td><td class="cl-843b526e"><p class="cl-843b4524"><span class="cl-8439b678">0</span></p></td><td class="cl-843b5276"><p class="cl-843b4524"><span class="cl-8439b678">1</span></p></td><td class="cl-843b5277"><p class="cl-843b4524"><span class="cl-8439b678">4</span></p></td><td class="cl-843b5278"><p class="cl-843b4524"><span class="cl-8439b678">4</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-843b5279"><p class="cl-843b4524"><span class="cl-8439b678">22.8</span></p></td><td class="cl-843b5280"><p class="cl-843b4524"><span class="cl-8439b678">4</span></p></td><td class="cl-843b5281"><p class="cl-843b4524"><span class="cl-8439b678">108</span></p></td><td class="cl-843b5282"><p class="cl-843b4524"><span class="cl-8439b678">93</span></p></td><td class="cl-843b5283"><p class="cl-843b4524"><span class="cl-8439b678">3.85</span></p></td><td class="cl-843b528a"><p class="cl-843b4524"><span class="cl-8439b678">2.320</span></p></td><td class="cl-843b528b"><p class="cl-843b4524"><span class="cl-8439b678">18.61</span></p></td><td class="cl-843b528c"><p class="cl-843b4524"><span class="cl-8439b678">1</span></p></td><td class="cl-843b528d"><p class="cl-843b4524"><span class="cl-8439b678">1</span></p></td><td class="cl-843b5294"><p class="cl-843b4524"><span class="cl-8439b678">4</span></p></td><td class="cl-843b5295"><p class="cl-843b4524"><span class="cl-8439b678">1</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-843b5279"><p class="cl-843b4524"><span class="cl-8439b678">21.4</span></p></td><td class="cl-843b5280"><p class="cl-843b4524"><span class="cl-8439b678">6</span></p></td><td class="cl-843b5281"><p class="cl-843b4524"><span class="cl-8439b678">258</span></p></td><td class="cl-843b5282"><p class="cl-843b4524"><span class="cl-8439b678">110</span></p></td><td class="cl-843b5283"><p class="cl-843b4524"><span class="cl-8439b678">3.08</span></p></td><td class="cl-843b528a"><p class="cl-843b4524"><span class="cl-8439b678">3.215</span></p></td><td class="cl-843b528b"><p class="cl-843b4524"><span class="cl-8439b678">19.44</span></p></td><td class="cl-843b528c"><p class="cl-843b4524"><span class="cl-8439b678">1</span></p></td><td class="cl-843b528d"><p class="cl-843b4524"><span class="cl-8439b678">0</span></p></td><td class="cl-843b5294"><p class="cl-843b4524"><span class="cl-8439b678">3</span></p></td><td class="cl-843b5295"><p class="cl-843b4524"><span class="cl-8439b678">1</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-843b5296"><p class="cl-843b4524"><span class="cl-8439b678">18.7</span></p></td><td class="cl-843b5297"><p class="cl-843b4524"><span class="cl-8439b678">8</span></p></td><td class="cl-843b5298"><p class="cl-843b4524"><span class="cl-8439b678">360</span></p></td><td class="cl-843b529e"><p class="cl-843b4524"><span class="cl-8439b678">175</span></p></td><td class="cl-843b529f"><p class="cl-843b4524"><span class="cl-8439b678">3.15</span></p></td><td class="cl-843b52a0"><p class="cl-843b4524"><span class="cl-8439b678">3.440</span></p></td><td class="cl-843b52a8"><p class="cl-843b4524"><span class="cl-8439b678">17.02</span></p></td><td class="cl-843b52a9"><p class="cl-843b4524"><span class="cl-8439b678">0</span></p></td><td class="cl-843b52aa"><p class="cl-843b4524"><span class="cl-8439b678">0</span></p></td><td class="cl-843b52ab"><p class="cl-843b4524"><span class="cl-8439b678">3</span></p></td><td class="cl-843b52ac"><p class="cl-843b4524"><span class="cl-8439b678">2</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+<p>Both <code>thekids_theme()</code> and <code>thekids_table</code> provide a host of options via parameters given to the functions.</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If we wish to use only the colours for any reason (such as some non-ggplot visualisation that accepts a colour argument) we can access them directly:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>thekidsbiostats<span class="sc">::</span>thekids_colours</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        Saffron         Pumpkin            Teal        DarkTeal   CelestialBlue 
+      "#F1B434"       "#F56B00"       "#00A39C"       "#00807A"       "#4A99DE" 
+      AzureBlue    MidnightBlue       Saffron50       Pumpkin50          Teal50 
+      "#426EA8"       "#1F3B73"       "#F8DA9A"       "#FAB580"       "#80D1CE" 
+CelestialBlue50  MidnightBlue50        CoolGrey      CoolGrey50      CoolGrey20 
+      "#A5CCEF"       "#8F9DB9"       "#565F5F"       "#ABAFAF"       "#EEEFEF" </code></pre>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="conclusions" class="level1">
+<h1>Conclusions</h1>
+<p>The <code>thekidsbiostats</code> package significantly simplifies repetitive tasks, standardises formatting, and speeds up workflows. While tailored for use at The Kids Research Institute Australia, many of its features can be readily adapted to other contexts, providing a ready-to-go framework for data analysis and reporting.</p>
+<p>There are plenty of arguments we didn’t go other in the this post, however they are all described in the <a href="https://github.com/The-Kids-Biostats/thekidsbiostats/tree/main/man">documentation</a>.</p>
+<p>We hope you’ll give the package a try and find some or all of the functions useful in your own workflow. Please feel free to contact us at biostatistics@thekids.org.au (or raise an issue on our <a href="https://github.com/The-Kids-Biostats/thekidsbiostats">Github repository</a>) if you encounter any bugs or would like to suggest additional features for any of our functions.</p>
+<section id="acknowledgements" class="level2">
+<h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
+<p>Thanks to Matt Cooper, Zac Dempsey and Elizabeth McKinnon for providing feedback on and reviewing this post.</p>
+<section id="ai-usage-note" class="level3">
+<h3 class="anchored" data-anchor-id="ai-usage-note">AI Usage Note</h3>
+<p>The majority of this post and code were produced by the author. AI tools were used to refine the structure and wording.</p>
+</section>
+</section>
+<section id="reproducibility-information" class="level2">
+<h2 class="anchored" data-anchor-id="reproducibility-information">Reproducibility Information</h2>
+<p>To access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:</p>
+<p><a href="https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/" class="uri">https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/</a></p>
+<p>The session information can also be seen below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.3.3 (2024-02-29)
+Platform: aarch64-apple-darwin20 (64-bit)
+Running under: macOS Sonoma 14.4.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.3-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: Australia/Perth
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] kableExtra_1.4.0      thekidsbiostats_0.0.1 flextable_0.9.7      
+ [4] gtsummary_2.0.4       extrafont_0.19        Hmisc_5.2-1          
+ [7] lubridate_1.9.4       forcats_1.0.0         stringr_1.5.1        
+[10] dplyr_1.1.4           purrr_1.0.2           readr_2.1.5          
+[13] tidyr_1.3.1           tibble_3.2.1          ggplot2_3.5.1        
+[16] tidyverse_2.0.0      
+
+loaded via a namespace (and not attached):
+ [1] gtable_0.3.6            xfun_0.50               htmlwidgets_1.6.4      
+ [4] tzdb_0.4.0              vctrs_0.6.5             tools_4.3.3            
+ [7] generics_0.1.3          cluster_2.1.8           pkgconfig_2.0.3        
+[10] data.table_1.16.4       checkmate_2.3.2         uuid_1.2-1             
+[13] lifecycle_1.0.4         farver_2.1.2            compiler_4.3.3         
+[16] textshaping_0.4.1       munsell_0.5.1           janitor_2.2.1          
+[19] snakecase_0.11.1        fontquiver_0.2.1        fontLiberation_0.1.0   
+[22] htmltools_0.5.8.1       yaml_2.3.10             Rttf2pt1_1.3.12        
+[25] htmlTable_2.4.3         Formula_1.2-5           pillar_1.10.1          
+[28] extrafontdb_1.0         openssl_2.3.1           rpart_4.1.24           
+[31] fontBitstreamVera_0.1.1 zip_2.3.1               tidyselect_1.2.1       
+[34] digest_0.6.37           stringi_1.8.4           labeling_0.4.3         
+[37] labelled_2.14.0         fastmap_1.2.0           grid_4.3.3             
+[40] ftExtra_0.6.4           colorspace_2.1-1        cli_3.6.3              
+[43] magrittr_2.0.3          base64enc_0.1-3         foreign_0.8-87         
+[46] withr_3.0.2             gdtools_0.4.1           scales_1.3.0           
+[49] backports_1.5.0         timechange_0.3.0        rmarkdown_2.29         
+[52] officer_0.6.7           nnet_7.3-20             gridExtra_2.3          
+[55] ragg_1.3.3              askpass_1.2.1           hms_1.1.3              
+[58] evaluate_1.0.3          haven_2.5.4             knitr_1.49             
+[61] viridisLite_0.4.2       rlang_1.1.4             Rcpp_1.0.14            
+[64] glue_1.8.0              xml2_1.3.6              svglite_2.1.3          
+[67] rstudioapi_0.17.1       jsonlite_1.8.9          R6_2.5.1               
+[70] systemfonts_1.1.0      </code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/the-kids-biostats\.github\.io");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
