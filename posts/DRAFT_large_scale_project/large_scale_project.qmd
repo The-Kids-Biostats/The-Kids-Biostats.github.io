@@ -40,7 +40,7 @@ crossref:
 library(thekidsbiostats) # install with remotes::install_github("The-Kids-Biostats/thekidsbiostats")
 ```
 
-A recent collaboration led by Dr Melissa Licari of The Kids produced a summary report detailing the challenges faced by individuals (and the families that care for them) living with Tourette syndrome and other tic disorders (https://www.thekids.org.au/impactfortourettes). The report was a summary of results of a national survey undertaken in 2023/2024(??), and the data analysis and preparation of figures for publication was undertaken by the Biostatistics team at The Kids.
+A cool collaboration led by Dr Melissa Licari of The Kids produced a summary report detailing the challenges faced by individuals (and the families that care for them) living with Tourette syndrome and other tic disorders (https://www.thekids.org.au/impactfortourettes). The report was a summary of results of a national survey undertaken in 2023/2024(??), and the data analysis and preparation of figures for publication was undertaken by the Biostatistics team at The Kids.
 
 To support production of the final publication there was considerable behind-the-scenes work around various challenges of a large-scale project such as this. For example:
 
