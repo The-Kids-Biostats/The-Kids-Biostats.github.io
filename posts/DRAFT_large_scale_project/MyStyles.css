@@ -1,0 +1,113 @@
+.quarto-title-block .quarto-title-banner {
+  background-image: url(thekids.png);
+  background-size: 200px;
+  background-position: left;
+  background-repeat: no-repeat;
+  padding-left: 10px;
+  background-origin: content-box;
+}
+
+/* Note Callout (Azure Blue) */
+.callout-note {
+    background-color: #ecf1f6 !important; /* Azure Blue tint10 */
+    border-left: 6px solid #426EA8 !important; /* Azure Blue primary */
+}
+
+.callout-note .callout-header {
+    background-color: #a1b7d4 !important; /* Azure Blue tint50 */
+    color: black !important; /* Text color for contrast */
+}
+
+/* Tip Callout (Teal) */
+.callout-tip {
+    background-color: #e6f6f5 !important; /* Teal tint10 */
+    border-left: 6px solid #00A39C !important; /* Teal primary */
+}
+
+.callout-tip .callout-header {
+    background-color: #80D1CE !important; /* Teal tint50 */
+    color: black !important; /* Text color for contrast */
+}
+
+/* Warning Callout (Saffron) */
+.callout-warning {
+    background-color: #fef8eb !important; /* Saffron tint10 */
+    border-left: 6px solid #F1B434 !important; /* Saffron primary */
+}
+
+.callout-warning .callout-header {
+    background-color: #F8DA9A !important; /* Saffron tint50 */
+    color: black !important; /* Text color for contrast */
+}
+
+/* Important/Danger Callout (Pumpkin) */
+.callout-important {
+    background-color: #fef0e6 !important; /* Pumpkin tint10 */
+    border-left: 6px solid #F56B00 !important; /* Pumpkin primary */
+}
+
+.callout-important .callout-header {
+    background-color: #FAB580 !important; /* Pumpkin tint50 */
+    color: black !important; /* Text color for contrast */
+}
+
+/* Note Callout Icon (Azure Blue) */
+.callout-note .callout-header .callout-icon-container .callout-icon {
+    color: #426EA8 !important; /* Azure Blue primary */
+}
+
+/* Tip Callout Icon (Teal) */
+.callout-tip .callout-header .callout-icon-container .callout-icon {
+    color: #00A39C !important; /* Teal primary */
+}
+
+/* Warning Callout Icon (Saffron) */
+.callout-warning .callout-header .callout-icon-container .callout-icon {
+    color: #F1B434 !important; /* Saffron primary */
+}
+
+/* Important/Danger Callout Icon (Pumpkin) */
+.callout-important .callout-header .callout-icon-container .callout-icon {
+    color: #F56B00 !important; /* Pumpkin primary */
+}
+
+#/* Wrap the actual content in a bordered box */
+#.column-margin > * {
+#  border: 2px solid #1F3B73;
+#  padding: 1em;
+#  background-color: #f9f9f9;
+#  margin-bottom: 1em;
+#  position: relative;
+#}
+
+/* Modified bordered box */
+.column-margin > * {
+border: 2px solid #1F3B73;
+padding: 0.5em;
+background-color: #f9f9f9;
+margin-bottom: 1em;
+position: relative;
+font-size: 12pt;  
+font-style: italic;
+}
+
+
+#/* Add a header using a pseudo-element */
+#.column-margin > *::before {
+#  content: "Comments";
+#  display: block;
+#  background-color: #1F3B73;
+#  color: white;
+#  padding: 0.5em;
+#  font-weight: bold;
+#  margin: -1em -1em 1em -1em;
+#  text-align: center;
+#}
+
+/* Add a border around the entire tabset content */
+.panel-tabset {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1em;
+  margin-top: 1em;
+}

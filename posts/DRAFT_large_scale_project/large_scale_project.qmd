@@ -1,6 +1,7 @@
 ---
 title: "Large-scale projects"
-author: "Dr Bethy McKinnon and ..."
+author: "Bethy McKinnon and Matt Cooper"
+date: "`r format(Sys.time(), '%d %B %Y')`"
 format:
   html:
     code-fold: true
@@ -8,7 +9,10 @@ format:
     toc: true
     toc-location: left
     number-depth: 1
-date: "2025-06-10"
+    grid:
+      sidebar-width: 220px  # default 250px
+      body-width: 800px  # default 800 px
+      margin-width: 280px    # default 250px    
 categories:
   - R
   - Modelling
@@ -24,14 +28,12 @@ fig-format: png
 fig-cap-location: bottom
 fig-cap-align: center
 tbl-cap-location: bottom
-fig-title: Figure # this is actually the default, but can specify another label prefix here
+fig-title: Figure # this is actually the default, but an alternative label prefix can be specified here
 number-sections: true
 crossref:  
-  chapters: true
-
+  chapters: true   # Enables table/figure labelling by sections/chapters
+css: MyStyles.css  # Used to define look of the call-outs
 ---
-
-<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
 
 
 # Overview
@@ -40,7 +42,7 @@ crossref:
 library(thekidsbiostats) # install with remotes::install_github("The-Kids-Biostats/thekidsbiostats")
 ```
 
-A cool collaboration led by Dr Melissa Licari of The Kids produced a summary report detailing the challenges faced by individuals (and the families that care for them) living with Tourette syndrome and other tic disorders (https://www.thekids.org.au/impactfortourettes). The report was a summary of results of a national survey undertaken in 2023/2024(??), and the data analysis and preparation of figures for publication was undertaken by the Biostatistics team at The Kids.
+A recent collaboration led by Dr Melissa Licari of The Kids produced a summary report detailing the challenges faced by individuals (and the families that care for them) living with Tourette syndrome and other tic disorders (https://www.thekids.org.au/impactfortourettes). The report was a summary of results of a national survey undertaken in 2023/2024, and the data analysis and preparation of figures for publication was undertaken by the Biostatistics team at The Kids.
 
 To support production of the final publication there was considerable behind-the-scenes work around various challenges of a large-scale project such as this. For example:
 
@@ -60,27 +62,22 @@ In line with current practice of our team, features of our general project desig
 -   Overall organisation being that of a self-contained R project with accompanying sub-directories.(See `thekidsbiostats::create_project()` for project template)
 
     -   Given the scale of the TS project, generation of tables and figures was further blocked into 9 different files corresponding to the distinct survey sections (background information, 7 impact domains, looking to the future). This enabled code and output to be run and checked in manageable chunks before resultant tables and plots being called into into an overarching file that pulled it all together.
-    
 
-![Directory/subdirectory setup](examples/file_setup.png){#fig-file_setup}
+![Directory/subdirectory setup](examples/file_setup.png){#fig-file_setup height=4in}
 
 *Use of sub-directories in the project organisation is illustrated by @fig-file_setup.*
 
+-   Main output document files are now Quarto documents (with a .qmd extension), superseding the previous default RStudio Markdown (.mkd) files, having more powerful capabilities but still retaining the header-text-code structure and simplicity and flexibility of the markdown syntax for text formatting. (See \[https://quarto.org/docs/authoring/markdown-basics.html\] for a useful reference.)
 
--   Main document files are now Quarto documents (with a .qmd extension), superseding the previous default RStudio Markdown (.mkd) files, having more powerful capabilities but still retaining the header-text-code structure and simplicity and flexibility of the markdown syntax for text formatting. (See \[https://quarto.org/docs/authoring/markdown-basics.html\] for a useful reference.)
+For those unfamiliar with Quarto, note that documents can be written and rendered from either a **visual** view or a **source** view:
 
-Quarto documents can be written and rendered from either a **visual** view or a *source** view:
+![Visual screen of the default new QMD file](examples/visual_qmd.png){#fig-visual  height=4in align=left}
 
-![**Visual** screen of the default new QMD file](examples/visual_qmd.png){#fig-visual, height=2.5in}
+![Source screen of the default new QMD file](examples/source_qmd.png){#fig-source  height=4in align=left}
 
+![HTML report](examples/defaultQMD-HTML.png){#fig-defaultHTML}
 
-![**Source** screen of the default new QMD file](examples/source_qmd.png){#fig-source, height=2.5in}  
-
-
-
-![HTML report](examples/defaultQMD-HTML.png){#fig-defaultHTML} 
-
-::: {.column-margin}
+::: column-margin
 @fig-defaultHTML shows the HTML report produced by rendering the default QMD file
 :::
 
@@ -89,50 +86,138 @@ Quarto documents can be written and rendered from either a **visual** view or a 
 
 # Robustness and reproducibility
 
-Numerous features of an appropriate project design and ensuing workflow ensure that the end product of the data analysis is robust and reproducible:
+It is inevitable that there will be considerable data pre-processing required prior to undertaking any analysis. (This is often the greatest challenge we find with a project.) 
 
--   Utilisation of a project template with organised sub-directories (See `thekidsbiostats::create_project()`)
 
--   Use of a document template that includes a run date in the header and session info at the end (See `thekidsbiostats::create_template()`)
+::: {.callout-important}
+It is therefore essential that sound data management practices are maintained. 
+:::
+
+When pre-processing data:  
+    -   **Never** overwrite the raw data   
+    -   Always double-check merging of different data sets is accomplished correctly.  
+    -   Check consistency of data entry/coding for the same variable sourced from different data sets  
+    -   Utilise a data dictionary, and ensure it is noted how missing values are coded  
+    -   Ensure newly created data sets are dated   
+    -   Scrutinize the final data set for anomalies prior to adopting it for analysis.  
+
+
+
+Furthermore, numerous features of an appropriate project design and ensuing workflow to ensure that the end product of the data analysis is robust and reproducible include:
+
+-   Utilisation of a project template with organised sub-directories (See `thekidsbiostats::create_project()`)  
+
+-   Routine ongoing checks that code as written produces the intended results when executed.  
+
+-   Utilisation of user-written functions, with appropriate testing, minimises errors that can creep in when reliant on cut-and-pastes or coding of repeated tasks or tasks comprised of multiple steps.
+
+-   Use of a document template for report writing that includes a run date in the header and session info at the end (See `thekidsbiostats::create_template()`)
 
 -   Inherent Quarto document features: Self-containment of the run environment, with other inputs called explicitly; auto-save with each render; text interspersed with result-producing code.
 
--   Routine ongoing checks that code as written produces the intended results when executed. Note the capability provided by the Quarto Visual editor to view results of coding chunks as you go - appropriate placement of code within text provides an avenue for a convenient step-by-step draft look at the flow of the finished product.
-
--   Utilisation of user-written functions, with appropriate testing, minimises errors that can creep in when reliant on cut-and-pastes or coding of repeated tasks or tasks comprised of multiple steps.
 
 # Streamlining and theming
 
 Coding can be streamlined by adoption of time-saving techniques:
 
 -   Setting of document-wide formatting, execution and style parameters in the document header
+
     -   For example, extra lines of code in the document YAML headers to facilitate numbering (and referencing) of figure and table captions
 
-    -  Further refinement and defnition can be accomplished by utilisation of a .css file (Note the styles.css file created and included in the document header if creating a new document using the Quarto template in `thekidsbiostats` package)
+    -   Further refinement and defnition can be accomplished by utilisation of a .css file (Note the styles.css file created and included in the document header if creating a new document using the Quarto template in `thekidsbiostats` package)  
+    
+![Example Quarto document header](examples/YAML.png){#fig-YAML}  
 
--   Familiarisation with short-cut keys and code (eg see ...)
+::: column-margin
+Document-wide styling can be defined in the Quarto header as in @fig-YAML
+:::
+
+-   Familiarisation with short-cut keys and code (eg see (https://bookdown.org/yihui/rmarkdown-cookbook/rstudio-shortcuts.html) )
 
 -   Judicious use of bespoke functions to reduce repetitive coding eg in generation of tables and plots
 
-*Example??*
+```{r,echo=T}
+# Example code for bespoke function
+survey.tblsum<-
+  function(dat,missed="no",var_label=NULL)
+  {
+    if(is.null(var_label))
+      var_label=""
+    SummaryTbl<-dat %>% 
+      tbl_summary(by=Survey,
+                  missing=missed) %>%
+      add_overall(last=T) %>%
+      bold_labels() %>%
+      modify_header(label=var_label) %>%
+      modify_footnote(everything()~NA)
+    return(SummaryTbl)
+  }
+```
 
--   Professionalism in presentation is enhanced by consistent formatting and theming, which can be embedded into function calls. Note that loading of the `thekidsbiostats` package enabled easy incorporation of Barlow font and the Institute's colour palette as specified in the brand style toolkit.
+<br>
 
-*Example??*
+Professionalism in presentation is enhanced by consistent formatting and theming, which can be embedded into function calls. Note that loading of the `thekidsbiostats` package enabled easy incorporation of Barlow font and the Institute's colour palette as specified in the brand style toolkit.
+
+
+```{r,echo=T}
+# Construction of the MOVES plot that allows choice of colour scheme 
+
+load("data/Moves.Rdata")  # importing the MOVES data summary
+
+kids.cols<-as.vector(thekidsbiostats::thekids_colours)
+# ie kids.cols<-c("#F1B434","#F56B00","#00A39C","#00807A","#4A99DE","#426EA8","#1F3B73")
+
+kids.colsCMYK<-c("#FFBA26" ,"#FF5C00" ,"#00FF7D", "#0FC971","#4FA8FF","#3678FF" ,"#002EAB", "#3F5260")
+levs<-unique(moves.dat$type)
+
+moves.means<-subset(moves.dat,moves.dat$Day=="Best day")
+moves.means2<-subset(moves.dat,moves.dat$Day=="Worst day")
+moves.means$mean2<-moves.means2$mean[match(moves.means$type,moves.means2$type)]
+
+# a function having an argument that defines the colours to be used in the plotting
+do.moves.plot<-function(my.cols=kids.cols[c(2,4)])
+{
+  ggplot(data=moves.dat,aes(x=mean,y=y,group=Day,colour=Day,fill=Day))+
+  geom_segment(data=moves.means,aes(x=mean,xend=mean2,y=y,yend=y),linewidth=0.5,linetype=2,color="grey50")+  
+  geom_point(aes(shape=Day),size=2.8)+
+  scale_shape_manual(values=c(24,25),guide=guide_legend(nrow=1))+
+  scale_fill_manual(values=my.cols)+
+  scale_color_manual(values=my.cols)+
+  scale_y_continuous(breaks=1:length(levs),labels=levs,minor_breaks=NULL)+
+  scale_x_continuous(limits=c(0,3))+
+  labs(x="Mean rating (/3)",y="",title="The MOVES")+
+  theme_classic(base_family="Barlow",base_line_size=11/30)+
+  theme(
+    plot.title=element_blank(),
+    axis.text.y=element_text(size=rel(1.35),colour="black"),
+    axis.title.x=element_text(size=rel(1)),
+    legend.text=element_text(size=rel(1)),
+    legend.title=element_blank(),
+    panel.grid=element_blank(),
+    legend.position="bottom")
+}
+
+# Construction of a plot to be presented later
+moves.plot<-do.moves.plot()
+movesCMYK.plot<-do.moves.plot(my.cols=kids.colsCMYK[c(2,4)])
+
+```
+
 
 <br>
 
 # Figures for publication
 
-At the pointy end of the TS project, we were tasked with generating in a publication-ready format those figures which the authors had chosen to be included in the final public-facing summary report. This required close consultation with the production team to ensure that the images produced in the PDF files that were requested stayed true to the colour and font formatting as intended.  After exploration of several options we settled on the `cairo_pdf`function from the `grDevices` package in the System Library.
+At the pointy end of the TS project, we were tasked with generating in a publication-ready format those figures which the authors had chosen to be included in the final public-facing summary report. This required close consultation with the production team to ensure that the images produced in the PDF files that were requested stayed true to the colour and font formatting as intended. After exploration of several options we settled on the `cairo_pdf`function from the `grDevices` package in the System Library because of its superior consistency and clarity of output.
 
-Example Code:
 
-```{r,eval=F}
-load("data/Diagnosis.Rdata") # Loads 2 plots into the document run environment
-library(Cairo)
-library(extrafont)
-loadfonts() 
+```{r,echo=T,eval=F}
+# Code for generating pdf output files of the same R plot 
+
+load("data/Diagnosis.Rdata") # Loads plot.diagProf, a previously constructed ggplot, into the document run environment
+library(Cairo) # for CairoPDF
+library(extrafont)  # for embedding Barlow font into the file created by pdf 
+loadfonts()   # necessary for embedding Barlow font into the file created by pdf 
 
 cairo_pdf("examples/diagProf_cairo_pdf.pdf",family="Barlow",height=3.5,width=9)
 plot.diagProf
@@ -155,15 +240,16 @@ embed_fonts("examples/diagProfCMYK_pdf.pdf",outfile="examples/embedded_diagProfC
 
 ```
 
-
 ```{r,include=F}
-load("data/Diagnosis.Rdata") # Loads 2 plots into the document run environment
+
+# Code for generating pdf output files of the same R plot 
+
+load("data/Diagnosis.Rdata") # Loads a previously constructed ggplot into the document run environment
 
 
 library(Cairo)
 library(extrafont)
 loadfonts() #necessary
-
 
 
 cairo_pdf("examples/diagProf_cairo_pdf.pdf",family="Barlow",height=3.5,width=9)
@@ -204,19 +290,17 @@ Regular HTML report output
 
 ::: column-margin
 **Diagnosing professional**\
-The PDF as generated by cairo_pdf(...,family="Barlow) provides a close likeness to the HTML output of @fig-diagProf_html, and was the preferred format of the production team. 
+The PDF as generated by cairo_pdf(...,family="Barlow) provides a close likeness to the HTML output of @fig-diagProf_html, and was the preferred format of the production team.
 :::
 
 ![Generated by `Cairo::CairoPDF`](examples/diagProf_CairoPDF.png){#fig-diagProf_CairoPDF}
 
 ::: column-margin
 **Diagnosing professional**\
-As noted by the production team when assessing the alternative outputs, the PDF as generated by `CairoPDF(...,family="Barlow)` didn't have such clean lines in its rendering, as can be seen in the discrepancies here, when contrasted with @fig-diagProf_html and @fig-diagProf_cairo_pdf. (Note, also, although retaining `fonts` in its argument list, the help file for `CairoPDF` says `Cairo` automatically detects and embeds fonts.)
+As noted by the production team when assessing the alternative outputs, the PDF as generated by `CairoPDF(...,family="Barlow)` didn't have such clean lines in its rendering, as can be seen in the discrepancies here, when contrasted with @fig-diagProf_html and @fig-diagProf_cairo_pdf. (Note, also, although retaining `fonts` in its argument list, the help file for `CairoPDF` says `Cairo` ignores this argument as it automatically detects and embeds fonts.)
 :::
 
-
 Given a perceived need to also be able to work with a CMYK colour palette to facilitate true-to-colour printing, we further explored use of the `pdf` function (from the system library) to generate PDF figures because of the `colormodel` inclusion in its argument list as an optional parameter:
-
 
 ```{r}
 #| fig-height: 3.5
@@ -228,78 +312,37 @@ CMYK.diagProf
 
 ::: column-margin
 **Diagnosing professional**\
-Regular HTML report output of a ggplot created using the CMYK palette of the The Kids brand. 
+Regular HTML report output of a ggplot created using the CMYK palette of the The Kids brand.
 :::
-
-
 
 ![Generated by `pdf`](examples/diagProfCMYK_pdf.png){#fig-cmyk_diagProf_pdf}
 
 ::: column-margin
 **Diagnosing professional**\
-This PDF was generated by `pdf(...,fonts="Barlow',colormodel="cmyk")` that had as its argument the plot seen in @fig-cmyk_diagProf_pdf. The colour is indistinguishable from that in @fig-diagProf_html but the Barlow font has yet to be embedded. Note that the choice of default font seen appears to be device dependent.    
+This PDF was generated by `pdf(...,fonts="Barlow',colormodel="cmyk")` that had as its argument the plot seen in @fig-cmyk_diagProf_pdf. The colour is indistinguishable from that in @fig-diagProf_html but the Barlow font has yet to be embedded. Note that the choice of default font seen appears to be device dependent.
 :::
-
-
 
 ![Generated by `extrafont::embed_fonts` applied to the file output by `pdf`](examples/embedded_diagProfCMYK_pdf.png){#fig-embedded_diagProf_pdf}
 
 ::: column-margin
 **Diagnosing professional**\
-Formatting and theming features have been retained satisfactorily once `embed_fonts(...)` has been applied to the above output file of `pdf(...,fonts="barlow",colormodel="cmyk")` seen in @fig-cmyk_diagProf_pdf.   
+Formatting and theming features have been retained satisfactorily once `embed_fonts(...)` has been applied to the above output file of `pdf(...,fonts="barlow",colormodel="cmyk")` seen in @fig-cmyk_diagProf_pdf.
 :::
 
 <br>
 
-The second example is a more complicated plot of mean responses to the Motor Tic, Obsessions and Compulsions, Vocal Tic Evaluation Survey (MOVES) to assess the severity of tics
-during mild and peak periods.  This was one of several plots where we encountered difficulties with getting the `pdf`/`embed_fonts` option to work properly. 
+The second example is a more complicated plot of mean responses to the Motor Tic, Obsessions and Compulsions, Vocal Tic Evaluation Survey (MOVES) to assess the severity of tics during mild and peak periods. This was one of several plots where we encountered difficulties with getting the `pdf`/`embed_fonts` option to work properly.
 
-```{r,include=F}
-load("data/Moves.Rdata")
-kids.cols<-as.vector(thekidsbiostats::thekids_cols())
-# ie kids.cols<-c("#F1B434","#F56B00","#00A39C","#00807A","#4A99DE","#426EA8","#1F3B73")
-
-kids.colsCMYK<-c("#FFBA26" ,"#FF5C00" ,"#00FF7D", "#0FC971","#4FA8FF","#3678FF" ,"#002EAB", "#3F5260")
-levs<-unique(moves.dat$type)
-
-moves.means<-subset(moves.dat,moves.dat$Day=="Best")
-moves.means2<-subset(moves.dat,moves.dat$Day=="Worst")
-moves.means$mean2<-moves.means2[match(moves.means$y,moves.means2$y)]
-
-do.moves.plot<-function(my.cols)
-{
-  ggplot(data=moves.dat,aes(x=mean,y=y,group=Day,colour=Day,fill=Day))+
-  geom_segment(data=moves.means,aes(x=mean,xend=mean2,y=y,yend=y),linewidth=0.5,linetype=2,color="grey50")+  
-  geom_point(aes(shape=Day),size=2.8)+
-  scale_shape_manual(values=c(24,25),guide=guide_legend(nrow=1))+
-  scale_fill_manual(values=my.cols)+
-  scale_color_manual(values=my.cols)+
-  scale_y_continuous(breaks=1:length(levs),labels=levs,minor_breaks=NULL)+
-  scale_x_continuous(limits=c(1,4))+
-  labs(x="Mean rating (/4)",y="",title="The MOVES")+
-  theme_classic(base_family="Barlow",base_line_size=11/30)+
-  theme(
-    plot.title=element_blank(),
-    axis.text.y=element_text(size=rel(1.35),colour="black"),
-    axis.title.x=element_text(size=rel(1)),
-    legend.text=element_text(size=rel(1)),
-    legend.title=element_blank(),
-    panel.grid=element_blank(),
-    legend.position="bottom")
-}
-moves.plot<-do.moves.plot(my.cols=kids.cols[c(2,4)])
-movesCMYK.plot<-do.moves.plot(my.cols=kids.colsCMYK[c(2,4)])
-
-```
 
 ```{r,fig.height=5.5,fig.width=9}
+# Plot constructed in earlier chunk
 #| label: fig-moves_html
 #| fig-cap: The MOVES best and worst days - HTML output
 moves.plot
 ```
 
 ::: column-margin
-**The MOVES**  
+**The MOVES**\
 Regular HTML report output
 :::
 
@@ -347,45 +390,38 @@ PDF as generated by cairo_pdf(...,family="Barlow"), which again closely resemble
 
 ::: column-margin
 **The MOVES**\
-In the PDF as generated by CairoPDF(..., family="Barlow") we again notice a discrepancy in 
-line width compared to `cairo_pdf()`
+In the PDF as generated by CairoPDF(..., family="Barlow") we again notice a discrepancy in line width compared to `cairo_pdf()`
 :::
 
 ![Generated by `pdf`](examples/moves_pdf.png){#fig-moves_pdf}
 
 ::: column-margin
-**The MOVES**  
+**The MOVES**\
 In the PDF generated by pdf(..., fonts="Barlow"), we again see a default font that is not Barlow
 :::
-
-
 
 ![Generated by `pdf` followed by a call to `extrafont::embed_fonts`](examples/embedded_moves_pdf.png){#fig-embedded_moves_pdf}
 
 ::: column-margin
-
-::: callout-note
 **The MOVES**\
-Generation of the PDF by application of pdf(...,fonts="Barlow") followed by embed_fonts(...) has lost the ability to embed the Barlow font for this particular plot, whereas this approach successfully worked for the simpler **Diagnosing professional** plot of @fig-cmyk_diagProf_pdf.
+Generation of the PDF by application of pdf(...,fonts="Barlow") followed by embed_fonts(...) has lost the ability to embed the Barlow font for this particular plot, whereas this approach successfully worked for the simpler Diagnosing professional plot of @fig-cmyk_diagProf_pdf.
 :::
 
-:::
+<br> 
 
-# Ongoing Challenges  
+# Ongoing Challenges
 
-There is always a balance of time investment and where to draw the line when attempting to further one's technical prowess, particularly with R coding! Some ongoing challenges that haven't yet been satisfactorily addressed include: 
-
-- An apparent lack of some intuitive control of formatting figure/table captions within the Quarto document eg  font sizing and getting the whole of a numbered prefix to be bolded, if so desired : "**Figure** 1.1 A plot of ..." is relatively easy to code but not "**Figure 1.1** A plot of ...". 
-
-- There seems to be a lack of clear online guidance around PDF exporting options and output discrepancies (embedding issues, Windows vs Mac, CMYK for printing vs device)
-
+There is always a balance of time investment and where to draw the line when attempting to further one's technical prowess, particularly with R coding! While often times a quick google or ChatGP will help you find a solution relatively quickly, we found here that there seems to be a lack of clear online guidance around PDF exporting options and output discrepancies (embedding issues, default fonts dependency on machine/OS, CMYK for printing vs HTML colour).
 
 <br>
 
 # Reproducibility Information
 
+<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
 
-[Session Information]</button>
+Session Information
+
+</button>
 
 ::: {#collapseOne .accordion-collapse .collapse}
 <div>
@@ -396,4 +432,3 @@ sessionInfo()
 
 </div>
 :::
-

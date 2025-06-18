@@ -6,8 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Dr Bethy McKinnon and …">
-<meta name="dcterms.date" content="2025-06-10">
+<meta name="author" content="Bethy McKinnon and Matt Cooper">
+<meta name="dcterms.date" content="2025-06-19">
 
 <title>The Kids Biostats - Large-scale projects</title>
 <style>
@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -71,6 +105,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 <link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="MyStyles.css">
 </head>
 
 <body class="floating nav-fixed slimcontent">
@@ -146,14 +181,14 @@ ul.task-list li input[type="checkbox"] {
       <div>
       <div class="quarto-title-meta-heading">Author</div>
       <div class="quarto-title-meta-contents">
-               <p>Dr Bethy McKinnon and … </p>
+               <p>Bethy McKinnon and Matt Cooper </p>
             </div>
     </div>
       
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">June 10, 2025</p>
+        <p class="date">June 19, 2025</p>
       </div>
     </div>
     
@@ -189,10 +224,9 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<button class="accordion-button page-columns page-full" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
 <section id="overview" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Overview</h1>
-<p>A recent collaboration led by Dr Melissa Licari of The Kids produced a summary report detailing the challenges faced by individuals (and the families that care for them) living with Tourette syndrome and other tic disorders (https://www.thekids.org.au/impactfortourettes). The report was a summary of results of a national survey undertaken in 2023/2024(??), and the data analysis and preparation of figures for publication was undertaken by the Biostatistics team at The Kids.</p>
+<p>A recent collaboration led by Dr Melissa Licari of The Kids produced a summary report detailing the challenges faced by individuals (and the families that care for them) living with Tourette syndrome and other tic disorders (https://www.thekids.org.au/impactfortourettes). The report was a summary of results of a national survey undertaken in 2023/2024, and the data analysis and preparation of figures for publication was undertaken by the Biostatistics team at The Kids.</p>
 <p>To support production of the final publication there was considerable behind-the-scenes work around various challenges of a large-scale project such as this. For example:</p>
 <ul>
 <li>Survey coverage of 7 specific impact domains, being comprised of existing validated questionnaires as well as bespoke questions, and including multiple response types (eg multiple choice, radio buttons, free-text fields)</li>
@@ -217,7 +251,7 @@ ul.task-list li input[type="checkbox"] {
 <div id="fig-file_setup" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-file_setup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="examples/file_setup.png" class="img-fluid figure-img">
+<img src="examples/file_setup.png" style="height:4in" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-file_setup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 Figure&nbsp;2.1: Directory/subdirectory setup
@@ -226,38 +260,77 @@ Figure&nbsp;2.1: Directory/subdirectory setup
 </div>
 <p><em>Use of sub-directories in the project organisation is illustrated by <a href="#fig-file_setup" class="quarto-xref">Figure&nbsp;2.1</a>.</em></p>
 <ul>
-<li>Main document files are now Quarto documents (with a .qmd extension), superseding the previous default RStudio Markdown (.mkd) files, having more powerful capabilities but still retaining the header-text-code structure and simplicity and flexibility of the markdown syntax for text formatting. (See [https://quarto.org/docs/authoring/markdown-basics.html] for a useful reference.)</li>
+<li>Main output document files are now Quarto documents (with a .qmd extension), superseding the previous default RStudio Markdown (.mkd) files, having more powerful capabilities but still retaining the header-text-code structure and simplicity and flexibility of the markdown syntax for text formatting. (See [https://quarto.org/docs/authoring/markdown-basics.html] for a useful reference.)</li>
 </ul>
-<p>Quarto documents can be written and rendered from either a <strong>visual</strong> view or a *source** view:</p>
-<p><img src="examples/visual_qmd.png" class="img-fluid" alt="Visual screen of the default new QMD file">{#fig-visual, height=2.5in}</p>
-<p><img src="examples/source_qmd.png" class="img-fluid" alt="Source screen of the default new QMD file">{#fig-source, height=2.5in}</p>
+<p>For those unfamiliar with Quarto, note that documents can be written and rendered from either a <strong>visual</strong> view or a <strong>source</strong> view:</p>
+<div id="fig-visual" class="quarto-figure quarto-figure-center quarto-float anchored" data-align="left">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-visual-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="examples/visual_qmd.png" style="height:4in" data-align="left" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-visual-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.2: Visual screen of the default new QMD file
+</figcaption>
+</figure>
+</div>
+<div id="fig-source" class="quarto-figure quarto-figure-center quarto-float anchored" data-align="left">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="examples/source_qmd.png" style="height:4in" data-align="left" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.3: Source screen of the default new QMD file
+</figcaption>
+</figure>
+</div>
 <div id="fig-defaultHTML" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-defaultHTML-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="examples/defaultQMD-HTML.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-defaultHTML-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.2: HTML report
+Figure&nbsp;2.4: HTML report
 </figcaption>
 </figure>
 </div>
 
 <div class="no-row-height column-margin column-container"><div class="">
-<p><a href="#fig-defaultHTML" class="quarto-xref">Figure&nbsp;2.2</a> shows the HTML report produced by rendering the default QMD file</p>
+<p><a href="#fig-defaultHTML" class="quarto-xref">Figure&nbsp;2.4</a> shows the HTML report produced by rendering the default QMD file</p>
 </div></div><p><br></p>
 </section>
 <section id="robustness-and-reproducibility" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Robustness and reproducibility</h1>
-<p>Numerous features of an appropriate project design and ensuing workflow ensure that the end product of the data analysis is robust and reproducible:</p>
+<p>It is inevitable that there will be considerable data pre-processing required prior to undertaking any analysis. (This is often the greatest challenge we find with a project.)</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>It is therefore essential that sound data management practices are maintained.</p>
+</div>
+</div>
+<p>When pre-processing data:<br>
+- <strong>Never</strong> overwrite the raw data<br>
+- Always double-check merging of different data sets is accomplished correctly.<br>
+- Check consistency of data entry/coding for the same variable sourced from different data sets<br>
+- Utilise a data dictionary, and ensure it is noted how missing values are coded<br>
+- Ensure newly created data sets are dated<br>
+- Scrutinize the final data set for anomalies prior to adopting it for analysis.</p>
+<p>Furthermore, numerous features of an appropriate project design and ensuing workflow to ensure that the end product of the data analysis is robust and reproducible include:</p>
 <ul>
 <li><p>Utilisation of a project template with organised sub-directories (See <code>thekidsbiostats::create_project()</code>)</p></li>
-<li><p>Use of a document template that includes a run date in the header and session info at the end (See <code>thekidsbiostats::create_template()</code>)</p></li>
-<li><p>Inherent Quarto document features: Self-containment of the run environment, with other inputs called explicitly; auto-save with each render; text interspersed with result-producing code.</p></li>
-<li><p>Routine ongoing checks that code as written produces the intended results when executed. Note the capability provided by the Quarto Visual editor to view results of coding chunks as you go - appropriate placement of code within text provides an avenue for a convenient step-by-step draft look at the flow of the finished product.</p></li>
+<li><p>Routine ongoing checks that code as written produces the intended results when executed.</p></li>
 <li><p>Utilisation of user-written functions, with appropriate testing, minimises errors that can creep in when reliant on cut-and-pastes or coding of repeated tasks or tasks comprised of multiple steps.</p></li>
+<li><p>Use of a document template for report writing that includes a run date in the header and session info at the end (See <code>thekidsbiostats::create_template()</code>)</p></li>
+<li><p>Inherent Quarto document features: Self-containment of the run environment, with other inputs called explicitly; auto-save with each render; text interspersed with result-producing code.</p></li>
 </ul>
 </section>
-<section id="streamlining-and-theming" class="level1" data-number="4">
+<section id="streamlining-and-theming" class="level1 page-columns page-full" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Streamlining and theming</h1>
 <p>Coding can be streamlined by adoption of time-saving techniques:</p>
 <ul>
@@ -266,20 +339,125 @@ Figure&nbsp;2.2: HTML report
 <li><p>For example, extra lines of code in the document YAML headers to facilitate numbering (and referencing) of figure and table captions</p></li>
 <li><p>Further refinement and defnition can be accomplished by utilisation of a .css file (Note the styles.css file created and included in the document header if creating a new document using the Quarto template in <code>thekidsbiostats</code> package)</p></li>
 </ul></li>
-<li><p>Familiarisation with short-cut keys and code (eg see …)</p></li>
+</ul>
+<div id="fig-YAML" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-YAML-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="examples/YAML.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-YAML-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.1: Example Quarto document header
+</figcaption>
+</figure>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>Document-wide styling can be defined in the Quarto header as in <a href="#fig-YAML" class="quarto-xref">Figure&nbsp;4.1</a></p>
+</div></div><ul>
+<li><p>Familiarisation with short-cut keys and code (eg see (https://bookdown.org/yihui/rmarkdown-cookbook/rstudio-shortcuts.html) )</p></li>
 <li><p>Judicious use of bespoke functions to reduce repetitive coding eg in generation of tables and plots</p></li>
 </ul>
-<p><em>Example??</em></p>
-<ul>
-<li>Professionalism in presentation is enhanced by consistent formatting and theming, which can be embedded into function calls. Note that loading of the <code>thekidsbiostats</code> package enabled easy incorporation of Barlow font and the Institute’s colour palette as specified in the brand style toolkit.</li>
-</ul>
-<p><em>Example??</em></p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example code for bespoke function</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>survey.tblsum<span class="ot">&lt;-</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(dat,<span class="at">missed=</span><span class="st">"no"</span>,<span class="at">var_label=</span><span class="cn">NULL</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">is.null</span>(var_label))</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      var_label<span class="ot">=</span><span class="st">""</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    SummaryTbl<span class="ot">&lt;-</span>dat <span class="sc">%&gt;%</span> </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">tbl_summary</span>(<span class="at">by=</span>Survey,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">missing=</span>missed) <span class="sc">%&gt;%</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">add_overall</span>(<span class="at">last=</span>T) <span class="sc">%&gt;%</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">bold_labels</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">modify_header</span>(<span class="at">label=</span>var_label) <span class="sc">%&gt;%</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">modify_footnote</span>(<span class="fu">everything</span>()<span class="sc">~</span><span class="cn">NA</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(SummaryTbl)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p><br></p>
+<p>Professionalism in presentation is enhanced by consistent formatting and theming, which can be embedded into function calls. Note that loading of the <code>thekidsbiostats</code> package enabled easy incorporation of Barlow font and the Institute’s colour palette as specified in the brand style toolkit.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construction of the MOVES plot that allows choice of colour scheme </span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/Moves.Rdata"</span>)  <span class="co"># importing the MOVES data summary</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>kids.cols<span class="ot">&lt;-</span><span class="fu">as.vector</span>(thekidsbiostats<span class="sc">::</span>thekids_colours)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># ie kids.cols&lt;-c("#F1B434","#F56B00","#00A39C","#00807A","#4A99DE","#426EA8","#1F3B73")</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>kids.colsCMYK<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">"#FFBA26"</span> ,<span class="st">"#FF5C00"</span> ,<span class="st">"#00FF7D"</span>, <span class="st">"#0FC971"</span>,<span class="st">"#4FA8FF"</span>,<span class="st">"#3678FF"</span> ,<span class="st">"#002EAB"</span>, <span class="st">"#3F5260"</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>levs<span class="ot">&lt;-</span><span class="fu">unique</span>(moves.dat<span class="sc">$</span>type)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>moves.means<span class="ot">&lt;-</span><span class="fu">subset</span>(moves.dat,moves.dat<span class="sc">$</span>Day<span class="sc">==</span><span class="st">"Best day"</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>moves.means2<span class="ot">&lt;-</span><span class="fu">subset</span>(moves.dat,moves.dat<span class="sc">$</span>Day<span class="sc">==</span><span class="st">"Worst day"</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>moves.means<span class="sc">$</span>mean2<span class="ot">&lt;-</span>moves.means2<span class="sc">$</span>mean[<span class="fu">match</span>(moves.means<span class="sc">$</span>type,moves.means2<span class="sc">$</span>type)]</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># a function having an argument that defines the colours to be used in the plotting</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>do.moves.plot<span class="ot">&lt;-</span><span class="cf">function</span>(<span class="at">my.cols=</span>kids.cols[<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>)])</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">data=</span>moves.dat,<span class="fu">aes</span>(<span class="at">x=</span>mean,<span class="at">y=</span>y,<span class="at">group=</span>Day,<span class="at">colour=</span>Day,<span class="at">fill=</span>Day))<span class="sc">+</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">data=</span>moves.means,<span class="fu">aes</span>(<span class="at">x=</span>mean,<span class="at">xend=</span>mean2,<span class="at">y=</span>y,<span class="at">yend=</span>y),<span class="at">linewidth=</span><span class="fl">0.5</span>,<span class="at">linetype=</span><span class="dv">2</span>,<span class="at">color=</span><span class="st">"grey50"</span>)<span class="sc">+</span>  </span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">shape=</span>Day),<span class="at">size=</span><span class="fl">2.8</span>)<span class="sc">+</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="dv">24</span>,<span class="dv">25</span>),<span class="at">guide=</span><span class="fu">guide_legend</span>(<span class="at">nrow=</span><span class="dv">1</span>))<span class="sc">+</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values=</span>my.cols)<span class="sc">+</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values=</span>my.cols)<span class="sc">+</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks=</span><span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(levs),<span class="at">labels=</span>levs,<span class="at">minor_breaks=</span><span class="cn">NULL</span>)<span class="sc">+</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">3</span>))<span class="sc">+</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Mean rating (/3)"</span>,<span class="at">y=</span><span class="st">""</span>,<span class="at">title=</span><span class="st">"The MOVES"</span>)<span class="sc">+</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>(<span class="at">base_family=</span><span class="st">"Barlow"</span>,<span class="at">base_line_size=</span><span class="dv">11</span><span class="sc">/</span><span class="dv">30</span>)<span class="sc">+</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title=</span><span class="fu">element_blank</span>(),</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.text.y=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="fu">rel</span>(<span class="fl">1.35</span>),<span class="at">colour=</span><span class="st">"black"</span>),</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="fu">rel</span>(<span class="dv">1</span>)),</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="fu">rel</span>(<span class="dv">1</span>)),</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.title=</span><span class="fu">element_blank</span>(),</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid=</span><span class="fu">element_blank</span>(),</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position=</span><span class="st">"bottom"</span>)</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Construction of a plot to be presented later</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>moves.plot<span class="ot">&lt;-</span><span class="fu">do.moves.plot</span>()</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>movesCMYK.plot<span class="ot">&lt;-</span><span class="fu">do.moves.plot</span>(<span class="at">my.cols=</span>kids.colsCMYK[<span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">4</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 <p><br></p>
 </section>
 <section id="figures-for-publication" class="level1 page-columns page-full" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Figures for publication</h1>
-<p>At the pointy end of the TS project, we were tasked with generating in a publication-ready format those figures which the authors had chosen to be included in the final public-facing summary report. This required close consultation with the production team to ensure that the images produced in the PDF files that were requested stayed true to the colour and font formatting as intended. After exploration of several options we settled on the <code>cairo_pdf</code>function from the <code>grDevices</code> package in the System Library.</p>
-<p>Example Code:</p>
+<p>At the pointy end of the TS project, we were tasked with generating in a publication-ready format those figures which the authors had chosen to be included in the final public-facing summary report. This required close consultation with the production team to ensure that the images produced in the PDF files that were requested stayed true to the colour and font formatting as intended. After exploration of several options we settled on the <code>cairo_pdf</code>function from the <code>grDevices</code> package in the System Library because of its superior consistency and clarity of output.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Code for generating pdf output files of the same R plot </span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/Diagnosis.Rdata"</span>) <span class="co"># Loads plot.diagProf, a previously constructed ggplot, into the document run environment</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Cairo) <span class="co"># for CairoPDF</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(extrafont)  <span class="co"># for embedding Barlow font into the file created by pdf </span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">loadfonts</span>()   <span class="co"># necessary for embedding Barlow font into the file created by pdf </span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cairo_pdf</span>(<span class="st">"examples/diagProf_cairo_pdf.pdf"</span>,<span class="at">family=</span><span class="st">"Barlow"</span>,<span class="at">height=</span><span class="fl">3.5</span>,<span class="at">width=</span><span class="dv">9</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>plot.diagProf</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">CairoPDF</span>(<span class="st">"examples/diagProf_CairoPDF.pdf"</span>,<span class="at">family=</span><span class="st">"Barlow"</span>,<span class="at">height=</span><span class="fl">3.5</span>,<span class="at">width=</span><span class="dv">9</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>plot.diagProf</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="fu">pdf</span>(<span class="st">"examples/diagProf_pdf.pdf"</span>,<span class="at">fonts=</span><span class="st">"Barlow"</span>,<span class="at">height=</span><span class="fl">3.5</span>,<span class="at">width=</span><span class="dv">9</span>)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>plot.diagProf</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="fu">embed_fonts</span>(<span class="st">"examples/diagProf_pdf.pdf"</span>,<span class="at">outfile=</span><span class="st">"examples/embedded_diagProf_pdf.pdf"</span>)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="fu">pdf</span>(<span class="st">"examples/diagProfCMYK_pdf.pdf"</span>,<span class="at">fonts=</span><span class="st">"Barlow"</span>,<span class="at">height=</span><span class="fl">3.5</span>,<span class="at">width=</span><span class="dv">9</span>,<span class="at">colormodel=</span><span class="st">"cmyk"</span>)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>CMYK.diagProf</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="fu">embed_fonts</span>(<span class="st">"examples/diagProfCMYK_pdf.pdf"</span>,<span class="at">outfile=</span><span class="st">"examples/embedded_diagProfCMYK_pdf.pdf"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 <div class="cell">
 <div class="cell-output-display">
 <div id="fig-diagProf_html" class="quarto-figure quarto-figure-center quarto-float anchored">
@@ -325,7 +503,7 @@ Figure&nbsp;5.3: Generated by <code>Cairo::CairoPDF</code>
 
 <div class="no-row-height column-margin column-container"><div class="">
 <p><strong>Diagnosing professional</strong><br>
-As noted by the production team when assessing the alternative outputs, the PDF as generated by <code>CairoPDF(...,family="Barlow)</code> didn’t have such clean lines in its rendering, as can be seen in the discrepancies here, when contrasted with <a href="#fig-diagProf_html" class="quarto-xref">Figure&nbsp;5.1</a> and <a href="#fig-diagProf_cairo_pdf" class="quarto-xref">Figure&nbsp;5.2</a>. (Note, also, although retaining <code>fonts</code> in its argument list, the help file for <code>CairoPDF</code> says <code>Cairo</code> automatically detects and embeds fonts.)</p>
+As noted by the production team when assessing the alternative outputs, the PDF as generated by <code>CairoPDF(...,family="Barlow)</code> didn’t have such clean lines in its rendering, as can be seen in the discrepancies here, when contrasted with <a href="#fig-diagProf_html" class="quarto-xref">Figure&nbsp;5.1</a> and <a href="#fig-diagProf_cairo_pdf" class="quarto-xref">Figure&nbsp;5.2</a>. (Note, also, although retaining <code>fonts</code> in its argument list, the help file for <code>CairoPDF</code> says <code>Cairo</code> ignores this argument as it automatically detects and embeds fonts.)</p>
 </div></div><p>Given a perceived need to also be able to work with a CMYK colour palette to facilitate true-to-colour printing, we further explored use of the <code>pdf</code> function (from the system library) to generate PDF figures because of the <code>colormodel</code> inclusion in its argument list as an optional parameter:</p>
 <div class="cell">
 <div class="cell-output-display">
@@ -377,14 +555,9 @@ Formatting and theming features have been retained satisfactorily once <code>emb
 <p>The second example is a more complicated plot of mean responses to the Motor Tic, Obsessions and Compulsions, Vocal Tic Evaluation Survey (MOVES) to assess the severity of tics during mild and peak periods. This was one of several plots where we encountered difficulties with getting the <code>pdf</code>/<code>embed_fonts</code> option to work properly.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div id="fig-moves_html" class="quarto-figure quarto-figure-center quarto-float anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-moves_html-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="large_scale_project_files/figure-html/fig-moves_html-1.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-moves_html-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5.7: The MOVES best and worst days - HTML output
-</figcaption>
+<div>
+<figure class="figure">
+<p><img src="large_scale_project_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
@@ -400,7 +573,7 @@ Regular HTML report output</p>
 <img src="examples/moves_cairo_pdf.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-moves_cairo_pdf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5.8: Generated by <code>cairo_pdf</code>
+Figure&nbsp;5.7: Generated by <code>cairo_pdf</code>
 </figcaption>
 </figure>
 </div>
@@ -414,7 +587,7 @@ PDF as generated by cairo_pdf(…,family=“Barlow”), which again closely rese
 <img src="examples/moves_CairoPDF.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-moves_CairoPDF-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5.9: Generated by <code>CairoPDF</code>
+Figure&nbsp;5.8: Generated by <code>CairoPDF</code>
 </figcaption>
 </figure>
 </div>
@@ -428,7 +601,7 @@ In the PDF as generated by CairoPDF(…, family=“Barlow”) we again notice a 
 <img src="examples/moves_pdf.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-moves_pdf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5.10: Generated by <code>pdf</code>
+Figure&nbsp;5.9: Generated by <code>pdf</code>
 </figcaption>
 </figure>
 </div>
@@ -442,40 +615,26 @@ In the PDF generated by pdf(…, fonts=“Barlow”), we again see a default fon
 <img src="examples/embedded_moves_pdf.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-embedded_moves_pdf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5.11: Generated by <code>pdf</code> followed by a call to <code>extrafont::embed_fonts</code>
+Figure&nbsp;5.10: Generated by <code>pdf</code> followed by a call to <code>extrafont::embed_fonts</code>
 </figcaption>
 </figure>
 </div>
 
 <div class="no-row-height column-margin column-container"><div class="">
-<div class="callout callout-style-default callout-note no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
 <p><strong>The MOVES</strong><br>
-Generation of the PDF by application of pdf(…,fonts=“Barlow”) followed by embed_fonts(…) has lost the ability to embed the Barlow font for this particular plot, whereas this approach successfully worked for the simpler <strong>Diagnosing professional</strong> plot of <a href="#fig-cmyk_diagProf_pdf" class="quarto-xref">Figure&nbsp;5.5</a>.</p>
-</div>
-</div>
-</div></div></section>
+Generation of the PDF by application of pdf(…,fonts=“Barlow”) followed by embed_fonts(…) has lost the ability to embed the Barlow font for this particular plot, whereas this approach successfully worked for the simpler Diagnosing professional plot of <a href="#fig-cmyk_diagProf_pdf" class="quarto-xref">Figure&nbsp;5.5</a>.</p>
+</div></div><p><br></p>
+</section>
 <section id="ongoing-challenges" class="level1" data-number="6">
 <h1 data-number="6"><span class="header-section-number">6</span> Ongoing Challenges</h1>
-<p>There is always a balance of time investment and where to draw the line when attempting to further one’s technical prowess, particularly with R coding! Some ongoing challenges that haven’t yet been satisfactorily addressed include:</p>
-<ul>
-<li><p>An apparent lack of some intuitive control of formatting figure/table captions within the Quarto document eg font sizing and getting the whole of a numbered prefix to be bolded, if so desired : “<strong>Figure</strong> 1.1 A plot of …” is relatively easy to code but not “<strong>Figure 1.1</strong> A plot of …”.</p></li>
-<li><p>There seems to be a lack of clear online guidance around PDF exporting options and output discrepancies (embedding issues, Windows vs Mac, CMYK for printing vs device)</p></li>
-</ul>
+<p>There is always a balance of time investment and where to draw the line when attempting to further one’s technical prowess, particularly with R coding! While often times a quick google or ChatGP will help you find a solution relatively quickly, we found here that there seems to be a lack of clear online guidance around PDF exporting options and output discrepancies (embedding issues, default fonts dependency on machine/OS, CMYK for printing vs HTML colour).</p>
 <p><br></p>
 </section>
 <section id="reproducibility-information" class="level1" data-number="7">
 <h1 data-number="7"><span class="header-section-number">7</span> Reproducibility Information</h1>
-[Session Information]
-</section></button>
+<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+<p>Session Information</p>
+</button>
 <div id="collapseOne" class="accordion-collapse collapse">
 <div>
 <div class="cell">
@@ -534,7 +693,7 @@ loaded via a namespace (and not attached):
 </div>
 
 
-
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
