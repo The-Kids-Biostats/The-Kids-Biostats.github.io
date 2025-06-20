@@ -210,11 +210,15 @@ movesCMYK.plot<-do.moves.plot(my.cols=kids.colsCMYK[c(2,4)])
 
 At the pointy end of the TS project, we were tasked with generating in a publication-ready format those figures which the authors had chosen to be included in the final public-facing summary report. This required close consultation with the production team to ensure that the images produced in the PDF files that were requested stayed true to the colour and font formatting as intended. After exploration of several options we settled on the `cairo_pdf`function from the `grDevices` package in the System Library because of its superior consistency and clarity of output.
 
+```{r}
+load("data/Diagnosis.Rdata") # Loads plot.diagProf, a previously constructed ggplot, into the document run environment
+```
+
 
 ```{r,echo=T,eval=F}
 # Code for generating pdf output files of the same R plot 
 
-load("data/Diagnosis.Rdata") # Loads plot.diagProf, a previously constructed ggplot, into the document run environment
+
 library(Cairo) # for CairoPDF
 library(extrafont)  # for embedding Barlow font into the file created by pdf 
 loadfonts()   # necessary for embedding Barlow font into the file created by pdf 
@@ -240,7 +244,7 @@ embed_fonts("examples/diagProfCMYK_pdf.pdf",outfile="examples/embedded_diagProfC
 
 ```
 
-```{r,include=F}
+```{r,include=F,eval=F}
 
 # Code for generating pdf output files of the same R plot 
 
@@ -348,7 +352,7 @@ Regular HTML report output
 
 <br>
 
-```{r,include=F}
+```{r,include=F,eval=F}
 library(Cairo) 
 library(extrafont)
 loadfonts() 
