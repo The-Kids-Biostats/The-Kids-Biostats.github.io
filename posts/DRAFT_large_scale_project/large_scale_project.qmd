@@ -35,23 +35,26 @@ crossref:
 css: MyStyles.css  # Used to define look of the call-outs
 ---
 
-
 # Overview
 
 ```{r}
 library(thekidsbiostats) # install with remotes::install_github("The-Kids-Biostats/thekidsbiostats")
 ```
 
-A recent collaboration led by Dr Melissa Licari of The Kids produced a summary report detailing the challenges faced by individuals (and the families that care for them) living with Tourette syndrome and other tic disorders (https://www.thekids.org.au/impactfortourettes). The report was a summary of results of a national survey undertaken in 2023/2024, and the data analysis and preparation of figures for publication was undertaken by the Biostatistics team at The Kids.
+A recent collaboration led by Dr Melissa Licari of The Kids resulted in a report detailing the challenges faced by individuals (and the families that care for them) living with Tourette Syndrome (TS) and other tic disorders. The report can be found here:
 
-To support production of the final publication there was considerable behind-the-scenes work around various challenges of a large-scale project such as this. For example:
+https://www.thekids.org.au/impactfortourettes 
+
+This report was a summary of results of a national survey undertaken in 2023/2024, and the data analysis and preparation of figures for publication was undertaken by the Biostatistics team at The Kids.
+
+To support production of the final publication there was considerable behind-the-scenes work, including various challenges common to a large-scale project such as this, wwhere there are many variables and outcomes of interest. For example:
 
 -   Survey coverage of 7 specific impact domains, being comprised of existing validated questionnaires as well as bespoke questions, and including multiple response types (eg multiple choice, radio buttons, free-text fields)
 -   Synthesis of data from 3 different distinct surveys (adults with tics, parents of children with tics, carers of adults with tics) having largely overlapping item/theme content but not necessarily identically matched response choices\
 -   Only partial survey completion by many respondents\
 -   Preparation of high-quality PDF output that met the needs of the production team whilst conforming to The Kids style guidelines.
 
-With a target endpoint rather different than the journal articles we are typically preparing for, our experience with the TS collaboration has prompted us to share our approach to tackling larger-scale projects, and any insight it may provide!
+Our experience with the TS collaboration has prompted us to share our approach to tackling larger-scale projects, and any insight it may provide!
 
 # Project design
 
@@ -59,62 +62,53 @@ The reproducible code-based capabilities of R, readily integrated into a suite o
 
 In line with current practice of our team, features of our general project design include:
 
--   Overall organisation being that of a self-contained R project with accompanying sub-directories.(See `thekidsbiostats::create_project()` for project template)
+-   Overall organisation being that of a self-contained R project with accompanying sub-directories.(See `thekidsbiostats::create_project()` and Figure 2.1 for project template)
 
-    -   Given the scale of the TS project, generation of tables and figures was further blocked into 9 different files corresponding to the distinct survey sections (background information, 7 impact domains, looking to the future). This enabled code and output to be run and checked in manageable chunks before resultant tables and plots being called into into an overarching file that pulled it all together.
+    -   Given the scale of the TS project, generation of tables and figures was further blocked into 9 different files corresponding to the distinct survey sections (background information, 7 impact domains, looking to the future). This enabled code and output to be run and checked in manageable chunks before the resulting tables and plots were reunited in an holistic file.
 
-![Directory/subdirectory setup](examples/file_setup.png){#fig-file_setup height=4in}
+![Directory/subdirectory setup](examples/file_setup.png){#fig-file_setup height="4in"}
 
 *Use of sub-directories in the project organisation is illustrated by @fig-file_setup.*
 
--   Main output document files are now Quarto documents (with a .qmd extension), superseding the previous default RStudio Markdown (.mkd) files, having more powerful capabilities but still retaining the header-text-code structure and simplicity and flexibility of the markdown syntax for text formatting. (See \[https://quarto.org/docs/authoring/markdown-basics.html\] for a useful reference.)
+-   Main output document files are now Quarto documents (with a .qmd extension), superseding the previous default RStudio Markdown (.Rmd) files, having more powerful capabilities but still retaining the same header-text-code structure, simplicity and flexibility. (See  https://quarto.org/docs/authoring/markdown-basics.html for a useful reference.)
 
-For those unfamiliar with Quarto, note that documents can be written and rendered from either a **visual** view or a **source** view:
+For those unfamiliar with Quarto, note that .qmd files can be edited and rendered from either a **visual** view or a **source** view within RStudio. The **visual** view aims to give format certain elements (e.g. headers, code chunks, bold/italics) as they will appear in the rendered document. **source** is preferred for more control over each element as the formatting syntax is visible and easily modifiable.  
 
-![Visual screen of the default new QMD file](examples/visual_qmd.png){#fig-visual  height=4in align=left}
+![Visual screen of the default new QMD file](examples/visual_qmd.png){#fig-visual height="4in" align="left"}
 
-![Source screen of the default new QMD file](examples/source_qmd.png){#fig-source  height=4in align=left}
+![Source screen of the default new QMD file](examples/source_qmd.png){#fig-source height="4in" align="left"}
 
 ![HTML report](examples/defaultQMD-HTML.png){#fig-defaultHTML}
 
-::: column-margin
-@fig-defaultHTML shows the HTML report produced by rendering the default QMD file
-:::
 
-
-<br>
 
 # Robustness and reproducibility
 
-It is inevitable that there will be considerable data pre-processing required prior to undertaking any analysis. (This is often the greatest challenge we find with a project.) 
+It is inevitable that there will be considerable data pre-processing required prior to undertaking any analysis. (This is often the greatest challenge we find with a project.)
 
-
-::: {.callout-important}
-It is therefore essential that sound data management practices are maintained. 
+::: callout-important
+It is therefore essential that sound data management practices are maintained.
 :::
 
-When pre-processing data:  
-    -   **Never** overwrite the raw data   
-    -   Always double-check merging of different data sets is accomplished correctly.  
-    -   Check consistency of data entry/coding for the same variable sourced from different data sets  
-    -   Utilise a data dictionary, and ensure it is noted how missing values are coded  
-    -   Ensure newly created data sets are dated   
-    -   Scrutinize the final data set for anomalies prior to adopting it for analysis.  
+When pre-processing data:\
+- **Never** overwrite the raw data\
+- Always double-check merging of different data sets is accomplished correctly.\
+- Check consistency of data entry/coding for the same variable sourced from different data sets\
+- Utilise a data dictionary, and ensure it is noted how missing values are coded\
+- Ensure newly created data sets are dated\
+- Scrutinize the final data set for anomalies prior to adopting it for analysis.
 
+Furthermore, one ought to use an appropriate folder/file structure and workflow to ensure that the end product of the data analysis is readable, robust and reproducible. Some of the numerous things that can be used to achieve this are listed below:
 
+-   Utilisation of a project template with organised sub-directories (See `thekidsbiostats::create_project()`)
 
-Furthermore, numerous features of an appropriate project design and ensuing workflow to ensure that the end product of the data analysis is robust and reproducible include:
+-   Routine ongoing checks that code as written produces the intended results when executed. (This can partly be automated by packages like `targets` - stay posted for a blog post about that!)
 
--   Utilisation of a project template with organised sub-directories (See `thekidsbiostats::create_project()`)  
+-   Utilisation of user-written functions, with appropriate testing, minimises errors that can creep in when reliant on cut-and-pastes or  manual coding of repeated tasks.
 
--   Routine ongoing checks that code as written produces the intended results when executed.  
-
--   Utilisation of user-written functions, with appropriate testing, minimises errors that can creep in when reliant on cut-and-pastes or coding of repeated tasks or tasks comprised of multiple steps.
-
--   Use of a document template for report writing that includes a run date in the header and session info at the end (See `thekidsbiostats::create_template()`)
+-   Use of a document template for report writing that includes a run date in the header and session info at the end (See `thekidsbiostats::create_template()`, which creates .qmd files such as those seen above)
 
 -   Inherent Quarto document features: Self-containment of the run environment, with other inputs called explicitly; auto-save with each render; text interspersed with result-producing code.
-
 
 # Streamlining and theming
 
@@ -124,15 +118,15 @@ Coding can be streamlined by adoption of time-saving techniques:
 
     -   For example, extra lines of code in the document YAML headers to facilitate numbering (and referencing) of figure and table captions
 
-    -   Further refinement and defnition can be accomplished by utilisation of a .css file (Note the styles.css file created and included in the document header if creating a new document using the Quarto template in `thekidsbiostats` package)  
-    
-![Example Quarto document header](examples/YAML.png){#fig-YAML}  
+    -   Further refinement and definition can be accomplished by utilisation of a .css file (Note the styles.css file created and included in the document header if creating a new document using the Quarto template in `thekidsbiostats` package)
+
+![Example Quarto document header](examples/YAML.png){#fig-YAML}
 
 ::: column-margin
 Document-wide styling can be defined in the Quarto header as in @fig-YAML
 :::
 
--   Familiarisation with short-cut keys and code (eg see (https://bookdown.org/yihui/rmarkdown-cookbook/rstudio-shortcuts.html) )
+-   Familiarisation with short-cut keys and code (eg see https://bookdown.org/yihui/rmarkdown-cookbook/rstudio-shortcuts.html )
 
 -   Judicious use of bespoke functions to reduce repetitive coding eg in generation of tables and plots
 
@@ -154,10 +148,8 @@ survey.tblsum<-
   }
 ```
 
-<br>
 
 Professionalism in presentation is enhanced by consistent formatting and theming, which can be embedded into function calls. Note that loading of the `thekidsbiostats` package enabled easy incorporation of Barlow font and the Institute's colour palette as specified in the brand style toolkit.
-
 
 ```{r,echo=T}
 # Construction of the MOVES plot that allows choice of colour scheme 
@@ -203,17 +195,15 @@ movesCMYK.plot<-do.moves.plot(my.cols=kids.colsCMYK[c(2,4)])
 
 ```
 
-
 <br>
 
 # Figures for publication
 
-At the pointy end of the TS project, we were tasked with generating in a publication-ready format those figures which the authors had chosen to be included in the final public-facing summary report. This required close consultation with the production team to ensure that the images produced in the PDF files that were requested stayed true to the colour and font formatting as intended. After exploration of several options we settled on the `cairo_pdf`function from the `grDevices` package in the System Library because of its superior consistency and clarity of output.
+At the pointy end of the TS project, we were tasked with generating, in a publication-ready format, those figures which the authors had chosen to be included in the final public-facing summary report. This required close consultation with the production team to ensure that the images produced in the PDF files that were requested stayed true to the colour and font formatting as intended. After exploration of several options we settled on the `cairo_pdf`function from the `grDevices` package in the System Library because of its superior consistency and clarity of output.
 
 ```{r}
 load("data/Diagnosis.Rdata") # Loads plot.diagProf, a previously constructed ggplot, into the document run environment
 ```
-
 
 ```{r,echo=T,eval=F}
 # Code for generating pdf output files of the same R plot 
@@ -287,14 +277,14 @@ plot.diagProf
 
 ::: column-margin
 **Diagnosing professional**\
-Regular HTML report output
+Regular HTML report output with thekidsbiostats::thekids_theme()
 :::
 
 ![Generated by `cairo_pdf`](examples/diagProf_cairo_pdf.png){#fig-diagProf_cairo_pdf}
 
 ::: column-margin
 **Diagnosing professional**\
-The PDF as generated by cairo_pdf(...,family="Barlow) provides a close likeness to the HTML output of @fig-diagProf_html, and was the preferred format of the production team.
+The PDF as generated by cairo_pdf(...,family="Barlow") provides a close likeness to the HTML output of @fig-diagProf_html, and was the preferred format of the production team.
 :::
 
 ![Generated by `Cairo::CairoPDF`](examples/diagProf_CairoPDF.png){#fig-diagProf_CairoPDF}
@@ -336,7 +326,6 @@ Formatting and theming features have been retained satisfactorily once `embed_fo
 <br>
 
 The second example is a more complicated plot of mean responses to the Motor Tic, Obsessions and Compulsions, Vocal Tic Evaluation Survey (MOVES) to assess the severity of tics during mild and peak periods. This was one of several plots where we encountered difficulties with getting the `pdf`/`embed_fonts` option to work properly.
-
 
 ```{r,fig.height=5.5,fig.width=9}
 # Plot constructed in earlier chunk
@@ -411,11 +400,11 @@ In the PDF generated by pdf(..., fonts="Barlow"), we again see a default font th
 Generation of the PDF by application of pdf(...,fonts="Barlow") followed by embed_fonts(...) has lost the ability to embed the Barlow font for this particular plot, whereas this approach successfully worked for the simpler Diagnosing professional plot of @fig-cmyk_diagProf_pdf.
 :::
 
-<br> 
+<br>
 
 # Ongoing Challenges
 
-There is always a balance of time investment and where to draw the line when attempting to further one's technical prowess, particularly with R coding! While often times a quick google or ChatGP will help you find a solution relatively quickly, we found here that there seems to be a lack of clear online guidance around PDF exporting options and output discrepancies (embedding issues, default fonts dependency on machine/OS, CMYK for printing vs HTML colour).
+There is always a balance of time investment and where to draw the line when attempting to further one's technical prowess, particularly with R coding! While often times a quick google (or ChatGPT) will help you find a solution relatively quickly, we found here that there seems to be a lack of clear online guidance around PDF exporting options and output discrepancies (embedding issues, default fonts dependency on machine/OS, CMYK for printing vs HTML colour).
 
 <br>
 

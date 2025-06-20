@@ -9,8 +9,8 @@
 <link>https://the-kids-biostats.github.io/</link>
 <atom:link href="https://the-kids-biostats.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description>Biostats R solutions</description>
-<generator>quarto-1.4.555</generator>
-<lastBuildDate>Sun, 13 Apr 2025 14:00:00 GMT</lastBuildDate>
+<generator>quarto-1.6.40</generator>
+<lastBuildDate>Sun, 13 Apr 2025 16:00:00 GMT</lastBuildDate>
 <item>
   <title>Managing RStudio addins using the rsam package</title>
   <dc:creator>Zac Dempsey and Dr Matt Cooper</dc:creator>
@@ -239,7 +239,7 @@ loaded via a namespace (and not attached):
   <category>RStudio</category>
   <category>addins</category>
   <guid>https://the-kids-biostats.github.io/posts/2025-04-14_rsam/rsam.html</guid>
-  <pubDate>Sun, 13 Apr 2025 14:00:00 GMT</pubDate>
+  <pubDate>Sun, 13 Apr 2025 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>An Overview of our R Package: ‘thekidsbiostats’</title>
@@ -822,7 +822,7 @@ loaded via a namespace (and not attached):
   <category>R</category>
   <category>Summary</category>
   <guid>https://the-kids-biostats.github.io/posts/2025-01-23_thekids_package/thekids_package.html</guid>
-  <pubDate>Wed, 22 Jan 2025 13:00:00 GMT</pubDate>
+  <pubDate>Wed, 22 Jan 2025 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Models - Condensed code and output</title>
@@ -1517,7 +1517,7 @@ loaded via a namespace (and not attached):
   <category>Modelling</category>
   <category>Quarto</category>
   <guid>https://the-kids-biostats.github.io/posts/2025-01-10_model_function/model_function.html</guid>
-  <pubDate>Thu, 09 Jan 2025 13:00:00 GMT</pubDate>
+  <pubDate>Thu, 09 Jan 2025 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Visualisations for (bidirectional) Likert scale data</title>
@@ -1655,6 +1655,7 @@ font-style: inherit;"># Function to simulate post-survey responses with both imp
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(pre_response) {</span>
 <span id="cb1-20">  <span class="co" style="color: #5E5E5E;
 background-color: null;
@@ -1751,6 +1752,7 @@ font-style: inherit;">apply</span>(pre, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">2</span>, <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(x) <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">sapply</span>(x, simulate_post))</span>
@@ -1981,6 +1983,7 @@ font-style: inherit;">3</span>)</span></code></pre></div>
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(data,</span>
 <span id="cb3-2">                          grouping_var,</span>
 <span id="cb3-3">                          facet_var,</span>
@@ -2442,6 +2445,7 @@ font-style: inherit;">15</span>))</span>
 <span id="cb3-79">  </span>
 <span id="cb3-80">  <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (hline <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="cn" style="color: #8f5902;
@@ -2469,8 +2473,10 @@ background-color: null;
 font-style: inherit;">"red"</span>)</span>
 <span id="cb3-85">  } <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (hline <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="cn" style="color: #8f5902;
@@ -2534,6 +2540,7 @@ font-style: inherit;">"mode"</span>)</span></code></pre></div>
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(data, </span>
 <span id="cb5-2">                            <span class="at" style="color: #657422;
 background-color: null;
@@ -2739,6 +2746,7 @@ font-style: inherit;">"Saffron"</span>) </span></code></pre></div>
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(data,</span>
 <span id="cb8-2">                           <span class="at" style="color: #657422;
 background-color: null;
@@ -3054,7 +3062,7 @@ loaded via a namespace (and not attached):
   <category>Likert</category>
   <category>ggplot</category>
   <guid>https://the-kids-biostats.github.io/posts/2024-12-16_bidirectional_likert_visualisation/bidirectional_likert_visualisations.html</guid>
-  <pubDate>Sun, 15 Dec 2024 13:00:00 GMT</pubDate>
+  <pubDate>Sun, 15 Dec 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Sharing - Code v Functions</title>
@@ -3887,6 +3895,7 @@ font-style: inherit;"># Arrange legend items in a single row (applies if legend 
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(data,</span>
 <span id="cb4-2">                         <span class="at" style="color: #657422;
 background-color: null;
@@ -4899,7 +4908,7 @@ loaded via a namespace (and not attached):
   <category>Likert</category>
   <category>ggplot</category>
   <guid>https://the-kids-biostats.github.io/posts/2024-11-19_code_v_functions/code_v_functions.html</guid>
-  <pubDate>Mon, 18 Nov 2024 13:00:00 GMT</pubDate>
+  <pubDate>Mon, 18 Nov 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Visualisations for (ordinal) Likert scale data</title>
@@ -7461,7 +7470,7 @@ loaded via a namespace (and not attached):
   <category>Likert</category>
   <category>ggplot</category>
   <guid>https://the-kids-biostats.github.io/posts/2024-10-14_likert_visualisation/likert_visualisations.html</guid>
-  <pubDate>Sun, 13 Oct 2024 13:00:00 GMT</pubDate>
+  <pubDate>Sun, 13 Oct 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Small-sample analysis</title>
@@ -7736,7 +7745,7 @@ loaded via a namespace (and not attached):
   <category>Small Samples</category>
   <category>R</category>
   <guid>https://the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis.html</guid>
-  <pubDate>Mon, 09 Sep 2024 14:00:00 GMT</pubDate>
+  <pubDate>Mon, 09 Sep 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>AI in Biostatistics - Part 2</title>
@@ -8144,7 +8153,7 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
   <category>AI</category>
   <category>R</category>
   <guid>https://the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/ai_part_two.html</guid>
-  <pubDate>Thu, 08 Aug 2024 14:00:00 GMT</pubDate>
+  <pubDate>Thu, 08 Aug 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>AI in Biostatistics - Part 1</title>
@@ -8379,7 +8388,7 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
   <category>AI</category>
   <category>R</category>
   <guid>https://the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/ai_part_one.html</guid>
-  <pubDate>Wed, 07 Aug 2024 14:00:00 GMT</pubDate>
+  <pubDate>Wed, 07 Aug 2024 16:00:00 GMT</pubDate>
   <media:content url="https://the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/weather_p8.png" medium="image" type="image/png" height="115" width="144"/>
 </item>
 <item>
@@ -11412,7 +11421,7 @@ loaded via a namespace (and not attached):
   <category>Mixed Models</category>
   <category>R</category>
   <guid>https://the-kids-biostats.github.io/posts/2024-07-22_pre_post/pre-post.html</guid>
-  <pubDate>Sun, 21 Jul 2024 14:00:00 GMT</pubDate>
+  <pubDate>Sun, 21 Jul 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Data Anonymiser</title>
@@ -11545,7 +11554,7 @@ loaded via a namespace (and not attached):
   <category>Shiny</category>
   <category>R</category>
   <guid>https://the-kids-biostats.github.io/posts/2024-07-19_data_anonymiser/data_anonymiser.html</guid>
-  <pubDate>Thu, 18 Jul 2024 14:00:00 GMT</pubDate>
+  <pubDate>Thu, 18 Jul 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Parallel Computing in R</title>
@@ -11771,8 +11780,10 @@ font-style: inherit;">data =</span> mtcars)))</span>
 <span id="cb9-6"></span>
 <span id="cb9-7"><span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">in</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
@@ -11839,6 +11850,7 @@ background-color: null;
 font-style: inherit;">2</span>, </span>
 <span id="cb9-25">                       <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(coefs){<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">quantile</span>(coefs, <span class="at" style="color: #657422;
@@ -12000,6 +12012,7 @@ background-color: null;
 font-style: inherit;">2</span>, </span>
 <span id="cb16-12">                       <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(coefs) {<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">quantile</span>(coefs, <span class="at" style="color: #657422;
@@ -12155,6 +12168,7 @@ background-color: null;
 font-style: inherit;">2</span>, </span>
 <span id="cb23-13">                       <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(coefs) {<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">quantile</span>(coefs, <span class="at" style="color: #657422;
@@ -12411,8 +12425,10 @@ background-color: null;
 font-style: inherit;">list</span>()</span>
 <span id="cb32-3"><span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">in</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
@@ -12887,11 +12903,14 @@ font-style: inherit;"># To store our model output</span></span>
 <span id="cb50-3"></span>
 <span id="cb50-4"><span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">in</span> outcome_vars){</span>
 <span id="cb50-5">  <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (i <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -12920,8 +12939,10 @@ font-style: inherit;">data =</span> flights)</span>
 <span id="cb50-8">    </span>
 <span id="cb50-9">  } <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (i <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -13008,6 +13029,7 @@ font-style: inherit;">map</span>(outcome_vars, </span>
 background-color: null;
 font-style: inherit;">~</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -13040,8 +13062,10 @@ font-style: inherit;">summary</span>()</span>
 <span id="cb53-10">        </span>
 <span id="cb53-11">        } <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -13145,6 +13169,7 @@ font-style: inherit;">future_map</span>(outcome_vars, </span>
 background-color: null;
 font-style: inherit;">~</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -13177,8 +13202,10 @@ font-style: inherit;">summary</span>()</span>
 <span id="cb56-12">        </span>
 <span id="cb56-13">        } <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -13292,6 +13319,7 @@ background-color: null;
 font-style: inherit;">%dopar%</span> {</span>
 <span id="cb59-5">  <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (j <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -13319,8 +13347,10 @@ background-color: null;
 font-style: inherit;">data =</span> flights)</span>
 <span id="cb59-8">  } <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (j <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -13484,7 +13514,7 @@ loaded via a namespace (and not attached):
   <category>R</category>
   <category>Parallel</category>
   <guid>https://the-kids-biostats.github.io/posts/2024-07-01_parallel/parallel.html</guid>
-  <pubDate>Sun, 30 Jun 2024 14:00:00 GMT</pubDate>
+  <pubDate>Sun, 30 Jun 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Handling Missing Data with LMER</title>
@@ -18463,7 +18493,50 @@ loaded via a namespace (and not attached):
   <category>Mixed Models</category>
   <category>R</category>
   <guid>https://the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer.html</guid>
-  <pubDate>Thu, 06 Jun 2024 14:00:00 GMT</pubDate>
+  <pubDate>Thu, 06 Jun 2024 16:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Default QMD</title>
+  <link>https://the-kids-biostats.github.io/posts/DRAFT_large_scale_project/examples/defaultQMD.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="quarto" class="level2">
+<h2 class="anchored" data-anchor-id="quarto">Quarto</h2>
+<p>Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <a href="https://quarto.org" class="uri">https://quarto.org</a>.</p>
+</section>
+<section id="running-code" class="level2">
+<h2 class="anchored" data-anchor-id="running-code">Running Code</h2>
+<p>When you click the <strong>Render</strong> button a document will be generated that includes both content and the output of embedded code. You can embed code like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+</div>
+<p>You can add options to executable code like this</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4</code></pre>
+</div>
+</div>
+<p>The <code>echo: false</code> option disables the printing of code (only output is displayed).</p>
+
+
+</section>
+
+ ]]></description>
+  <guid>https://the-kids-biostats.github.io/posts/DRAFT_large_scale_project/examples/defaultQMD.html</guid>
+  <pubDate>Fri, 20 Jun 2025 06:49:51 GMT</pubDate>
 </item>
 </channel>
 </rss>
