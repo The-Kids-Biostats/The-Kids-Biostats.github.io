@@ -66,6 +66,18 @@
     color: #F1B434 !important; /* Saffron primary */
 }
 
+
+/* Wrap the content of margin text in a bordered box */
+.column-margin > * {
+border: 2px solid #426EA8;
+padding: 0.5em;
+background-color: #f9f9f9;
+margin-bottom: 1em;
+position: relative;
+font-size: 12pt;  
+font-style: italic;
+}
+
 /* Important/Danger Callout Icon (Pumpkin) */
 .callout-important .callout-header .callout-icon-container .callout-icon {
     color: #F56B00 !important; /* Pumpkin primary */
@@ -80,16 +92,6 @@
 #  position: relative;
 #}
 
-/* Modified bordered box */
-.column-margin > * {
-border: 2px solid #1F3B73;
-padding: 0.5em;
-background-color: #f9f9f9;
-margin-bottom: 1em;
-position: relative;
-font-size: 12pt;  
-font-style: italic;
-}
 
 
 #/* Add a header using a pseudo-element */
