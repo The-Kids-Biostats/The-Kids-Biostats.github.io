@@ -9,7 +9,7 @@
 <link>https://the-kids-biostats.github.io/</link>
 <atom:link href="https://the-kids-biostats.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description>Biostats R solutions</description>
-<generator>quarto-1.6.40</generator>
+<generator>quarto-1.5.56</generator>
 <lastBuildDate>Sun, 13 Apr 2025 16:00:00 GMT</lastBuildDate>
 <item>
   <title>Managing RStudio addins using the rsam package</title>
@@ -35,7 +35,7 @@ font-style: inherit;"># install with remotes::install_github("The-Kids-Biostats/
 <section id="addins-within-rstudio" class="level2">
 <h2 class="anchored" data-anchor-id="addins-within-rstudio">Addins within RStudio</h2>
 <p>Addins are accessed in the top toolbar in RStudio. Figure 1 shows the (long) list of addins offered by various packages—most of which, we suspect, will not regularly (or ever) be used by the average user.</p>
-<div id="fig-1" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<div id="fig-1" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-04-14_rsam/01-addins-pre.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
@@ -83,7 +83,7 @@ background-color: null;
 font-style: inherit;">library</span>(rsam)</span></code></pre></div>
 </div>
 <p>Upon loading, we must explicitly allow the package to write to disk. We feel you can safely accept both of these request, acknowledging this is a personal choice to be made.</p>
-<div id="fig-2" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<div id="fig-2" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-04-14_rsam/02-load_package.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
@@ -121,7 +121,7 @@ font-style: inherit;">thekids_table</span>()</span></code></pre></div>
 background-color: null;
 font-style: inherit;">rsam</span>()</span></code></pre></div>
 </div>
-<div id="fig-3" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<div id="fig-3" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-04-14_rsam/03-select_addins.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
@@ -147,7 +147,7 @@ Important
 <section id="result" class="level2">
 <h2 class="anchored" data-anchor-id="result">Result</h2>
 <p>Now, back in the addins toolbar in RStudio, we can see only the ones we selected (I chose to preserve only the <code>targets</code> and <code>thekidsbiostats</code> addins).</p>
-<div id="fig-4" class="quarto-figure quarto-figure-center quarto-float anchored" data-fig-align="center">
+<div id="fig-4" class="quarto-float quarto-figure quarto-figure-center anchored" data-fig-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-04-14_rsam/05-result.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%">
@@ -18494,49 +18494,6 @@ loaded via a namespace (and not attached):
   <category>R</category>
   <guid>https://the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer.html</guid>
   <pubDate>Thu, 06 Jun 2024 16:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Default QMD</title>
-  <link>https://the-kids-biostats.github.io/posts/DRAFT_large_scale_project/examples/defaultQMD.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<section id="quarto" class="level2">
-<h2 class="anchored" data-anchor-id="quarto">Quarto</h2>
-<p>Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <a href="https://quarto.org" class="uri">https://quarto.org</a>.</p>
-</section>
-<section id="running-code" class="level2">
-<h2 class="anchored" data-anchor-id="running-code">Running Code</h2>
-<p>When you click the <strong>Render</strong> button a document will be generated that includes both content and the output of embedded code. You can embed code like this:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span></span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
-</div>
-</div>
-<p>You can add options to executable code like this</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 4</code></pre>
-</div>
-</div>
-<p>The <code>echo: false</code> option disables the printing of code (only output is displayed).</p>
-
-
-</section>
-
- ]]></description>
-  <guid>https://the-kids-biostats.github.io/posts/DRAFT_large_scale_project/examples/defaultQMD.html</guid>
-  <pubDate>Fri, 20 Jun 2025 06:49:51 GMT</pubDate>
 </item>
 </channel>
 </rss>
