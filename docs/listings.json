@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/2025-07-03_large_scale_project/large_scale_project.html",
       "/posts/2025-04-14_rsam/rsam.html",
       "/posts/2025-01-23_thekids_package/thekids_package.html",
       "/posts/2025-01-10_model_function/model_function.html",
@@ -14,8 +15,7 @@
       "/posts/2024-07-22_pre_post/pre-post.html",
       "/posts/2024-07-19_data_anonymiser/data_anonymiser.html",
       "/posts/2024-07-01_parallel/parallel.html",
-      "/posts/2024-06-07_lmer-missing/missing_lmer.html",
-      "/posts/2025-07-03_large_scale_project/large_scale_project.html"
+      "/posts/2024-06-07_lmer-missing/missing_lmer.html"
     ]
   }
 ]

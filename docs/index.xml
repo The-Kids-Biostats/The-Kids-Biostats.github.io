@@ -10,7 +10,842 @@
 <atom:link href="https://the-kids-biostats.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description>Biostats R solutions</description>
 <generator>quarto-1.5.56</generator>
-<lastBuildDate>Sun, 13 Apr 2025 16:00:00 GMT</lastBuildDate>
+<lastBuildDate>Wed, 02 Jul 2025 16:00:00 GMT</lastBuildDate>
+<item>
+  <title>Large-scale projects</title>
+  <dc:creator>Dr Bethy McKinnon and Dr Matt Cooper</dc:creator>
+  <link>https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/large_scale_project.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<p>A recent collaboration of ours, led by Dr Melissa Licari of <a href="https://www.thekids.org.au">The Kids</a>, involved producing a summary report detailing the challenges faced by individuals <em>(and the families that care for them)</em> living with Tourette Syndrome (TS) and other tic disorders. The full report can be found <a href="https://www.thekids.org.au/impactfortourettes">here</a>.</p>
+<div id="fig-report_cover" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-report_cover-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/report_cover.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-report_cover-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Report cover
+</figcaption>
+</figure>
+</div>
+<p>The report presented the analysis of a national survey undertaken in 2023/2024. The data analysis and preparation of figures for publication was undertaken by the Biostatistics team at The Kids.</p>
+<p>To support production of the final publication there was considerable behind-the-scenes work, including resolving various challenges common to a large-scale project like this, where there are many variables and outcomes of interest. For example:</p>
+<ul>
+<li>Survey coverage of 7 impact domains, each comprised of existing validated questionnaires as well as bespoke questions with a variety of response types <em>(e.g.&nbsp;multiple choice, radio buttons, free-text fields)</em></li>
+<li>Synthesis of data from 3 different distinct surveys <em>(adults with tics, parents of children with tics, carers of adults with tics)</em> that had a large overlap in terms of item/theme content but not necessarily identically matched response choices</li>
+<li>Only partial survey completion by many respondents</li>
+</ul>
+<p>Ultimately, the collaborators required the preparation of high-quality PDF output that met the needs of the report production team whilst conforming to The Kids style guidelines.</p>
+<p>With a target endpoint that was rather different to the journal articles we Biostatisticians are typically preparing output for. Our experience with this TS collaboration prompted us to share our approach to tackling larger-scale projects like this, documenting elements of the processes followed in the hope they provide some insight to others <em>(or ourselves in the future)</em>!</p>
+<p>While this post leans heavily into the use of <a href="https://github.com/The-Kids-Biostats/thekidsbiostats">our package</a>, the outlined principles and insights should have much broader appeal.</p>
+</section>
+<section id="project-design" class="level1 page-columns page-full">
+<h1>Project design</h1>
+<p>The reproducible code-based capabilities of R for producing a suite of output, readily integrated into the RStudio environment, provided the ideal platform for us to compile a comprehensive document of data summaries, tabulations, and graphs from which the authors of the report could draw the key results for inclusion in the report destined for public dissemination.</p>
+<p>Furthermore, the theming and formatting features of our in-house <a href="https://github.com/The-Kids-Biostats/thekidsbiostats">thekidsbiostats package</a> proved to be a particularly useful asset in preparation of the publication-ready output conforming to The Kids style guide.</p>
+<p>In line with the current practice of our team, features of our general project design include:</p>
+<ul>
+<li><p>Overall project organisation being that of a self-contained R project with accompanying sub-directories. <em>(See <code>thekidsbiostats::create_project()</code> for the template)</em>.</p></li>
+<li><p>Given the scale of the TS project, generation of tables and figures was further blocked into 9 different files, corresponding to the distinct survey sections <em>(background information, 7 impact domains, looking to the future)</em> across the three distinct surveys <em>(listed earlier)</em>. This enabled the code and output to be run, and checked, in manageable chunks, before the resulting tables and plots were reunited into single output file!</p>
+<ul>
+<li><em>Use of sub-directories in the project organisation is illustrated by Figure&nbsp;2.</em></li>
+</ul></li>
+</ul>
+<div id="fig-file_setup" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-file_setup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/file_setup.png" style="height:4in" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-file_setup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Directory/subdirectory setup
+</figcaption>
+</figure>
+</div>
+<ul>
+<li>The main output generating files are Quarto documents <em>(with the .qmd extension)</em>, which supersedes the previous framework withing RStudio - R Markdown <em>(.Rmd)</em>. Quarto documents have more flexibility and functionality, but still retain the header-text-code structure and simplicity of the markdown syntax. <em>(See a useful reference <a href="https://quarto.org/docs/authoring/markdown-basics.html">here</a>.)</em></li>
+</ul>
+<p>For those unfamiliar with Quarto, note that documents can be written and rendered from either a <strong>visual</strong> view or a <strong>source</strong> view. The <strong>visual</strong> view aims to show certain elements <em>(e.g.&nbsp;headers, code chunks, bold/italics)</em> formatted as they will appear in the rendered document. Experienced users, or those more comfortable with coding, may prefer the <strong>source</strong> view, which gives more direct control and access to the customising of the formatting.</p>
+<div id="fig-visual" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="left">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-visual-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/visual_qmd.png" style="height:4in" data-align="left" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-visual-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Visual screen of the default new QMD file
+</figcaption>
+</figure>
+</div>
+<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="left">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/source_qmd.png" style="height:4in" data-align="left" class="figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Source screen of the default new QMD file
+</figcaption>
+</figure>
+</div>
+<div id="fig-defaultHTML" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-defaultHTML-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/defaultQMD-HTML.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-defaultHTML-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: HTML report
+</figcaption>
+</figure>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>Figure&nbsp;5 shows the HTML report produced by rendering the default QMD file</p>
+</div></div></section>
+<section id="robustness-and-reproducibility" class="level1">
+<h1>Robustness and reproducibility</h1>
+<p><em>Why a reproducible framework?</em></p>
+<p>It is inevitable that there will be considerable data pre-processing required prior to undertaking any analysis and results generation. This is often the greatest challenge we find with a project! And it is inevitable that there will be minor tweaks and changes along the way.</p>
+<div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>It is therefore essential that sound data management practices are thought out and maintained from the outset.</p>
+</div>
+</div>
+<p>When pre-processing data:</p>
+<ul>
+<li><strong>Never</strong> overwrite the original raw data,</li>
+<li>Always double-check merging of different data sets is accomplished correctly,</li>
+<li>Check consistency of data entry/coding for the same variable sourced from different data sets,</li>
+<li>Utilise a data dictionary, and ensure it is noted how missing values are coded,</li>
+<li>Ensure newly created <em>(exported)</em> data sets are dated,</li>
+<li>Scrutinize the final data set for anomalies prior to adopting it for analysis.</li>
+</ul>
+<p>Furthermore, we find the following features of an appropriate project design and ensuing workflow help ensure that the end product of the data analysis is robust and reproducible:</p>
+<ul>
+<li>Utilisation of a project template with organised sub-directories <em>(see <code>thekidsbiostats::create_project()</code>)</em>,</li>
+<li>Routine ongoing checks that code as written produces the intended results when executed,</li>
+<li>Use of a document template for report writing that includes a run date in the header and session info at the end <em>(see <code>thekidsbiostats::create_template()</code>, which creates .qmd files such as those seen above)</em>,</li>
+<li>Inherent Quarto document features: Self-containment of the run environment, with other inputs called explicitly; auto-save with each render; text interspersed with result-producing code.</li>
+</ul>
+</section>
+<section id="streamlining-and-theming" class="level1 page-columns page-full">
+<h1>Streamlining and theming</h1>
+<p>Coding can be streamlined by adoption of time-saving techniques:</p>
+<ul>
+<li>Setting of document-wide formatting, execution and style parameters in the document header,
+<ul>
+<li>For example, extra lines of code in the document YAML headers to facilitate numbering <em>(and referencing)</em> of figure and table captions,</li>
+<li>Further refinement and definition can be accomplished by utilisation of a .css file <em>(note: the reference to the styles.css file in the document header is required if creating a new document using the Quarto template in <code>thekidsbiostats</code> package)</em>,</li>
+</ul></li>
+</ul>
+<div id="fig-YAML" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-YAML-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/YAML.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-YAML-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: Example Quarto document header
+</figcaption>
+</figure>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>Document-wide styling can be defined in the Quarto header as in Figure&nbsp;6.</p>
+</div></div><div id="fig-CSS" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-CSS-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/CSS.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-CSS-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: Some example .css code
+</figcaption>
+</figure>
+</div>
+<ul>
+<li>Familiarisation with short-cut keys and code <em>(e.g.&nbsp;see this useful <a href="https://bookdown.org/yihui/rmarkdown-cookbook/rstudio-shortcuts.html">bookdown reference</a>)</em>,</li>
+<li>Judicious use of bespoke functions to reduce repetitive coding eg in generation of tables and plots,
+<ul>
+<li>This can minimise errors that easily creep in when reliant on cut-and-pastes or manual coding of repeated tasks; before functions require appropriate testing!</li>
+</ul></li>
+</ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Example code for bespoke function</span></span>
+<span id="cb1-2">survey.tblsum <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span></span>
+<span id="cb1-3">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span>(dat, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">missed =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"no"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">var_label =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>)</span>
+<span id="cb1-4">  {</span>
+<span id="cb1-5">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">if</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">is.null</span>(var_label))</span>
+<span id="cb1-6">      var_label<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span></span>
+<span id="cb1-7">    </span>
+<span id="cb1-8">    SummaryTbl <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> dat <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb1-9">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tbl_summary</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">by =</span> Survey,</span>
+<span id="cb1-10">                  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">missing =</span> missed) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb1-11">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">add_overall</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">last =</span> T) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb1-12">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">bold_labels</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb1-13">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">modify_header</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">label =</span> var_label) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb1-14">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">modify_footnote</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">everything</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NA</span>)</span>
+<span id="cb1-15">    </span>
+<span id="cb1-16">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">return</span>(SummaryTbl)</span>
+<span id="cb1-17">  }</span></code></pre></div>
+</details>
+</div>
+<p>Professionalism in the overall presentation can be easily enhanced by the consistent formatting and theming of output. This can also be embedded into function calls. Note that loading of the <code>thekidsbiostats</code> package enables the easy incorporation of the Barlow font and the The Kid’s colour palette, as specified in the brand style toolkit.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This functionality can easily be adapted by the user for other organisations, simply by directing the function(s) to a different font and/or colour palette.</p>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">my_theme <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">base_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">11</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">base_family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Barlow"</span>,</span>
+<span id="cb2-2">                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">base_line_size =</span> base_size<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">22</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">base_rect_size =</span> base_size<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">22</span>,</span>
+<span id="cb2-3">                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">scale_colour_type =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"discrete"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">scale_fill_type =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"discrete"</span>,</span>
+<span id="cb2-4">                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">colour_theme =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"thekids"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill_theme =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"thekids"</span>,</span>
+<span id="cb2-5">                     <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">rev_colour =</span> F, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">rev_fill =</span> F) {</span>
+<span id="cb2-6"></span>
+<span id="cb2-7">  colour_function <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">case_when</span>(</span>
+<span id="cb2-8">    colour_theme <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"thekids"</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span></span>
+<span id="cb2-9">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">list</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_color_thekids</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"primary"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">reverse =</span> rev_colour)),</span>
+<span id="cb2-10">    colour_theme <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"thekids_tint"</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span></span>
+<span id="cb2-11">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">list</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_color_thekids</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"tint50"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">reverse =</span> rev_colour)),</span>
+<span id="cb2-12">    colour_theme <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"thekids_grey"</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span></span>
+<span id="cb2-13">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">list</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_color_thekids</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"typography"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">reverse =</span> T)),</span>
+<span id="cb2-14">  )[[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]]</span>
+<span id="cb2-15">  </span>
+<span id="cb2-16">  fill_function <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">case_when</span>(</span>
+<span id="cb2-17">    fill_theme <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"thekids"</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span></span>
+<span id="cb2-18">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">list</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_fill_thekids</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"primary"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">reverse =</span> rev_fill)),</span>
+<span id="cb2-19">    fill_theme <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"thekids_tint"</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span></span>
+<span id="cb2-20">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">list</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_fill_thekids</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"tint50"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">reverse =</span> rev_fill)),</span>
+<span id="cb2-21">    fill_theme <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"thekids_grey"</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span></span>
+<span id="cb2-22">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">list</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_fill_thekids</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"typography"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">reverse =</span> rev_fill)),</span>
+<span id="cb2-23">  )[[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]]</span>
+<span id="cb2-24">  </span>
+<span id="cb2-25">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">list</span>(</span>
+<span id="cb2-26">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_classic</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">base_family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Barlow"</span>,</span>
+<span id="cb2-27">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">base_size =</span> base_size,</span>
+<span id="cb2-28">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">base_line_size =</span> base_line_size,</span>
+<span id="cb2-29">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">base_rect_size =</span> base_rect_size) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb2-30">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">panel.grid.minor =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_blank</span>(),</span>
+<span id="cb2-31">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">plot.title =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rel</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.6</span>)),</span>
+<span id="cb2-32">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.title=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_blank</span>(),</span>
+<span id="cb2-33">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.text =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rel</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.2</span>),<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">colour=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"black"</span>),</span>
+<span id="cb2-34">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">strip.text =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(</span>
+<span id="cb2-35">              <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rel</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.4</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hjust =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>,<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color=</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"black"</span>,<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">face=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span></span>
+<span id="cb2-36">            ),</span>
+<span id="cb2-37">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">plot.background =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_rect</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"white"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">colour =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"white"</span>),</span>
+<span id="cb2-38">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">strip.background =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_rect</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"white"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">colour =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NA</span>)),</span>
+<span id="cb2-39">    colour_function,</span>
+<span id="cb2-40">    fill_function</span>
+<span id="cb2-41">  )</span>
+<span id="cb2-42">}</span>
+<span id="cb2-43"></span>
+<span id="cb2-44"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Function to consistently present plots of the same type, with data having a column of rating levels (defined to be a factor) and the proportions to be plotted</span></span>
+<span id="cb2-45"></span>
+<span id="cb2-46">do.RatingPlot <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span>(Rdat, p.title){</span>
+<span id="cb2-47">  </span>
+<span id="cb2-48">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">return</span>(</span>
+<span id="cb2-49">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(Rdat, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> prop, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> Rating, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> Rating)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb2-50">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_col</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">linewidth =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.0</span>)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb2-51">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> scales<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">label_percent</span>()) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb2-52">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>, </span>
+<span id="cb2-53">           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>,</span>
+<span id="cb2-54">           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">str_wrap</span>(p.title, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">width =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">70</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb2-55">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">my_theme</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb2-56">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"none"</span>,</span>
+<span id="cb2-57">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">plot.margin =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">margin</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">l =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">15</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">b =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">7.5</span>),</span>
+<span id="cb2-58">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.text.x =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">angle =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">25</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hjust =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rel</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.4</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"black"</span>)</span>
+<span id="cb2-59">          )</span>
+<span id="cb2-60">  )</span>
+<span id="cb2-61">}</span></code></pre></div>
+</details>
+</div>
+</section>
+<section id="figures-for-publication" class="level1 page-columns page-full">
+<h1>Figures for publication</h1>
+<p>At the pointy end of the TS collaboration, we were tasked with generating <em>(in a publication-ready format)</em> those figures which the co-authors had chosen to be included in the final public-facing summary report. This required close consultation with the production team to ensure that the images produced, as PDF files, matched the production specification, adhering to the colour and font formatting <em>(and embedding)</em> as intended.</p>
+<p>After the exploration of several options, we settled on the <code>cairo_pdf</code> function from the <code>grDevices</code> package in the System Library, due to of its superior consistency and clarity of output.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Code for generating a pdf output file </span></span>
+<span id="cb3-2"></span>
+<span id="cb3-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">load</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"data/Diagnosis.Rdata"</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Loads plot.diagProf, a previously constructed ggplot, into the document run environment</span></span>
+<span id="cb3-4"></span>
+<span id="cb3-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">cairo_pdf</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"examples/diagProf_cairo_pdf.pdf"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">family =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Barlow"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">height =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3.5</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">width =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">9</span>)</span>
+<span id="cb3-6">plot.diagProf</span>
+<span id="cb3-7"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">dev.off</span>()</span></code></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-diagProf_html" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-diagProf_html-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/large_scale_project_files/figure-html/fig-diagProf_html-1.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-diagProf_html-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8: The Diagnosing medical professional
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>Regular HTML report output of a <code>ggplot</code> generated figure.</p>
+</div></div><div id="fig-diagProf_cairo_pdf" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-diagProf_cairo_pdf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/diagProf_cairo_pdf.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-diagProf_cairo_pdf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9: Exported PDF reproduction of the above figure generated by <code>cairo_pdf</code>
+</figcaption>
+</figure>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>The PDF as generated by <code>cairo_pdf(...,family="Barlow)</code> provides a close likeness to the HTML output of Figure&nbsp;8, and was the preferred format of the production team.</p>
+</div></div></section>
+<section id="closing-comments" class="level1">
+<h1>Closing comments</h1>
+<section id="ongoing-challenges" class="level2">
+<h2 class="anchored" data-anchor-id="ongoing-challenges">Ongoing Challenges</h2>
+<p>There is always a balance of time investment and where to draw the line when attempting to further one’s technical prowess, particularly with R coding!</p>
+<p>While often times a quick google or ChatGPT will help you find a solution relatively quickly, we found here that there seemed to be a lack of clear <em>(complete)</em> online guidance around PDF exporting options and resolving output discrepancies <em>(embedding issues, default fonts dependency on machine/OS, CMYK for printing vs HTML colour)</em> - fodder for another post!</p>
+</section>
+<section id="acknowledgements" class="level2">
+<h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
+<p>Thanks to Wes Billingham, Zac Dempsey, and Robin Cook for providing feedback on and reviewing this post. <br></p>
+</section>
+<section id="reproducibility-information" class="level2">
+<h2 class="anchored" data-anchor-id="reproducibility-information">Reproducibility Information</h2>
+<p>The session information can also be seen below.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.5.0 (2025-04-11)
+Platform: aarch64-apple-darwin20
+Running under: macOS Sonoma 14.4.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: Australia/Perth
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] thekidsbiostats_1.1.1 flextable_0.9.9       gtsummary_2.2.0      
+ [4] lubridate_1.9.4       forcats_1.0.0         stringr_1.5.1        
+ [7] dplyr_1.1.4           purrr_1.0.4           readr_2.1.5          
+[10] tidyr_1.3.1           tibble_3.3.0          ggplot2_3.5.2        
+[13] tidyverse_2.0.0       extrafont_0.19       
+
+loaded via a namespace (and not attached):
+ [1] gtable_0.3.6            xfun_0.52               htmlwidgets_1.6.4      
+ [4] tzdb_0.5.0              vctrs_0.6.5             tools_4.5.0            
+ [7] generics_0.1.4          pkgconfig_2.0.3         data.table_1.17.6      
+[10] RColorBrewer_1.1-3      uuid_1.2-1              lifecycle_1.0.4        
+[13] compiler_4.5.0          farver_2.1.2            textshaping_1.0.1      
+[16] janitor_2.2.1           snakecase_0.11.1        httpuv_1.6.16          
+[19] fontquiver_0.2.1        fontLiberation_0.1.0    htmltools_0.5.8.1      
+[22] yaml_2.3.10             Rttf2pt1_1.3.12         pillar_1.10.2          
+[25] later_1.4.2             extrafontdb_1.0         openssl_2.3.3          
+[28] mime_0.13               fontBitstreamVera_0.1.1 tidyselect_1.2.1       
+[31] zip_2.3.3               digest_0.6.37           stringi_1.8.7          
+[34] labeling_0.4.3          labelled_2.14.1         fastmap_1.2.0          
+[37] grid_4.5.0              cli_3.6.5               magrittr_2.0.3         
+[40] patchwork_1.3.1         withr_3.0.2             gdtools_0.4.2          
+[43] scales_1.4.0            promises_1.3.3          timechange_0.3.0       
+[46] rmarkdown_2.29          officer_0.6.10          askpass_1.2.1          
+[49] ragg_1.4.0              hms_1.1.3               shiny_1.10.0           
+[52] evaluate_1.0.4          haven_2.5.5             knitr_1.50             
+[55] rlang_1.1.6             Rcpp_1.0.14             xtable_1.8-4           
+[58] glue_1.8.0              xml2_1.3.8              rstudioapi_0.17.1      
+[61] jsonlite_2.0.0          R6_2.6.1                shinyFiles_0.9.3       
+[64] systemfonts_1.2.3       fs_1.6.6               </code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <category>R</category>
+  <category>Output</category>
+  <category>Quarto</category>
+  <guid>https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/large_scale_project.html</guid>
+  <pubDate>Wed, 02 Jul 2025 16:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Managing RStudio addins using the rsam package</title>
   <dc:creator>Zac Dempsey and Dr Matt Cooper</dc:creator>
@@ -18494,841 +19329,6 @@ loaded via a namespace (and not attached):
   <category>R</category>
   <guid>https://the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer.html</guid>
   <pubDate>Thu, 06 Jun 2024 16:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Large-scale projects</title>
-  <dc:creator>Dr Bethy McKinnon and Dr Matt Cooper</dc:creator>
-  <link>https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/large_scale_project.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<section id="overview" class="level1">
-<h1>Overview</h1>
-<p>A recent collaboration of ours, led by Dr Melissa Licari of <a href="https://www.thekids.org.au">The Kids</a>, involved producing a summary report detailing the challenges faced by individuals <em>(and the families that care for them)</em> living with Tourette Syndrome (TS) and other tic disorders. The full report can be found <a href="https://www.thekids.org.au/impactfortourettes">here</a>.</p>
-<div id="fig-report_cover" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-report_cover-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/report_cover.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-report_cover-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: Report cover
-</figcaption>
-</figure>
-</div>
-<p>The report presented the analysis of a national survey undertaken in 2023/2024. The data analysis and preparation of figures for publication was undertaken by the Biostatistics team at The Kids.</p>
-<p>To support production of the final publication there was considerable behind-the-scenes work, including resolving various challenges common to a large-scale project like this, where there are many variables and outcomes of interest. For example:</p>
-<ul>
-<li>Survey coverage of 7 impact domains, each comprised of existing validated questionnaires as well as bespoke questions with a variety of response types <em>(e.g.&nbsp;multiple choice, radio buttons, free-text fields)</em></li>
-<li>Synthesis of data from 3 different distinct surveys <em>(adults with tics, parents of children with tics, carers of adults with tics)</em> that had a large overlap in terms of item/theme content but not necessarily identically matched response choices</li>
-<li>Only partial survey completion by many respondents</li>
-</ul>
-<p>Ultimately, the collaborators required the preparation of high-quality PDF output that met the needs of the report production team whilst conforming to The Kids style guidelines.</p>
-<p>With a target endpoint that was rather different to the journal articles we Biostatisticians are typically preparing output for. Our experience with this TS collaboration prompted us to share our approach to tackling larger-scale projects like this, documenting elements of the processes followed in the hope they provide some insight to others <em>(or ourselves in the future)</em>!</p>
-<p>While this post leans heavily into the use of <a href="https://github.com/The-Kids-Biostats/thekidsbiostats">our package</a>, the outlined principles and insights should have much broader appeal.</p>
-</section>
-<section id="project-design" class="level1 page-columns page-full">
-<h1>Project design</h1>
-<p>The reproducible code-based capabilities of R for producing a suite of output, readily integrated into the RStudio environment, provided the ideal platform for us to compile a comprehensive document of data summaries, tabulations, and graphs from which the authors of the report could draw the key results for inclusion in the report destined for public dissemination.</p>
-<p>Furthermore, the theming and formatting features of our in-house <a href="https://github.com/The-Kids-Biostats/thekidsbiostats">thekidsbiostats package</a> proved to be a particularly useful asset in preparation of the publication-ready output conforming to The Kids style guide.</p>
-<p>In line with the current practice of our team, features of our general project design include:</p>
-<ul>
-<li><p>Overall project organisation being that of a self-contained R project with accompanying sub-directories. <em>(See <code>thekidsbiostats::create_project()</code> for the template)</em>.</p></li>
-<li><p>Given the scale of the TS project, generation of tables and figures was further blocked into 9 different files, corresponding to the distinct survey sections <em>(background information, 7 impact domains, looking to the future)</em> across the three distinct surveys <em>(listed earlier)</em>. This enabled the code and output to be run, and checked, in manageable chunks, before the resulting tables and plots were reunited into single output file!</p>
-<ul>
-<li><em>Use of sub-directories in the project organisation is illustrated by Figure&nbsp;2.</em></li>
-</ul></li>
-</ul>
-<div id="fig-file_setup" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-file_setup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/file_setup.png" style="height:4in" class="figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-file_setup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2: Directory/subdirectory setup
-</figcaption>
-</figure>
-</div>
-<ul>
-<li>The main output generating files are Quarto documents <em>(with the .qmd extension)</em>, which supersedes the previous framework withing RStudio - R Markdown <em>(.Rmd)</em>. Quarto documents have more flexibility and functionality, but still retain the header-text-code structure and simplicity of the markdown syntax. <em>(See a useful reference <a href="https://quarto.org/docs/authoring/markdown-basics.html">here</a>.)</em></li>
-</ul>
-<p>For those unfamiliar with Quarto, note that documents can be written and rendered from either a <strong>visual</strong> view or a <strong>source</strong> view. The <strong>visual</strong> view aims to show certain elements <em>(e.g.&nbsp;headers, code chunks, bold/italics)</em> formatted as they will appear in the rendered document. Experienced users, or those more comfortable with coding, may prefer the <strong>source</strong> view, which gives more direct control and access to the customising of the formatting.</p>
-<div id="fig-visual" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="left">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-visual-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/visual_qmd.png" style="height:4in" data-align="left" class="figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-visual-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;3: Visual screen of the default new QMD file
-</figcaption>
-</figure>
-</div>
-<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="left">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/source_qmd.png" style="height:4in" data-align="left" class="figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4: Source screen of the default new QMD file
-</figcaption>
-</figure>
-</div>
-<div id="fig-defaultHTML" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-defaultHTML-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/defaultQMD-HTML.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-defaultHTML-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5: HTML report
-</figcaption>
-</figure>
-</div>
-
-<div class="no-row-height column-margin column-container"><div class="">
-<p>Figure&nbsp;5 shows the HTML report produced by rendering the default QMD file</p>
-</div></div></section>
-<section id="robustness-and-reproducibility" class="level1">
-<h1>Robustness and reproducibility</h1>
-<p><em>Why a reproducible framework?</em></p>
-<p>It is inevitable that there will be considerable data pre-processing required prior to undertaking any analysis and results generation. This is often the greatest challenge we find with a project! And it is inevitable that there will be minor tweaks and changes along the way.</p>
-<div class="callout callout-style-default callout-important no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Important
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>It is therefore essential that sound data management practices are thought out and maintained from the outset.</p>
-</div>
-</div>
-<p>When pre-processing data:</p>
-<ul>
-<li><strong>Never</strong> overwrite the original raw data,</li>
-<li>Always double-check merging of different data sets is accomplished correctly,</li>
-<li>Check consistency of data entry/coding for the same variable sourced from different data sets,</li>
-<li>Utilise a data dictionary, and ensure it is noted how missing values are coded,</li>
-<li>Ensure newly created <em>(exported)</em> data sets are dated,</li>
-<li>Scrutinize the final data set for anomalies prior to adopting it for analysis.</li>
-</ul>
-<p>Furthermore, we find the following features of an appropriate project design and ensuing workflow help ensure that the end product of the data analysis is robust and reproducible:</p>
-<ul>
-<li>Utilisation of a project template with organised sub-directories <em>(see <code>thekidsbiostats::create_project()</code>)</em>,</li>
-<li>Routine ongoing checks that code as written produces the intended results when executed,</li>
-<li>Use of a document template for report writing that includes a run date in the header and session info at the end <em>(see <code>thekidsbiostats::create_template()</code>, which creates .qmd files such as those seen above)</em>,</li>
-<li>Inherent Quarto document features: Self-containment of the run environment, with other inputs called explicitly; auto-save with each render; text interspersed with result-producing code.</li>
-</ul>
-</section>
-<section id="streamlining-and-theming" class="level1 page-columns page-full">
-<h1>Streamlining and theming</h1>
-<p>Coding can be streamlined by adoption of time-saving techniques:</p>
-<ul>
-<li>Setting of document-wide formatting, execution and style parameters in the document header,
-<ul>
-<li>For example, extra lines of code in the document YAML headers to facilitate numbering <em>(and referencing)</em> of figure and table captions,</li>
-<li>Further refinement and definition can be accomplished by utilisation of a .css file <em>(note: the reference to the styles.css file in the document header is required if creating a new document using the Quarto template in <code>thekidsbiostats</code> package)</em>,</li>
-</ul></li>
-</ul>
-<div id="fig-YAML" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-YAML-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/YAML.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-YAML-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;6: Example Quarto document header
-</figcaption>
-</figure>
-</div>
-
-<div class="no-row-height column-margin column-container"><div class="">
-<p>Document-wide styling can be defined in the Quarto header as in Figure&nbsp;6.</p>
-</div></div><div id="fig-CSS" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-CSS-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/CSS.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-CSS-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;7: Some example .css code
-</figcaption>
-</figure>
-</div>
-<ul>
-<li>Familiarisation with short-cut keys and code <em>(e.g.&nbsp;see this useful <a href="https://bookdown.org/yihui/rmarkdown-cookbook/rstudio-shortcuts.html">bookdown reference</a>)</em>,</li>
-<li>Judicious use of bespoke functions to reduce repetitive coding eg in generation of tables and plots,
-<ul>
-<li>This can minimise errors that easily creep in when reliant on cut-and-pastes or manual coding of repeated tasks; before functions require appropriate testing!</li>
-</ul></li>
-</ul>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Example code for bespoke function</span></span>
-<span id="cb1-2">survey.tblsum <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span></span>
-<span id="cb1-3">  <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">function</span>(dat, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">missed =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"no"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">var_label =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">NULL</span>)</span>
-<span id="cb1-4">  {</span>
-<span id="cb1-5">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">if</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">is.null</span>(var_label))</span>
-<span id="cb1-6">      var_label<span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">""</span></span>
-<span id="cb1-7">    </span>
-<span id="cb1-8">    SummaryTbl <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> dat <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> </span>
-<span id="cb1-9">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">tbl_summary</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">by =</span> Survey,</span>
-<span id="cb1-10">                  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">missing =</span> missed) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb1-11">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">add_overall</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">last =</span> T) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb1-12">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">bold_labels</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb1-13">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">modify_header</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">label =</span> var_label) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb1-14">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">modify_footnote</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">everything</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">~</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">NA</span>)</span>
-<span id="cb1-15">    </span>
-<span id="cb1-16">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">return</span>(SummaryTbl)</span>
-<span id="cb1-17">  }</span></code></pre></div>
-</details>
-</div>
-<p>Professionalism in the overall presentation can be easily enhanced by the consistent formatting and theming of output. This can also be embedded into function calls. Note that loading of the <code>thekidsbiostats</code> package enables the easy incorporation of the Barlow font and the The Kid’s colour palette, as specified in the brand style toolkit.</p>
-<div class="callout callout-style-default callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Tip
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>This functionality can easily be adapted by the user for other organisations, simply by directing the function(s) to a different font and/or colour palette.</p>
-</div>
-</div>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">my_theme <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">function</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">base_size =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">11</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">base_family =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Barlow"</span>,</span>
-<span id="cb2-2">                     <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">base_line_size =</span> base_size<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">22</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">base_rect_size =</span> base_size<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">22</span>,</span>
-<span id="cb2-3">                     <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">scale_colour_type =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"discrete"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">scale_fill_type =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"discrete"</span>,</span>
-<span id="cb2-4">                     <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">colour_theme =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"thekids"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill_theme =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"thekids"</span>,</span>
-<span id="cb2-5">                     <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">rev_colour =</span> F, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">rev_fill =</span> F) {</span>
-<span id="cb2-6"></span>
-<span id="cb2-7">  colour_function <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">case_when</span>(</span>
-<span id="cb2-8">    colour_theme <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"thekids"</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">~</span></span>
-<span id="cb2-9">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">list</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_color_thekids</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"primary"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">reverse =</span> rev_colour)),</span>
-<span id="cb2-10">    colour_theme <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"thekids_tint"</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">~</span></span>
-<span id="cb2-11">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">list</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_color_thekids</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"tint50"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">reverse =</span> rev_colour)),</span>
-<span id="cb2-12">    colour_theme <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"thekids_grey"</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">~</span></span>
-<span id="cb2-13">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">list</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_color_thekids</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"typography"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">reverse =</span> T)),</span>
-<span id="cb2-14">  )[[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>]]</span>
-<span id="cb2-15">  </span>
-<span id="cb2-16">  fill_function <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">case_when</span>(</span>
-<span id="cb2-17">    fill_theme <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"thekids"</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">~</span></span>
-<span id="cb2-18">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">list</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_fill_thekids</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"primary"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">reverse =</span> rev_fill)),</span>
-<span id="cb2-19">    fill_theme <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"thekids_tint"</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">~</span></span>
-<span id="cb2-20">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">list</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_fill_thekids</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"tint50"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">reverse =</span> rev_fill)),</span>
-<span id="cb2-21">    fill_theme <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"thekids_grey"</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">~</span></span>
-<span id="cb2-22">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">list</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_fill_thekids</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"typography"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">reverse =</span> rev_fill)),</span>
-<span id="cb2-23">  )[[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>]]</span>
-<span id="cb2-24">  </span>
-<span id="cb2-25">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">list</span>(</span>
-<span id="cb2-26">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme_classic</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">base_family =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Barlow"</span>,</span>
-<span id="cb2-27">                <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">base_size =</span> base_size,</span>
-<span id="cb2-28">                <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">base_line_size =</span> base_line_size,</span>
-<span id="cb2-29">                <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">base_rect_size =</span> base_rect_size) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb2-30">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">panel.grid.minor =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_blank</span>(),</span>
-<span id="cb2-31">            <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">plot.title =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">size=</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">rel</span>(<span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1.6</span>)),</span>
-<span id="cb2-32">            <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">axis.title=</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_blank</span>(),</span>
-<span id="cb2-33">            <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">axis.text =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">size=</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">rel</span>(<span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1.2</span>),<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">colour=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"black"</span>),</span>
-<span id="cb2-34">            <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">strip.text =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_text</span>(</span>
-<span id="cb2-35">              <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">size =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">rel</span>(<span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1.4</span>), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">hjust =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>,<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"black"</span>,<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">face=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span></span>
-<span id="cb2-36">            ),</span>
-<span id="cb2-37">            <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">plot.background =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_rect</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"white"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">colour =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"white"</span>),</span>
-<span id="cb2-38">            <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">strip.background =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_rect</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"white"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">colour =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">NA</span>)),</span>
-<span id="cb2-39">    colour_function,</span>
-<span id="cb2-40">    fill_function</span>
-<span id="cb2-41">  )</span>
-<span id="cb2-42">}</span>
-<span id="cb2-43"></span>
-<span id="cb2-44"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Function to consistently present plots of the same type, with data having a column of rating levels (defined to be a factor) and the proportions to be plotted</span></span>
-<span id="cb2-45"></span>
-<span id="cb2-46">do.RatingPlot <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">function</span>(Rdat, p.title){</span>
-<span id="cb2-47">  </span>
-<span id="cb2-48">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">return</span>(</span>
-<span id="cb2-49">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(Rdat, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> prop, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> Rating, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> Rating)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb2-50">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_col</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">linewidth =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.0</span>)<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb2-51">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">labels =</span> scales<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">label_percent</span>()) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb2-52">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">""</span>, </span>
-<span id="cb2-53">           <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">""</span>,</span>
-<span id="cb2-54">           <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">title =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">str_wrap</span>(p.title, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">width =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">70</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb2-55">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">my_theme</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb2-56">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"none"</span>,</span>
-<span id="cb2-57">          <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">plot.margin =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">margin</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">l =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">15</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">b =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">7.5</span>),</span>
-<span id="cb2-58">          <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">axis.text.x =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">angle =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">25</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">hjust =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">size =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">rel</span>(<span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1.4</span>), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"black"</span>)</span>
-<span id="cb2-59">          )</span>
-<span id="cb2-60">  )</span>
-<span id="cb2-61">}</span></code></pre></div>
-</details>
-</div>
-</section>
-<section id="figures-for-publication" class="level1 page-columns page-full">
-<h1>Figures for publication</h1>
-<p>At the pointy end of the TS collaboration, we were tasked with generating <em>(in a publication-ready format)</em> those figures which the co-authors had chosen to be included in the final public-facing summary report. This required close consultation with the production team to ensure that the images produced, as PDF files, matched the production specification, adhering to the colour and font formatting <em>(and embedding)</em> as intended.</p>
-<p>After the exploration of several options, we settled on the <code>cairo_pdf</code> function from the <code>grDevices</code> package in the System Library, due to of its superior consistency and clarity of output.</p>
-<div class="cell">
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Code for generating a pdf output file </span></span>
-<span id="cb3-2"></span>
-<span id="cb3-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">load</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"data/Diagnosis.Rdata"</span>) <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Loads plot.diagProf, a previously constructed ggplot, into the document run environment</span></span>
-<span id="cb3-4"></span>
-<span id="cb3-5"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">cairo_pdf</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"examples/diagProf_cairo_pdf.pdf"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">family =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Barlow"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">height =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3.5</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">width =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">9</span>)</span>
-<span id="cb3-6">plot.diagProf</span>
-<span id="cb3-7"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">dev.off</span>()</span></code></pre></div>
-</details>
-</div>
-<div class="cell">
-<div class="cell-output-display">
-<div id="fig-diagProf_html" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-diagProf_html-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/large_scale_project_files/figure-html/fig-diagProf_html-1.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-diagProf_html-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;8: The Diagnosing medical professional
-</figcaption>
-</figure>
-</div>
-</div>
-</div>
-
-<div class="no-row-height column-margin column-container"><div class="">
-<p>Regular HTML report output of a <code>ggplot</code> generated figure.</p>
-</div></div><div id="fig-diagProf_cairo_pdf" class="quarto-float quarto-figure quarto-figure-center anchored">
-<figure class="quarto-float quarto-float-fig figure">
-<div aria-describedby="fig-diagProf_cairo_pdf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-<img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/diagProf_cairo_pdf.png" class="img-fluid figure-img">
-</div>
-<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-diagProf_cairo_pdf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;9: Exported PDF reproduction of the above figure generated by <code>cairo_pdf</code>
-</figcaption>
-</figure>
-</div>
-
-<div class="no-row-height column-margin column-container"><div class="">
-<p>The PDF as generated by <code>cairo_pdf(...,family="Barlow)</code> provides a close likeness to the HTML output of Figure&nbsp;8, and was the preferred format of the production team.</p>
-</div></div></section>
-<section id="closing-comments" class="level1">
-<h1>Closing comments</h1>
-<section id="ongoing-challenges" class="level2">
-<h2 class="anchored" data-anchor-id="ongoing-challenges">Ongoing Challenges</h2>
-<p>There is always a balance of time investment and where to draw the line when attempting to further one’s technical prowess, particularly with R coding!</p>
-<p>While often times a quick google or ChatGPT will help you find a solution relatively quickly, we found here that there seemed to be a lack of clear <em>(complete)</em> online guidance around PDF exporting options and resolving output discrepancies <em>(embedding issues, default fonts dependency on machine/OS, CMYK for printing vs HTML colour)</em> - fodder for another post!</p>
-</section>
-<section id="acknowledgements" class="level2">
-<h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
-<p>Thanks to Wes Billingham, Zac Dempsey, and Robin Cook for providing feedback on and reviewing this post. <br></p>
-</section>
-<section id="reproducibility-information" class="level2">
-<h2 class="anchored" data-anchor-id="reproducibility-information">Reproducibility Information</h2>
-<p>The session information can also be seen below.</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>R version 4.5.0 (2025-04-11)
-Platform: aarch64-apple-darwin20
-Running under: macOS Sonoma 14.4.1
-
-Matrix products: default
-BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib 
-LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
-
-locale:
-[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
-
-time zone: Australia/Perth
-tzcode source: internal
-
-attached base packages:
-[1] stats     graphics  grDevices utils     datasets  methods   base     
-
-other attached packages:
- [1] thekidsbiostats_1.1.1 flextable_0.9.9       gtsummary_2.2.0      
- [4] lubridate_1.9.4       forcats_1.0.0         stringr_1.5.1        
- [7] dplyr_1.1.4           purrr_1.0.4           readr_2.1.5          
-[10] tidyr_1.3.1           tibble_3.3.0          ggplot2_3.5.2        
-[13] tidyverse_2.0.0       extrafont_0.19       
-
-loaded via a namespace (and not attached):
- [1] gtable_0.3.6            xfun_0.52               htmlwidgets_1.6.4      
- [4] tzdb_0.5.0              vctrs_0.6.5             tools_4.5.0            
- [7] generics_0.1.4          pkgconfig_2.0.3         data.table_1.17.6      
-[10] RColorBrewer_1.1-3      uuid_1.2-1              lifecycle_1.0.4        
-[13] compiler_4.5.0          farver_2.1.2            textshaping_1.0.1      
-[16] janitor_2.2.1           snakecase_0.11.1        httpuv_1.6.16          
-[19] fontquiver_0.2.1        fontLiberation_0.1.0    htmltools_0.5.8.1      
-[22] yaml_2.3.10             Rttf2pt1_1.3.12         pillar_1.10.2          
-[25] later_1.4.2             extrafontdb_1.0         openssl_2.3.3          
-[28] mime_0.13               fontBitstreamVera_0.1.1 tidyselect_1.2.1       
-[31] zip_2.3.3               digest_0.6.37           stringi_1.8.7          
-[34] labeling_0.4.3          labelled_2.14.1         fastmap_1.2.0          
-[37] grid_4.5.0              cli_3.6.5               magrittr_2.0.3         
-[40] patchwork_1.3.1         withr_3.0.2             gdtools_0.4.2          
-[43] scales_1.4.0            promises_1.3.3          timechange_0.3.0       
-[46] rmarkdown_2.29          officer_0.6.10          askpass_1.2.1          
-[49] ragg_1.4.0              hms_1.1.3               shiny_1.10.0           
-[52] evaluate_1.0.4          haven_2.5.5             knitr_1.50             
-[55] rlang_1.1.6             Rcpp_1.0.14             xtable_1.8-4           
-[58] glue_1.8.0              xml2_1.3.8              rstudioapi_0.17.1      
-[61] jsonlite_2.0.0          R6_2.6.1                shinyFiles_0.9.3       
-[64] systemfonts_1.2.3       fs_1.6.6               </code></pre>
-</div>
-</div>
-
-
-</section>
-</section>
-
- ]]></description>
-  <category>R</category>
-  <category>Output</category>
-  <category>Quarto</category>
-  <guid>https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/large_scale_project.html</guid>
-  <pubDate>Invalid Date</pubDate>
 </item>
 </channel>
 </rss>
