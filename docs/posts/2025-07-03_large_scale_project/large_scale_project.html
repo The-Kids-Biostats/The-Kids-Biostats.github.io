@@ -2,14 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.555">
+<meta name="generator" content="quarto-1.5.56">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Bethy McKinnon and Matt Cooper">
-<meta name="dcterms.date" content="2025-06-24">
+<meta name="author" content="Dr Bethy McKinnon and Dr Matt Cooper">
+<meta name="dcterms.date" content="2025-07-03">
 
-<title>The Kids Biostats - Large-scale projects</title>
+<title>Large-scale projects – The Kids Biostats</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -35,7 +35,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -105,7 +105,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <link rel="stylesheet" href="../../styles.css">
-<link rel="stylesheet" href="MyStyles.css">
+<link rel="stylesheet" href="_extensions/html/styles.css">
 </head>
 
 <body class="floating nav-fixed slimcontent">
@@ -123,7 +123,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -157,7 +157,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -169,7 +169,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <h1 class="title">Large-scale projects</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">R</div>
-                <div class="quarto-category">Modelling</div>
+                <div class="quarto-category">Output</div>
                 <div class="quarto-category">Quarto</div>
               </div>
                   </div>
@@ -181,14 +181,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div>
       <div class="quarto-title-meta-heading">Author</div>
       <div class="quarto-title-meta-contents">
-               <p>Bethy McKinnon and Matt Cooper </p>
+               <p>Dr Bethy McKinnon and Dr Matt Cooper </p>
             </div>
     </div>
       
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">June 24, 2025</p>
+        <p class="date">July 3, 2025</p>
       </div>
     </div>
     
@@ -203,12 +203,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">1</span> Overview</a></li>
-  <li><a href="#project-design" id="toc-project-design" class="nav-link" data-scroll-target="#project-design"><span class="header-section-number">2</span> Project design</a></li>
-  <li><a href="#robustness-and-reproducibility" id="toc-robustness-and-reproducibility" class="nav-link" data-scroll-target="#robustness-and-reproducibility"><span class="header-section-number">3</span> Robustness and reproducibility</a></li>
-  <li><a href="#streamlining-and-theming" id="toc-streamlining-and-theming" class="nav-link" data-scroll-target="#streamlining-and-theming"><span class="header-section-number">4</span> Streamlining and theming</a></li>
-  <li><a href="#figures-for-publication" id="toc-figures-for-publication" class="nav-link" data-scroll-target="#figures-for-publication"><span class="header-section-number">5</span> Figures for publication</a></li>
-  <li><a href="#final-comments" id="toc-final-comments" class="nav-link" data-scroll-target="#final-comments"><span class="header-section-number">6</span> Final comments</a>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#project-design" id="toc-project-design" class="nav-link" data-scroll-target="#project-design">Project design</a></li>
+  <li><a href="#robustness-and-reproducibility" id="toc-robustness-and-reproducibility" class="nav-link" data-scroll-target="#robustness-and-reproducibility">Robustness and reproducibility</a></li>
+  <li><a href="#streamlining-and-theming" id="toc-streamlining-and-theming" class="nav-link" data-scroll-target="#streamlining-and-theming">Streamlining and theming</a></li>
+  <li><a href="#figures-for-publication" id="toc-figures-for-publication" class="nav-link" data-scroll-target="#figures-for-publication">Figures for publication</a></li>
+  <li><a href="#closing-comments" id="toc-closing-comments" class="nav-link" data-scroll-target="#closing-comments">Closing comments</a>
   <ul class="collapse">
   <li><a href="#ongoing-challenges" id="toc-ongoing-challenges" class="nav-link" data-scroll-target="#ongoing-challenges">Ongoing Challenges</a></li>
   <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements">Acknowledgements</a></li>
@@ -219,7 +219,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block page-columns page-full" id="quarto-document-content">
@@ -228,84 +228,94 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="overview" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Overview</h1>
-<p>A recent collaboration led by Dr Melissa Licari of The Kids produced a summary report detailing the challenges faced by individuals (and the families that care for them) living with Tourette syndrome and other tic disorders (https://www.thekids.org.au/impactfortourettes). The report can be found [here](https://www.thekids.org.au/impactfortourettes).</p>
-<p>The report was a summary of results of a national survey undertaken in 2023/2024, and the data analysis and preparation of figures for publication was undertaken by the Biostatistics team at The Kids.</p>
-<p>To support production of the final publication there was considerable behind-the-scenes work, including various challenges common to a large-scale project such as this, where there are many variables and outcomes of interest. For example:</p>
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<p>A recent collaboration of ours, led by Dr Melissa Licari of <a href="https://www.thekids.org.au">The Kids</a>, involved producing a summary report detailing the challenges faced by individuals <em>(and the families that care for them)</em> living with Tourette Syndrome (TS) and other tic disorders. The full report can be found <a href="https://www.thekids.org.au/impactfortourettes">here</a>.</p>
+<div id="fig-report_cover" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-report_cover-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="examples/report_cover.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-report_cover-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Report cover
+</figcaption>
+</figure>
+</div>
+<p>The report presented the analysis of a national survey undertaken in 2023/2024. The data analysis and preparation of figures for publication was undertaken by the Biostatistics team at The Kids.</p>
+<p>To support production of the final publication there was considerable behind-the-scenes work, including resolving various challenges common to a large-scale project like this, where there are many variables and outcomes of interest. For example:</p>
 <ul>
-<li>Survey coverage of 7 specific impact domains, being comprised of existing validated questionnaires as well as bespoke questions, and including multiple response types (eg multiple choice, radio buttons, free-text fields)</li>
-<li>Synthesis of data from 3 different distinct surveys (adults with tics, parents of children with tics, carers of adults with tics) having largely overlapping item/theme content but not necessarily identically matched response choices<br>
-</li>
-<li>Only partial survey completion by many respondents<br>
-</li>
-<li>Preparation of high-quality PDF output that met the needs of the production team whilst conforming to The Kids style guidelines.</li>
+<li>Survey coverage of 7 impact domains, each comprised of existing validated questionnaires as well as bespoke questions with a variety of response types <em>(e.g.&nbsp;multiple choice, radio buttons, free-text fields)</em></li>
+<li>Synthesis of data from 3 different distinct surveys <em>(adults with tics, parents of children with tics, carers of adults with tics)</em> that had a large overlap in terms of item/theme content but not necessarily identically matched response choices</li>
+<li>Only partial survey completion by many respondents</li>
 </ul>
-<p>With a target endpoint rather different than the journal articles we are typically preparing for, our experience with the TS collaboration has prompted us to share our approach to tackling larger-scale projects, and any insight it may provide!</p>
+<p>Ultimately, the collaborators required the preparation of high-quality PDF output that met the needs of the report production team whilst conforming to The Kids style guidelines.</p>
+<p>With a target endpoint that was rather different to the journal articles we Biostatisticians are typically preparing output for. Our experience with this TS collaboration prompted us to share our approach to tackling larger-scale projects like this, documenting elements of the processes followed in the hope they provide some insight to others <em>(or ourselves in the future)</em>!</p>
+<p>While this post leans heavily into the use of <a href="https://github.com/The-Kids-Biostats/thekidsbiostats">our package</a>, the outlined principles and insights should have much broader appeal.</p>
 </section>
-<section id="project-design" class="level1 page-columns page-full" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Project design</h1>
-<p>The reproducible code-based capabilities of R, readily integrated into a suite of output options via the RStudio environment, have provided the ideal platform to compile a comprehensive document of data summaries, tabulations and graphs from which the authors of the report could draw key results for public dissemination. Furthermore, the theming and formatting features of our in-house <a href="https://github.com/The-Kids-Biostats/thekidsbiostats"><code>thekidsbiostats</code> package</a> are a particularly useful asset for preparation of publication-ready output that conforms to The Kids style guide.</p>
-<p>In line with current practice of our team, features of our general project design include:</p>
+<section id="project-design" class="level1 page-columns page-full">
+<h1>Project design</h1>
+<p>The reproducible code-based capabilities of R for producing a suite of output, readily integrated into the RStudio environment, provided the ideal platform for us to compile a comprehensive document of data summaries, tabulations, and graphs from which the authors of the report could draw the key results for inclusion in the report destined for public dissemination.</p>
+<p>Furthermore, the theming and formatting features of our in-house <a href="https://github.com/The-Kids-Biostats/thekidsbiostats">thekidsbiostats package</a> proved to be a particularly useful asset in preparation of the publication-ready output conforming to The Kids style guide.</p>
+<p>In line with the current practice of our team, features of our general project design include:</p>
 <ul>
-<li><p>Overall organisation being that of a self-contained R project with accompanying sub-directories.(See <code>thekidsbiostats::create_project()</code> for project template)</p>
+<li><p>Overall project organisation being that of a self-contained R project with accompanying sub-directories. <em>(See <code>thekidsbiostats::create_project()</code> for the template)</em>.</p></li>
+<li><p>Given the scale of the TS project, generation of tables and figures was further blocked into 9 different files, corresponding to the distinct survey sections <em>(background information, 7 impact domains, looking to the future)</em> across the three distinct surveys <em>(listed earlier)</em>. This enabled the code and output to be run, and checked, in manageable chunks, before the resulting tables and plots were reunited into single output file!</p>
 <ul>
-<li>Given the scale of the TS project, generation of tables and figures was further blocked into 9 different files corresponding to the distinct survey sections (background information, 7 impact domains, looking to the future). This enabled code and output to be run and checked in manageable chunks before the resulting tables and plots were reunited in an holistic file.</li>
+<li><em>Use of sub-directories in the project organisation is illustrated by <a href="#fig-file_setup" class="quarto-xref">Figure&nbsp;2</a>.</em></li>
 </ul></li>
 </ul>
-<div id="fig-file_setup" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-file_setup" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-file_setup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="examples/file_setup.png" style="height:4in" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-file_setup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.1: Directory/subdirectory setup
+Figure&nbsp;2: Directory/subdirectory setup
 </figcaption>
 </figure>
 </div>
-<p><em>Use of sub-directories in the project organisation is illustrated by <a href="#fig-file_setup" class="quarto-xref">Figure&nbsp;2.1</a>.</em></p>
 <ul>
-<li>Main output document files are now Quarto documents (with a .qmd extension), superseding the previous default RStudio Markdown (.mkd) files, having more powerful capabilities but still retaining the header-text-code structure and simplicity and flexibility of the markdown syntax for text formatting. (See a useful reference <a href="https://quarto.org/docs/authoring/markdown-basics.html">here</a>.)</li>
+<li>The main output generating files are Quarto documents <em>(with the .qmd extension)</em>, which supersedes the previous framework withing RStudio - R Markdown <em>(.Rmd)</em>. Quarto documents have more flexibility and functionality, but still retain the header-text-code structure and simplicity of the markdown syntax. <em>(See a useful reference <a href="https://quarto.org/docs/authoring/markdown-basics.html">here</a>.)</em></li>
 </ul>
-<p>For those unfamiliar with Quarto, note that documents can be written and rendered from either a <strong>visual</strong> view or a <strong>source</strong> view. The <strong>visual</strong> view aims to give format certain elements (e.g.&nbsp;headers, code chunks, bold/italics) as they will appear in the rendered document. <strong>source</strong> is preferred for more control over each element as the formatting syntax is visible and easily modifiable.</p>
-<div id="fig-visual" class="quarto-figure quarto-figure-center quarto-float anchored" data-align="left">
+<p>For those unfamiliar with Quarto, note that documents can be written and rendered from either a <strong>visual</strong> view or a <strong>source</strong> view. The <strong>visual</strong> view aims to show certain elements <em>(e.g.&nbsp;headers, code chunks, bold/italics)</em> formatted as they will appear in the rendered document. Experienced users, or those more comfortable with coding, may prefer the <strong>source</strong> view, which gives more direct control and access to the customising of the formatting.</p>
+<div id="fig-visual" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="left">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-visual-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="examples/visual_qmd.png" style="height:4in" data-align="left" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-visual-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.2: Visual screen of the default new QMD file
+Figure&nbsp;3: Visual screen of the default new QMD file
 </figcaption>
 </figure>
 </div>
-<div id="fig-source" class="quarto-figure quarto-figure-center quarto-float anchored" data-align="left">
+<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="left">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="examples/source_qmd.png" style="height:4in" data-align="left" class="figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.3: Source screen of the default new QMD file
+Figure&nbsp;4: Source screen of the default new QMD file
 </figcaption>
 </figure>
 </div>
-<div id="fig-defaultHTML" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-defaultHTML" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-defaultHTML-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="examples/defaultQMD-HTML.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-defaultHTML-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.4: HTML report
+Figure&nbsp;5: HTML report
 </figcaption>
 </figure>
 </div>
 
 <div class="no-row-height column-margin column-container"><div class="">
-<p><a href="#fig-defaultHTML" class="quarto-xref">Figure&nbsp;2.4</a> shows the HTML report produced by rendering the default QMD file</p>
-</div></div><p><br></p>
-</section>
-<section id="robustness-and-reproducibility" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Robustness and reproducibility</h1>
-<p>It is inevitable that there will be considerable data pre-processing required prior to undertaking any analysis. (This is often the greatest challenge we find with a project.)</p>
+<p><a href="#fig-defaultHTML" class="quarto-xref">Figure&nbsp;5</a> shows the HTML report produced by rendering the default QMD file</p>
+</div></div></section>
+<section id="robustness-and-reproducibility" class="level1">
+<h1>Robustness and reproducibility</h1>
+<p><em>Why a reproducible framework?</em></p>
+<p>It is inevitable that there will be considerable data pre-processing required prior to undertaking any analysis and results generation. This is often the greatest challenge we find with a project! And it is inevitable that there will be minor tweaks and changes along the way.</p>
 <div class="callout callout-style-default callout-important no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -316,83 +326,102 @@ Important
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>It is therefore essential that sound data management practices are maintained.</p>
+<p>It is therefore essential that sound data management practices are thought out and maintained from the outset.</p>
 </div>
 </div>
-<p>When pre-processing data:<br>
-- <strong>Never</strong> overwrite the raw data<br>
-- Always double-check merging of different data sets is accomplished correctly.<br>
-- Check consistency of data entry/coding for the same variable sourced from different data sets<br>
-- Utilise a data dictionary, and ensure it is noted how missing values are coded<br>
-- Ensure newly created data sets are dated<br>
-- Scrutinize the final data set for anomalies prior to adopting it for analysis.</p>
-<p>Furthermore, numerous features of an appropriate project design and ensuing workflow to ensure that the end product of the data analysis is robust and reproducible include:</p>
+<p>When pre-processing data:</p>
 <ul>
-<li><p>Utilisation of a project template with organised sub-directories (See <code>thekidsbiostats::create_project()</code>)</p></li>
-<li><p>Routine ongoing checks that code as written produces the intended results when executed.</p></li>
-<li><p>Utilisation of user-written functions, with appropriate testing, to minimise errors that can creep in when reliant on cut-and-pastes or manual coding of repeated tasks.</p></li>
-<li><p>Use of a document template for report writing that includes a run date in the header and session info at the end (See <code>thekidsbiostats::create_template()</code>, which creates .qmd files such as those seen above)</p></li>
-<li><p>Inherent Quarto document features: Self-containment of the run environment, with other inputs called explicitly; auto-save with each render; text interspersed with result-producing code.</p></li>
+<li><strong>Never</strong> overwrite the original raw data,</li>
+<li>Always double-check merging of different data sets is accomplished correctly,</li>
+<li>Check consistency of data entry/coding for the same variable sourced from different data sets,</li>
+<li>Utilise a data dictionary, and ensure it is noted how missing values are coded,</li>
+<li>Ensure newly created <em>(exported)</em> data sets are dated,</li>
+<li>Scrutinize the final data set for anomalies prior to adopting it for analysis.</li>
+</ul>
+<p>Furthermore, we find the following features of an appropriate project design and ensuing workflow help ensure that the end product of the data analysis is robust and reproducible:</p>
+<ul>
+<li>Utilisation of a project template with organised sub-directories <em>(see <code>thekidsbiostats::create_project()</code>)</em>,</li>
+<li>Routine ongoing checks that code as written produces the intended results when executed,</li>
+<li>Use of a document template for report writing that includes a run date in the header and session info at the end <em>(see <code>thekidsbiostats::create_template()</code>, which creates .qmd files such as those seen above)</em>,</li>
+<li>Inherent Quarto document features: Self-containment of the run environment, with other inputs called explicitly; auto-save with each render; text interspersed with result-producing code.</li>
 </ul>
 </section>
-<section id="streamlining-and-theming" class="level1 page-columns page-full" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Streamlining and theming</h1>
+<section id="streamlining-and-theming" class="level1 page-columns page-full">
+<h1>Streamlining and theming</h1>
 <p>Coding can be streamlined by adoption of time-saving techniques:</p>
 <ul>
-<li><p>Setting of document-wide formatting, execution and style parameters in the document header</p>
+<li>Setting of document-wide formatting, execution and style parameters in the document header,
 <ul>
-<li><p>For example, extra lines of code in the document YAML headers to facilitate numbering (and referencing) of figure and table captions</p></li>
-<li><p>Further refinement and definition can be accomplished by utilisation of a .css file. (Note the styles.css file created and included in the document header if creating a new document using the Quarto template in <code>thekidsbiostats</code> package.)</p></li>
+<li>For example, extra lines of code in the document YAML headers to facilitate numbering <em>(and referencing)</em> of figure and table captions,</li>
+<li>Further refinement and definition can be accomplished by utilisation of a .css file <em>(note: the reference to the styles.css file in the document header is required if creating a new document using the Quarto template in <code>thekidsbiostats</code> package)</em>,</li>
 </ul></li>
 </ul>
-<div id="fig-YAML" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-YAML" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-YAML-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="examples/YAML.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-YAML-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4.1: Example Quarto document header
+Figure&nbsp;6: Example Quarto document header
 </figcaption>
 </figure>
 </div>
 
 <div class="no-row-height column-margin column-container"><div class="">
-<p>Document-wide styling can be defined in the Quarto header as in <a href="#fig-YAML" class="quarto-xref">Figure&nbsp;4.1</a>.</p>
-</div></div><div id="fig-CSS" class="quarto-figure quarto-figure-center quarto-float anchored">
+<p>Document-wide styling can be defined in the Quarto header as in <a href="#fig-YAML" class="quarto-xref">Figure&nbsp;6</a>.</p>
+</div></div><div id="fig-CSS" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-CSS-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="examples/CSS.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-CSS-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;4.2: Some example .css code
+Figure&nbsp;7: Some example .css code
 </figcaption>
 </figure>
 </div>
 <ul>
-<li><p>Familiarisation with short-cut keys and code (eg see this useful <a href="https://bookdown.org/yihui/rmarkdown-cookbook/rstudio-shortcuts.html">bookdown reference</a> )</p></li>
-<li><p>Judicious use of bespoke functions to reduce repetitive coding eg in generation of tables and plots</p></li>
+<li>Familiarisation with short-cut keys and code <em>(e.g.&nbsp;see this useful <a href="https://bookdown.org/yihui/rmarkdown-cookbook/rstudio-shortcuts.html">bookdown reference</a>)</em>,</li>
+<li>Judicious use of bespoke functions to reduce repetitive coding eg in generation of tables and plots,
+<ul>
+<li>This can minimise errors that easily creep in when reliant on cut-and-pastes or manual coding of repeated tasks; before functions require appropriate testing!</li>
+</ul></li>
 </ul>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example code for bespoke function</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>survey.tblsum<span class="ot">&lt;-</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(dat,<span class="at">missed=</span><span class="st">"no"</span>,<span class="at">var_label=</span><span class="cn">NULL</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>survey.tblsum <span class="ot">&lt;-</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(dat, <span class="at">missed =</span> <span class="st">"no"</span>, <span class="at">var_label =</span> <span class="cn">NULL</span>)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  {</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(<span class="fu">is.null</span>(var_label))</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      var_label<span class="ot">=</span><span class="st">""</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    SummaryTbl<span class="ot">&lt;-</span>dat <span class="sc">%&gt;%</span> </span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">tbl_summary</span>(<span class="at">by=</span>Survey,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                  <span class="at">missing=</span>missed) <span class="sc">%&gt;%</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">add_overall</span>(<span class="at">last=</span>T) <span class="sc">%&gt;%</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">bold_labels</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">modify_header</span>(<span class="at">label=</span>var_label) <span class="sc">%&gt;%</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">modify_footnote</span>(<span class="fu">everything</span>()<span class="sc">~</span><span class="cn">NA</span>)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(SummaryTbl)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    SummaryTbl <span class="ot">&lt;-</span> dat <span class="sc">%&gt;%</span> </span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">tbl_summary</span>(<span class="at">by =</span> Survey,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>                  <span class="at">missing =</span> missed) <span class="sc">%&gt;%</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">add_overall</span>(<span class="at">last =</span> T) <span class="sc">%&gt;%</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">bold_labels</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">modify_header</span>(<span class="at">label =</span> var_label) <span class="sc">%&gt;%</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">modify_footnote</span>(<span class="fu">everything</span>() <span class="sc">~</span> <span class="cn">NA</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(SummaryTbl)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p><br> Professionalism in presentation is enhanced by consistent formatting and theming, which can be embedded into function calls. Note that loading of the <code>thekidsbiostats</code> package enabled easy incorporation of Barlow font and the Institute’s colour palette as specified in the brand style toolkit.</p>
+<p>Professionalism in the overall presentation can be easily enhanced by the consistent formatting and theming of output. This can also be embedded into function calls. Note that loading of the <code>thekidsbiostats</code> package enables the easy incorporation of the Barlow font and the The Kid’s colour palette, as specified in the brand style toolkit.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This functionality can easily be adapted by the user for other organisations, simply by directing the function(s) to a different font and/or colour palette.</p>
+</div>
+</div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -441,26 +470,29 @@ Figure&nbsp;4.2: Some example .css code
 <span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="co"># Function to consistently present plots of the same type, with data having a column of rating levels (defined to be a factor) and the proportions to be plotted</span></span>
 <span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>do.RatingPlot<span class="ot">&lt;-</span><span class="cf">function</span>(Rdat,p.title)</span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>{</span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">ggplot</span>(Rdat,<span class="fu">aes</span>(<span class="at">y=</span>prop,<span class="at">x=</span>Rating,<span class="at">fill=</span>Rating)) <span class="sc">+</span></span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="at">linewidth=</span><span class="fl">0.0</span>)<span class="sc">+</span></span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels=</span>scales<span class="sc">::</span><span class="fu">label_percent</span>())<span class="sc">+</span></span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x=</span><span class="st">""</span>,<span class="at">y=</span><span class="st">""</span>,</span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>         <span class="at">title=</span><span class="fu">str_wrap</span>(p.title,<span class="at">width=</span><span class="dv">70</span>))<span class="sc">+</span></span>
-<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>    <span class="fu">my_theme</span>()<span class="sc">+</span></span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">"none"</span>,</span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>          <span class="at">plot.margin=</span><span class="fu">margin</span>(<span class="at">l=</span><span class="dv">15</span>,<span class="at">b=</span><span class="fl">7.5</span>),</span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.text.x=</span><span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">25</span>,<span class="at">hjust=</span><span class="dv">1</span>,<span class="at">size=</span><span class="fu">rel</span>(<span class="fl">1.4</span>),<span class="at">color=</span><span class="st">"black"</span>)</span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a><span class="er">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>do.RatingPlot <span class="ot">&lt;-</span> <span class="cf">function</span>(Rdat, p.title){</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(Rdat, <span class="fu">aes</span>(<span class="at">y =</span> prop, <span class="at">x =</span> Rating, <span class="at">fill =</span> Rating)) <span class="sc">+</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_col</span>(<span class="at">linewidth =</span> <span class="fl">0.0</span>)<span class="sc">+</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_percent</span>()) <span class="sc">+</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, </span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>           <span class="at">y =</span> <span class="st">""</span>,</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>           <span class="at">title =</span> <span class="fu">str_wrap</span>(p.title, <span class="at">width =</span> <span class="dv">70</span>)) <span class="sc">+</span></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>      <span class="fu">my_theme</span>() <span class="sc">+</span> </span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>,</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>          <span class="at">plot.margin =</span> <span class="fu">margin</span>(<span class="at">l =</span> <span class="dv">15</span>, <span class="at">b =</span> <span class="fl">7.5</span>),</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">25</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">size =</span> <span class="fu">rel</span>(<span class="fl">1.4</span>), <span class="at">color =</span> <span class="st">"black"</span>)</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>          )</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p><br></p>
 </section>
-<section id="figures-for-publication" class="level1 page-columns page-full" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> Figures for publication</h1>
-<p>At the pointy end of the TS project, we were tasked with generating in a publication-ready format those figures which the authors had chosen to be included in the final public-facing summary report. This required close consultation with the production team to ensure that the images produced in the PDF files that were requested stayed true to the colour and font formatting as intended. After exploration of several options we settled on the <code>cairo_pdf</code>function from the <code>grDevices</code> package in the System Library because of its superior consistency and clarity of output.</p>
+<section id="figures-for-publication" class="level1 page-columns page-full">
+<h1>Figures for publication</h1>
+<p>At the pointy end of the TS collaboration, we were tasked with generating <em>(in a publication-ready format)</em> those figures which the co-authors had chosen to be included in the final public-facing summary report. This required close consultation with the production team to ensure that the images produced, as PDF files, matched the production specification, adhering to the colour and font formatting <em>(and embedding)</em> as intended.</p>
+<p>After the exploration of several options, we settled on the <code>cairo_pdf</code> function from the <code>grDevices</code> package in the System Library, due to of its superior consistency and clarity of output.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -468,20 +500,20 @@ Figure&nbsp;4.2: Some example .css code
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/Diagnosis.Rdata"</span>) <span class="co"># Loads plot.diagProf, a previously constructed ggplot, into the document run environment</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cairo_pdf</span>(<span class="st">"examples/diagProf_cairo_pdf.pdf"</span>,<span class="at">family=</span><span class="st">"Barlow"</span>,<span class="at">height=</span><span class="fl">3.5</span>,<span class="at">width=</span><span class="dv">9</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cairo_pdf</span>(<span class="st">"examples/diagProf_cairo_pdf.pdf"</span>, <span class="at">family =</span> <span class="st">"Barlow"</span>, <span class="at">height =</span> <span class="fl">3.5</span>, <span class="at">width =</span> <span class="dv">9</span>)</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>plot.diagProf</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
 <div class="cell-output-display">
-<div id="fig-diagProf_html" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-diagProf_html" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-diagProf_html-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="large_scale_project_files/figure-html/fig-diagProf_html-1.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-diagProf_html-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5.1: Diagnosing medical professional
+Figure&nbsp;8: The Diagnosing medical professional
 </figcaption>
 </figure>
 </div>
@@ -489,30 +521,27 @@ Figure&nbsp;5.1: Diagnosing medical professional
 </div>
 
 <div class="no-row-height column-margin column-container"><div class="">
-<p><strong>Diagnosing professional</strong><br>
-Regular HTML report output of a <code>ggplot</code> generated figure</p>
-</div></div><div id="fig-diagProf_cairo_pdf" class="quarto-figure quarto-figure-center quarto-float anchored">
+<p>Regular HTML report output of a <code>ggplot</code> generated figure.</p>
+</div></div><div id="fig-diagProf_cairo_pdf" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-diagProf_cairo_pdf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="examples/diagProf_cairo_pdf.png" class="img-fluid figure-img">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-diagProf_cairo_pdf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;5.2: Reproduction of the above figure generated by <code>cairo_pdf</code>
+Figure&nbsp;9: Exported PDF reproduction of the above figure generated by <code>cairo_pdf</code>
 </figcaption>
 </figure>
 </div>
 
 <div class="no-row-height column-margin column-container"><div class="">
-<p><strong>Diagnosing professional</strong><br>
-The PDF as generated by cairo_pdf(…,family=“Barlow) provides a close likeness to the HTML output of <a href="#fig-diagProf_html" class="quarto-xref">Figure&nbsp;5.1</a>, and was the preferred format of the production team.</p>
-</div></div><p><br></p>
-</section>
-<section id="final-comments" class="level1" data-number="6">
-<h1 data-number="6"><span class="header-section-number">6</span> Final comments</h1>
+<p>The PDF as generated by <code>cairo_pdf(...,family="Barlow)</code> provides a close likeness to the HTML output of <a href="#fig-diagProf_html" class="quarto-xref">Figure&nbsp;8</a>, and was the preferred format of the production team.</p>
+</div></div></section>
+<section id="closing-comments" class="level1">
+<h1>Closing comments</h1>
 <section id="ongoing-challenges" class="level2">
 <h2 class="anchored" data-anchor-id="ongoing-challenges">Ongoing Challenges</h2>
-<p>There is always a balance of time investment and where to draw the line when attempting to further one’s technical prowess, particularly with R coding! While often times a quick google or ChatGP will help you find a solution relatively quickly, we found here that there seems to be a lack of clear online guidance around PDF exporting options and output discrepancies (embedding issues, default fonts dependency on machine/OS, CMYK for printing vs HTML colour) - fodder for another post!</p>
-<p><br></p>
+<p>There is always a balance of time investment and where to draw the line when attempting to further one’s technical prowess, particularly with R coding!</p>
+<p>While often times a quick google or ChatGPT will help you find a solution relatively quickly, we found here that there seemed to be a lack of clear <em>(complete)</em> online guidance around PDF exporting options and resolving output discrepancies <em>(embedding issues, default fonts dependency on machine/OS, CMYK for printing vs HTML colour)</em> - fodder for another post!</p>
 </section>
 <section id="acknowledgements" class="level2">
 <h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
@@ -520,24 +549,19 @@ The PDF as generated by cairo_pdf(…,family=“Barlow) provides a close likenes
 </section>
 <section id="reproducibility-information" class="level2">
 <h2 class="anchored" data-anchor-id="reproducibility-information">Reproducibility Information</h2>
-<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
-<p>Session Information</p>
-</button>
-<div id="collapseOne" class="accordion-collapse collapse">
-<div>
+<p>The session information can also be seen below.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>R version 4.4.1 (2024-06-14 ucrt)
-Platform: x86_64-w64-mingw32/x64
-Running under: Windows 10 x64 (build 19045)
+<pre><code>R version 4.5.0 (2025-04-11)
+Platform: aarch64-apple-darwin20
+Running under: macOS Sonoma 14.4.1
 
 Matrix products: default
-
+BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
 
 locale:
-[1] LC_COLLATE=English_Australia.utf8  LC_CTYPE=English_Australia.utf8   
-[3] LC_MONETARY=English_Australia.utf8 LC_NUMERIC=C                      
-[5] LC_TIME=English_Australia.utf8    
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 
 time zone: Australia/Perth
 tzcode source: internal
@@ -546,37 +570,35 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] thekidsbiostats_1.1.0 flextable_0.9.8       gtsummary_2.2.0      
+ [1] thekidsbiostats_1.1.1 flextable_0.9.9       gtsummary_2.2.0      
  [4] lubridate_1.9.4       forcats_1.0.0         stringr_1.5.1        
  [7] dplyr_1.1.4           purrr_1.0.4           readr_2.1.5          
-[10] tidyr_1.3.1           tibble_3.2.1          ggplot2_3.5.2        
+[10] tidyr_1.3.1           tibble_3.3.0          ggplot2_3.5.2        
 [13] tidyverse_2.0.0       extrafont_0.19       
 
 loaded via a namespace (and not attached):
  [1] gtable_0.3.6            xfun_0.52               htmlwidgets_1.6.4      
- [4] tzdb_0.5.0              vctrs_0.6.5             tools_4.4.1            
- [7] generics_0.1.4          pkgconfig_2.0.3         data.table_1.17.0      
+ [4] tzdb_0.5.0              vctrs_0.6.5             tools_4.5.0            
+ [7] generics_0.1.4          pkgconfig_2.0.3         data.table_1.17.6      
 [10] RColorBrewer_1.1-3      uuid_1.2-1              lifecycle_1.0.4        
-[13] compiler_4.4.1          farver_2.1.2            textshaping_1.0.1      
+[13] compiler_4.5.0          farver_2.1.2            textshaping_1.0.1      
 [16] janitor_2.2.1           snakecase_0.11.1        httpuv_1.6.16          
 [19] fontquiver_0.2.1        fontLiberation_0.1.0    htmltools_0.5.8.1      
 [22] yaml_2.3.10             Rttf2pt1_1.3.12         pillar_1.10.2          
-[25] later_1.4.2             extrafontdb_1.0         openssl_2.3.2          
+[25] later_1.4.2             extrafontdb_1.0         openssl_2.3.3          
 [28] mime_0.13               fontBitstreamVera_0.1.1 tidyselect_1.2.1       
-[31] zip_2.3.2               digest_0.6.37           stringi_1.8.7          
+[31] zip_2.3.3               digest_0.6.37           stringi_1.8.7          
 [34] labeling_0.4.3          labelled_2.14.1         fastmap_1.2.0          
-[37] grid_4.4.1              cli_3.6.5               magrittr_2.0.3         
-[40] patchwork_1.3.0         withr_3.0.2             gdtools_0.4.2          
-[43] scales_1.4.0            promises_1.3.2          timechange_0.3.0       
-[46] rmarkdown_2.29          officer_0.6.9           askpass_1.2.1          
+[37] grid_4.5.0              cli_3.6.5               magrittr_2.0.3         
+[40] patchwork_1.3.1         withr_3.0.2             gdtools_0.4.2          
+[43] scales_1.4.0            promises_1.3.3          timechange_0.3.0       
+[46] rmarkdown_2.29          officer_0.6.10          askpass_1.2.1          
 [49] ragg_1.4.0              hms_1.1.3               shiny_1.10.0           
-[52] evaluate_1.0.3          haven_2.5.4             knitr_1.50             
+[52] evaluate_1.0.4          haven_2.5.5             knitr_1.50             
 [55] rlang_1.1.6             Rcpp_1.0.14             xtable_1.8-4           
 [58] glue_1.8.0              xml2_1.3.8              rstudioapi_0.17.1      
 [61] jsonlite_2.0.0          R6_2.6.1                shinyFiles_0.9.3       
 [64] systemfonts_1.2.3       fs_1.6.6               </code></pre>
-</div>
-</div>
 </div>
 </div>
 
@@ -620,18 +642,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -663,7 +674,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp("https:\/\/the-kids-biostats\.github\.io");
@@ -671,7 +704,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
