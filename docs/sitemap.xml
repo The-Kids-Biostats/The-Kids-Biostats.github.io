@@ -1,91 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://the-kids-biostats.github.io/posts/2025-01-23_thekids_package/thekids_package.html</loc>
-    <lastmod>2025-06-24T07:53:35.539Z</lastmod>
-  </url>
-  <url>
-    <loc>https://the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/ai_part_two.html</loc>
-    <lastmod>2025-06-24T07:53:35.494Z</lastmod>
-  </url>
-  <url>
-    <loc>https://the-kids-biostats.github.io/posts/2024-12-16_bidirectional_likert_visualisation/bidirectional_likert_visualisations.html</loc>
-    <lastmod>2025-06-24T07:53:35.436Z</lastmod>
-  </url>
-  <url>
-    <loc>https://the-kids-biostats.github.io/posts/2024-10-14_likert_visualisation/likert_visualisations.html</loc>
-    <lastmod>2025-06-24T07:53:35.403Z</lastmod>
-  </url>
-  <url>
-    <loc>https://the-kids-biostats.github.io/posts/2024-07-22_pre_post/pre-post.html</loc>
-    <lastmod>2025-06-24T07:53:35.398Z</lastmod>
-  </url>
-  <url>
-    <loc>https://the-kids-biostats.github.io/posts/2024-07-01_parallel/parallel.html</loc>
-    <lastmod>2025-06-24T07:53:35.366Z</lastmod>
-  </url>
-  <url>
-    <loc>https://the-kids-biostats.github.io/index.html</loc>
-    <lastmod>2024-06-05T02:11:19.201Z</lastmod>
-  </url>
-  <url>
     <loc>https://the-kids-biostats.github.io/about.html</loc>
-    <lastmod>2024-09-20T04:00:10.638Z</lastmod>
-  </url>
-  <url>
-    <loc>https://the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer.html</loc>
-    <lastmod>2025-06-24T07:53:35.349Z</lastmod>
-  </url>
-  <url>
-    <loc>https://the-kids-biostats.github.io/posts/2024-07-19_data_anonymiser/data_anonymiser.html</loc>
-    <lastmod>2025-06-24T07:53:35.383Z</lastmod>
-  </url>
-  <url>
-    <loc>https://the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis.html</loc>
-    <lastmod>2025-06-24T07:53:35.403Z</lastmod>
+    <lastmod>2024-06-05T04:00:32.190Z</lastmod>
   </url>
   <url>
     <loc>https://the-kids-biostats.github.io/posts/2024-11-19_code_v_functions/code_v_functions.html</loc>
-    <lastmod>2025-06-24T07:53:35.420Z</lastmod>
+    <lastmod>2024-12-18T02:35:35.772Z</lastmod>
   </url>
   <url>
-    <loc>https://the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/ai_part_one.html</loc>
-    <lastmod>2025-06-24T07:53:35.441Z</lastmod>
+    <loc>https://the-kids-biostats.github.io/posts/2025-10-10_AIHW_api/aihw_api_guess_plot.html</loc>
+    <lastmod>2025-10-20T04:20:32.046Z</lastmod>
   </url>
   <url>
-    <loc>https://the-kids-biostats.github.io/posts/2025-01-10_model_function/model_function.html</loc>
-    <lastmod>2025-06-24T07:53:35.519Z</lastmod>
+    <loc>https://the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/ai_part_two.html</loc>
+    <lastmod>2024-09-09T12:19:50.116Z</lastmod>
+  </url>
+  <url>
+    <loc>https://the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis.html</loc>
+    <lastmod>2024-09-10T00:05:17.959Z</lastmod>
+  </url>
+  <url>
+    <loc>https://the-kids-biostats.github.io/posts/2024-07-22_pre_post/pre-post.html</loc>
+    <lastmod>2024-08-06T04:40:39.301Z</lastmod>
   </url>
   <url>
     <loc>https://the-kids-biostats.github.io/posts/2025-04-14_rsam/rsam.html</loc>
     <lastmod>2025-06-20T00:37:49.375Z</lastmod>
   </url>
   <url>
-    <loc>https://the-kids-biostats.github.io/posts/DRAFT_large_scale_project/examples/defaultQMD.html</loc>
-    <lastmod>2025-06-18T03:39:40.080Z</lastmod>
+    <loc>https://the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/ai_part_one.html</loc>
+    <lastmod>2025-01-23T06:28:49.290Z</lastmod>
   </url>
   <url>
-    <loc>https://the-kids-biostats.github.io/posts/DRAFT_large_scale_project/large_scale_project.html</loc>
-    <lastmod>2025-07-03T01:45:08.368Z</lastmod>
+    <loc>https://the-kids-biostats.github.io/posts/2024-07-19_data_anonymiser/data_anonymiser.html</loc>
+    <lastmod>2024-08-06T04:40:39.299Z</lastmod>
+  </url>
+  <url>
+    <loc>https://the-kids-biostats.github.io/posts/2025-01-10_model_function/model_function.html</loc>
+    <lastmod>2025-01-23T06:28:49.291Z</lastmod>
+  </url>
+  <url>
+    <loc>https://the-kids-biostats.github.io/posts/2024-07-01_parallel/parallel.html</loc>
+    <lastmod>2024-08-06T04:40:39.295Z</lastmod>
+  </url>
+  <url>
+    <loc>https://the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer.html</loc>
+    <lastmod>2024-08-06T04:40:39.295Z</lastmod>
+  </url>
+  <url>
+    <loc>https://the-kids-biostats.github.io/posts/2024-10-14_likert_visualisation/likert_visualisations.html</loc>
+    <lastmod>2024-12-18T02:35:35.771Z</lastmod>
   </url>
   <url>
     <loc>https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/large_scale_project.html</loc>
     <lastmod>2025-07-03T02:35:13.275Z</lastmod>
   </url>
   <url>
-    <loc>https://the-kids-biostats.github.io/posts/DRAFT_AIHW_api/aihw_api_guess_plot.html</loc>
-    <lastmod>2025-10-20T03:53:17.386Z</lastmod>
+    <loc>https://the-kids-biostats.github.io/posts/2025-01-23_thekids_package/thekids_package.html</loc>
+    <lastmod>2025-06-20T00:37:49.370Z</lastmod>
   </url>
   <url>
-    <loc>https://the-kids-biostats.github.io/posts/2025-10-20_AIHW_api/aihw_api_guess_plot.html</loc>
-    <lastmod>2025-10-20T04:02:29.714Z</lastmod>
+    <loc>https://the-kids-biostats.github.io/posts/2024-12-16_bidirectional_likert_visualisation/bidirectional_likert_visualisations.html</loc>
+    <lastmod>2024-12-18T02:35:35.775Z</lastmod>
   </url>
   <url>
-    <loc>https://the-kids-biostats.github.io/posts/DRAFT_interaction_term/interaction_terms.html</loc>
-    <lastmod>2024-08-06T04:40:39.320Z</lastmod>
-  </url>
-  <url>
-    <loc>https://the-kids-biostats.github.io/posts/2025-10-10_AIHW_api/aihw_api_guess_plot.html</loc>
-    <lastmod>2025-10-20T04:20:32.046Z</lastmod>
+    <loc>https://the-kids-biostats.github.io/index.html</loc>
+    <lastmod>2024-06-05T02:11:19.201Z</lastmod>
   </url>
 </urlset>
