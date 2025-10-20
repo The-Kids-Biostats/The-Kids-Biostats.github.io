@@ -2,14 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.56">
+<meta name="generator" content="quarto-1.4.555">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Dr Bethy McKinnon and Dr Matt Cooper">
 <meta name="dcterms.date" content="2025-07-03">
 
-<title>Large-scale projects – The Kids Biostats</title>
+<title>The Kids Biostats - Large-scale projects</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -35,7 +35,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -123,7 +123,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -157,7 +157,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-            <div class="quarto-navbar-tools">
+          <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -219,7 +219,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
 <main class="content quarto-banner-title-block page-columns page-full" id="quarto-document-content">
@@ -231,7 +231,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="overview" class="level1">
 <h1>Overview</h1>
 <p>A recent collaboration of ours, led by Dr Melissa Licari of <a href="https://www.thekids.org.au">The Kids</a>, involved producing a summary report detailing the challenges faced by individuals <em>(and the families that care for them)</em> living with Tourette Syndrome (TS) and other tic disorders. The full report can be found <a href="https://www.thekids.org.au/impactfortourettes">here</a>.</p>
-<div id="fig-report_cover" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-report_cover" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-report_cover-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="examples/report_cover.png" class="img-fluid figure-img">
@@ -264,7 +264,7 @@ Figure&nbsp;1: Report cover
 <li><em>Use of sub-directories in the project organisation is illustrated by <a href="#fig-file_setup" class="quarto-xref">Figure&nbsp;2</a>.</em></li>
 </ul></li>
 </ul>
-<div id="fig-file_setup" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-file_setup" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-file_setup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="examples/file_setup.png" style="height:4in" class="figure-img">
@@ -278,7 +278,7 @@ Figure&nbsp;2: Directory/subdirectory setup
 <li>The main output generating files are Quarto documents <em>(with the .qmd extension)</em>, which supersedes the previous framework withing RStudio - R Markdown <em>(.Rmd)</em>. Quarto documents have more flexibility and functionality, but still retain the header-text-code structure and simplicity of the markdown syntax. <em>(See a useful reference <a href="https://quarto.org/docs/authoring/markdown-basics.html">here</a>.)</em></li>
 </ul>
 <p>For those unfamiliar with Quarto, note that documents can be written and rendered from either a <strong>visual</strong> view or a <strong>source</strong> view. The <strong>visual</strong> view aims to show certain elements <em>(e.g.&nbsp;headers, code chunks, bold/italics)</em> formatted as they will appear in the rendered document. Experienced users, or those more comfortable with coding, may prefer the <strong>source</strong> view, which gives more direct control and access to the customising of the formatting.</p>
-<div id="fig-visual" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="left">
+<div id="fig-visual" class="quarto-figure quarto-figure-center quarto-float anchored" data-align="left">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-visual-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="examples/visual_qmd.png" style="height:4in" data-align="left" class="figure-img">
@@ -288,7 +288,7 @@ Figure&nbsp;3: Visual screen of the default new QMD file
 </figcaption>
 </figure>
 </div>
-<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="left">
+<div id="fig-source" class="quarto-figure quarto-figure-center quarto-float anchored" data-align="left">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="examples/source_qmd.png" style="height:4in" data-align="left" class="figure-img">
@@ -298,7 +298,7 @@ Figure&nbsp;4: Source screen of the default new QMD file
 </figcaption>
 </figure>
 </div>
-<div id="fig-defaultHTML" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-defaultHTML" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-defaultHTML-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="examples/defaultQMD-HTML.png" class="img-fluid figure-img">
@@ -356,7 +356,7 @@ Important
 <li>Further refinement and definition can be accomplished by utilisation of a .css file <em>(note: the reference to the styles.css file in the document header is required if creating a new document using the Quarto template in <code>thekidsbiostats</code> package)</em>,</li>
 </ul></li>
 </ul>
-<div id="fig-YAML" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-YAML" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-YAML-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="examples/YAML.png" class="img-fluid figure-img">
@@ -369,7 +369,7 @@ Figure&nbsp;6: Example Quarto document header
 
 <div class="no-row-height column-margin column-container"><div class="">
 <p>Document-wide styling can be defined in the Quarto header as in <a href="#fig-YAML" class="quarto-xref">Figure&nbsp;6</a>.</p>
-</div></div><div id="fig-CSS" class="quarto-float quarto-figure quarto-figure-center anchored">
+</div></div><div id="fig-CSS" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-CSS-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="examples/CSS.png" class="img-fluid figure-img">
@@ -1887,7 +1887,7 @@ attr(,"class")
 
 <div class="no-row-height column-margin column-container"><div class="">
 <p>Regular HTML report output of a <code>ggplot</code> generated figure.</p>
-</div></div><div id="fig-diagProf_cairo_pdf" class="quarto-float quarto-figure quarto-figure-center anchored">
+</div></div><div id="fig-diagProf_cairo_pdf" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-diagProf_cairo_pdf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="examples/diagProf_cairo_pdf.png" class="img-fluid figure-img">
@@ -2007,7 +2007,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const onCopySuccess = function(e) {
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -2039,29 +2050,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
   });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
-    });
-    clipboardModal.on('success', onCopySuccess);
-  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp("https:\/\/the-kids-biostats\.github\.io");
@@ -2069,7 +2058,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {

@@ -9,8 +9,8 @@
 <link>https://the-kids-biostats.github.io/</link>
 <atom:link href="https://the-kids-biostats.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description>Biostats R solutions</description>
-<generator>quarto-1.5.56</generator>
-<lastBuildDate>Sun, 19 Oct 2025 16:00:00 GMT</lastBuildDate>
+<generator>quarto-1.4.555</generator>
+<lastBuildDate>Sun, 19 Oct 2025 13:00:00 GMT</lastBuildDate>
 <item>
   <title>Accessing national health data via API</title>
   <dc:creator>Dr Matt Cooper and Dr Haileab Wolde</dc:creator>
@@ -24,19 +24,19 @@
 <section id="overview" class="level1">
 <h1>Overview</h1>
 <p>Did you know, the <a href="https://www.aihw.gov.au/">Australian Institute of Health and Welfare</a> (AIHW) is a treasure trove of <strong>available</strong> health data?</p>
-<p>The AIHW works with a range of stakeholders from across Australia to carry out high-quality research covering a broad range of health domains; they also produce a many reports a year providing context to the state of the nation’s health. While the data that supports these reports is often available for download from their websites <em>(.xslx, .csv)</em>, a range of the data can can also by accessed via Application Programming Interface (API). The <a href="https://www.aihw.gov.au/hospitals/other-resources/myhospitals-api">MyHospitals API</a> opens the door to automated, real-time access, and offers much greater flexibility in how you explore and analysis the data.</p>
-<p>In this post, we’ll demonstrate - as an example - how to access emergency department presentation (ED) data for major hospitals here in Western Australia, process it in R, and create an insightful visualisation.</p>
-<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
+<p>The AIHW works with a range of stakeholders from across Australia to carry out high-quality research covering a broad range of health domains; they also produce many reports each year contextualising the state of the nation’s health. While the data that supports these reports is often available for download from their website <em>(.xslx, .csv)</em>, a range of the data can can also by accessed via Application Programming Interface (API). The <a href="https://www.aihw.gov.au/hospitals/other-resources/myhospitals-api">MyHospitals API</a> opens the door to automated, real-time access, and offers much greater flexibility in how you explore and analyse the data.</p>
+<p>In this post, we’ll demonstrate—as an example—how to access emergency department presentation (ED) data for major hospitals here in Western Australia, process it in R, and create an insightful visualisation.</p>
+<div id="fig-source" class="quarto-figure quarto-figure-center quarto-float anchored" data-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-10-10_AIHW_api/images/all4.png" class="img-fluid figure-img" style="width:100.0%" data-align="center">
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;1: All 4 Guess The Plots Together
+Figure&nbsp;1: All 4 “Guess The Plots” Together
 </figcaption>
 </figure>
 </div>
-<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
+<div id="fig-source" class="quarto-figure quarto-figure-center quarto-float anchored" data-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-10-10_AIHW_api/images/fig4.png" class="img-fluid figure-img" style="width:100.0%" data-align="center">
@@ -49,15 +49,15 @@ Figure&nbsp;2: The final plot
 </section>
 <section id="diving-in" class="level1">
 <h1>Diving in!</h1>
-<p>There are many ways to access data via API using R, you might look to combine the <a href="https://cran.r-project.org/web/packages/httr/index.html">httr</a> package with the <a href="https://cran.r-project.org/web/packages/jsonlite/index.html">jsonlite</a> package to build your own query. However, we’re going to leverage the great work that has already been done in the <a href="https://cran.r-project.org/package=readaihw%22">readaihw</a> to dive right in without too technical from a data request and restructuring perspective. With just a few steps, we’ve got the data we were after!</p>
+<p>There are many ways to access data via API using R; for example, you might look to combine the <a href="https://cran.r-project.org/web/packages/httr/index.html"><code>httr</code></a> package with the <a href="https://cran.r-project.org/web/packages/jsonlite/index.html"><code>jsonlite</code></a> package to build your own query. Instead, we’re going to leverage the great work that has already been done in the <a href="https://github.com/RWParsons/readaihw"><code>readaihw</code></a> package to dive right in without getting too technical from a data request and restructuring perspective. With just a few steps, we’ve got the data that we are after!</p>
 <ol type="1">
-<li>Load our package and the <code>readaihw</code> package <a href="https://github.com/RWParsons/readaihw">(installed from github)</a>.</li>
-<li>Use the <code>read_flat_data_extract()</code> to source the <code>"MYH-ED"</code></li>
-<li>Use the <code>get_hospital_mappings()</code> function to source metadata for the hospitals; then reducing this dataset to just what we’re interested in</li>
+<li>Load <a href="https://github.com/The-Kids-Biostats/thekidsbiostats">our package</a> and the <code>readaihw</code> package <a href="https://github.com/RWParsons/readaihw">(installed from github)</a>.</li>
+<li>Use the <code>read_flat_data_extract()</code> to source the <code>"MYH-ED"</code>.</li>
+<li>Use the <code>get_hospital_mappings()</code> function to source metadata for the hospitals; then reducing this dataset to just what we’re interested in.</li>
 <li>Some further data processing (filtering, variable manipulation, aggregation) prior to joining the two datasets together.</li>
 </ol>
-<p><em>Expanding on these four steps above. In Step 2, we use the <code>read_flat_data_extract()</code> function from <a href="https://cran.r-project.org/package=readaihw%22">readaihw</a> package to retrieve ED presentation data for hospitals in Western Australia. This function simplifies API access and returns a tidy data frame ready for analysis. The <code>MYH-ED</code> code is what specifies that we are. asking for the monthly ED presentation counts across hospitals in Australia. Other key columns in this dataset include: <code>reporting_unit_code</code> - Unique hospital identifier, <code>date</code> – Month and year of the record, <code>value</code> – Number of ED presentations. In Step 2, while the returned API call includes data from many other hospitals and locations, we just want to focus on key metropolitan hospitals in Western Australia, so we filter the dataset using hospital codes and names. We also join geographic coordinates to each hospital so we can later include inset maps.</em></p>
-<p><em>This gave us a clean dataset ready for plotting and mapping.</em></p>
+<p><em>Expanding on these four steps above. In Step 2, we use the <code>read_flat_data_extract()</code> function from the <code>readaihw</code> package to retrieve ED presentation data for hospitals in Western Australia. This function simplifies API access and returns a tidy data frame ready for analysis. The <code>MYH-ED</code> code specifies that we are asking for the count of monthly ED presentations across hospitals in Australia. Other key columns in this dataset include: <code>reporting_unit_code</code> (unique hospital identifier), <code>date</code> (month and year of the record), <code>value</code> (number of ED presentations). In Step 2, while the returned API call includes data from many other hospitals and locations, we just want to focus on key metropolitan hospitals in Western Australia, so we filter the dataset using hospital codes and names. We also join geographic coordinates to each hospital so we can later include inset maps.</em></p>
+<p><em>This gives us a clean dataset ready for plotting and mapping.</em></p>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
@@ -78,7 +78,9 @@ font-style: inherit;"># Step 2</span></span>
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">read_flat_data_extract</span>(<span class="st" style="color: #20794D;
+font-style: inherit;">read_flat_data_extract</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">measure_category_code =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"MYH-ED"</span>)</span>
 <span id="cb1-7"></span>
@@ -115,16 +117,16 @@ background-color: null;
 font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Perth Children's Hospital"</span>,</span>
-<span id="cb1-13">             <span class="st" style="color: #20794D;
+<span id="cb1-13">                     <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Fiona Stanley Hospital"</span>,</span>
-<span id="cb1-14">             <span class="st" style="color: #20794D;
+<span id="cb1-14">                     <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Sir Charles Gairdner Hospital"</span>,</span>
-<span id="cb1-15">             <span class="st" style="color: #20794D;
+<span id="cb1-15">                     <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Joondalup Health Campus (Public)"</span>,</span>
-<span id="cb1-16">             <span class="st" style="color: #20794D;
+<span id="cb1-16">                     <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Royal Perth Hospital Wellington Street Campus"</span>)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -168,7 +170,8 @@ font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">value =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">as.numeric</span>(value), <span class="at" style="color: #657422;
+font-style: inherit;">as.numeric</span>(value), </span>
+<span id="cb1-27">         <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">date =</span> lubridate<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -177,12 +180,12 @@ background-color: null;
 font-style: inherit;">ymd</span>(date)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span></span>
-<span id="cb1-27">  <span class="fu" style="color: #4758AB;
+<span id="cb1-28">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">group_by</span>(hospital, date) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb1-28">  <span class="fu" style="color: #4758AB;
+<span id="cb1-29">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">summarize</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -193,14 +196,14 @@ background-color: null;
 font-style: inherit;">na.rm =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
 font-style: inherit;">TRUE</span>),</span>
-<span id="cb1-29">            <span class="at" style="color: #657422;
+<span id="cb1-30">            <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">code =</span> reporting_unit_code[<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span>]) <span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">%&gt;%</span> </span>
-<span id="cb1-30">  <span class="fu" style="color: #4758AB;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb1-31">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">left_join</span>(msh_hospital_codes, <span class="at" style="color: #657422;
 background-color: null;
@@ -209,21 +212,21 @@ background-color: null;
 font-style: inherit;">join_by</span>(code <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> code))</span>
-<span id="cb1-31"></span>
-<span id="cb1-32"><span class="co" style="color: #5E5E5E;
+<span id="cb1-32"></span>
+<span id="cb1-33"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Let's have a look  </span></span>
-<span id="cb1-33">my_aihw_dat <span class="sc" style="color: #5E5E5E;
+<span id="cb1-34">my_aihw_dat <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb1-34">  <span class="fu" style="color: #4758AB;
+<span id="cb1-35">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">head</span>(<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">10</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb1-35">  <span class="fu" style="color: #4758AB;
+<span id="cb1-36">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">thekids_table</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -232,13 +235,13 @@ background-color: null;
 font-style: inherit;">"AzureBlue"</span>)</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="tabwid"><style>.cl-25231794{table-layout:auto;}.cl-251fc1a2{font-family:'Barlow';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-251fc1b6{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-252115d4{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-252115de{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-25212376{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-25212377{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-25212380{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-25212381{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2521238a{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2521238b{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2521238c{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-25212394{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-25212395{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-25212396{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2521239e{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2521239f{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-252123a8{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-252123a9{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-252123aa{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-252123b2{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-252123b3{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-252123b4{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-25231794"><thead><tr style="overflow-wrap:break-word;"><th class="cl-25212376"><p class="cl-252115d4"><span class="cl-251fc1a2">hospital</span></p></th><th class="cl-25212377"><p class="cl-252115d4"><span class="cl-251fc1a2">date</span></p></th><th class="cl-25212380"><p class="cl-252115de"><span class="cl-251fc1a2">count</span></p></th><th class="cl-25212381"><p class="cl-252115d4"><span class="cl-251fc1a2">code</span></p></th><th class="cl-2521238a"><p class="cl-252115d4"><span class="cl-251fc1a2">latitude</span></p></th><th class="cl-2521238b"><p class="cl-252115d4"><span class="cl-251fc1a2">longitude</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-2521238c"><p class="cl-252115d4"><span class="cl-251fc1b6">Fiona Stanley Hospital</span></p></td><td class="cl-25212394"><p class="cl-252115d4"><span class="cl-251fc1b6">2015‑06‑30</span></p></td><td class="cl-25212395"><p class="cl-252115de"><span class="cl-251fc1b6">39571</span></p></td><td class="cl-25212396"><p class="cl-252115d4"><span class="cl-251fc1b6">H0746</span></p></td><td class="cl-2521239e"><p class="cl-252115d4"><span class="cl-251fc1b6">‑32.070120</span></p></td><td class="cl-2521239f"><p class="cl-252115d4"><span class="cl-251fc1b6">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-2521238c"><p class="cl-252115d4"><span class="cl-251fc1b6">Fiona Stanley Hospital</span></p></td><td class="cl-25212394"><p class="cl-252115d4"><span class="cl-251fc1b6">2016‑06‑30</span></p></td><td class="cl-25212395"><p class="cl-252115de"><span class="cl-251fc1b6">103234</span></p></td><td class="cl-25212396"><p class="cl-252115d4"><span class="cl-251fc1b6">H0746</span></p></td><td class="cl-2521239e"><p class="cl-252115d4"><span class="cl-251fc1b6">‑32.070120</span></p></td><td class="cl-2521239f"><p class="cl-252115d4"><span class="cl-251fc1b6">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-2521238c"><p class="cl-252115d4"><span class="cl-251fc1b6">Fiona Stanley Hospital</span></p></td><td class="cl-25212394"><p class="cl-252115d4"><span class="cl-251fc1b6">2017‑06‑30</span></p></td><td class="cl-25212395"><p class="cl-252115de"><span class="cl-251fc1b6">101901</span></p></td><td class="cl-25212396"><p class="cl-252115d4"><span class="cl-251fc1b6">H0746</span></p></td><td class="cl-2521239e"><p class="cl-252115d4"><span class="cl-251fc1b6">‑32.070120</span></p></td><td class="cl-2521239f"><p class="cl-252115d4"><span class="cl-251fc1b6">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-2521238c"><p class="cl-252115d4"><span class="cl-251fc1b6">Fiona Stanley Hospital</span></p></td><td class="cl-25212394"><p class="cl-252115d4"><span class="cl-251fc1b6">2018‑06‑30</span></p></td><td class="cl-25212395"><p class="cl-252115de"><span class="cl-251fc1b6">107041</span></p></td><td class="cl-25212396"><p class="cl-252115d4"><span class="cl-251fc1b6">H0746</span></p></td><td class="cl-2521239e"><p class="cl-252115d4"><span class="cl-251fc1b6">‑32.070120</span></p></td><td class="cl-2521239f"><p class="cl-252115d4"><span class="cl-251fc1b6">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-2521238c"><p class="cl-252115d4"><span class="cl-251fc1b6">Fiona Stanley Hospital</span></p></td><td class="cl-25212394"><p class="cl-252115d4"><span class="cl-251fc1b6">2019‑06‑30</span></p></td><td class="cl-25212395"><p class="cl-252115de"><span class="cl-251fc1b6">110553</span></p></td><td class="cl-25212396"><p class="cl-252115d4"><span class="cl-251fc1b6">H0746</span></p></td><td class="cl-2521239e"><p class="cl-252115d4"><span class="cl-251fc1b6">‑32.070120</span></p></td><td class="cl-2521239f"><p class="cl-252115d4"><span class="cl-251fc1b6">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-2521238c"><p class="cl-252115d4"><span class="cl-251fc1b6">Fiona Stanley Hospital</span></p></td><td class="cl-25212394"><p class="cl-252115d4"><span class="cl-251fc1b6">2020‑06‑30</span></p></td><td class="cl-25212395"><p class="cl-252115de"><span class="cl-251fc1b6">105122</span></p></td><td class="cl-25212396"><p class="cl-252115d4"><span class="cl-251fc1b6">H0746</span></p></td><td class="cl-2521239e"><p class="cl-252115d4"><span class="cl-251fc1b6">‑32.070120</span></p></td><td class="cl-2521239f"><p class="cl-252115d4"><span class="cl-251fc1b6">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-2521238c"><p class="cl-252115d4"><span class="cl-251fc1b6">Fiona Stanley Hospital</span></p></td><td class="cl-25212394"><p class="cl-252115d4"><span class="cl-251fc1b6">2021‑06‑30</span></p></td><td class="cl-25212395"><p class="cl-252115de"><span class="cl-251fc1b6">110029</span></p></td><td class="cl-25212396"><p class="cl-252115d4"><span class="cl-251fc1b6">H0746</span></p></td><td class="cl-2521239e"><p class="cl-252115d4"><span class="cl-251fc1b6">‑32.070120</span></p></td><td class="cl-2521239f"><p class="cl-252115d4"><span class="cl-251fc1b6">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-2521238c"><p class="cl-252115d4"><span class="cl-251fc1b6">Fiona Stanley Hospital</span></p></td><td class="cl-25212394"><p class="cl-252115d4"><span class="cl-251fc1b6">2022‑06‑30</span></p></td><td class="cl-25212395"><p class="cl-252115de"><span class="cl-251fc1b6">112678</span></p></td><td class="cl-25212396"><p class="cl-252115d4"><span class="cl-251fc1b6">H0746</span></p></td><td class="cl-2521239e"><p class="cl-252115d4"><span class="cl-251fc1b6">‑32.070120</span></p></td><td class="cl-2521239f"><p class="cl-252115d4"><span class="cl-251fc1b6">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-2521238c"><p class="cl-252115d4"><span class="cl-251fc1b6">Fiona Stanley Hospital</span></p></td><td class="cl-25212394"><p class="cl-252115d4"><span class="cl-251fc1b6">2023‑06‑30</span></p></td><td class="cl-25212395"><p class="cl-252115de"><span class="cl-251fc1b6">107770</span></p></td><td class="cl-25212396"><p class="cl-252115d4"><span class="cl-251fc1b6">H0746</span></p></td><td class="cl-2521239e"><p class="cl-252115d4"><span class="cl-251fc1b6">‑32.070120</span></p></td><td class="cl-2521239f"><p class="cl-252115d4"><span class="cl-251fc1b6">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-252123a8"><p class="cl-252115d4"><span class="cl-251fc1b6">Fiona Stanley Hospital</span></p></td><td class="cl-252123a9"><p class="cl-252115d4"><span class="cl-251fc1b6">2024‑06‑30</span></p></td><td class="cl-252123aa"><p class="cl-252115de"><span class="cl-251fc1b6">111145</span></p></td><td class="cl-252123b2"><p class="cl-252115d4"><span class="cl-251fc1b6">H0746</span></p></td><td class="cl-252123b3"><p class="cl-252115d4"><span class="cl-251fc1b6">‑32.070120</span></p></td><td class="cl-252123b4"><p class="cl-252115d4"><span class="cl-251fc1b6">115.846909</span></p></td></tr></tbody></table></div>
+<div class="tabwid"><style>.cl-ff76ed92{table-layout:auto;}.cl-ff6e36d4{font-family:'Barlow';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-ff6e36de{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-ff71605c{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-ff716070{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-ff717dee{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ff717df8{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ff717e02{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ff717e03{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ff717e04{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ff717e0c{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ff717e0d{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ff717e0e{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ff717e0f{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ff717e16{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ff717e17{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ff717e18{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ff717e20{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ff717e2a{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ff717e2b{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ff717e2c{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ff717e2d{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ff717e2e{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-ff76ed92"><thead><tr style="overflow-wrap:break-word;"><th class="cl-ff717dee"><p class="cl-ff71605c"><span class="cl-ff6e36d4">hospital</span></p></th><th class="cl-ff717df8"><p class="cl-ff71605c"><span class="cl-ff6e36d4">date</span></p></th><th class="cl-ff717e02"><p class="cl-ff716070"><span class="cl-ff6e36d4">count</span></p></th><th class="cl-ff717e03"><p class="cl-ff71605c"><span class="cl-ff6e36d4">code</span></p></th><th class="cl-ff717e04"><p class="cl-ff71605c"><span class="cl-ff6e36d4">latitude</span></p></th><th class="cl-ff717e0c"><p class="cl-ff71605c"><span class="cl-ff6e36d4">longitude</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-ff717e0d"><p class="cl-ff71605c"><span class="cl-ff6e36de">Fiona Stanley Hospital</span></p></td><td class="cl-ff717e0e"><p class="cl-ff71605c"><span class="cl-ff6e36de">2015‑06‑30</span></p></td><td class="cl-ff717e0f"><p class="cl-ff716070"><span class="cl-ff6e36de">39571</span></p></td><td class="cl-ff717e16"><p class="cl-ff71605c"><span class="cl-ff6e36de">H0746</span></p></td><td class="cl-ff717e17"><p class="cl-ff71605c"><span class="cl-ff6e36de">‑32.070120</span></p></td><td class="cl-ff717e18"><p class="cl-ff71605c"><span class="cl-ff6e36de">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ff717e0d"><p class="cl-ff71605c"><span class="cl-ff6e36de">Fiona Stanley Hospital</span></p></td><td class="cl-ff717e0e"><p class="cl-ff71605c"><span class="cl-ff6e36de">2016‑06‑30</span></p></td><td class="cl-ff717e0f"><p class="cl-ff716070"><span class="cl-ff6e36de">103234</span></p></td><td class="cl-ff717e16"><p class="cl-ff71605c"><span class="cl-ff6e36de">H0746</span></p></td><td class="cl-ff717e17"><p class="cl-ff71605c"><span class="cl-ff6e36de">‑32.070120</span></p></td><td class="cl-ff717e18"><p class="cl-ff71605c"><span class="cl-ff6e36de">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ff717e0d"><p class="cl-ff71605c"><span class="cl-ff6e36de">Fiona Stanley Hospital</span></p></td><td class="cl-ff717e0e"><p class="cl-ff71605c"><span class="cl-ff6e36de">2017‑06‑30</span></p></td><td class="cl-ff717e0f"><p class="cl-ff716070"><span class="cl-ff6e36de">101901</span></p></td><td class="cl-ff717e16"><p class="cl-ff71605c"><span class="cl-ff6e36de">H0746</span></p></td><td class="cl-ff717e17"><p class="cl-ff71605c"><span class="cl-ff6e36de">‑32.070120</span></p></td><td class="cl-ff717e18"><p class="cl-ff71605c"><span class="cl-ff6e36de">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ff717e0d"><p class="cl-ff71605c"><span class="cl-ff6e36de">Fiona Stanley Hospital</span></p></td><td class="cl-ff717e0e"><p class="cl-ff71605c"><span class="cl-ff6e36de">2018‑06‑30</span></p></td><td class="cl-ff717e0f"><p class="cl-ff716070"><span class="cl-ff6e36de">107041</span></p></td><td class="cl-ff717e16"><p class="cl-ff71605c"><span class="cl-ff6e36de">H0746</span></p></td><td class="cl-ff717e17"><p class="cl-ff71605c"><span class="cl-ff6e36de">‑32.070120</span></p></td><td class="cl-ff717e18"><p class="cl-ff71605c"><span class="cl-ff6e36de">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ff717e0d"><p class="cl-ff71605c"><span class="cl-ff6e36de">Fiona Stanley Hospital</span></p></td><td class="cl-ff717e0e"><p class="cl-ff71605c"><span class="cl-ff6e36de">2019‑06‑30</span></p></td><td class="cl-ff717e0f"><p class="cl-ff716070"><span class="cl-ff6e36de">110553</span></p></td><td class="cl-ff717e16"><p class="cl-ff71605c"><span class="cl-ff6e36de">H0746</span></p></td><td class="cl-ff717e17"><p class="cl-ff71605c"><span class="cl-ff6e36de">‑32.070120</span></p></td><td class="cl-ff717e18"><p class="cl-ff71605c"><span class="cl-ff6e36de">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ff717e0d"><p class="cl-ff71605c"><span class="cl-ff6e36de">Fiona Stanley Hospital</span></p></td><td class="cl-ff717e0e"><p class="cl-ff71605c"><span class="cl-ff6e36de">2020‑06‑30</span></p></td><td class="cl-ff717e0f"><p class="cl-ff716070"><span class="cl-ff6e36de">105122</span></p></td><td class="cl-ff717e16"><p class="cl-ff71605c"><span class="cl-ff6e36de">H0746</span></p></td><td class="cl-ff717e17"><p class="cl-ff71605c"><span class="cl-ff6e36de">‑32.070120</span></p></td><td class="cl-ff717e18"><p class="cl-ff71605c"><span class="cl-ff6e36de">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ff717e0d"><p class="cl-ff71605c"><span class="cl-ff6e36de">Fiona Stanley Hospital</span></p></td><td class="cl-ff717e0e"><p class="cl-ff71605c"><span class="cl-ff6e36de">2021‑06‑30</span></p></td><td class="cl-ff717e0f"><p class="cl-ff716070"><span class="cl-ff6e36de">110029</span></p></td><td class="cl-ff717e16"><p class="cl-ff71605c"><span class="cl-ff6e36de">H0746</span></p></td><td class="cl-ff717e17"><p class="cl-ff71605c"><span class="cl-ff6e36de">‑32.070120</span></p></td><td class="cl-ff717e18"><p class="cl-ff71605c"><span class="cl-ff6e36de">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ff717e0d"><p class="cl-ff71605c"><span class="cl-ff6e36de">Fiona Stanley Hospital</span></p></td><td class="cl-ff717e0e"><p class="cl-ff71605c"><span class="cl-ff6e36de">2022‑06‑30</span></p></td><td class="cl-ff717e0f"><p class="cl-ff716070"><span class="cl-ff6e36de">112678</span></p></td><td class="cl-ff717e16"><p class="cl-ff71605c"><span class="cl-ff6e36de">H0746</span></p></td><td class="cl-ff717e17"><p class="cl-ff71605c"><span class="cl-ff6e36de">‑32.070120</span></p></td><td class="cl-ff717e18"><p class="cl-ff71605c"><span class="cl-ff6e36de">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ff717e0d"><p class="cl-ff71605c"><span class="cl-ff6e36de">Fiona Stanley Hospital</span></p></td><td class="cl-ff717e0e"><p class="cl-ff71605c"><span class="cl-ff6e36de">2023‑06‑30</span></p></td><td class="cl-ff717e0f"><p class="cl-ff716070"><span class="cl-ff6e36de">107770</span></p></td><td class="cl-ff717e16"><p class="cl-ff71605c"><span class="cl-ff6e36de">H0746</span></p></td><td class="cl-ff717e17"><p class="cl-ff71605c"><span class="cl-ff6e36de">‑32.070120</span></p></td><td class="cl-ff717e18"><p class="cl-ff71605c"><span class="cl-ff6e36de">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ff717e20"><p class="cl-ff71605c"><span class="cl-ff6e36de">Fiona Stanley Hospital</span></p></td><td class="cl-ff717e2a"><p class="cl-ff71605c"><span class="cl-ff6e36de">2024‑06‑30</span></p></td><td class="cl-ff717e2b"><p class="cl-ff716070"><span class="cl-ff6e36de">111145</span></p></td><td class="cl-ff717e2c"><p class="cl-ff71605c"><span class="cl-ff6e36de">H0746</span></p></td><td class="cl-ff717e2d"><p class="cl-ff71605c"><span class="cl-ff6e36de">‑32.070120</span></p></td><td class="cl-ff717e2e"><p class="cl-ff71605c"><span class="cl-ff6e36de">115.846909</span></p></td></tr></tbody></table></div>
 </div>
 </div>
 <section id="where-did-the-myh-ed-code-come-from" class="level2">
 <h2 class="anchored" data-anchor-id="where-did-the-myh-ed-code-come-from">Where did the <code>"MYH-ED"</code> code come from?</h2>
 <p>Great question!</p>
-<p>There are many different variables that can be sourced. You can see a <a href="https://www.aihw.gov.au/about-our-data/our-data-collections">descriptive list online</a>, but we can also use th API (and some of those packages mentioned earlier) to import the list of codes directly into R!</p>
+<p>There are many different variables that can be sourced. You can find a <a href="https://www.aihw.gov.au/about-our-data/our-data-collections">descriptive list online</a>, but we can also use the API (and some of those packages mentioned earlier) to import the list of codes directly into R!</p>
 <div class="cell">
 <details open="" class="code-fold">
 <summary>Code</summary>
@@ -300,21 +303,21 @@ background-color: null;
 font-style: inherit;">"AzureBlue"</span>)</span></code></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="tabwid"><style>.cl-2557b030{table-layout:auto;}.cl-25541f1a{font-family:'Barlow';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-25541f24{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-2555692e{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-255575f4{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-255575fe{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-255575ff{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-25557600{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-25557608{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-25557609{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-25557612{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-25557613{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-2557b030"><thead><tr style="overflow-wrap:break-word;"><th class="cl-255575f4"><p class="cl-2555692e"><span class="cl-25541f1a">measure_code</span></p></th><th class="cl-255575fe"><p class="cl-2555692e"><span class="cl-25541f1a">measure_name</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-255575ff"><p class="cl-2555692e"><span class="cl-25541f24">MYH0001</span></p></td><td class="cl-25557600"><p class="cl-2555692e"><span class="cl-25541f24">Number of surgeries for malignant cancer</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-25557608"><p class="cl-2555692e"><span class="cl-25541f24">MYH0002</span></p></td><td class="cl-25557609"><p class="cl-2555692e"><span class="cl-25541f24">Median waiting time for surgery for malignant cancer</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-25557608"><p class="cl-2555692e"><span class="cl-25541f24">MYH0003</span></p></td><td class="cl-25557609"><p class="cl-2555692e"><span class="cl-25541f24">Percentage of people who received surgery for malignant cancer within 30 days</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-25557608"><p class="cl-2555692e"><span class="cl-25541f24">MYH0004</span></p></td><td class="cl-25557609"><p class="cl-2555692e"><span class="cl-25541f24">Percentage of people who received surgery for malignant cancer within 45 days</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-25557608"><p class="cl-2555692e"><span class="cl-25541f24">MYH0005</span></p></td><td class="cl-25557609"><p class="cl-2555692e"><span class="cl-25541f24">Percentage of patients who depart the emergency department within four hours of arrival</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-255575ff"><p class="cl-2555692e"><span class="cl-25541f24">MYH0006</span></p></td><td class="cl-25557600"><p class="cl-2555692e"><span class="cl-25541f24">Number of elective surgeries</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-25557608"><p class="cl-2555692e"><span class="cl-25541f24">MYH0007</span></p></td><td class="cl-25557609"><p class="cl-2555692e"><span class="cl-25541f24">Percentage of patients who waited longer than 365 days for elective surgery</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-25557608"><p class="cl-2555692e"><span class="cl-25541f24">MYH0008</span></p></td><td class="cl-25557609"><p class="cl-2555692e"><span class="cl-25541f24">Percentage of patients who received their surgery within clinically recommended times</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-25557608"><p class="cl-2555692e"><span class="cl-25541f24">MYH0009</span></p></td><td class="cl-25557609"><p class="cl-2555692e"><span class="cl-25541f24">Median waiting time for elective surgery</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-25557612"><p class="cl-2555692e"><span class="cl-25541f24">MYH0010</span></p></td><td class="cl-25557613"><p class="cl-2555692e"><span class="cl-25541f24">Percentage of patients who commenced treatment within the recommended time</span></p></td></tr></tbody></table></div>
+<div class="tabwid"><style>.cl-ffb62a2a{table-layout:auto;}.cl-ffae7744{font-family:'Barlow';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-ffae774e{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-ffb15c0c{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-ffb171a6{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ffb171b0{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ffb171b1{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ffb171ba{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ffb171bb{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ffb171c4{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ffb171c5{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-ffb171ce{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-ffb62a2a"><thead><tr style="overflow-wrap:break-word;"><th class="cl-ffb171a6"><p class="cl-ffb15c0c"><span class="cl-ffae7744">measure_code</span></p></th><th class="cl-ffb171b0"><p class="cl-ffb15c0c"><span class="cl-ffae7744">measure_name</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-ffb171b1"><p class="cl-ffb15c0c"><span class="cl-ffae774e">MYH0001</span></p></td><td class="cl-ffb171ba"><p class="cl-ffb15c0c"><span class="cl-ffae774e">Number of surgeries for malignant cancer</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ffb171bb"><p class="cl-ffb15c0c"><span class="cl-ffae774e">MYH0002</span></p></td><td class="cl-ffb171c4"><p class="cl-ffb15c0c"><span class="cl-ffae774e">Median waiting time for surgery for malignant cancer</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ffb171bb"><p class="cl-ffb15c0c"><span class="cl-ffae774e">MYH0003</span></p></td><td class="cl-ffb171c4"><p class="cl-ffb15c0c"><span class="cl-ffae774e">Percentage of people who received surgery for malignant cancer within 30 days</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ffb171bb"><p class="cl-ffb15c0c"><span class="cl-ffae774e">MYH0004</span></p></td><td class="cl-ffb171c4"><p class="cl-ffb15c0c"><span class="cl-ffae774e">Percentage of people who received surgery for malignant cancer within 45 days</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ffb171bb"><p class="cl-ffb15c0c"><span class="cl-ffae774e">MYH0005</span></p></td><td class="cl-ffb171c4"><p class="cl-ffb15c0c"><span class="cl-ffae774e">Percentage of patients who depart the emergency department within four hours of arrival</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ffb171b1"><p class="cl-ffb15c0c"><span class="cl-ffae774e">MYH0006</span></p></td><td class="cl-ffb171ba"><p class="cl-ffb15c0c"><span class="cl-ffae774e">Number of elective surgeries</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ffb171bb"><p class="cl-ffb15c0c"><span class="cl-ffae774e">MYH0007</span></p></td><td class="cl-ffb171c4"><p class="cl-ffb15c0c"><span class="cl-ffae774e">Percentage of patients who waited longer than 365 days for elective surgery</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ffb171bb"><p class="cl-ffb15c0c"><span class="cl-ffae774e">MYH0008</span></p></td><td class="cl-ffb171c4"><p class="cl-ffb15c0c"><span class="cl-ffae774e">Percentage of patients who received their surgery within clinically recommended times</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ffb171bb"><p class="cl-ffb15c0c"><span class="cl-ffae774e">MYH0009</span></p></td><td class="cl-ffb171c4"><p class="cl-ffb15c0c"><span class="cl-ffae774e">Median waiting time for elective surgery</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-ffb171c5"><p class="cl-ffb15c0c"><span class="cl-ffae774e">MYH0010</span></p></td><td class="cl-ffb171ce"><p class="cl-ffb15c0c"><span class="cl-ffae774e">Percentage of patients who commenced treatment within the recommended time</span></p></td></tr></tbody></table></div>
 </div>
 </div>
-<p>From here, the world <em>(of AIHW MyHospital data)</em> is your Oyster!</p>
+<p>From here, the world <em>(of AIHW MyHospital data)</em> is your oyster!</p>
 </section>
 </section>
 <section id="extended-example---guess.-that.-plot" class="level1">
 <h1>Extended example - Guess. That. Plot!</h1>
-<p>Every so often, on one of our internal communication platforms, we’ll do a little ‘Guess That Plot’ quiz. It’s a fun way to Engage staff from around <a href="https://www.thekids.org.au/">our Institute</a> in some conversation and critical thinking are data and visualisations. And it possibly goes without saying - the above plot is a recent example of one of these ‘Guess That Plot’ quizzes we did where we used AIHW data!</p>
-<p>The code for this below!</p>
+<p>Every so often, on one of our internal communication platforms, we’ll do a little ‘Guess That Plot’ quiz. It’s a fun way to engage staff from around <a href="https://www.thekids.org.au/">our Institute</a> in some conversation and critical thinking around data and visualisations. And it possibly goes without saying—the above plot is indeed a recent example of one of these ‘Guess That Plot’ quizzes we did where we used AIHW data!</p>
+<p>The code for this is below.</p>
 <section id="but-first-some-notes" class="level2">
 <h2 class="anchored" data-anchor-id="but-first-some-notes">But first, some notes …</h2>
-<p>For a little something different, we inset a map of Perth into these plots with a marker for the <em>point of interest</em>. This involved using the <a href="https://cran.r-project.org/web/packages/ggmap/index.html"><code>ggmaps</code></a> package and <a href="https://client.stadiamaps.com/signup/">registering here</a> at Stadia Maps for a free account to receive a <code>token</code> to allow us to access the map tile images.</p>
-<p>We obviously can’t share our token, the full <code>.qmd</code> for this post won’t run until you update the code with your token. For that reason, we insert <code>.png.</code>’s of the figures that were saved earlier.</p>
-<p><em>Now we will create a base map of the Perth area and define a function to generate small inset maps for hospitals. Each inset will mark a hospital’s location with a red star on the map. These inset maps can be added to other plots to visually show the exact location of each hospital, while keeping the map clean and free of axes or labels.</em></p>
+<p>For something a little different, we inset a map of Perth into these plots with a marker for the <em>point of interest</em>. This involves using the <a href="https://cran.r-project.org/web/packages/ggmap/index.html"><code>ggmaps</code></a> package and <a href="https://client.stadiamaps.com/signup/">registering here</a> at Stadia Maps for a free account to receive a <code>token</code> to allow us to access the map tile images.</p>
+<p>We obviously can’t share our token; the full <code>.qmd</code> for this post won’t run until you update the code with your own token. For that reason, we insert <code>.png</code>s of the figures that were saved earlier.</p>
+<p><em>Now we will create a base map of the Perth area and define a function to generate small inset maps for each hospital. Each inset will mark a hospital’s location with a red star on the map. These inset maps can be added to other plots to visually show the exact location of each hospital, while keeping the map clean and free of axes or labels.</em></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -384,12 +387,11 @@ font-style: inherit;">"stamen_terrain_background"</span></span>
 <span id="cb3-14"></span>
 <span id="cb3-15"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;"># Forma grob object of the map that we will reuse in each plot</span></span>
+font-style: inherit;"># Form a grob object of the map that we will reuse in each plot</span></span>
 <span id="cb3-16">inset_map <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(latitude, longitude) {</span>
 <span id="cb3-17">  latitude <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -440,14 +442,14 @@ font-style: inherit;">theme_void</span>())}</span></code></pre></div>
 </div>
 <p>In addition:</p>
 <ul>
-<li>We use an <code>lapply</code> to <code>split</code> to iterate over the hospitals. Typically we might look to <code>map</code> or other functions from the <code>tidyverse</code>. <strong>We acknowledge here that ai assisted with some of the code here.</strong></li>
+<li>We use an <code>lapply</code> to iterate over each hospital. Typically, we might look to <code>purrr::map</code> or other functions from the <code>tidyverse</code> for tasks like this. <strong>We acknowledge here that AI assisted with some of the code here.</strong></li>
 <li>We use <code>wrap_plots()</code> from the <code>patchwork</code> package to assemble the figures. We originally looked at using <code>facet_wrap()</code> (or similar) from the <code>ggplot2</code> package, but this proved quite challenging when incorporating the inset map with varying red X marker.</li>
-<li>We use white text on a white background, as opposed to <code>element_blank()</code> because it keeps all dimensions of the plots consisten as we work through the reveal! This is really important so plot elements don’t change relative size and position!</li>
+<li>We use white text on a white background, as opposed to <code>element_blank()</code> because it keeps all dimensions of the plots consistent as we work through to the reveal! This is really important so plot elements don’t change relative size and position!</li>
 </ul>
 </section>
 <section id="figure-1-not-much-to-go-off" class="level2">
 <h2 class="anchored" data-anchor-id="figure-1-not-much-to-go-off">Figure 1: Not much to go off!</h2>
-<p>This plot only shows the time series with both x and y-axis labels and hospital names are hidden, but perhaps the markings on the maps are a hint? Particularly if you remember which year certain hospitals opened?</p>
+<p>This plot only shows the time series where both x- and y-axis labels and hospital names are hidden, but perhaps the markings on the maps are a hint? Particularly if you remember which year certain hospitals opened…</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -461,7 +463,6 @@ font-style: inherit;">split</span>(my_aihw_dat, my_aihw_dat<span class="sc" styl
 background-color: null;
 font-style: inherit;">$</span>hospital), <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(df) {</span>
 <span id="cb4-2">  </span>
 <span id="cb4-3">  lat <span class="ot" style="color: #003B4F;
@@ -636,7 +637,7 @@ background-color: null;
 font-style: inherit;">" "</span>)</span></code></pre></div>
 </details>
 </div>
-<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
+<div id="fig-source" class="quarto-figure quarto-figure-center quarto-float anchored" data-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-10-10_AIHW_api/images/fig1.png" class="img-fluid figure-img" style="width:80.0%" data-align="center">
@@ -648,8 +649,8 @@ Figure&nbsp;3: Reveal 1
 </div>
 </section>
 <section id="figure-2-time-series-with-x-axis-labels" class="level2">
-<h2 class="anchored" data-anchor-id="figure-2-time-series-with-x-axis-labels">Figure 2: Time Series with X-axis Labels</h2>
-<p>Similar to Plot 1, but the x-axis labels are visible, allowing the timeline to be interpreted while keeping the y-axis subtle.</p>
+<h2 class="anchored" data-anchor-id="figure-2-time-series-with-x-axis-labels">Figure 2: Time Series with x-axis Labels</h2>
+<p>Similar to Figure 1, but the x-axis labels are visible, allowing the timeline to be interpreted while keeping the y-axis blank.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -663,7 +664,6 @@ font-style: inherit;">split</span>(my_aihw_dat, my_aihw_dat<span class="sc" styl
 background-color: null;
 font-style: inherit;">$</span>hospital), <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(df) {</span>
 <span id="cb5-2">  </span>
 <span id="cb5-3">  lat <span class="ot" style="color: #003B4F;
@@ -838,7 +838,7 @@ background-color: null;
 font-style: inherit;">" "</span>)</span></code></pre></div>
 </details>
 </div>
-<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
+<div id="fig-source" class="quarto-figure quarto-figure-center quarto-float anchored" data-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-10-10_AIHW_api/images/fig2.png" class="img-fluid figure-img" style="width:80.0%" data-align="center">
@@ -851,7 +851,7 @@ Figure&nbsp;4: Reveal 2
 </section>
 <section id="figure-3-time-series-with-caption" class="level2">
 <h2 class="anchored" data-anchor-id="figure-3-time-series-with-caption">Figure 3: Time Series with Caption</h2>
-<p>This version includes visible axes and ticks, making the data easier to interpret. A caption indicating the data source <code>AIHW API</code> is added as a real nudge to what the data might be. Hospital titles are still not shown.</p>
+<p>This version includes visible axes and ticks, making the data easier to interpret. A caption indicating the data source (<code>AIHW API</code>) is added as a real nudge to what the data might be. Hospital names are still hidden.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -865,7 +865,6 @@ font-style: inherit;">split</span>(my_aihw_dat, my_aihw_dat<span class="sc" styl
 background-color: null;
 font-style: inherit;">$</span>hospital), <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(df) {</span>
 <span id="cb6-2">  </span>
 <span id="cb6-3">  lat <span class="ot" style="color: #003B4F;
@@ -1031,7 +1030,7 @@ background-color: null;
 font-style: inherit;">"Data source: AIHW API, code: 'XXX-XX'"</span>)</span></code></pre></div>
 </details>
 </div>
-<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
+<div id="fig-source" class="quarto-figure quarto-figure-center quarto-float anchored" data-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-10-10_AIHW_api/images/fig3.png" class="img-fluid figure-img" style="width:80.0%" data-align="center">
@@ -1058,7 +1057,6 @@ font-style: inherit;">split</span>(my_aihw_dat, my_aihw_dat<span class="sc" styl
 background-color: null;
 font-style: inherit;">$</span>hospital), <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(df) {</span>
 <span id="cb7-2">  </span>
 <span id="cb7-3">  lat <span class="ot" style="color: #003B4F;
@@ -1226,7 +1224,7 @@ background-color: null;
 font-style: inherit;">"Data source: AIHW API, code: 'MYH-ED'"</span>)</span></code></pre></div>
 </details>
 </div>
-<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
+<div id="fig-source" class="quarto-figure quarto-figure-center quarto-float anchored" data-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-10-10_AIHW_api/images/fig4.png" class="img-fluid figure-img" style="width:100.0%" data-align="center">
@@ -1239,8 +1237,8 @@ Figure&nbsp;6: The final reveal
 </section>
 <section id="putting-them-all-together" class="level2">
 <h2 class="anchored" data-anchor-id="putting-them-all-together">Putting them all together</h2>
-<p>Putting these four stages of the reveal together also posed a few challenges! Combining multiple plots that, <em>themselves</em>, were assembled with <code>patchwork</code>.</p>
-<p>For this, we again turned to ai, and the resulting code is available below.</p>
+<p>Putting these four stages of the reveal together also posed a few challenges, namely combining multiple plots that <em>themselves</em> were assembled with <code>patchwork</code>.</p>
+<p>For this, we again turned to AI, and the resulting code is available below.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -1387,7 +1385,7 @@ background-color: null;
 font-style: inherit;">10</span>)</span></code></pre></div>
 </details>
 </div>
-<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
+<div id="fig-source" class="quarto-figure quarto-figure-center quarto-float anchored" data-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-10-10_AIHW_api/images/all4.png" class="img-fluid figure-img" style="width:100.0%" data-align="center">
@@ -1401,7 +1399,7 @@ Figure&nbsp;7: All 4 Guess The Plots Together
 </section>
 <section id="closing-comments" class="level1">
 <h1>Closing comments</h1>
-<p>Accessing health data via the AIHW API opens up many possibilities for data analysis and visualisations to help us understand trends in Australian Health Statistics. Or, perhaps for finding informative data to aid in one’s study planning! The <code>readaihw</code> helps put this data at the fingertips of any R user, reducing the barriers to diving in and exploring this data. The figures shown here are not overly polished - as that wasn’t the purpose of this post. However, hopefully we’ve shown how easy it can be to draw some interesting local insights while having a bit of fun along the way.</p>
+<p>Accessing health data via the AIHW API opens up many possibilities for data analysis and visualisations to help us understand trends in Australian Health Statistics. Perhaps it may even contain informative data to aid in one’s own study planning! The <code>readaihw</code> package puts this data at the fingertips of any R user, reducing the barriers to diving in and exploring this data. The figures shown here are not overly polished—as that wasn’t the purpose of this post. However, hopefully we’ve shown how easy it can be to draw some interesting local insights while having a bit of fun along the way.</p>
 <section id="acknowledgements" class="level2">
 <h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
 <p>Thanks to Zac Dempsey, Robin Cook, Elizabeth McKinnon, and Wes Billingham for providing feedback on and reviewing this post.</p>
@@ -1411,18 +1409,19 @@ Figure&nbsp;7: All 4 Guess The Plots Together
 <p>The session information can also be seen below.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
-<pre><code>R version 4.5.0 (2025-04-11)
-Platform: aarch64-apple-darwin20
-Running under: macOS Sequoia 15.6.1
+<pre><code>R version 4.5.0 (2025-04-11 ucrt)
+Platform: x86_64-w64-mingw32/x64
+Running under: Windows 10 x64 (build 19045)
 
 Matrix products: default
-BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib 
-LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+  LAPACK version 3.12.1
 
 locale:
-[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+[1] LC_COLLATE=English_Australia.utf8  LC_CTYPE=English_Australia.utf8   
+[3] LC_MONETARY=English_Australia.utf8 LC_NUMERIC=C                      
+[5] LC_TIME=English_Australia.utf8    
 
-time zone: Australia/Perth
+time zone: Australia/Sydney
 tzcode source: internal
 
 attached base packages:
@@ -1430,7 +1429,7 @@ attached base packages:
 
 other attached packages:
  [1] jsonlite_2.0.0        httr_1.4.7            readaihw_0.0.2       
- [4] thekidsbiostats_1.4.1 extrafont_0.20        flextable_0.9.10     
+ [4] thekidsbiostats_1.4.3 extrafont_0.20        flextable_0.9.10     
  [7] gtsummary_2.4.0       lubridate_1.9.4       forcats_1.0.1        
 [10] stringr_1.5.2         dplyr_1.1.4           purrr_1.1.0          
 [13] readr_2.1.5           tidyr_1.3.1           tibble_3.3.0         
@@ -1443,7 +1442,7 @@ loaded via a namespace (and not attached):
 [10] pkgconfig_2.0.3         data.table_1.17.8       RColorBrewer_1.1-3     
 [13] S7_0.2.0                readxl_1.4.5            assertthat_0.2.1       
 [16] uuid_1.2-1              lifecycle_1.0.4         compiler_4.5.0         
-[19] farver_2.1.2            textshaping_1.0.3       janitor_2.2.1          
+[19] farver_2.1.2            textshaping_1.0.4       janitor_2.2.1          
 [22] snakecase_0.11.1        httpuv_1.6.16           fontquiver_0.2.1       
 [25] fontLiberation_0.1.0    htmltools_0.5.8.1       yaml_2.3.10            
 [28] Rttf2pt1_1.3.14         extrafontdb_1.1         later_1.4.4            
@@ -1455,7 +1454,7 @@ loaded via a namespace (and not attached):
 [46] rappdirs_0.3.3          gdtools_0.4.4           scales_1.4.0           
 [49] promises_1.3.3          timechange_0.3.0        rmarkdown_2.30         
 [52] officer_0.7.0           cellranger_1.1.0        askpass_1.2.1          
-[55] ragg_1.5.0              hms_1.1.3               shiny_1.11.1           
+[55] ragg_1.5.0              hms_1.1.4               shiny_1.11.1           
 [58] evaluate_1.0.5          knitr_1.50              haven_2.5.5            
 [61] rlang_1.1.6             Rcpp_1.1.0              xtable_1.8-4           
 [64] glue_1.8.0              xml2_1.4.0              rstudioapi_0.17.1      
@@ -1473,7 +1472,7 @@ loaded via a namespace (and not attached):
   <category>AIHW</category>
   <category>Guess that plot</category>
   <guid>https://the-kids-biostats.github.io/posts/2025-10-10_AIHW_api/aihw_api_guess_plot.html</guid>
-  <pubDate>Sun, 19 Oct 2025 16:00:00 GMT</pubDate>
+  <pubDate>Sun, 19 Oct 2025 13:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Large-scale projects</title>
@@ -1488,7 +1487,7 @@ loaded via a namespace (and not attached):
 <section id="overview" class="level1">
 <h1>Overview</h1>
 <p>A recent collaboration of ours, led by Dr Melissa Licari of <a href="https://www.thekids.org.au">The Kids</a>, involved producing a summary report detailing the challenges faced by individuals <em>(and the families that care for them)</em> living with Tourette Syndrome (TS) and other tic disorders. The full report can be found <a href="https://www.thekids.org.au/impactfortourettes">here</a>.</p>
-<div id="fig-report_cover" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-report_cover" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-report_cover-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/report_cover.png" class="img-fluid figure-img">
@@ -1521,7 +1520,7 @@ Figure&nbsp;1: Report cover
 <li><em>Use of sub-directories in the project organisation is illustrated by Figure&nbsp;2.</em></li>
 </ul></li>
 </ul>
-<div id="fig-file_setup" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-file_setup" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-file_setup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/file_setup.png" style="height:4in" class="figure-img">
@@ -1535,7 +1534,7 @@ Figure&nbsp;2: Directory/subdirectory setup
 <li>The main output generating files are Quarto documents <em>(with the .qmd extension)</em>, which supersedes the previous framework withing RStudio - R Markdown <em>(.Rmd)</em>. Quarto documents have more flexibility and functionality, but still retain the header-text-code structure and simplicity of the markdown syntax. <em>(See a useful reference <a href="https://quarto.org/docs/authoring/markdown-basics.html">here</a>.)</em></li>
 </ul>
 <p>For those unfamiliar with Quarto, note that documents can be written and rendered from either a <strong>visual</strong> view or a <strong>source</strong> view. The <strong>visual</strong> view aims to show certain elements <em>(e.g.&nbsp;headers, code chunks, bold/italics)</em> formatted as they will appear in the rendered document. Experienced users, or those more comfortable with coding, may prefer the <strong>source</strong> view, which gives more direct control and access to the customising of the formatting.</p>
-<div id="fig-visual" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="left">
+<div id="fig-visual" class="quarto-figure quarto-figure-center quarto-float anchored" data-align="left">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-visual-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/visual_qmd.png" style="height:4in" data-align="left" class="figure-img">
@@ -1545,7 +1544,7 @@ Figure&nbsp;3: Visual screen of the default new QMD file
 </figcaption>
 </figure>
 </div>
-<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="left">
+<div id="fig-source" class="quarto-figure quarto-figure-center quarto-float anchored" data-align="left">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/source_qmd.png" style="height:4in" data-align="left" class="figure-img">
@@ -1555,7 +1554,7 @@ Figure&nbsp;4: Source screen of the default new QMD file
 </figcaption>
 </figure>
 </div>
-<div id="fig-defaultHTML" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-defaultHTML" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-defaultHTML-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/defaultQMD-HTML.png" class="img-fluid figure-img">
@@ -1613,7 +1612,7 @@ Important
 <li>Further refinement and definition can be accomplished by utilisation of a .css file <em>(note: the reference to the styles.css file in the document header is required if creating a new document using the Quarto template in <code>thekidsbiostats</code> package)</em>,</li>
 </ul></li>
 </ul>
-<div id="fig-YAML" class="quarto-float quarto-figure quarto-figure-center anchored">
+<div id="fig-YAML" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-YAML-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/YAML.png" class="img-fluid figure-img">
@@ -1626,7 +1625,7 @@ Figure&nbsp;6: Example Quarto document header
 
 <div class="no-row-height column-margin column-container"><div class="">
 <p>Document-wide styling can be defined in the Quarto header as in Figure&nbsp;6.</p>
-</div></div><div id="fig-CSS" class="quarto-float quarto-figure quarto-figure-center anchored">
+</div></div><div id="fig-CSS" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-CSS-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/CSS.png" class="img-fluid figure-img">
@@ -1654,7 +1653,6 @@ background-color: null;
 font-style: inherit;">&lt;-</span></span>
 <span id="cb1-3">  <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(dat, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">missed =</span> <span class="st" style="color: #20794D;
@@ -1667,7 +1665,6 @@ font-style: inherit;">NULL</span>)</span>
 <span id="cb1-4">  {</span>
 <span id="cb1-5">    <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">is.null</span>(var_label))</span>
@@ -1748,7 +1745,6 @@ Tip
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">base_size =</span> <span class="dv" style="color: #AD0000;
@@ -2044,7 +2040,6 @@ font-style: inherit;"># Function to consistently present plots of the same type,
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(Rdat, p.title){</span>
 <span id="cb2-47">  </span>
 <span id="cb2-48">  <span class="fu" style="color: #4758AB;
@@ -3584,7 +3579,7 @@ attr(,"class")
 
 <div class="no-row-height column-margin column-container"><div class="">
 <p>Regular HTML report output of a <code>ggplot</code> generated figure.</p>
-</div></div><div id="fig-diagProf_cairo_pdf" class="quarto-float quarto-figure quarto-figure-center anchored">
+</div></div><div id="fig-diagProf_cairo_pdf" class="quarto-figure quarto-figure-center quarto-float anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-diagProf_cairo_pdf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/diagProf_cairo_pdf.png" class="img-fluid figure-img">
@@ -3673,7 +3668,7 @@ loaded via a namespace (and not attached):
   <category>Output</category>
   <category>Quarto</category>
   <guid>https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/large_scale_project.html</guid>
-  <pubDate>Wed, 02 Jul 2025 16:00:00 GMT</pubDate>
+  <pubDate>Wed, 02 Jul 2025 14:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Managing RStudio addins using the rsam package</title>
@@ -3903,7 +3898,7 @@ loaded via a namespace (and not attached):
   <category>RStudio</category>
   <category>addins</category>
   <guid>https://the-kids-biostats.github.io/posts/2025-04-14_rsam/rsam.html</guid>
-  <pubDate>Sun, 13 Apr 2025 16:00:00 GMT</pubDate>
+  <pubDate>Sun, 13 Apr 2025 14:00:00 GMT</pubDate>
 </item>
 <item>
   <title>An Overview of our R Package: ‘thekidsbiostats’</title>
@@ -4486,7 +4481,7 @@ loaded via a namespace (and not attached):
   <category>R</category>
   <category>Summary</category>
   <guid>https://the-kids-biostats.github.io/posts/2025-01-23_thekids_package/thekids_package.html</guid>
-  <pubDate>Wed, 22 Jan 2025 16:00:00 GMT</pubDate>
+  <pubDate>Wed, 22 Jan 2025 13:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Models - Condensed code and output</title>
@@ -5181,7 +5176,7 @@ loaded via a namespace (and not attached):
   <category>Modelling</category>
   <category>Quarto</category>
   <guid>https://the-kids-biostats.github.io/posts/2025-01-10_model_function/model_function.html</guid>
-  <pubDate>Thu, 09 Jan 2025 16:00:00 GMT</pubDate>
+  <pubDate>Thu, 09 Jan 2025 13:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Visualisations for (bidirectional) Likert scale data</title>
@@ -5319,7 +5314,6 @@ font-style: inherit;"># Function to simulate post-survey responses with both imp
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(pre_response) {</span>
 <span id="cb1-20">  <span class="co" style="color: #5E5E5E;
 background-color: null;
@@ -5416,7 +5410,6 @@ font-style: inherit;">apply</span>(pre, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">2</span>, <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(x) <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">sapply</span>(x, simulate_post))</span>
@@ -5647,7 +5640,6 @@ font-style: inherit;">3</span>)</span></code></pre></div>
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(data,</span>
 <span id="cb3-2">                          grouping_var,</span>
 <span id="cb3-3">                          facet_var,</span>
@@ -6109,7 +6101,6 @@ font-style: inherit;">15</span>))</span>
 <span id="cb3-79">  </span>
 <span id="cb3-80">  <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (hline <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="cn" style="color: #8f5902;
@@ -6137,10 +6128,8 @@ background-color: null;
 font-style: inherit;">"red"</span>)</span>
 <span id="cb3-85">  } <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (hline <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="cn" style="color: #8f5902;
@@ -6204,7 +6193,6 @@ font-style: inherit;">"mode"</span>)</span></code></pre></div>
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(data, </span>
 <span id="cb5-2">                            <span class="at" style="color: #657422;
 background-color: null;
@@ -6410,7 +6398,6 @@ font-style: inherit;">"Saffron"</span>) </span></code></pre></div>
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(data,</span>
 <span id="cb8-2">                           <span class="at" style="color: #657422;
 background-color: null;
@@ -6726,7 +6713,7 @@ loaded via a namespace (and not attached):
   <category>Likert</category>
   <category>ggplot</category>
   <guid>https://the-kids-biostats.github.io/posts/2024-12-16_bidirectional_likert_visualisation/bidirectional_likert_visualisations.html</guid>
-  <pubDate>Sun, 15 Dec 2024 16:00:00 GMT</pubDate>
+  <pubDate>Sun, 15 Dec 2024 13:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Sharing - Code v Functions</title>
@@ -7559,7 +7546,6 @@ font-style: inherit;"># Arrange legend items in a single row (applies if legend 
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(data,</span>
 <span id="cb4-2">                         <span class="at" style="color: #657422;
 background-color: null;
@@ -8572,7 +8558,7 @@ loaded via a namespace (and not attached):
   <category>Likert</category>
   <category>ggplot</category>
   <guid>https://the-kids-biostats.github.io/posts/2024-11-19_code_v_functions/code_v_functions.html</guid>
-  <pubDate>Mon, 18 Nov 2024 16:00:00 GMT</pubDate>
+  <pubDate>Mon, 18 Nov 2024 13:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Visualisations for (ordinal) Likert scale data</title>
@@ -11134,7 +11120,7 @@ loaded via a namespace (and not attached):
   <category>Likert</category>
   <category>ggplot</category>
   <guid>https://the-kids-biostats.github.io/posts/2024-10-14_likert_visualisation/likert_visualisations.html</guid>
-  <pubDate>Sun, 13 Oct 2024 16:00:00 GMT</pubDate>
+  <pubDate>Sun, 13 Oct 2024 13:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Small-sample analysis</title>
@@ -11409,7 +11395,7 @@ loaded via a namespace (and not attached):
   <category>Small Samples</category>
   <category>R</category>
   <guid>https://the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis.html</guid>
-  <pubDate>Mon, 09 Sep 2024 16:00:00 GMT</pubDate>
+  <pubDate>Mon, 09 Sep 2024 14:00:00 GMT</pubDate>
 </item>
 <item>
   <title>AI in Biostatistics - Part 2</title>
@@ -11817,7 +11803,7 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
   <category>AI</category>
   <category>R</category>
   <guid>https://the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/ai_part_two.html</guid>
-  <pubDate>Thu, 08 Aug 2024 16:00:00 GMT</pubDate>
+  <pubDate>Thu, 08 Aug 2024 14:00:00 GMT</pubDate>
 </item>
 <item>
   <title>AI in Biostatistics - Part 1</title>
@@ -12052,7 +12038,7 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
   <category>AI</category>
   <category>R</category>
   <guid>https://the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/ai_part_one.html</guid>
-  <pubDate>Wed, 07 Aug 2024 16:00:00 GMT</pubDate>
+  <pubDate>Wed, 07 Aug 2024 14:00:00 GMT</pubDate>
   <media:content url="https://the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/weather_p8.png" medium="image" type="image/png" height="115" width="144"/>
 </item>
 <item>
@@ -15085,7 +15071,7 @@ loaded via a namespace (and not attached):
   <category>Mixed Models</category>
   <category>R</category>
   <guid>https://the-kids-biostats.github.io/posts/2024-07-22_pre_post/pre-post.html</guid>
-  <pubDate>Sun, 21 Jul 2024 16:00:00 GMT</pubDate>
+  <pubDate>Sun, 21 Jul 2024 14:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Data Anonymiser</title>
@@ -15218,7 +15204,7 @@ loaded via a namespace (and not attached):
   <category>Shiny</category>
   <category>R</category>
   <guid>https://the-kids-biostats.github.io/posts/2024-07-19_data_anonymiser/data_anonymiser.html</guid>
-  <pubDate>Thu, 18 Jul 2024 16:00:00 GMT</pubDate>
+  <pubDate>Thu, 18 Jul 2024 14:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Parallel Computing in R</title>
@@ -15444,10 +15430,8 @@ font-style: inherit;">data =</span> mtcars)))</span>
 <span id="cb9-6"></span>
 <span id="cb9-7"><span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">in</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
@@ -15514,7 +15498,6 @@ background-color: null;
 font-style: inherit;">2</span>, </span>
 <span id="cb9-25">                       <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(coefs){<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">quantile</span>(coefs, <span class="at" style="color: #657422;
@@ -15676,7 +15659,6 @@ background-color: null;
 font-style: inherit;">2</span>, </span>
 <span id="cb16-12">                       <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(coefs) {<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">quantile</span>(coefs, <span class="at" style="color: #657422;
@@ -15832,7 +15814,6 @@ background-color: null;
 font-style: inherit;">2</span>, </span>
 <span id="cb23-13">                       <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">function</span>(coefs) {<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">quantile</span>(coefs, <span class="at" style="color: #657422;
@@ -16089,10 +16070,8 @@ background-color: null;
 font-style: inherit;">list</span>()</span>
 <span id="cb32-3"><span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">in</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
@@ -16567,14 +16546,11 @@ font-style: inherit;"># To store our model output</span></span>
 <span id="cb50-3"></span>
 <span id="cb50-4"><span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">in</span> outcome_vars){</span>
 <span id="cb50-5">  <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (i <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -16603,10 +16579,8 @@ font-style: inherit;">data =</span> flights)</span>
 <span id="cb50-8">    </span>
 <span id="cb50-9">  } <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (i <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -16693,7 +16667,6 @@ font-style: inherit;">map</span>(outcome_vars, </span>
 background-color: null;
 font-style: inherit;">~</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -16726,10 +16699,8 @@ font-style: inherit;">summary</span>()</span>
 <span id="cb53-10">        </span>
 <span id="cb53-11">        } <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -16833,7 +16804,6 @@ font-style: inherit;">future_map</span>(outcome_vars, </span>
 background-color: null;
 font-style: inherit;">~</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -16866,10 +16836,8 @@ font-style: inherit;">summary</span>()</span>
 <span id="cb56-12">        </span>
 <span id="cb56-13">        } <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -16983,7 +16951,6 @@ background-color: null;
 font-style: inherit;">%dopar%</span> {</span>
 <span id="cb59-5">  <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (j <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -17011,10 +16978,8 @@ background-color: null;
 font-style: inherit;">data =</span> flights)</span>
 <span id="cb59-8">  } <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
-font-weight: bold;
 font-style: inherit;">if</span> (j <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -17178,7 +17143,7 @@ loaded via a namespace (and not attached):
   <category>R</category>
   <category>Parallel</category>
   <guid>https://the-kids-biostats.github.io/posts/2024-07-01_parallel/parallel.html</guid>
-  <pubDate>Sun, 30 Jun 2024 16:00:00 GMT</pubDate>
+  <pubDate>Sun, 30 Jun 2024 14:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Handling Missing Data with LMER</title>
@@ -22157,7 +22122,7 @@ loaded via a namespace (and not attached):
   <category>Mixed Models</category>
   <category>R</category>
   <guid>https://the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer.html</guid>
-  <pubDate>Thu, 06 Jun 2024 16:00:00 GMT</pubDate>
+  <pubDate>Thu, 06 Jun 2024 14:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
