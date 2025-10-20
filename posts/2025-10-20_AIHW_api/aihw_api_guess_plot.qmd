@@ -1,22 +1,19 @@
 ---
 title: "Accessing national health data via API"
 author: "Dr Matt Cooper and Dr Haileab Wolde"
-date: "2025-10-20"
 format:
   html:
     code-fold: true
     tabset: true
     toc: true
     toc-location: left
-    grid:
-      sidebar-width: 220px  # default 250px
-      body-width: 800px  # default 800 px
-      margin-width: 280px    # default 250px    
+date: "2025-10-20"
 categories:
   - R
-  - Output
-  - Quarto
-draft: true
+  - AIHW
+  - Guess that plot
+draft: false
+css: _extensions/html/styles.css
 editor_options: 
   chunk_output_type: console
 execute:
@@ -24,17 +21,13 @@ execute:
   warning: false 
 fig-align: center
 fig-format: png
-fig-cap-align: center
-tbl-cap-location: bottom
-fig-title: ""
-css: _extensions/html/styles.css
 ---
 
 # Overview
 
-Did you know, the [Australian Institute of Health and Welfare](https://www.aihw.gov.au/) (AIHW) is a treasure trove of **available** health data? 
+Did you know, the [Australian Institute of Health and Welfare](https://www.aihw.gov.au/) (AIHW) is a treasure trove of **available** health data?
 
-The AIHW works with a range of stakeholders from across Australia to carry out high-quality research covering a broad range of health domains; they also produce a many reports a year providing context to the state of the nation's health. While the data that supports these reports is often available for download from their websites *(.xslx, .csv)*, a range of the data can can also by accessed via Application Programming Interface (API). The [MyHospitals API](https://www.aihw.gov.au/hospitals/other-resources/myhospitals-api) opens the door to automated, real-time access, and offers much greater flexibility in how you explore and analysis the data. 
+The AIHW works with a range of stakeholders from across Australia to carry out high-quality research covering a broad range of health domains; they also produce a many reports a year providing context to the state of the nation's health. While the data that supports these reports is often available for download from their websites *(.xslx, .csv)*, a range of the data can can also by accessed via Application Programming Interface (API). The [MyHospitals API](https://www.aihw.gov.au/hospitals/other-resources/myhospitals-api) opens the door to automated, real-time access, and offers much greater flexibility in how you explore and analysis the data.
 
 In this post, we’ll demonstrate - as an example - how to access emergency department presentation (ED) data for major hospitals here in Western Australia, process it in R, and create an insightful visualisation.
 
@@ -46,16 +39,16 @@ In this post, we’ll demonstrate - as an example - how to access emergency depa
 
 There are many ways to access data via API using R, you might look to combine the [httr](https://cran.r-project.org/web/packages/httr/index.html) package with the [jsonlite](https://cran.r-project.org/web/packages/jsonlite/index.html) package to build your own query. However, we're going to leverage the great work that has already been done in the [readaihw](https://cran.r-project.org/package=readaihw%22) to dive right in without too technical from a data request and restructuring perspective. With just a few steps, we've got the data we were after!
 
-1. Load our package and the `readaihw` package [(installed from github)](https://github.com/RWParsons/readaihw).
-2. Use the `read_flat_data_extract()` to source the `"MYH-ED"` 
-3. Use the `get_hospital_mappings()` function to source metadata for the hospitals; then reducing this dataset to just what we're interested in
-4. Some further data processing (filtering, variable manipulation, aggregation) prior to joining the two datasets together.
+1.  Load our package and the `readaihw` package [(installed from github)](https://github.com/RWParsons/readaihw).
+2.  Use the `read_flat_data_extract()` to source the `"MYH-ED"`
+3.  Use the `get_hospital_mappings()` function to source metadata for the hospitals; then reducing this dataset to just what we're interested in
+4.  Some further data processing (filtering, variable manipulation, aggregation) prior to joining the two datasets together.
 
 *Expanding on these four steps above. In Step 2, we use the `read_flat_data_extract()` function from [readaihw](https://cran.r-project.org/package=readaihw%22) package to retrieve ED presentation data for hospitals in Western Australia. This function simplifies API access and returns a tidy data frame ready for analysis. The `MYH-ED` code is what specifies that we are. asking for the monthly ED presentation counts across hospitals in Australia. Other key columns in this dataset include: `reporting_unit_code` - Unique hospital identifier, `date` – Month and year of the record, `value` – Number of ED presentations. In Step 2, while the returned API call includes data from many other hospitals and locations, we just want to focus on key metropolitan hospitals in Western Australia, so we filter the dataset using hospital codes and names. We also join geographic coordinates to each hospital so we can later include inset maps.*
 
 *This gave us a clean dataset ready for plotting and mapping.*
 
-```{r echo = T} 
+```{r echo = T}
 #| code-fold: show
 
 # Step 1
@@ -97,7 +90,7 @@ my_aihw_dat |>
 
 ## Where did the `"MYH-ED"` code come from?
 
-Great question! 
+Great question!
 
 There are many different variables that can be sourced. You can see a [descriptive list online](https://www.aihw.gov.au/about-our-data/our-data-collections), but we can also use th API (and some of those packages mentioned earlier) to import the list of codes directly into R!
 
@@ -126,7 +119,7 @@ The code for this below!
 
 ## But first, some notes ...
 
-For a little something different, we inset a map of Perth into these plots with a marker for the *point of interest*. This involved using the [`ggmaps`](https://cran.r-project.org/web/packages/ggmap/index.html) package and [registering here](https://client.stadiamaps.com/signup/) at Stadia Maps for a free account to receive a `token` to allow us to access the map tile images. 
+For a little something different, we inset a map of Perth into these plots with a marker for the *point of interest*. This involved using the [`ggmaps`](https://cran.r-project.org/web/packages/ggmap/index.html) package and [registering here](https://client.stadiamaps.com/signup/) at Stadia Maps for a free account to receive a `token` to allow us to access the map tile images.
 
 We obviously can't share our token, the full `.qmd` for this post won't run until you update the code with your token. For that reason, we insert `.png.`'s of the figures that were saved earlier.
 
@@ -163,9 +156,9 @@ inset_map <- function(latitude, longitude) {
 
 In addition:
 
-+  We use an `lapply` to `split` to iterate over the hospitals. Typically we might look to `map` or other functions from the `tidyverse`. **We acknowledge here that ai assisted with some of the code here.**
-+  We use `wrap_plots()` from the `patchwork` package to assemble the figures. We originally looked at using `facet_wrap()` (or similar) from the `ggplot2` package, but this proved quite challenging when incorporating the inset map with varying red X marker.
-+  We use white text on a white background, as opposed to `element_blank()` because it keeps all dimensions of the plots consisten as we work through the reveal! This is really important so plot elements don't change relative size and position!
+-   We use an `lapply` to `split` to iterate over the hospitals. Typically we might look to `map` or other functions from the `tidyverse`. **We acknowledge here that ai assisted with some of the code here.**
+-   We use `wrap_plots()` from the `patchwork` package to assemble the figures. We originally looked at using `facet_wrap()` (or similar) from the `ggplot2` package, but this proved quite challenging when incorporating the inset map with varying red X marker.
+-   We use white text on a white background, as opposed to `element_blank()` because it keeps all dimensions of the plots consisten as we work through the reveal! This is really important so plot elements don't change relative size and position!
 
 ## Figure 1: Not much to go off!
 
@@ -307,7 +300,7 @@ fig4 <- wrap_plots(hospital_plots, ncol = 2)  +
 
 ## Putting them all together
 
-Putting these four stages of the reveal together also posed a few challenges! Combining multiple plots that, *themselves*, were assembled with `patchwork`. 
+Putting these four stages of the reveal together also posed a few challenges! Combining multiple plots that, *themselves*, were assembled with `patchwork`.
 
 For this, we again turned to ai, and the resulting code is available below.
 

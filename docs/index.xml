@@ -10,7 +10,1477 @@
 <atom:link href="https://the-kids-biostats.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description>Biostats R solutions</description>
 <generator>quarto-1.5.56</generator>
-<lastBuildDate>Wed, 02 Jul 2025 16:00:00 GMT</lastBuildDate>
+<lastBuildDate>Sun, 19 Oct 2025 16:00:00 GMT</lastBuildDate>
+<item>
+  <title>Accessing national health data via API</title>
+  <dc:creator>Dr Matt Cooper and Dr Haileab Wolde</dc:creator>
+  <link>https://the-kids-biostats.github.io/posts/2025-10-20_AIHW_api/aihw_api_guess_plot.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<p>Did you know, the <a href="https://www.aihw.gov.au/">Australian Institute of Health and Welfare</a> (AIHW) is a treasure trove of <strong>available</strong> health data?</p>
+<p>The AIHW works with a range of stakeholders from across Australia to carry out high-quality research covering a broad range of health domains; they also produce a many reports a year providing context to the state of the nation’s health. While the data that supports these reports is often available for download from their websites <em>(.xslx, .csv)</em>, a range of the data can can also by accessed via Application Programming Interface (API). The <a href="https://www.aihw.gov.au/hospitals/other-resources/myhospitals-api">MyHospitals API</a> opens the door to automated, real-time access, and offers much greater flexibility in how you explore and analysis the data.</p>
+<p>In this post, we’ll demonstrate - as an example - how to access emergency department presentation (ED) data for major hospitals here in Western Australia, process it in R, and create an insightful visualisation.</p>
+<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://the-kids-biostats.github.io/posts/2025-10-20_AIHW_api/images/all4.png" class="img-fluid figure-img" style="width:100.0%" data-align="center">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: All 4 Guess The Plots Together
+</figcaption>
+</figure>
+</div>
+<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://the-kids-biostats.github.io/posts/2025-10-20_AIHW_api/images/fig4.png" class="img-fluid figure-img" style="width:100.0%" data-align="center">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: The final plot
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="diving-in" class="level1">
+<h1>Diving in!</h1>
+<p>There are many ways to access data via API using R, you might look to combine the <a href="https://cran.r-project.org/web/packages/httr/index.html">httr</a> package with the <a href="https://cran.r-project.org/web/packages/jsonlite/index.html">jsonlite</a> package to build your own query. However, we’re going to leverage the great work that has already been done in the <a href="https://cran.r-project.org/package=readaihw%22">readaihw</a> to dive right in without too technical from a data request and restructuring perspective. With just a few steps, we’ve got the data we were after!</p>
+<ol type="1">
+<li>Load our package and the <code>readaihw</code> package <a href="https://github.com/RWParsons/readaihw">(installed from github)</a>.</li>
+<li>Use the <code>read_flat_data_extract()</code> to source the <code>"MYH-ED"</code></li>
+<li>Use the <code>get_hospital_mappings()</code> function to source metadata for the hospitals; then reducing this dataset to just what we’re interested in</li>
+<li>Some further data processing (filtering, variable manipulation, aggregation) prior to joining the two datasets together.</li>
+</ol>
+<p><em>Expanding on these four steps above. In Step 2, we use the <code>read_flat_data_extract()</code> function from <a href="https://cran.r-project.org/package=readaihw%22">readaihw</a> package to retrieve ED presentation data for hospitals in Western Australia. This function simplifies API access and returns a tidy data frame ready for analysis. The <code>MYH-ED</code> code is what specifies that we are. asking for the monthly ED presentation counts across hospitals in Australia. Other key columns in this dataset include: <code>reporting_unit_code</code> - Unique hospital identifier, <code>date</code> – Month and year of the record, <code>value</code> – Number of ED presentations. In Step 2, while the returned API call includes data from many other hospitals and locations, we just want to focus on key metropolitan hospitals in Western Australia, so we filter the dataset using hospital codes and names. We also join geographic coordinates to each hospital so we can later include inset maps.</em></p>
+<p><em>This gave us a clean dataset ready for plotting and mapping.</em></p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 1</span></span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(thekidsbiostats)</span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(readaihw)</span>
+<span id="cb1-4"></span>
+<span id="cb1-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 2</span></span>
+<span id="cb1-6">ed_presentations <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">read_flat_data_extract</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"MYH-ED"</span>)</span>
+<span id="cb1-7"></span>
+<span id="cb1-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 3</span></span>
+<span id="cb1-9">msh_hospital_codes <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">get_hospital_mappings</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb1-10">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(state <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Western Australia"</span>,</span>
+<span id="cb1-11">         type <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Hospital"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb1-12">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(name <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%in%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Perth Children's Hospital"</span>,</span>
+<span id="cb1-13">             <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Fiona Stanley Hospital"</span>,</span>
+<span id="cb1-14">             <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Sir Charles Gairdner Hospital"</span>,</span>
+<span id="cb1-15">             <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Joondalup Health Campus (Public)"</span>,</span>
+<span id="cb1-16">             <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Royal Perth Hospital Wellington Street Campus"</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb1-17">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(code, latitude, longitude)</span>
+<span id="cb1-18"></span>
+<span id="cb1-19"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Step 4</span></span>
+<span id="cb1-20">my_aihw_dat <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> ed_presentations <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb1-21">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(reporting_unit_code <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%in%</span> msh_hospital_codes<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>code) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb1-22">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(reporting_unit_code, </span>
+<span id="cb1-23">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">date =</span> reporting_end_date, </span>
+<span id="cb1-24">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hospital =</span> reporting_unit_name, </span>
+<span id="cb1-25">         value) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb1-26">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">value =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(value), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">date =</span> lubridate<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ymd</span>(date)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb1-27">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">group_by</span>(hospital, date) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb1-28">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summarize</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">count =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(value, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">na.rm =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>),</span>
+<span id="cb1-29">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">code =</span> reporting_unit_code[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span> </span>
+<span id="cb1-30">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">left_join</span>(msh_hospital_codes, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">by =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">join_by</span>(code <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> code))</span>
+<span id="cb1-31"></span>
+<span id="cb1-32"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Let's have a look  </span></span>
+<span id="cb1-33">my_aihw_dat <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb1-34">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">head</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb1-35">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">thekids_table</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">colour =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"AzureBlue"</span>)</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-a00ef714{table-layout:auto;}.cl-a00b0e56{font-family:'Barlow';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-a00b0e6a{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-a00ca946{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-a00ca950{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-a00cb80a{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a00cb80b{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a00cb814{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a00cb815{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a00cb816{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a00cb817{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a00cb81e{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a00cb81f{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a00cb820{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a00cb828{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a00cb829{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a00cb82a{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a00cb832{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a00cb833{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a00cb834{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a00cb835{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a00cb83c{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a00cb83d{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-a00ef714"><thead><tr style="overflow-wrap:break-word;"><th class="cl-a00cb80a"><p class="cl-a00ca946"><span class="cl-a00b0e56">hospital</span></p></th><th class="cl-a00cb80b"><p class="cl-a00ca946"><span class="cl-a00b0e56">date</span></p></th><th class="cl-a00cb814"><p class="cl-a00ca950"><span class="cl-a00b0e56">count</span></p></th><th class="cl-a00cb815"><p class="cl-a00ca946"><span class="cl-a00b0e56">code</span></p></th><th class="cl-a00cb816"><p class="cl-a00ca946"><span class="cl-a00b0e56">latitude</span></p></th><th class="cl-a00cb817"><p class="cl-a00ca946"><span class="cl-a00b0e56">longitude</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-a00cb81e"><p class="cl-a00ca946"><span class="cl-a00b0e6a">Fiona Stanley Hospital</span></p></td><td class="cl-a00cb81f"><p class="cl-a00ca946"><span class="cl-a00b0e6a">2015‑06‑30</span></p></td><td class="cl-a00cb820"><p class="cl-a00ca950"><span class="cl-a00b0e6a">39571</span></p></td><td class="cl-a00cb828"><p class="cl-a00ca946"><span class="cl-a00b0e6a">H0746</span></p></td><td class="cl-a00cb829"><p class="cl-a00ca946"><span class="cl-a00b0e6a">‑32.070120</span></p></td><td class="cl-a00cb82a"><p class="cl-a00ca946"><span class="cl-a00b0e6a">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a00cb81e"><p class="cl-a00ca946"><span class="cl-a00b0e6a">Fiona Stanley Hospital</span></p></td><td class="cl-a00cb81f"><p class="cl-a00ca946"><span class="cl-a00b0e6a">2016‑06‑30</span></p></td><td class="cl-a00cb820"><p class="cl-a00ca950"><span class="cl-a00b0e6a">103234</span></p></td><td class="cl-a00cb828"><p class="cl-a00ca946"><span class="cl-a00b0e6a">H0746</span></p></td><td class="cl-a00cb829"><p class="cl-a00ca946"><span class="cl-a00b0e6a">‑32.070120</span></p></td><td class="cl-a00cb82a"><p class="cl-a00ca946"><span class="cl-a00b0e6a">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a00cb81e"><p class="cl-a00ca946"><span class="cl-a00b0e6a">Fiona Stanley Hospital</span></p></td><td class="cl-a00cb81f"><p class="cl-a00ca946"><span class="cl-a00b0e6a">2017‑06‑30</span></p></td><td class="cl-a00cb820"><p class="cl-a00ca950"><span class="cl-a00b0e6a">101901</span></p></td><td class="cl-a00cb828"><p class="cl-a00ca946"><span class="cl-a00b0e6a">H0746</span></p></td><td class="cl-a00cb829"><p class="cl-a00ca946"><span class="cl-a00b0e6a">‑32.070120</span></p></td><td class="cl-a00cb82a"><p class="cl-a00ca946"><span class="cl-a00b0e6a">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a00cb81e"><p class="cl-a00ca946"><span class="cl-a00b0e6a">Fiona Stanley Hospital</span></p></td><td class="cl-a00cb81f"><p class="cl-a00ca946"><span class="cl-a00b0e6a">2018‑06‑30</span></p></td><td class="cl-a00cb820"><p class="cl-a00ca950"><span class="cl-a00b0e6a">107041</span></p></td><td class="cl-a00cb828"><p class="cl-a00ca946"><span class="cl-a00b0e6a">H0746</span></p></td><td class="cl-a00cb829"><p class="cl-a00ca946"><span class="cl-a00b0e6a">‑32.070120</span></p></td><td class="cl-a00cb82a"><p class="cl-a00ca946"><span class="cl-a00b0e6a">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a00cb81e"><p class="cl-a00ca946"><span class="cl-a00b0e6a">Fiona Stanley Hospital</span></p></td><td class="cl-a00cb81f"><p class="cl-a00ca946"><span class="cl-a00b0e6a">2019‑06‑30</span></p></td><td class="cl-a00cb820"><p class="cl-a00ca950"><span class="cl-a00b0e6a">110553</span></p></td><td class="cl-a00cb828"><p class="cl-a00ca946"><span class="cl-a00b0e6a">H0746</span></p></td><td class="cl-a00cb829"><p class="cl-a00ca946"><span class="cl-a00b0e6a">‑32.070120</span></p></td><td class="cl-a00cb82a"><p class="cl-a00ca946"><span class="cl-a00b0e6a">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a00cb81e"><p class="cl-a00ca946"><span class="cl-a00b0e6a">Fiona Stanley Hospital</span></p></td><td class="cl-a00cb81f"><p class="cl-a00ca946"><span class="cl-a00b0e6a">2020‑06‑30</span></p></td><td class="cl-a00cb820"><p class="cl-a00ca950"><span class="cl-a00b0e6a">105122</span></p></td><td class="cl-a00cb828"><p class="cl-a00ca946"><span class="cl-a00b0e6a">H0746</span></p></td><td class="cl-a00cb829"><p class="cl-a00ca946"><span class="cl-a00b0e6a">‑32.070120</span></p></td><td class="cl-a00cb82a"><p class="cl-a00ca946"><span class="cl-a00b0e6a">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a00cb81e"><p class="cl-a00ca946"><span class="cl-a00b0e6a">Fiona Stanley Hospital</span></p></td><td class="cl-a00cb81f"><p class="cl-a00ca946"><span class="cl-a00b0e6a">2021‑06‑30</span></p></td><td class="cl-a00cb820"><p class="cl-a00ca950"><span class="cl-a00b0e6a">110029</span></p></td><td class="cl-a00cb828"><p class="cl-a00ca946"><span class="cl-a00b0e6a">H0746</span></p></td><td class="cl-a00cb829"><p class="cl-a00ca946"><span class="cl-a00b0e6a">‑32.070120</span></p></td><td class="cl-a00cb82a"><p class="cl-a00ca946"><span class="cl-a00b0e6a">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a00cb81e"><p class="cl-a00ca946"><span class="cl-a00b0e6a">Fiona Stanley Hospital</span></p></td><td class="cl-a00cb81f"><p class="cl-a00ca946"><span class="cl-a00b0e6a">2022‑06‑30</span></p></td><td class="cl-a00cb820"><p class="cl-a00ca950"><span class="cl-a00b0e6a">112678</span></p></td><td class="cl-a00cb828"><p class="cl-a00ca946"><span class="cl-a00b0e6a">H0746</span></p></td><td class="cl-a00cb829"><p class="cl-a00ca946"><span class="cl-a00b0e6a">‑32.070120</span></p></td><td class="cl-a00cb82a"><p class="cl-a00ca946"><span class="cl-a00b0e6a">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a00cb81e"><p class="cl-a00ca946"><span class="cl-a00b0e6a">Fiona Stanley Hospital</span></p></td><td class="cl-a00cb81f"><p class="cl-a00ca946"><span class="cl-a00b0e6a">2023‑06‑30</span></p></td><td class="cl-a00cb820"><p class="cl-a00ca950"><span class="cl-a00b0e6a">107770</span></p></td><td class="cl-a00cb828"><p class="cl-a00ca946"><span class="cl-a00b0e6a">H0746</span></p></td><td class="cl-a00cb829"><p class="cl-a00ca946"><span class="cl-a00b0e6a">‑32.070120</span></p></td><td class="cl-a00cb82a"><p class="cl-a00ca946"><span class="cl-a00b0e6a">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a00cb832"><p class="cl-a00ca946"><span class="cl-a00b0e6a">Fiona Stanley Hospital</span></p></td><td class="cl-a00cb833"><p class="cl-a00ca946"><span class="cl-a00b0e6a">2024‑06‑30</span></p></td><td class="cl-a00cb834"><p class="cl-a00ca950"><span class="cl-a00b0e6a">111145</span></p></td><td class="cl-a00cb835"><p class="cl-a00ca946"><span class="cl-a00b0e6a">H0746</span></p></td><td class="cl-a00cb83c"><p class="cl-a00ca946"><span class="cl-a00b0e6a">‑32.070120</span></p></td><td class="cl-a00cb83d"><p class="cl-a00ca946"><span class="cl-a00b0e6a">115.846909</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+<section id="where-did-the-myh-ed-code-come-from" class="level2">
+<h2 class="anchored" data-anchor-id="where-did-the-myh-ed-code-come-from">Where did the <code>"MYH-ED"</code> code come from?</h2>
+<p>Great question!</p>
+<p>There are many different variables that can be sourced. You can see a <a href="https://www.aihw.gov.au/about-our-data/our-data-collections">descriptive list online</a>, but we can also use th API (and some of those packages mentioned earlier) to import the list of codes directly into R!</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(httr)</span>
+<span id="cb2-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(jsonlite)</span>
+<span id="cb2-3"></span>
+<span id="cb2-4">measures <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">GET</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://myhospitalsapi.aihw.gov.au/api/v1/Measures"</span>)</span>
+<span id="cb2-5">measures <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">content</span>(measures, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">as =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"text"</span>)</span>
+<span id="cb2-6">measures <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">fromJSON</span>(measures, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">flatten =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>)</span>
+<span id="cb2-7">measures<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>result <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-8">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(measure_code, measure_name) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-9">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">head</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb2-10">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">thekids_table</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">colour =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"AzureBlue"</span>)</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-a042d1f6{table-layout:auto;}.cl-a03e929e{font-family:'Barlow';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-a03e92a8{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-a04038b0{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-a0404882{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a0404883{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a040488c{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a040488d{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a040488e{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a0404896{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a04048a0{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a04048a1{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-a042d1f6"><thead><tr style="overflow-wrap:break-word;"><th class="cl-a0404882"><p class="cl-a04038b0"><span class="cl-a03e929e">measure_code</span></p></th><th class="cl-a0404883"><p class="cl-a04038b0"><span class="cl-a03e929e">measure_name</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-a040488c"><p class="cl-a04038b0"><span class="cl-a03e92a8">MYH0001</span></p></td><td class="cl-a040488d"><p class="cl-a04038b0"><span class="cl-a03e92a8">Number of surgeries for malignant cancer</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a040488e"><p class="cl-a04038b0"><span class="cl-a03e92a8">MYH0002</span></p></td><td class="cl-a0404896"><p class="cl-a04038b0"><span class="cl-a03e92a8">Median waiting time for surgery for malignant cancer</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a040488e"><p class="cl-a04038b0"><span class="cl-a03e92a8">MYH0003</span></p></td><td class="cl-a0404896"><p class="cl-a04038b0"><span class="cl-a03e92a8">Percentage of people who received surgery for malignant cancer within 30 days</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a040488e"><p class="cl-a04038b0"><span class="cl-a03e92a8">MYH0004</span></p></td><td class="cl-a0404896"><p class="cl-a04038b0"><span class="cl-a03e92a8">Percentage of people who received surgery for malignant cancer within 45 days</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a040488e"><p class="cl-a04038b0"><span class="cl-a03e92a8">MYH0005</span></p></td><td class="cl-a0404896"><p class="cl-a04038b0"><span class="cl-a03e92a8">Percentage of patients who depart the emergency department within four hours of arrival</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a040488c"><p class="cl-a04038b0"><span class="cl-a03e92a8">MYH0006</span></p></td><td class="cl-a040488d"><p class="cl-a04038b0"><span class="cl-a03e92a8">Number of elective surgeries</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a040488e"><p class="cl-a04038b0"><span class="cl-a03e92a8">MYH0007</span></p></td><td class="cl-a0404896"><p class="cl-a04038b0"><span class="cl-a03e92a8">Percentage of patients who waited longer than 365 days for elective surgery</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a040488e"><p class="cl-a04038b0"><span class="cl-a03e92a8">MYH0008</span></p></td><td class="cl-a0404896"><p class="cl-a04038b0"><span class="cl-a03e92a8">Percentage of patients who received their surgery within clinically recommended times</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a040488e"><p class="cl-a04038b0"><span class="cl-a03e92a8">MYH0009</span></p></td><td class="cl-a0404896"><p class="cl-a04038b0"><span class="cl-a03e92a8">Median waiting time for elective surgery</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-a04048a0"><p class="cl-a04038b0"><span class="cl-a03e92a8">MYH0010</span></p></td><td class="cl-a04048a1"><p class="cl-a04038b0"><span class="cl-a03e92a8">Percentage of patients who commenced treatment within the recommended time</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+<p>From here, the world <em>(of AIHW MyHospital data)</em> is your Oyster!</p>
+</section>
+</section>
+<section id="extended-example---guess.-that.-plot" class="level1">
+<h1>Extended example - Guess. That. Plot!</h1>
+<p>Every so often, on one of our internal communication platforms, we’ll do a little ‘Guess That Plot’ quiz. It’s a fun way to Engage staff from around <a href="https://www.thekids.org.au/">our Institute</a> in some conversation and critical thinking are data and visualisations. And it possibly goes without saying - the above plot is a recent example of one of these ‘Guess That Plot’ quizzes we did where we used AIHW data!</p>
+<p>The code for this below!</p>
+<section id="but-first-some-notes" class="level2">
+<h2 class="anchored" data-anchor-id="but-first-some-notes">But first, some notes …</h2>
+<p>For a little something different, we inset a map of Perth into these plots with a marker for the <em>point of interest</em>. This involved using the <a href="https://cran.r-project.org/web/packages/ggmap/index.html"><code>ggmaps</code></a> package and <a href="https://client.stadiamaps.com/signup/">registering here</a> at Stadia Maps for a free account to receive a <code>token</code> to allow us to access the map tile images.</p>
+<p>We obviously can’t share our token, the full <code>.qmd</code> for this post won’t run until you update the code with your token. For that reason, we insert <code>.png.</code>’s of the figures that were saved earlier.</p>
+<p><em>Now we will create a base map of the Perth area and define a function to generate small inset maps for hospitals. Each inset will mark a hospital’s location with a red star on the map. These inset maps can be added to other plots to visually show the exact location of each hospital, while keeping the map clean and free of axes or labels.</em></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggmap)</span>
+<span id="cb3-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(patchwork)</span>
+<span id="cb3-3"></span>
+<span id="cb3-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">register_stadiamaps</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"7ae597d3-556b-4f05-b2cf-837d3a978e67"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">write =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">FALSE</span>)</span>
+<span id="cb3-5"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># register_stadiamaps("YOUR-TOKEN-GOES-HERE", write = FALSE)</span></span>
+<span id="cb3-6"></span>
+<span id="cb3-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Define the Perth area</span></span>
+<span id="cb3-8">perth_bbox <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">left =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">115.65</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">bottom =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">32.1</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">right =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">115.95</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">top =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">31.70</span>)</span>
+<span id="cb3-9"></span>
+<span id="cb3-10"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Source the map tiles for the area we need</span></span>
+<span id="cb3-11">perth_map <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">get_stadiamap</span>(</span>
+<span id="cb3-12">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">bbox =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.matrix</span>(perth_bbox),</span>
+<span id="cb3-13">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">maptype =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"stamen_terrain_background"</span></span>
+<span id="cb3-14">)</span>
+<span id="cb3-15"></span>
+<span id="cb3-16"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Forma grob object of the map that we will reuse in each plot</span></span>
+<span id="cb3-17">inset_map <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span>(latitude, longitude) {</span>
+<span id="cb3-18">  latitude <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(latitude)</span>
+<span id="cb3-19">  longitude <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(longitude)</span>
+<span id="cb3-20">  </span>
+<span id="cb3-21">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplotGrob</span>(</span>
+<span id="cb3-22">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggmap</span>(perth_map) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb3-23">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">annotate</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"point"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> longitude, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> latitude,</span>
+<span id="cb3-24">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"red"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">shape =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">8</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb3-25">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_void</span>())}</span></code></pre></div>
+</div>
+<p>In addition:</p>
+<ul>
+<li>We use an <code>lapply</code> to <code>split</code> to iterate over the hospitals. Typically we might look to <code>map</code> or other functions from the <code>tidyverse</code>. <strong>We acknowledge here that ai assisted with some of the code here.</strong></li>
+<li>We use <code>wrap_plots()</code> from the <code>patchwork</code> package to assemble the figures. We originally looked at using <code>facet_wrap()</code> (or similar) from the <code>ggplot2</code> package, but this proved quite challenging when incorporating the inset map with varying red X marker.</li>
+<li>We use white text on a white background, as opposed to <code>element_blank()</code> because it keeps all dimensions of the plots consisten as we work through the reveal! This is really important so plot elements don’t change relative size and position!</li>
+</ul>
+</section>
+<section id="figure-1-not-much-to-go-off" class="level2">
+<h2 class="anchored" data-anchor-id="figure-1-not-much-to-go-off">Figure 1: Not much to go off!</h2>
+<p>This plot only shows the time series with both x and y-axis labels and hospital names are hidden, but perhaps the markings on the maps are a hint? Particularly if you remember which year certain hospitals opened?</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">hospital_plots <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lapply</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">split</span>(my_aihw_dat, my_aihw_dat<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>hospital), <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span>(df) {</span>
+<span id="cb4-2">  </span>
+<span id="cb4-3">  lat <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> df<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>latitude[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]</span>
+<span id="cb4-4">  lon <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> df<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>longitude[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]</span>
+<span id="cb4-5">  </span>
+<span id="cb4-6">  ts_plot <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(df, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(date, count)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb4-7">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_line</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb4-8">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb4-9">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> scales<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">label_comma</span>(), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">limits =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">120000</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb4-10">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_x_date</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">date_breaks =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2 years"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">date_labels =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"%Y"</span>,</span>
+<span id="cb4-11">                 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">limits =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.Date</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2013-01-01"</span>), <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.Date</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2024-12-31"</span>))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb4-12">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_thekids</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb4-13">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.line =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_line</span>(),</span>
+<span id="cb4-14">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.ticks =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_line</span>(),</span>
+<span id="cb4-15">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.text =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">colour =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"white"</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb4-16">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">" "</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">" "</span>)</span>
+<span id="cb4-17">  </span>
+<span id="cb4-18">  ts_plot <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">inset_element</span>(</span>
+<span id="cb4-19">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">inset_map</span>(lat, lon),</span>
+<span id="cb4-20">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">left =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.8</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">right =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,</span>
+<span id="cb4-21">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">bottom =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.02</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">top =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.55</span></span>
+<span id="cb4-22">  ) </span>
+<span id="cb4-23">})</span>
+<span id="cb4-24"></span>
+<span id="cb4-25">fig1 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">wrap_plots</span>(hospital_plots, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ncol =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb4-26">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plot_annotation</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">caption =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">" "</span>)</span></code></pre></div>
+</details>
+</div>
+<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://the-kids-biostats.github.io/posts/2025-10-20_AIHW_api/images/fig1.png" class="img-fluid figure-img" style="width:80.0%" data-align="center">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Reveal 1
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="figure-2-time-series-with-x-axis-labels" class="level2">
+<h2 class="anchored" data-anchor-id="figure-2-time-series-with-x-axis-labels">Figure 2: Time Series with X-axis Labels</h2>
+<p>Similar to Plot 1, but the x-axis labels are visible, allowing the timeline to be interpreted while keeping the y-axis subtle.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">hospital_plots <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lapply</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">split</span>(my_aihw_dat, my_aihw_dat<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>hospital), <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span>(df) {</span>
+<span id="cb5-2">  </span>
+<span id="cb5-3">  lat <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> df<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>latitude[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]</span>
+<span id="cb5-4">  lon <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> df<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>longitude[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]</span>
+<span id="cb5-5">  </span>
+<span id="cb5-6">  ts_plot <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(df, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(date, count)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb5-7">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_line</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb5-8">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb5-9">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> scales<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">label_comma</span>(), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">limits =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">120000</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb5-10">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_x_date</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">date_breaks =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2 years"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">date_labels =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"%Y"</span>,</span>
+<span id="cb5-11">                 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">limits =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.Date</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2013-01-01"</span>), <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.Date</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2024-12-31"</span>))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb5-12">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_thekids</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb5-13">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.line =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_line</span>(),</span>
+<span id="cb5-14">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.ticks =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_line</span>(),</span>
+<span id="cb5-15">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.text.y =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_text</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">colour =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"white"</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb5-16">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">" "</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">" "</span>)</span>
+<span id="cb5-17">  </span>
+<span id="cb5-18">  ts_plot <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">inset_element</span>(</span>
+<span id="cb5-19">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">inset_map</span>(lat, lon),</span>
+<span id="cb5-20">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">left =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.8</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">right =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,</span>
+<span id="cb5-21">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">bottom =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.02</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">top =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.55</span></span>
+<span id="cb5-22">  ) </span>
+<span id="cb5-23">})</span>
+<span id="cb5-24"></span>
+<span id="cb5-25">fig2 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">wrap_plots</span>(hospital_plots, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ncol =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb5-26">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plot_annotation</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">caption =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">" "</span>)</span></code></pre></div>
+</details>
+</div>
+<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://the-kids-biostats.github.io/posts/2025-10-20_AIHW_api/images/fig2.png" class="img-fluid figure-img" style="width:80.0%" data-align="center">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Reveal 2
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="figure-3-time-series-with-caption" class="level2">
+<h2 class="anchored" data-anchor-id="figure-3-time-series-with-caption">Figure 3: Time Series with Caption</h2>
+<p>This version includes visible axes and ticks, making the data easier to interpret. A caption indicating the data source <code>AIHW API</code> is added as a real nudge to what the data might be. Hospital titles are still not shown.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">hospital_plots <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lapply</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">split</span>(my_aihw_dat, my_aihw_dat<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>hospital), <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span>(df) {</span>
+<span id="cb6-2">  </span>
+<span id="cb6-3">  lat <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> df<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>latitude[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]</span>
+<span id="cb6-4">  lon <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> df<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>longitude[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]</span>
+<span id="cb6-5">  </span>
+<span id="cb6-6">  ts_plot <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(df, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(date, count)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb6-7">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_line</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb6-8">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb6-9">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> scales<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">label_comma</span>(), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">limits =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">120000</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb6-10">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_x_date</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">date_breaks =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2 years"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">date_labels =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"%Y"</span>,</span>
+<span id="cb6-11">                 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">limits =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.Date</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2013-01-01"</span>), <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.Date</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2024-12-31"</span>))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb6-12">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_thekids</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb6-13">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.line =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_line</span>(),</span>
+<span id="cb6-14">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.ticks =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_line</span>()) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb6-15">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">" "</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">" "</span>)</span>
+<span id="cb6-16">  </span>
+<span id="cb6-17">  ts_plot <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">inset_element</span>(</span>
+<span id="cb6-18">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">inset_map</span>(lat, lon),</span>
+<span id="cb6-19">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">left =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.8</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">right =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,</span>
+<span id="cb6-20">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">bottom =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.02</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">top =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.55</span></span>
+<span id="cb6-21">  ) </span>
+<span id="cb6-22">})</span>
+<span id="cb6-23"></span>
+<span id="cb6-24">fig3 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">wrap_plots</span>(hospital_plots, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ncol =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb6-25">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plot_annotation</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">caption =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Data source: AIHW API, code: 'XXX-XX'"</span>)</span></code></pre></div>
+</details>
+</div>
+<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://the-kids-biostats.github.io/posts/2025-10-20_AIHW_api/images/fig3.png" class="img-fluid figure-img" style="width:80.0%" data-align="center">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Reveal 3
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="figure-4-the-reveal" class="level2">
+<h2 class="anchored" data-anchor-id="figure-4-the-reveal">Figure 4: The reveal!</h2>
+<p>And here, everything is revealed.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">hospital_plots <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">lapply</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">split</span>(my_aihw_dat, my_aihw_dat<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>hospital), <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span>(df) {</span>
+<span id="cb7-2">  </span>
+<span id="cb7-3">  lat <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> df<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>latitude[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]</span>
+<span id="cb7-4">  lon <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> df<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>longitude[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]</span>
+<span id="cb7-5">  </span>
+<span id="cb7-6">  ts_plot <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(df, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(date, count)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-7">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_line</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-8">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-9">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> scales<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">label_comma</span>(), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">limits =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">120000</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-10">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_x_date</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">date_breaks =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2 years"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">date_labels =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"%Y"</span>,</span>
+<span id="cb7-11">                 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">limits =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.Date</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2013-01-01"</span>), <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.Date</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2024-12-31"</span>))) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-12">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_thekids</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-13">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.line =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_line</span>(),</span>
+<span id="cb7-14">          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">axis.ticks =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_line</span>()) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-15">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NULL</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ED Presentations (n)"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">unique</span>(df<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>hospital))</span>
+<span id="cb7-16">  </span>
+<span id="cb7-17">  ts_plot <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">inset_element</span>(</span>
+<span id="cb7-18">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">inset_map</span>(lat, lon),</span>
+<span id="cb7-19">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">left =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.8</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">right =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,</span>
+<span id="cb7-20">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">bottom =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.02</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">top =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.55</span></span>
+<span id="cb7-21">  ) </span>
+<span id="cb7-22">})</span>
+<span id="cb7-23"></span>
+<span id="cb7-24">fig4 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">wrap_plots</span>(hospital_plots, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ncol =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>)  <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb7-25">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plot_annotation</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">caption =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Data source: AIHW API, code: 'MYH-ED'"</span>)</span></code></pre></div>
+</details>
+</div>
+<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://the-kids-biostats.github.io/posts/2025-10-20_AIHW_api/images/fig4.png" class="img-fluid figure-img" style="width:100.0%" data-align="center">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: The final reveal
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="putting-them-all-together" class="level2">
+<h2 class="anchored" data-anchor-id="putting-them-all-together">Putting them all together</h2>
+<p>Putting these four stages of the reveal together also posed a few challenges! Combining multiple plots that, <em>themselves</em>, were assembled with <code>patchwork</code>.</p>
+<p>For this, we again turned to ai, and the resulting code is available below.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Divider "plots" (vertical and horizontal)</span></span>
+<span id="cb8-2">v_thickness <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.005</span>  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># fraction of width for vertical divider (adjust)</span></span>
+<span id="cb8-3">h_thickness <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.01</span>  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># fraction of height for horizontal divider (adjust)</span></span>
+<span id="cb8-4"></span>
+<span id="cb8-5">divider_v <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb8-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_void</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb8-7">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">plot.background =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_rect</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"black"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">colour =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NA</span>))</span>
+<span id="cb8-8"></span>
+<span id="cb8-9">divider_h <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> divider_v  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># same look for horizontal divider</span></span>
+<span id="cb8-10"></span>
+<span id="cb8-11"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Make rows with a vertical divider between plots</span></span>
+<span id="cb8-12">top_row <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">wrap_plots</span>(p1, divider_v, p2, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ncol =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">widths =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, v_thickness, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>))</span>
+<span id="cb8-13">bottom_row <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">wrap_plots</span>(p3, divider_v, p4, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ncol =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">widths =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, v_thickness, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>))</span>
+<span id="cb8-14"></span>
+<span id="cb8-15"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Combine rows with a horizontal divider between them</span></span>
+<span id="cb8-16">final <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">wrap_plots</span>(top_row, divider_h, bottom_row, </span>
+<span id="cb8-17">                    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ncol =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">heights =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, h_thickness, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb8-18">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">plot_layout</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ncol =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) </span>
+<span id="cb8-19"></span>
+<span id="cb8-20">final</span>
+<span id="cb8-21"></span>
+<span id="cb8-22"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggsave</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste0</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">Sys.Date</span>(), <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"_fig1-4.png"</span>),</span>
+<span id="cb8-23">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">width =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">height =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>)</span></code></pre></div>
+</details>
+</div>
+<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="https://the-kids-biostats.github.io/posts/2025-10-20_AIHW_api/images/all4.png" class="img-fluid figure-img" style="width:100.0%" data-align="center">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: All 4 Guess The Plots Together
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="closing-comments" class="level1">
+<h1>Closing comments</h1>
+<p>Accessing health data via the AIHW API opens up many possibilities for data analysis and visualisations to help us understand trends in Australian Health Statistics. Or, perhaps for finding informative data to aid in one’s study planning! The <code>readaihw</code> helps put this data at the fingertips of any R user, reducing the barriers to diving in and exploring this data. The figures shown here are not overly polished - as that wasn’t the purpose of this post. However, hopefully we’ve shown how easy it can be to draw some interesting local insights while having a bit of fun along the way.</p>
+<section id="acknowledgements" class="level2">
+<h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
+<p>Thanks to Zac Dempsey, Robin Cook, Elizabeth McKinnon, and Wes Billingham for providing feedback on and reviewing this post.</p>
+</section>
+<section id="reproducibility-information" class="level2">
+<h2 class="anchored" data-anchor-id="reproducibility-information">Reproducibility Information</h2>
+<p>The session information can also be seen below.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.5.0 (2025-04-11)
+Platform: aarch64-apple-darwin20
+Running under: macOS Sequoia 15.6.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: Australia/Perth
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] patchwork_1.3.2       ggmap_4.0.2           jsonlite_2.0.0       
+ [4] httr_1.4.7            readaihw_0.0.2        thekidsbiostats_1.4.1
+ [7] extrafont_0.20        flextable_0.9.10      gtsummary_2.4.0      
+[10] lubridate_1.9.4       forcats_1.0.1         stringr_1.5.2        
+[13] dplyr_1.1.4           purrr_1.1.0           readr_2.1.5          
+[16] tidyr_1.3.1           tibble_3.3.0          ggplot2_4.0.0        
+[19] tidyverse_2.0.0      
+
+loaded via a namespace (and not attached):
+ [1] tidyselect_1.2.1        viridisLite_0.4.2       farver_2.1.2           
+ [4] S7_0.2.0                bitops_1.0-9            fastmap_1.2.0          
+ [7] fontquiver_0.2.1        janitor_2.2.1           promises_1.3.3         
+[10] labelled_2.15.0         digest_0.6.37           timechange_0.3.0       
+[13] mime_0.13               lifecycle_1.0.4         magrittr_2.0.4         
+[16] compiler_4.5.0          rlang_1.1.6             tools_4.5.0            
+[19] yaml_2.3.10             data.table_1.17.8       knitr_1.50             
+[22] labeling_0.4.3          askpass_1.2.1           htmlwidgets_1.6.4      
+[25] curl_7.0.0              plyr_1.8.9              xml2_1.4.0             
+[28] RColorBrewer_1.1-3      withr_3.0.2             grid_4.5.0             
+[31] shinyFiles_0.9.3        sysfonts_0.8.9          gdtools_0.4.4          
+[34] xtable_1.8-4            extrafontdb_1.1         scales_1.4.0           
+[37] cli_3.6.5               rmarkdown_2.30          ragg_1.5.0             
+[40] generics_0.1.4          rstudioapi_0.17.1       tzdb_0.5.0             
+[43] readxl_1.4.5            assertthat_0.2.1        cellranger_1.1.0       
+[46] vctrs_0.6.5             fontBitstreamVera_0.1.1 hms_1.1.3              
+[49] systemfonts_1.3.1       jpeg_0.1-11             glue_1.8.0             
+[52] stringi_1.8.7           gtable_0.3.6            later_1.4.4            
+[55] pillar_1.11.1           rappdirs_0.3.3          htmltools_0.5.8.1      
+[58] openssl_2.3.4           R6_2.6.1                httr2_1.2.1            
+[61] textshaping_1.0.3       evaluate_1.0.5          shiny_1.11.1           
+[64] haven_2.5.5             png_0.1-8               snakecase_0.11.1       
+[67] fontLiberation_0.1.0    httpuv_1.6.16           Rcpp_1.1.0             
+[70] zip_2.3.3               uuid_1.2-1              Rttf2pt1_1.3.14        
+[73] officer_0.7.0           xfun_0.53               fs_1.6.6               
+[76] pkgconfig_2.0.3        </code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <category>R</category>
+  <category>AIHW</category>
+  <category>Guess that plot</category>
+  <guid>https://the-kids-biostats.github.io/posts/2025-10-20_AIHW_api/aihw_api_guess_plot.html</guid>
+  <pubDate>Sun, 19 Oct 2025 16:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Large-scale projects</title>
   <dc:creator>Dr Bethy McKinnon and Dr Matt Cooper</dc:creator>
