@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.56">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Dr Matt Cooper and Dr Haileab Wolde">
+<meta name="dcterms.date" content="2025-10-20">
+
+<title>Accessing national health data via API – The Kids Biostats</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../thekids_logo.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link href="../../site_libs/tabwid-1.1.3/tabwid.css" rel="stylesheet">
+<script src="../../site_libs/tabwid-1.1.3/tabwid.js"></script>
+<meta name="quarto:status" content="draft">
+
+
+<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="_extensions/html/styles.css">
+</head>
+
+<body class="floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner"><div id="quarto-draft-alert" class="alert alert-warning"><i class="bi bi-pencil-square"></i>Draft</div>
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../thekids_logo.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">The Kids Biostats</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://x.com/telethonkids"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://github.com/The-Kids-Biostats/thekidsbiostats"> 
+<span class="menu-text">Our Package</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://the-kids-biostats.github.io/model_guides/"> 
+<span class="menu-text">Model Guides</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Accessing national health data via API</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">R</div>
+                <div class="quarto-category">Output</div>
+                <div class="quarto-category">Quarto</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>Dr Matt Cooper and Dr Haileab Wolde </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">October 20, 2025</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a></li>
+  <li><a href="#diving-in" id="toc-diving-in" class="nav-link" data-scroll-target="#diving-in">Diving in!</a>
+  <ul class="collapse">
+  <li><a href="#where-did-the-myh-ed-code-come-from" id="toc-where-did-the-myh-ed-code-come-from" class="nav-link" data-scroll-target="#where-did-the-myh-ed-code-come-from">Where did the <code>"MYH-ED"</code> code come from?</a></li>
+  </ul></li>
+  <li><a href="#extended-example---guess.-that.-plot" id="toc-extended-example---guess.-that.-plot" class="nav-link" data-scroll-target="#extended-example---guess.-that.-plot">Extended example - Guess. That. Plot!</a>
+  <ul class="collapse">
+  <li><a href="#but-first-some-notes" id="toc-but-first-some-notes" class="nav-link" data-scroll-target="#but-first-some-notes">But first, some notes …</a></li>
+  <li><a href="#figure-1-not-much-to-go-off" id="toc-figure-1-not-much-to-go-off" class="nav-link" data-scroll-target="#figure-1-not-much-to-go-off">Figure 1: Not much to go off!</a></li>
+  <li><a href="#figure-2-time-series-with-x-axis-labels" id="toc-figure-2-time-series-with-x-axis-labels" class="nav-link" data-scroll-target="#figure-2-time-series-with-x-axis-labels">Figure 2: Time Series with X-axis Labels</a></li>
+  <li><a href="#figure-3-time-series-with-caption" id="toc-figure-3-time-series-with-caption" class="nav-link" data-scroll-target="#figure-3-time-series-with-caption">Figure 3: Time Series with Caption</a></li>
+  <li><a href="#figure-4-the-reveal" id="toc-figure-4-the-reveal" class="nav-link" data-scroll-target="#figure-4-the-reveal">Figure 4: The reveal!</a></li>
+  <li><a href="#putting-them-all-together" id="toc-putting-them-all-together" class="nav-link" data-scroll-target="#putting-them-all-together">Putting them all together</a></li>
+  </ul></li>
+  <li><a href="#closing-comments" id="toc-closing-comments" class="nav-link" data-scroll-target="#closing-comments">Closing comments</a>
+  <ul class="collapse">
+  <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements">Acknowledgements</a></li>
+  <li><a href="#reproducibility-information" id="toc-reproducibility-information" class="nav-link" data-scroll-target="#reproducibility-information">Reproducibility Information</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<p>Did you know, the <a href="https://www.aihw.gov.au/">Australian Institute of Health and Welfare</a> (AIHW) is a treasure trove of <strong>available</strong> health data?</p>
+<p>The AIHW works with a range of stakeholders from across Australia to carry out high-quality research covering a broad range of health domains; they also produce a many reports a year providing context to the state of the nation’s health. While the data that supports these reports is often available for download from their websites <em>(.xslx, .csv)</em>, a range of the data can can also by accessed via Application Programming Interface (API). The <a href="https://www.aihw.gov.au/hospitals/other-resources/myhospitals-api">MyHospitals API</a> opens the door to automated, real-time access, and offers much greater flexibility in how you explore and analysis the data.</p>
+<p>In this post, we’ll demonstrate - as an example - how to access emergency department presentation (ED) data for major hospitals here in Western Australia, process it in R, and create an insightful visualisation.</p>
+<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/all4.png" class="img-fluid figure-img" style="width:100.0%" data-align="center">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: All 4 Guess The Plots Together
+</figcaption>
+</figure>
+</div>
+<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/fig4.png" class="img-fluid figure-img" style="width:100.0%" data-align="center">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: The final plot
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="diving-in" class="level1">
+<h1>Diving in!</h1>
+<p>There are many ways to access data via API using R, you might look to combine the <a href="https://cran.r-project.org/web/packages/httr/index.html">httr</a> package with the <a href="https://cran.r-project.org/web/packages/jsonlite/index.html">jsonlite</a> package to build your own query. However, we’re going to leverage the great work that has already been done in the <a href="https://cran.r-project.org/package=readaihw%22">readaihw</a> to dive right in without too technical from a data request and restructuring perspective. With just a few steps, we’ve got the data we were after!</p>
+<ol type="1">
+<li>Load our package and the <code>readaihw</code> package <a href="https://github.com/RWParsons/readaihw">(installed from github)</a>.</li>
+<li>Use the <code>read_flat_data_extract()</code> to source the <code>"MYH-ED"</code></li>
+<li>Use the <code>get_hospital_mappings()</code> function to source metadata for the hospitals; then reducing this dataset to just what we’re interested in</li>
+<li>Some further data processing (filtering, variable manipulation, aggregation) prior to joining the two datasets together.</li>
+</ol>
+<p><em>Expanding on these four steps above. In Step 2, we use the <code>read_flat_data_extract()</code> function from <a href="https://cran.r-project.org/package=readaihw%22">readaihw</a> package to retrieve ED presentation data for hospitals in Western Australia. This function simplifies API access and returns a tidy data frame ready for analysis. The <code>MYH-ED</code> code is what specifies that we are. asking for the monthly ED presentation counts across hospitals in Australia. Other key columns in this dataset include: <code>reporting_unit_code</code> - Unique hospital identifier, <code>date</code> – Month and year of the record, <code>value</code> – Number of ED presentations. In Step 2, while the returned API call includes data from many other hospitals and locations, we just want to focus on key metropolitan hospitals in Western Australia, so we filter the dataset using hospital codes and names. We also join geographic coordinates to each hospital so we can later include inset maps.</em></p>
+<p><em>This gave us a clean dataset ready for plotting and mapping.</em></p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(thekidsbiostats)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readaihw)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>ed_presentations <span class="ot">&lt;-</span> <span class="fu">read_flat_data_extract</span>(<span class="st">"MYH-ED"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>msh_hospital_codes <span class="ot">&lt;-</span> <span class="fu">get_hospital_mappings</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(state <span class="sc">==</span> <span class="st">"Western Australia"</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>         type <span class="sc">==</span> <span class="st">"Hospital"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(name <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Perth Children's Hospital"</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>             <span class="st">"Fiona Stanley Hospital"</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>             <span class="st">"Sir Charles Gairdner Hospital"</span>,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>             <span class="st">"Joondalup Health Campus (Public)"</span>,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>             <span class="st">"Royal Perth Hospital Wellington Street Campus"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(code, latitude, longitude)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 4</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>my_aihw_dat <span class="ot">&lt;-</span> ed_presentations <span class="sc">|&gt;</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(reporting_unit_code <span class="sc">%in%</span> msh_hospital_codes<span class="sc">$</span>code) <span class="sc">|&gt;</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(reporting_unit_code, </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>         <span class="at">date =</span> reporting_end_date, </span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>         <span class="at">hospital =</span> reporting_unit_name, </span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>         value) <span class="sc">|&gt;</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">value =</span> <span class="fu">as.numeric</span>(value), <span class="at">date =</span> lubridate<span class="sc">::</span><span class="fu">ymd</span>(date)) <span class="sc">|&gt;</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(hospital, date) <span class="sc">|&gt;</span> </span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">count =</span> <span class="fu">sum</span>(value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>            <span class="at">code =</span> reporting_unit_code[<span class="dv">1</span>]) <span class="sc">%&gt;%</span> </span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(msh_hospital_codes, <span class="at">by =</span> <span class="fu">join_by</span>(code <span class="sc">==</span> code))</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Let's have a look  </span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>my_aihw_dat <span class="sc">|&gt;</span> </span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">thekids_table</span>(<span class="at">colour =</span> <span class="st">"AzureBlue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-56fbb504{table-layout:auto;}.cl-56f821be{font-family:'Barlow';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-56f821d2{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-56f99c56{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-56f99c60{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-56f9ab1a{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-56f9ab1b{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-56f9ab24{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-56f9ab25{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-56f9ab26{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-56f9ab2e{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-56f9ab2f{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-56f9ab30{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-56f9ab38{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-56f9ab39{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-56f9ab3a{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-56f9ab3b{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-56f9ab42{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-56f9ab43{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-56f9ab44{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-56f9ab45{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-56f9ab4c{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-56f9ab4d{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-56fbb504"><thead><tr style="overflow-wrap:break-word;"><th class="cl-56f9ab1a"><p class="cl-56f99c56"><span class="cl-56f821be">hospital</span></p></th><th class="cl-56f9ab1b"><p class="cl-56f99c56"><span class="cl-56f821be">date</span></p></th><th class="cl-56f9ab24"><p class="cl-56f99c60"><span class="cl-56f821be">count</span></p></th><th class="cl-56f9ab25"><p class="cl-56f99c56"><span class="cl-56f821be">code</span></p></th><th class="cl-56f9ab26"><p class="cl-56f99c56"><span class="cl-56f821be">latitude</span></p></th><th class="cl-56f9ab2e"><p class="cl-56f99c56"><span class="cl-56f821be">longitude</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-56f9ab2f"><p class="cl-56f99c56"><span class="cl-56f821d2">Fiona Stanley Hospital</span></p></td><td class="cl-56f9ab30"><p class="cl-56f99c56"><span class="cl-56f821d2">2015‑06‑30</span></p></td><td class="cl-56f9ab38"><p class="cl-56f99c60"><span class="cl-56f821d2">39571</span></p></td><td class="cl-56f9ab39"><p class="cl-56f99c56"><span class="cl-56f821d2">H0746</span></p></td><td class="cl-56f9ab3a"><p class="cl-56f99c56"><span class="cl-56f821d2">‑32.070120</span></p></td><td class="cl-56f9ab3b"><p class="cl-56f99c56"><span class="cl-56f821d2">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-56f9ab2f"><p class="cl-56f99c56"><span class="cl-56f821d2">Fiona Stanley Hospital</span></p></td><td class="cl-56f9ab30"><p class="cl-56f99c56"><span class="cl-56f821d2">2016‑06‑30</span></p></td><td class="cl-56f9ab38"><p class="cl-56f99c60"><span class="cl-56f821d2">103234</span></p></td><td class="cl-56f9ab39"><p class="cl-56f99c56"><span class="cl-56f821d2">H0746</span></p></td><td class="cl-56f9ab3a"><p class="cl-56f99c56"><span class="cl-56f821d2">‑32.070120</span></p></td><td class="cl-56f9ab3b"><p class="cl-56f99c56"><span class="cl-56f821d2">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-56f9ab2f"><p class="cl-56f99c56"><span class="cl-56f821d2">Fiona Stanley Hospital</span></p></td><td class="cl-56f9ab30"><p class="cl-56f99c56"><span class="cl-56f821d2">2017‑06‑30</span></p></td><td class="cl-56f9ab38"><p class="cl-56f99c60"><span class="cl-56f821d2">101901</span></p></td><td class="cl-56f9ab39"><p class="cl-56f99c56"><span class="cl-56f821d2">H0746</span></p></td><td class="cl-56f9ab3a"><p class="cl-56f99c56"><span class="cl-56f821d2">‑32.070120</span></p></td><td class="cl-56f9ab3b"><p class="cl-56f99c56"><span class="cl-56f821d2">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-56f9ab2f"><p class="cl-56f99c56"><span class="cl-56f821d2">Fiona Stanley Hospital</span></p></td><td class="cl-56f9ab30"><p class="cl-56f99c56"><span class="cl-56f821d2">2018‑06‑30</span></p></td><td class="cl-56f9ab38"><p class="cl-56f99c60"><span class="cl-56f821d2">107041</span></p></td><td class="cl-56f9ab39"><p class="cl-56f99c56"><span class="cl-56f821d2">H0746</span></p></td><td class="cl-56f9ab3a"><p class="cl-56f99c56"><span class="cl-56f821d2">‑32.070120</span></p></td><td class="cl-56f9ab3b"><p class="cl-56f99c56"><span class="cl-56f821d2">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-56f9ab2f"><p class="cl-56f99c56"><span class="cl-56f821d2">Fiona Stanley Hospital</span></p></td><td class="cl-56f9ab30"><p class="cl-56f99c56"><span class="cl-56f821d2">2019‑06‑30</span></p></td><td class="cl-56f9ab38"><p class="cl-56f99c60"><span class="cl-56f821d2">110553</span></p></td><td class="cl-56f9ab39"><p class="cl-56f99c56"><span class="cl-56f821d2">H0746</span></p></td><td class="cl-56f9ab3a"><p class="cl-56f99c56"><span class="cl-56f821d2">‑32.070120</span></p></td><td class="cl-56f9ab3b"><p class="cl-56f99c56"><span class="cl-56f821d2">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-56f9ab2f"><p class="cl-56f99c56"><span class="cl-56f821d2">Fiona Stanley Hospital</span></p></td><td class="cl-56f9ab30"><p class="cl-56f99c56"><span class="cl-56f821d2">2020‑06‑30</span></p></td><td class="cl-56f9ab38"><p class="cl-56f99c60"><span class="cl-56f821d2">105122</span></p></td><td class="cl-56f9ab39"><p class="cl-56f99c56"><span class="cl-56f821d2">H0746</span></p></td><td class="cl-56f9ab3a"><p class="cl-56f99c56"><span class="cl-56f821d2">‑32.070120</span></p></td><td class="cl-56f9ab3b"><p class="cl-56f99c56"><span class="cl-56f821d2">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-56f9ab2f"><p class="cl-56f99c56"><span class="cl-56f821d2">Fiona Stanley Hospital</span></p></td><td class="cl-56f9ab30"><p class="cl-56f99c56"><span class="cl-56f821d2">2021‑06‑30</span></p></td><td class="cl-56f9ab38"><p class="cl-56f99c60"><span class="cl-56f821d2">110029</span></p></td><td class="cl-56f9ab39"><p class="cl-56f99c56"><span class="cl-56f821d2">H0746</span></p></td><td class="cl-56f9ab3a"><p class="cl-56f99c56"><span class="cl-56f821d2">‑32.070120</span></p></td><td class="cl-56f9ab3b"><p class="cl-56f99c56"><span class="cl-56f821d2">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-56f9ab2f"><p class="cl-56f99c56"><span class="cl-56f821d2">Fiona Stanley Hospital</span></p></td><td class="cl-56f9ab30"><p class="cl-56f99c56"><span class="cl-56f821d2">2022‑06‑30</span></p></td><td class="cl-56f9ab38"><p class="cl-56f99c60"><span class="cl-56f821d2">112678</span></p></td><td class="cl-56f9ab39"><p class="cl-56f99c56"><span class="cl-56f821d2">H0746</span></p></td><td class="cl-56f9ab3a"><p class="cl-56f99c56"><span class="cl-56f821d2">‑32.070120</span></p></td><td class="cl-56f9ab3b"><p class="cl-56f99c56"><span class="cl-56f821d2">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-56f9ab2f"><p class="cl-56f99c56"><span class="cl-56f821d2">Fiona Stanley Hospital</span></p></td><td class="cl-56f9ab30"><p class="cl-56f99c56"><span class="cl-56f821d2">2023‑06‑30</span></p></td><td class="cl-56f9ab38"><p class="cl-56f99c60"><span class="cl-56f821d2">107770</span></p></td><td class="cl-56f9ab39"><p class="cl-56f99c56"><span class="cl-56f821d2">H0746</span></p></td><td class="cl-56f9ab3a"><p class="cl-56f99c56"><span class="cl-56f821d2">‑32.070120</span></p></td><td class="cl-56f9ab3b"><p class="cl-56f99c56"><span class="cl-56f821d2">115.846909</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-56f9ab42"><p class="cl-56f99c56"><span class="cl-56f821d2">Fiona Stanley Hospital</span></p></td><td class="cl-56f9ab43"><p class="cl-56f99c56"><span class="cl-56f821d2">2024‑06‑30</span></p></td><td class="cl-56f9ab44"><p class="cl-56f99c60"><span class="cl-56f821d2">111145</span></p></td><td class="cl-56f9ab45"><p class="cl-56f99c56"><span class="cl-56f821d2">H0746</span></p></td><td class="cl-56f9ab4c"><p class="cl-56f99c56"><span class="cl-56f821d2">‑32.070120</span></p></td><td class="cl-56f9ab4d"><p class="cl-56f99c56"><span class="cl-56f821d2">115.846909</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+<section id="where-did-the-myh-ed-code-come-from" class="level2">
+<h2 class="anchored" data-anchor-id="where-did-the-myh-ed-code-come-from">Where did the <code>"MYH-ED"</code> code come from?</h2>
+<p>Great question!</p>
+<p>There are many different variables that can be sourced. You can see a <a href="https://www.aihw.gov.au/about-our-data/our-data-collections">descriptive list online</a>, but we can also use th API (and some of those packages mentioned earlier) to import the list of codes directly into R!</p>
+<div class="cell">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(httr)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jsonlite)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>measures <span class="ot">&lt;-</span> <span class="fu">GET</span>(<span class="st">"https://myhospitalsapi.aihw.gov.au/api/v1/Measures"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>measures <span class="ot">&lt;-</span> <span class="fu">content</span>(measures, <span class="at">as =</span> <span class="st">"text"</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>measures <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(measures, <span class="at">flatten =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>measures<span class="sc">$</span>result <span class="sc">|&gt;</span> </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(measure_code, measure_name) <span class="sc">|&gt;</span> </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(<span class="dv">10</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">thekids_table</span>(<span class="at">colour =</span> <span class="st">"AzureBlue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-57309152{table-layout:auto;}.cl-572d12ac{font-family:'Barlow';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-572d12b6{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-572edf10{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-572eebf4{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-572eebfe{background-color:rgba(66, 110, 168, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-572eebff{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-572eec00{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-572eec01{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-572eec08{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-572eec09{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-572eec12{background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-57309152"><thead><tr style="overflow-wrap:break-word;"><th class="cl-572eebf4"><p class="cl-572edf10"><span class="cl-572d12ac">measure_code</span></p></th><th class="cl-572eebfe"><p class="cl-572edf10"><span class="cl-572d12ac">measure_name</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-572eebff"><p class="cl-572edf10"><span class="cl-572d12b6">MYH0001</span></p></td><td class="cl-572eec00"><p class="cl-572edf10"><span class="cl-572d12b6">Number of surgeries for malignant cancer</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-572eec01"><p class="cl-572edf10"><span class="cl-572d12b6">MYH0002</span></p></td><td class="cl-572eec08"><p class="cl-572edf10"><span class="cl-572d12b6">Median waiting time for surgery for malignant cancer</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-572eec01"><p class="cl-572edf10"><span class="cl-572d12b6">MYH0003</span></p></td><td class="cl-572eec08"><p class="cl-572edf10"><span class="cl-572d12b6">Percentage of people who received surgery for malignant cancer within 30 days</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-572eec01"><p class="cl-572edf10"><span class="cl-572d12b6">MYH0004</span></p></td><td class="cl-572eec08"><p class="cl-572edf10"><span class="cl-572d12b6">Percentage of people who received surgery for malignant cancer within 45 days</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-572eec01"><p class="cl-572edf10"><span class="cl-572d12b6">MYH0005</span></p></td><td class="cl-572eec08"><p class="cl-572edf10"><span class="cl-572d12b6">Percentage of patients who depart the emergency department within four hours of arrival</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-572eebff"><p class="cl-572edf10"><span class="cl-572d12b6">MYH0006</span></p></td><td class="cl-572eec00"><p class="cl-572edf10"><span class="cl-572d12b6">Number of elective surgeries</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-572eec01"><p class="cl-572edf10"><span class="cl-572d12b6">MYH0007</span></p></td><td class="cl-572eec08"><p class="cl-572edf10"><span class="cl-572d12b6">Percentage of patients who waited longer than 365 days for elective surgery</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-572eec01"><p class="cl-572edf10"><span class="cl-572d12b6">MYH0008</span></p></td><td class="cl-572eec08"><p class="cl-572edf10"><span class="cl-572d12b6">Percentage of patients who received their surgery within clinically recommended times</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-572eec01"><p class="cl-572edf10"><span class="cl-572d12b6">MYH0009</span></p></td><td class="cl-572eec08"><p class="cl-572edf10"><span class="cl-572d12b6">Median waiting time for elective surgery</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-572eec09"><p class="cl-572edf10"><span class="cl-572d12b6">MYH0010</span></p></td><td class="cl-572eec12"><p class="cl-572edf10"><span class="cl-572d12b6">Percentage of patients who commenced treatment within the recommended time</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+<p>From here, the world <em>(of AIHW MyHospital data)</em> is your Oyster!</p>
+</section>
+</section>
+<section id="extended-example---guess.-that.-plot" class="level1">
+<h1>Extended example - Guess. That. Plot!</h1>
+<p>Every so often, on one of our internal communication platforms, we’ll do a little ‘Guess That Plot’ quiz. It’s a fun way to Engage staff from around <a href="https://www.thekids.org.au/">our Institute</a> in some conversation and critical thinking are data and visualisations. And it possibly goes without saying - the above plot is a recent example of one of these ‘Guess That Plot’ quizzes we did where we used AIHW data!</p>
+<p>The code for this below!</p>
+<section id="but-first-some-notes" class="level2">
+<h2 class="anchored" data-anchor-id="but-first-some-notes">But first, some notes …</h2>
+<p>For a little something different, we inset a map of Perth into these plots with a marker for the <em>point of interest</em>. This involved using the <a href="https://cran.r-project.org/web/packages/ggmap/index.html"><code>ggmaps</code></a> package and <a href="https://client.stadiamaps.com/signup/">registering here</a> at Stadia Maps for a free account to receive a <code>token</code> to allow us to access the map tile images.</p>
+<p>We obviously can’t share our token, the full <code>.qmd</code> for this post won’t run until you update the code with your token. For that reason, we insert <code>.png.</code>’s of the figures that were saved earlier.</p>
+<p><em>Now we will create a base map of the Perth area and define a function to generate small inset maps for hospitals. Each inset will mark a hospital’s location with a red star on the map. These inset maps can be added to other plots to visually show the exact location of each hospital, while keeping the map clean and free of axes or labels.</em></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggmap)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">register_stadiamaps</span>(<span class="st">"7ae597d3-556b-4f05-b2cf-837d3a978e67"</span>, <span class="at">write =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># register_stadiamaps("YOUR-TOKEN-GOES-HERE", write = FALSE)</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the Perth area</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>perth_bbox <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="at">left =</span> <span class="fl">115.65</span>, <span class="at">bottom =</span> <span class="sc">-</span><span class="fl">32.1</span>, <span class="at">right =</span> <span class="fl">115.95</span>, <span class="at">top =</span> <span class="sc">-</span><span class="fl">31.70</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Source the map tiles for the area we need</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>perth_map <span class="ot">&lt;-</span> <span class="fu">get_stadiamap</span>(</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">bbox =</span> <span class="fu">as.matrix</span>(perth_bbox),</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">maptype =</span> <span class="st">"stamen_terrain_background"</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Forma grob object of the map that we will reuse in each plot</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>inset_map <span class="ot">&lt;-</span> <span class="cf">function</span>(latitude, longitude) {</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  latitude <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(latitude)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  longitude <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(longitude)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplotGrob</span>(</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggmap</span>(perth_map) <span class="sc">+</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>      <span class="fu">annotate</span>(<span class="st">"point"</span>, <span class="at">x =</span> longitude, <span class="at">y =</span> latitude,</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">shape =</span> <span class="dv">8</span>) <span class="sc">+</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme_void</span>())}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In addition:</p>
+<ul>
+<li>We use an <code>lapply</code> to <code>split</code> to iterate over the hospitals. Typically we might look to <code>map</code> or other functions from the <code>tidyverse</code>. <strong>We acknowledge here that ai assisted with some of the code here.</strong></li>
+<li>We use <code>wrap_plots()</code> from the <code>patchwork</code> package to assemble the figures. We originally looked at using <code>facet_wrap()</code> (or similar) from the <code>ggplot2</code> package, but this proved quite challenging when incorporating the inset map with varying red X marker.</li>
+<li>We use white text on a white background, as opposed to <code>element_blank()</code> because it keeps all dimensions of the plots consisten as we work through the reveal! This is really important so plot elements don’t change relative size and position!</li>
+</ul>
+</section>
+<section id="figure-1-not-much-to-go-off" class="level2">
+<h2 class="anchored" data-anchor-id="figure-1-not-much-to-go-off">Figure 1: Not much to go off!</h2>
+<p>This plot only shows the time series with both x and y-axis labels and hospital names are hidden, but perhaps the markings on the maps are a hint? Particularly if you remember which year certain hospitals opened?</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>hospital_plots <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">split</span>(my_aihw_dat, my_aihw_dat<span class="sc">$</span>hospital), <span class="cf">function</span>(df) {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  lat <span class="ot">&lt;-</span> df<span class="sc">$</span>latitude[<span class="dv">1</span>]</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  lon <span class="ot">&lt;-</span> df<span class="sc">$</span>longitude[<span class="dv">1</span>]</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  ts_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(date, count)) <span class="sc">+</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_comma</span>(), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">120000</span>)) <span class="sc">+</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_date</span>(<span class="at">date_breaks =</span> <span class="st">"2 years"</span>, <span class="at">date_labels =</span> <span class="st">"%Y"</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">limits =</span> <span class="fu">c</span>(<span class="fu">as.Date</span>(<span class="st">"2013-01-01"</span>), <span class="fu">as.Date</span>(<span class="st">"2024-12-31"</span>))) <span class="sc">+</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_thekids</span>() <span class="sc">+</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.line =</span> <span class="fu">element_line</span>(),</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.ticks =</span> <span class="fu">element_line</span>(),</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">colour =</span> <span class="st">"white"</span>)) <span class="sc">+</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">" "</span>, <span class="at">title =</span> <span class="st">" "</span>)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  ts_plot <span class="sc">+</span> <span class="fu">inset_element</span>(</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">inset_map</span>(lat, lon),</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">left =</span> <span class="fl">0.8</span>, <span class="at">right =</span> <span class="dv">1</span>,</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">bottom =</span> <span class="fl">0.02</span>, <span class="at">top =</span> <span class="fl">0.55</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  ) </span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>fig1 <span class="ot">&lt;-</span> <span class="fu">wrap_plots</span>(hospital_plots, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(<span class="at">caption =</span> <span class="st">" "</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/fig1.png" class="img-fluid figure-img" style="width:80.0%" data-align="center">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Reveal 1
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="figure-2-time-series-with-x-axis-labels" class="level2">
+<h2 class="anchored" data-anchor-id="figure-2-time-series-with-x-axis-labels">Figure 2: Time Series with X-axis Labels</h2>
+<p>Similar to Plot 1, but the x-axis labels are visible, allowing the timeline to be interpreted while keeping the y-axis subtle.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>hospital_plots <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">split</span>(my_aihw_dat, my_aihw_dat<span class="sc">$</span>hospital), <span class="cf">function</span>(df) {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  lat <span class="ot">&lt;-</span> df<span class="sc">$</span>latitude[<span class="dv">1</span>]</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  lon <span class="ot">&lt;-</span> df<span class="sc">$</span>longitude[<span class="dv">1</span>]</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  ts_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(date, count)) <span class="sc">+</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_comma</span>(), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">120000</span>)) <span class="sc">+</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_date</span>(<span class="at">date_breaks =</span> <span class="st">"2 years"</span>, <span class="at">date_labels =</span> <span class="st">"%Y"</span>,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">limits =</span> <span class="fu">c</span>(<span class="fu">as.Date</span>(<span class="st">"2013-01-01"</span>), <span class="fu">as.Date</span>(<span class="st">"2024-12-31"</span>))) <span class="sc">+</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_thekids</span>() <span class="sc">+</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.line =</span> <span class="fu">element_line</span>(),</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.ticks =</span> <span class="fu">element_line</span>(),</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">colour =</span> <span class="st">"white"</span>)) <span class="sc">+</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">" "</span>, <span class="at">title =</span> <span class="st">" "</span>)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  ts_plot <span class="sc">+</span> <span class="fu">inset_element</span>(</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">inset_map</span>(lat, lon),</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">left =</span> <span class="fl">0.8</span>, <span class="at">right =</span> <span class="dv">1</span>,</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">bottom =</span> <span class="fl">0.02</span>, <span class="at">top =</span> <span class="fl">0.55</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  ) </span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>fig2 <span class="ot">&lt;-</span> <span class="fu">wrap_plots</span>(hospital_plots, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(<span class="at">caption =</span> <span class="st">" "</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/fig2.png" class="img-fluid figure-img" style="width:80.0%" data-align="center">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: Reveal 2
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="figure-3-time-series-with-caption" class="level2">
+<h2 class="anchored" data-anchor-id="figure-3-time-series-with-caption">Figure 3: Time Series with Caption</h2>
+<p>This version includes visible axes and ticks, making the data easier to interpret. A caption indicating the data source <code>AIHW API</code> is added as a real nudge to what the data might be. Hospital titles are still not shown.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>hospital_plots <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">split</span>(my_aihw_dat, my_aihw_dat<span class="sc">$</span>hospital), <span class="cf">function</span>(df) {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  lat <span class="ot">&lt;-</span> df<span class="sc">$</span>latitude[<span class="dv">1</span>]</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  lon <span class="ot">&lt;-</span> df<span class="sc">$</span>longitude[<span class="dv">1</span>]</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  ts_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(date, count)) <span class="sc">+</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_comma</span>(), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">120000</span>)) <span class="sc">+</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_date</span>(<span class="at">date_breaks =</span> <span class="st">"2 years"</span>, <span class="at">date_labels =</span> <span class="st">"%Y"</span>,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">limits =</span> <span class="fu">c</span>(<span class="fu">as.Date</span>(<span class="st">"2013-01-01"</span>), <span class="fu">as.Date</span>(<span class="st">"2024-12-31"</span>))) <span class="sc">+</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_thekids</span>() <span class="sc">+</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.line =</span> <span class="fu">element_line</span>(),</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.ticks =</span> <span class="fu">element_line</span>()) <span class="sc">+</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">" "</span>, <span class="at">title =</span> <span class="st">" "</span>)</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  ts_plot <span class="sc">+</span> <span class="fu">inset_element</span>(</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">inset_map</span>(lat, lon),</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">left =</span> <span class="fl">0.8</span>, <span class="at">right =</span> <span class="dv">1</span>,</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">bottom =</span> <span class="fl">0.02</span>, <span class="at">top =</span> <span class="fl">0.55</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  ) </span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>fig3 <span class="ot">&lt;-</span> <span class="fu">wrap_plots</span>(hospital_plots, <span class="at">ncol =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(<span class="at">caption =</span> <span class="st">"Data source: AIHW API, code: 'XXX-XX'"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/fig3.png" class="img-fluid figure-img" style="width:80.0%" data-align="center">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Reveal 3
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="figure-4-the-reveal" class="level2">
+<h2 class="anchored" data-anchor-id="figure-4-the-reveal">Figure 4: The reveal!</h2>
+<p>And here, everything is revealed.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>hospital_plots <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">split</span>(my_aihw_dat, my_aihw_dat<span class="sc">$</span>hospital), <span class="cf">function</span>(df) {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  lat <span class="ot">&lt;-</span> df<span class="sc">$</span>latitude[<span class="dv">1</span>]</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  lon <span class="ot">&lt;-</span> df<span class="sc">$</span>longitude[<span class="dv">1</span>]</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  ts_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(date, count)) <span class="sc">+</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_comma</span>(), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">120000</span>)) <span class="sc">+</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_date</span>(<span class="at">date_breaks =</span> <span class="st">"2 years"</span>, <span class="at">date_labels =</span> <span class="st">"%Y"</span>,</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>                 <span class="at">limits =</span> <span class="fu">c</span>(<span class="fu">as.Date</span>(<span class="st">"2013-01-01"</span>), <span class="fu">as.Date</span>(<span class="st">"2024-12-31"</span>))) <span class="sc">+</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_thekids</span>() <span class="sc">+</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.line =</span> <span class="fu">element_line</span>(),</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>          <span class="at">axis.ticks =</span> <span class="fu">element_line</span>()) <span class="sc">+</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"ED Presentations (n)"</span>, <span class="at">title =</span> <span class="fu">unique</span>(df<span class="sc">$</span>hospital))</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  ts_plot <span class="sc">+</span> <span class="fu">inset_element</span>(</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">inset_map</span>(lat, lon),</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">left =</span> <span class="fl">0.8</span>, <span class="at">right =</span> <span class="dv">1</span>,</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">bottom =</span> <span class="fl">0.02</span>, <span class="at">top =</span> <span class="fl">0.55</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  ) </span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>fig4 <span class="ot">&lt;-</span> <span class="fu">wrap_plots</span>(hospital_plots, <span class="at">ncol =</span> <span class="dv">2</span>)  <span class="sc">+</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(<span class="at">caption =</span> <span class="st">"Data source: AIHW API, code: 'MYH-ED'"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/fig4.png" class="img-fluid figure-img" style="width:100.0%" data-align="center">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;6: The final reveal
+</figcaption>
+</figure>
+</div>
+</section>
+<section id="putting-them-all-together" class="level2">
+<h2 class="anchored" data-anchor-id="putting-them-all-together">Putting them all together</h2>
+<p>Putting these four stages of the reveal together also posed a few challenges! Combining multiple plots that, <em>themselves</em>, were assembled with <code>patchwork</code>.</p>
+<p>For this, we again turned to ai, and the resulting code is available below.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Divider "plots" (vertical and horizontal)</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>v_thickness <span class="ot">&lt;-</span> <span class="fl">0.005</span>  <span class="co"># fraction of width for vertical divider (adjust)</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>h_thickness <span class="ot">&lt;-</span> <span class="fl">0.01</span>  <span class="co"># fraction of height for horizontal divider (adjust)</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>divider_v <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"black"</span>, <span class="at">colour =</span> <span class="cn">NA</span>))</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>divider_h <span class="ot">&lt;-</span> divider_v  <span class="co"># same look for horizontal divider</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Make rows with a vertical divider between plots</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>top_row <span class="ot">&lt;-</span> <span class="fu">wrap_plots</span>(p1, divider_v, p2, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">1</span>, v_thickness, <span class="dv">1</span>))</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>bottom_row <span class="ot">&lt;-</span> <span class="fu">wrap_plots</span>(p3, divider_v, p4, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">1</span>, v_thickness, <span class="dv">1</span>))</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine rows with a horizontal divider between them</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>final <span class="ot">&lt;-</span> <span class="fu">wrap_plots</span>(top_row, divider_h, bottom_row, </span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ncol =</span> <span class="dv">1</span>, <span class="at">heights =</span> <span class="fu">c</span>(<span class="dv">1</span>, h_thickness, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_layout</span>(<span class="at">ncol =</span> <span class="dv">1</span>) </span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>final</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">paste0</span>(<span class="fu">Sys.Date</span>(), <span class="st">"_fig1-4.png"</span>),</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>       <span class="at">width =</span> <span class="dv">20</span>, <span class="at">height =</span> <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="images/all4.png" class="img-fluid figure-img" style="width:100.0%" data-align="center">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;7: All 4 Guess The Plots Together
+</figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="closing-comments" class="level1">
+<h1>Closing comments</h1>
+<p>Accessing health data via the AIHW API opens up many possibilities for data analysis and visualisations to help us understand trends in Australian Health Statistics. Or, perhaps for finding informative data to aid in one’s study planning! The <code>readaihw</code> helps put this data at the fingertips of any R user, reducing the barriers to diving in and exploring this data. The figures shown here are not overly polished - as that wasn’t the purpose of this post. However, hopefully we’ve shown how easy it can be to draw some interesting local insights while having a bit of fun along the way.</p>
+<section id="acknowledgements" class="level2">
+<h2 class="anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
+<p>Thanks to Zac Dempsey, Robin Cook, Elizabeth McKinnon, and Wes Billingham for providing feedback on and reviewing this post.</p>
+</section>
+<section id="reproducibility-information" class="level2">
+<h2 class="anchored" data-anchor-id="reproducibility-information">Reproducibility Information</h2>
+<p>The session information can also be seen below.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.5.0 (2025-04-11)
+Platform: aarch64-apple-darwin20
+Running under: macOS Sequoia 15.6.1
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: Australia/Perth
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] patchwork_1.3.2       ggmap_4.0.2           jsonlite_2.0.0       
+ [4] httr_1.4.7            readaihw_0.0.2        thekidsbiostats_1.4.1
+ [7] extrafont_0.20        flextable_0.9.10      gtsummary_2.4.0      
+[10] lubridate_1.9.4       forcats_1.0.1         stringr_1.5.2        
+[13] dplyr_1.1.4           purrr_1.1.0           readr_2.1.5          
+[16] tidyr_1.3.1           tibble_3.3.0          ggplot2_4.0.0        
+[19] tidyverse_2.0.0      
+
+loaded via a namespace (and not attached):
+ [1] tidyselect_1.2.1        viridisLite_0.4.2       farver_2.1.2           
+ [4] S7_0.2.0                bitops_1.0-9            fastmap_1.2.0          
+ [7] fontquiver_0.2.1        janitor_2.2.1           promises_1.3.3         
+[10] labelled_2.15.0         digest_0.6.37           timechange_0.3.0       
+[13] mime_0.13               lifecycle_1.0.4         magrittr_2.0.4         
+[16] compiler_4.5.0          rlang_1.1.6             tools_4.5.0            
+[19] yaml_2.3.10             data.table_1.17.8       knitr_1.50             
+[22] labeling_0.4.3          askpass_1.2.1           htmlwidgets_1.6.4      
+[25] curl_7.0.0              plyr_1.8.9              xml2_1.4.0             
+[28] RColorBrewer_1.1-3      withr_3.0.2             grid_4.5.0             
+[31] shinyFiles_0.9.3        sysfonts_0.8.9          gdtools_0.4.4          
+[34] xtable_1.8-4            extrafontdb_1.1         scales_1.4.0           
+[37] cli_3.6.5               rmarkdown_2.30          ragg_1.5.0             
+[40] generics_0.1.4          rstudioapi_0.17.1       tzdb_0.5.0             
+[43] readxl_1.4.5            assertthat_0.2.1        cellranger_1.1.0       
+[46] vctrs_0.6.5             fontBitstreamVera_0.1.1 hms_1.1.3              
+[49] systemfonts_1.3.1       jpeg_0.1-11             glue_1.8.0             
+[52] stringi_1.8.7           gtable_0.3.6            later_1.4.4            
+[55] pillar_1.11.1           rappdirs_0.3.3          htmltools_0.5.8.1      
+[58] openssl_2.3.4           R6_2.6.1                httr2_1.2.1            
+[61] textshaping_1.0.3       evaluate_1.0.5          shiny_1.11.1           
+[64] haven_2.5.5             png_0.1-8               snakecase_0.11.1       
+[67] fontLiberation_0.1.0    httpuv_1.6.16           Rcpp_1.1.0             
+[70] zip_2.3.3               uuid_1.2-1              Rttf2pt1_1.3.14        
+[73] officer_0.7.0           xfun_0.53               fs_1.6.6               
+[76] pkgconfig_2.0.3        </code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/the-kids-biostats\.github\.io");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
