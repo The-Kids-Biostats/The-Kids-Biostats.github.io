@@ -125,13 +125,12 @@ We obviously can't share our token, the full `.qmd` for this post won't run unti
 
 *Now we will create a base map of the Perth area and define a function to generate small inset maps for hospitals. Each inset will mark a hospital’s location with a red star on the map. These inset maps can be added to other plots to visually show the exact location of each hospital, while keeping the map clean and free of axes or labels.*
 
-```{r echo = T}
+```{r echo = T, eval = F}
 #| code-fold: false
 library(ggmap)
 library(patchwork)
 
-register_stadiamaps("7ae597d3-556b-4f05-b2cf-837d3a978e67", write = FALSE)
-# register_stadiamaps("YOUR-TOKEN-GOES-HERE", write = FALSE)
+register_stadiamaps("YOUR-TOKEN-GOES-HERE", write = FALSE)
 
 # Define the Perth area
 perth_bbox <- c(left = 115.65, bottom = -32.1, right = 115.95, top = -31.70)
@@ -164,7 +163,7 @@ In addition:
 
 This plot only shows the time series with both x and y-axis labels and hospital names are hidden, but perhaps the markings on the maps are a hint? Particularly if you remember which year certain hospitals opened?
 
-```{r echo = T}
+```{r echo = T, eval = F}
 hospital_plots <- lapply(split(my_aihw_dat, my_aihw_dat$hospital), function(df) {
   
   lat <- df$latitude[1]
@@ -199,7 +198,7 @@ fig1 <- wrap_plots(hospital_plots, ncol = 2) +
 
 Similar to Plot 1, but the x-axis labels are visible, allowing the timeline to be interpreted while keeping the y-axis subtle.
 
-```{r echo = T}
+```{r echo = T, eval = F}
 hospital_plots <- lapply(split(my_aihw_dat, my_aihw_dat$hospital), function(df) {
   
   lat <- df$latitude[1]
@@ -234,7 +233,7 @@ fig2 <- wrap_plots(hospital_plots, ncol = 2) +
 
 This version includes visible axes and ticks, making the data easier to interpret. A caption indicating the data source `AIHW API` is added as a real nudge to what the data might be. Hospital titles are still not shown.
 
-```{r echo = T}
+```{r echo = T, eval = F}
 hospital_plots <- lapply(split(my_aihw_dat, my_aihw_dat$hospital), function(df) {
   
   lat <- df$latitude[1]
@@ -268,7 +267,7 @@ fig3 <- wrap_plots(hospital_plots, ncol = 2) +
 
 And here, everything is revealed.
 
-```{r echo = T}
+```{r echo = T, eval = F}
 hospital_plots <- lapply(split(my_aihw_dat, my_aihw_dat$hospital), function(df) {
   
   lat <- df$latitude[1]
@@ -304,7 +303,7 @@ Putting these four stages of the reveal together also posed a few challenges! Co
 
 For this, we again turned to ai, and the resulting code is available below.
 
-```{r echo = T , eval=FALSE}
+```{r echo = T , eval=F}
 
 # Divider "plots" (vertical and horizontal)
 v_thickness <- 0.005  # fraction of width for vertical divider (adjust)

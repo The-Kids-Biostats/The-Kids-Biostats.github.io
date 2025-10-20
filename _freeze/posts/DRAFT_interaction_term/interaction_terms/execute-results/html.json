@@ -1,0 +1,15 @@
+{
+  "hash": "6db8ca5207c50018c1c12c243595b6e9",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Interaction Terms in Logistic Regression\"\nauthor: \"Zac Dempsey\"\nformat:\n  html:\n    code-fold: true\n    toc: true\n    toc-location: left\ndate: Sys.Date()\ncategories:\n  - R\n  - regression\n  - model\n  - interpretation\ndraft: true\n---\n\n\n\n\n\n\n# Overview\n\n-   Anybody can fit a model to any data set. And R will oblige so long as it is possible!\n\n-   Interpreting/drawing meaning from model coefficients is where the bulk of the work/complexity arises in statistical/biostatistical work. Also what we need to write to deliver at the end of the day!\n\n    -   Interaction terms add an additional layer of complexity, particularly with respect to nonlinear models.\n\n# Background\n\n## Logistic Regression\n\n### Components\n\n-   Odds\n\n-   Log-odds\n\n-   Proportions\n\n### Model Form\n\n-   Coefficients are estimated on a log-odds scale. For interpretation, we often interpret in terms of odds ratio (exponentiation)\n\n## Interaction Terms\n\n# Motivating Example\n\n-   Leave the correct interpretation hanging? Can we structure things to set up a motivating example\n\n# Example 1\n\n## Acknowledgements\n\nThanks to Wesley Billingham, Matt Cooper, and Elizabeth McKinnon for providing feedback on and reviewing this post.\n\nYou can look forward to seeing posts from these other team members here in the coming weeks and months.\n\n<br>\n\n## Reproducibility Information\n\nTo access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:\n\nThe session information can also be seen below.\n\n\n\n\n::: {.cell}\n\n```{.r .cell-code}\nsessionInfo()\n```\n\n::: {.cell-output .cell-output-stdout}\n\n```\nR version 4.5.0 (2025-04-11)\nPlatform: aarch64-apple-darwin20\nRunning under: macOS Sequoia 15.6.1\n\nMatrix products: default\nBLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib \nLAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1\n\nlocale:\n[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8\n\ntime zone: Australia/Perth\ntzcode source: internal\n\nattached base packages:\n[1] stats     graphics  grDevices utils     datasets  methods   base     \n\nloaded via a namespace (and not attached):\n [1] htmlwidgets_1.6.4 compiler_4.5.0    fastmap_1.2.0     cli_3.6.5        \n [5] tools_4.5.0       htmltools_0.5.8.1 rstudioapi_0.17.1 yaml_2.3.10      \n [9] rmarkdown_2.30    knitr_1.50        jsonlite_2.0.0    xfun_0.53        \n[13] digest_0.6.37     rlang_1.1.6       evaluate_1.0.5   \n```\n\n\n:::\n:::\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
