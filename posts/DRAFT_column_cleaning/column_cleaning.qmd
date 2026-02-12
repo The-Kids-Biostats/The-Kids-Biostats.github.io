@@ -1,0 +1,179 @@
+---
+title: "Efficiently Cleaning Column Labels with `thekidsbiostats`"
+author: "Zac Dempsey"
+format:
+  html:
+    code-fold: true
+    tabset: true
+    toc: true
+    toc-location: left
+date: "2026-02-12"
+categories:
+  - R
+  - Data cleaning
+  - Package
+draft: true
+css: _extensions/html/styles.css
+editor_options: 
+  chunk_output_type: inline
+execute:
+  echo: false
+  warning: false 
+fig-align: center
+fig-format: png
+---
+
+```{r echo=TRUE}
+#| code-fold: false
+library(thekidsbiostats) # install with install.packages("thekidsbiostats", repos = "the-kids-biostats.r-universe.dev")
+```
+
+# Overview
+
+Datasets rarely come with cleaned, tidy formatting in their column names and hence it is common practice to rename the original column names to those that are more code-friendly (i.e. lower-case, no spaces or special characters and unique). Alongside the code-friendly renamed columns, it’s also very practical to store label attributes, which act as a human-readable version of each column that can be used for displaying in tables and figures. Whilst there already exists functions for renaming columns (e.g. dplyr::rename()) and applying labels (e.g. labelled or Hmisc), there is much leg work that needs to be applied in setting up the inputs for these functions.
+
+This post demonstrates how to use column dictionaries to expedite the process of standardising and labelling columns in a dataset. We will use two main functions from [`thekidsbiostats`](https://github.com/The-Kids-Biostats/thekidsbiostats):
+
++ `make_column_dict()` – create a copy-pasteable column dictionary template.
++ `update_columns()` – rename and label columns using a column dictionary.
+
+# Motivating Example
+
+As an example, let's point to the `data_patient` dataset, which is conveniently contained in `thekidsbiostats` package:
+
+```{r echo=TRUE}
+#| code-fold: false
+data(data_patient, package = "thekidsbiostats")
+```
+
+Previewing this data set:
+
+```{r}
+data_patient %>%
+  thekids_table()
+```
+
+Immediately, we see that the column headers are not formatted in a very nice way. The column headers contain:
+
++ Categorical variable coding,
++ Full questions,
++ Spacing
++ Inconsistent capitalisation,
++ Punctuation (parentheses, equals signs, questions marks, dashes, slashes)
+
+The spaces, equal signs and parentheses in the column names requires us to use backticks (` `) to avoid R interpreting these symbols literally.
+
+Beyond this dataset visually looking messy, it can also be tricky to reference these column names when attempting to use them in operations. For example, let’s try to calculate the BMI of individuals and recode the Sex column by replacing 0/1 with Male/Female.
+
+```{r echo=TRUE}
+#| code-fold: false
+data_patient$`Sex (0=Male, 1=Female)` = case_when(
+  data_patient$`Sex (0=Male, 1=Female)` == 0 ~ "Male",
+  data_patient$`Sex (0=Male, 1=Female)` == 1 ~ "Female",
+  T ~ NA_character_
+)
+
+bmi = data_patient$`WEIGHT (kg)` / (data_patient$`HEIGHT (cm)` / 100.0)^2
+print(bmi)
+```
+
+Functions such as `janitor::clean_names()` can be very useful for standardising such column names into syntactic names. However, for situations like our column "Do you currently smoke any form of tobacco products, including cigarettes, cigars, or pipes, on a regular basis?", the “cleaned” version is arguably just as unwieldy.
+
+Nonetheless, the consequence of renaming columns for easy manipulation in code is likely dropping any potentially useful formatting of the columns (e.g. units and symbols). Ideally, we want to both rename the columns and simultaneously retain their human-readable labels for presentation.
+
+
+
+
+## Create Data Dictionary
+
+The solution is therefore to manually set up a dictionary that maps the old column names to newly formatted column names as well as apply $label attributes to each column to be used for all visual presentation.
+
+The make_column_dict() function makes this process slightly easier by creating a ready-to-fill template based on the column names that exist with the data. 
+
+For example:
+
+```{r echo=TRUE}
+#| code-fold: false
+make_column_dict(data = data_patient,
+                 auto_clean = TRUE)
+```
+
+We can either directly add to the dict object assigned above or copy-paste the printed output into our code and modify as needed:
+
+```{r}
+dict_patient <- tribble(
+  ~old, ~new, ~label,
+  'Patient ID#', 'id', 'Patient ID',
+  'DOB [YYYY-MM-DD]', 'dob', 'Date of Birth',
+  'Sex (0=Male, 1=Female)', 'sex', 'Sex',
+  'WHAT IS YOUR HEIGHT? (cm)', 'height_cm', 'Height (cm)',
+  'WHAT IS YOUR CURRENT WEIGHT? (kg)', 'weight_kg', 'Weight (kg)',
+  'Do you currently smoke any form of tobacco products, including cigarettes, cigars, or pipes, on a regular basis?', 'current_smoking', 'Current tobacco consumption',
+  'bp (mmHg)', 'bp_mmhg', 'BP (mmHg)',
+  'Cholesterol / mmolL', 'cholesterol_mmol_l', 'Cholesterol (mmolL)',
+)
+```
+
+Alternatively, we can also write this file to our machine, by specifying `file`:
+
+```{r echo=TRUE, eval=FALSE}
+#| code-fold: false
+make_column_dict(data = data_patient,
+                 auto_clean = TRUE,
+                 file = "colnames.csv")
+```
+
+And then read this csv in:
+
+```{r echo=TRUE}
+#| code-fold: false
+dict_patient <- readr::read_csv(file = "colnames.csv")
+```
+
+```{r}
+dict_patient %>%
+  thekids_table()
+```
+
+## Apply column dictionary
+
+Now after having defined the column dictionary above, we can simply use the `update_columns()` function to apply these changes in a single line.
+
+```{r echo=TRUE}
+#| code-fold: false
+data_clean <- update_columns(data_patient, dict = dict_patient)
+```
+
+```{r}
+data_clean %>%
+  labelled::remove_labels() %>%
+  thekids_table()
+```
+
+The labels we have specified are stored as an attribute, and automatically apply to summary tables.
+
+```{r}
+data_clean %>%
+  tbl_summary(include = -id) %>%
+  thekids_table()
+```
+
+
+# Closing comments
+
+
+# Acknowledgements
+
+Thanks to Dr Matt Cooper, Wesley Billingham, Dr Robin Cook and Dr Elizabeth McKinnon for providing feedback on and reviewing this post.
+
+## Reproducibility Information
+
+To access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:
+
+<https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/>
+
+The session information can also be seen below.
+
+```{r echo = T}
+sessionInfo()
+```

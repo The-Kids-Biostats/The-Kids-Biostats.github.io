@@ -1,0 +1,9 @@
+old,new,label
+Patient ID#,id,Patient ID
+DOB [YYYY-MM-DD],dob,Date of Birth
+"Sex (0=Male, 1=Female)",sex,Sex
+WHAT IS YOUR HEIGHT? (cm),height_cm,Height (cm)
+WHAT IS YOUR CURRENT WEIGHT? (kg),weight_kg,Weight (kg)
+"Do you currently smoke any form of tobacco products, including cigarettes, cigars, or pipes, on a regular basis?",current_smoking,Current tobacco consumption
+bp (mmHg),bp_mmhg,BP (mmHg)
+Cholesterol / mmolL,cholesterol_mmoll,Cholesterol (mmolL)
