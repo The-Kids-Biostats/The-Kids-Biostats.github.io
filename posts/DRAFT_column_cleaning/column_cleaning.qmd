@@ -108,7 +108,7 @@ The "cleaned" version of this column name simply omits spaces and punctuation, a
 
 Ideally, we want to (i) rename the columns, and (ii) simultaneously retain human-readable labels for presentation/reporting.
 
-Our solution to this is therefore to manually set up a dictionary that maps the **old column names** to **newly formatted column names** as well as **apply label attributes**.
+Therefore, our solution is to manually set up a dictionary that maps the **old column names** to **newly formatted column names** as well as **apply label attributes**.
 
 The `make_column_dict()` function facilitates this process by creating a ready-to-fill template based on the original column names in the data. 
 
@@ -145,7 +145,7 @@ This `tribble` has been manually modified with "clean" column names and variable
 :::
 
 ::: callout-important
-Naively renaming columns for easy manipulation in code risks dropping potentially useful information contained in the original column name (e.g., units and symbols). It is important to have a *data dictionary* to retain this information about variables, which is distinct from the column name dictionary we're creating here. For example, neither our `new` or `label` value for the Sex variable above captures the coding.  
+Naively renaming columns for easy manipulation in code risks dropping potentially useful information contained in the original column name (e.g., units and symbols). It is important to have a *data dictionary* to retain this information about variables, which is distinct from the column name dictionary we're creating here. For example, neither our `new` or `label` value for the `sex` variable above captures the coding.  
 :::
 
 Alternatively, we can also write this file (e.g., csv, rds, xlsx) to our machine for editing, by specifying `file`:
@@ -171,7 +171,7 @@ dict_patient %>%
 
 ## Step 2: Apply column dictionary
 
-Now that we have defined the column dictionary above, we can simply use the `update_columns()` function to apply these changes in a single line.
+Now that we have defined the column dictionary above, we can simply use `update_columns()` to apply these changes in a single line.
 
 ```{r echo=TRUE}
 #| code-fold: false
