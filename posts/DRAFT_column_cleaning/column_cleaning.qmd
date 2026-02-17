@@ -30,13 +30,13 @@ library(thekidsbiostats) # install with install.packages("thekidsbiostats", repo
 
 # Overview
 
-Datasets rarely come with cleaned, tidy formatting in their column names. Therefore, it is common practice to rename the original column names to something more syntactic, code-friendly names (i.e., unique, lower-case names with no spaces or special characters). Alongside code-friendly columns, it is also often useful to store *label attributes*, which provide clean, human-readable versions labels for each code-friendly variable for use in analytical reports, tables and figures. 
+Datasets rarely come with clean and consistent formatting in their column names. Therefore, it is common practice when performing analysis to rename the original column names to syntactic, code-friendly names (i.e., unique, lower-case names with no spaces or special characters). Alongside these code-friendly columns, it is then also often useful to store *label attributes*, which provide clean, human-readable versions labels to for each code-friendly variable. These can be called upon later for end-user output, such as analytical reports, tables and figures. 
 
-While a variety of functions for *renaming columns* (e.g., `dplyr::rename()`) and *applying labels* (e.g., using the [`labelled`](https://cran.r-project.org/web/packages/labelled/index.html) or [`Hmisc`](https://cran.r-project.org/web/packages/Hmisc/index.html) packages) exist, a reasonable amount of leg work is still needed before such functions can be applied.
+While a variety of functions for **renaming columns** (e.g., `dplyr::rename()`) and **applying labels** (e.g., using the [`labelled`](https://cran.r-project.org/web/packages/labelled/index.html) or [`Hmisc`](https://cran.r-project.org/web/packages/Hmisc/index.html) packages) exist, a reasonable amount of leg work is still needed before such functions can be applied.
 
 This post will demonstrate how [`thekidsbiostats`](https://github.com/The-Kids-Biostats/thekidsbiostats) can be used to streamline and expedite the process of standardising and labelling columns. Specifically, the following functions will be introduced:
 
-+ [`make_column_dict()`](https://the-kids-biostats.github.io/thekidsbiostats/reference/make_column_dict.html)–--create a copy-pasteable column dictionary template.
++ [`make_column_dict()`](https://the-kids-biostats.github.io/thekidsbiostats/reference/make_column_dict.html)–--create a copy-pasteable column name dictionary template.
 + [`update_columns()`](https://the-kids-biostats.github.io/thekidsbiostats/reference/update_columns.html)–--rename and label columns using a column dictionary.
 
 # Motivating Example
@@ -55,7 +55,7 @@ data_patient %>%
   thekids_table()
 ```
 
-Immediately, we see that the column headers are not formatted in a very nice way. The column headers contain (any combination of):
+Immediately, we see that the column headers are not formatted in a very nice way, and especially not for programming! The column headers contain (any combination of):
 
 + Categorical variable coding,
 + Full questions,
@@ -106,11 +106,9 @@ The "cleaned" version of this column name simply omits spaces and punctuation, a
 
 ## Step 1: Create Data Dictionary
 
-::: callout-important
-Naively renaming columns for easy manipulation in code risks dropping potentially useful information contained in the original column name (e.g., units and symbols). Ideally, we want to (i) rename the columns, and (ii) simultaneously retain human-readable labels for presentation/reporting.
+Ideally, we want to (i) rename the columns, and (ii) simultaneously retain human-readable labels for presentation/reporting.
 
 Our solution to this is therefore to manually set up a dictionary that maps the **old column names** to **newly formatted column names** as well as **apply label attributes**.
-:::
 
 The `make_column_dict()` function facilitates this process by creating a ready-to-fill template based on the original column names in the data. 
 
@@ -146,7 +144,11 @@ dict_patient <- tribble(
 This `tribble` has been manually modified with "clean" column names and variable labels. Additionally, a row for the derived `bmi` variable has been included.
 :::
 
-Alternatively, we can also write this file (e.g., csv, rds, xlsx) to our machine, by specifying `file`:
+::: callout-important
+Naively renaming columns for easy manipulation in code risks dropping potentially useful information contained in the original column name (e.g., units and symbols). It is important to have a *data dictionary* to retain this information about variables, which is distinct from the column name dictionary we're creating here. For example, neither our `new` or `label` value for the Sex variable above captures the coding.  
+:::
+
+Alternatively, we can also write this file (e.g., csv, rds, xlsx) to our machine for editing, by specifying `file`:
 
 ```{r echo=TRUE, eval=FALSE}
 #| code-fold: false
