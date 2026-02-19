@@ -9,8 +9,635 @@
 <link>https://the-kids-biostats.github.io/</link>
 <atom:link href="https://the-kids-biostats.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description>Biostats R solutions</description>
-<generator>quarto-1.4.555</generator>
-<lastBuildDate>Sun, 19 Oct 2025 13:00:00 GMT</lastBuildDate>
+<generator>quarto-1.5.56</generator>
+<lastBuildDate>Wed, 18 Feb 2026 16:00:00 GMT</lastBuildDate>
+<item>
+  <title>Efficiently Cleaning and Labelling Data Columns with thekidsbiostats</title>
+  <dc:creator>Zac Dempsey, Dr Robin van de Meeberg</dc:creator>
+  <link>https://the-kids-biostats.github.io/posts/2026-02-19_column_cleaning/column_cleaning.html</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(thekidsbiostats) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># install with install.packages("thekidsbiostats", repos = "the-kids-biostats.r-universe.dev")</span></span></code></pre></div>
+</div>
+<section id="overview" class="level1">
+<h1>Overview</h1>
+<p>Datasets rarely come with clean and consistent formatting in their column names. Therefore, it is common practice when performing analysis to rename the original column names to coding-friendly names (i.e., unique, lower-case, no spaces or special characters, consistent prefixes/suffixes).</p>
+<p>Alongside these coding-friendly columns, it is then also useful to store (or link) <em>label attributes</em>, which provide clean, more descriptive or verbose labels for each coding-friendly variable name. These can be called upon when we are producing output for presentation, such as complete analytical reports, or exported tables and figures.</p>
+<p>While a variety of functions for <strong>renaming columns</strong> (e.g., <code>dplyr::rename()</code>) and <strong>applying labels</strong> (e.g., using the <a href="https://cran.r-project.org/web/packages/labelled/index.html"><code>labelled</code></a> or <a href="https://cran.r-project.org/web/packages/Hmisc/index.html"><code>Hmisc</code></a> packages) exist, a reasonable amount of leg work is needed to use such functions across an entire dataset.</p>
+<p>This post will demonstrate how two new functions within <a href="https://github.com/The-Kids-Biostats/thekidsbiostats"><code>thekidsbiostats</code></a> package can be used to streamline and expedite the process of standardising and labelling columns. Specifically, let’s introduce the following functions:</p>
+<ul>
+<li><a href="https://the-kids-biostats.github.io/thekidsbiostats/reference/make_column_dict.html"><code>make_column_dict()</code></a> — create a copy-pasteable column name dictionary template.</li>
+<li><a href="https://the-kids-biostats.github.io/thekidsbiostats/reference/update_columns.html"><code>update_columns()</code></a> — renames and labels columns using a column name dictionary.</li>
+</ul>
+</section>
+<section id="motivating-example" class="level1 page-columns page-full">
+<h1>Motivating Example</h1>
+<p>As an example, let’s explore the <code>data_patient</code> dataset, an example dataset shipped with the package:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">data</span>(data_patient, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">package =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"thekidsbiostats"</span>)</span></code></pre></div>
+</div>
+<p>Previewing this dataset:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-4922672c{table-layout:auto;}.cl-4919a222{font-family:'Barlow';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-4919a22c{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-491ce3c4{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-491ce3ce{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-491d140c{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d1416{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d1417{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d1420{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d1421{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d142a{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d1434{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d1435{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d143e{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d143f{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d1440{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d1448{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d1449{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d144a{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d1452{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d1453{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d1454{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d145c{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d145d{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d145e{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d1466{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d1470{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d1471{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d1472{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d147a{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d147b{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d1484{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d1485{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d1486{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d148e{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d148f{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-491d1498{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-4922672c"><thead><tr style="overflow-wrap:break-word;"><th class="cl-491d140c"><p class="cl-491ce3c4"><span class="cl-4919a222">Patient ID#</span></p></th><th class="cl-491d1416"><p class="cl-491ce3ce"><span class="cl-4919a222">DOB [YYYY-MM-DD]</span></p></th><th class="cl-491d1417"><p class="cl-491ce3ce"><span class="cl-4919a222">Sex (0=Male, 1=Female)</span></p></th><th class="cl-491d1420"><p class="cl-491ce3c4"><span class="cl-4919a222">WHAT IS YOUR HEIGHT? (cm)</span></p></th><th class="cl-491d1421"><p class="cl-491ce3c4"><span class="cl-4919a222">WHAT IS YOUR CURRENT WEIGHT? (kg)</span></p></th><th class="cl-491d142a"><p class="cl-491ce3c4"><span class="cl-4919a222">Do you currently smoke any form of tobacco products, including cigarettes, cigars, or pipes, on a regular basis?</span></p></th><th class="cl-491d1434"><p class="cl-491ce3ce"><span class="cl-4919a222">bp (mmHg)</span></p></th><th class="cl-491d1435"><p class="cl-491ce3c4"><span class="cl-4919a222">Cholesterol / mmolL</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-491d143e"><p class="cl-491ce3c4"><span class="cl-4919a22c">101</span></p></td><td class="cl-491d143f"><p class="cl-491ce3ce"><span class="cl-4919a22c">1980‑05‑12</span></p></td><td class="cl-491d1440"><p class="cl-491ce3ce"><span class="cl-4919a22c">0</span></p></td><td class="cl-491d1448"><p class="cl-491ce3c4"><span class="cl-4919a22c">175</span></p></td><td class="cl-491d1449"><p class="cl-491ce3c4"><span class="cl-4919a22c">70</span></p></td><td class="cl-491d144a"><p class="cl-491ce3c4"><span class="cl-4919a22c">true</span></p></td><td class="cl-491d1452"><p class="cl-491ce3ce"><span class="cl-4919a22c">120/80</span></p></td><td class="cl-491d1453"><p class="cl-491ce3c4"><span class="cl-4919a22c">5.2</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-491d143e"><p class="cl-491ce3c4"><span class="cl-4919a22c">102</span></p></td><td class="cl-491d143f"><p class="cl-491ce3ce"><span class="cl-4919a22c">1992‑08‑03</span></p></td><td class="cl-491d1440"><p class="cl-491ce3ce"><span class="cl-4919a22c">1</span></p></td><td class="cl-491d1448"><p class="cl-491ce3c4"><span class="cl-4919a22c">160</span></p></td><td class="cl-491d1449"><p class="cl-491ce3c4"><span class="cl-4919a22c">55</span></p></td><td class="cl-491d144a"><p class="cl-491ce3c4"><span class="cl-4919a22c">false</span></p></td><td class="cl-491d1452"><p class="cl-491ce3ce"><span class="cl-4919a22c">110/70</span></p></td><td class="cl-491d1453"><p class="cl-491ce3c4"><span class="cl-4919a22c">4.8</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-491d143e"><p class="cl-491ce3c4"><span class="cl-4919a22c">103</span></p></td><td class="cl-491d143f"><p class="cl-491ce3ce"><span class="cl-4919a22c">1975‑12‑25</span></p></td><td class="cl-491d1440"><p class="cl-491ce3ce"><span class="cl-4919a22c">1</span></p></td><td class="cl-491d1448"><p class="cl-491ce3c4"><span class="cl-4919a22c">180</span></p></td><td class="cl-491d1449"><p class="cl-491ce3c4"><span class="cl-4919a22c">80</span></p></td><td class="cl-491d144a"><p class="cl-491ce3c4"><span class="cl-4919a22c">false</span></p></td><td class="cl-491d1452"><p class="cl-491ce3ce"><span class="cl-4919a22c">130/85</span></p></td><td class="cl-491d1453"><p class="cl-491ce3c4"><span class="cl-4919a22c">6.1</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-491d1454"><p class="cl-491ce3c4"><span class="cl-4919a22c">104</span></p></td><td class="cl-491d145c"><p class="cl-491ce3ce"><span class="cl-4919a22c">2000‑01‑01</span></p></td><td class="cl-491d145d"><p class="cl-491ce3ce"><span class="cl-4919a22c">0</span></p></td><td class="cl-491d145e"><p class="cl-491ce3c4"><span class="cl-4919a22c">165</span></p></td><td class="cl-491d1466"><p class="cl-491ce3c4"><span class="cl-4919a22c">60</span></p></td><td class="cl-491d1470"><p class="cl-491ce3c4"><span class="cl-4919a22c">true</span></p></td><td class="cl-491d1471"><p class="cl-491ce3ce"><span class="cl-4919a22c">115/75</span></p></td><td class="cl-491d1472"><p class="cl-491ce3c4"><span class="cl-4919a22c">5.0</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-491d147a"><p class="cl-491ce3c4"><span class="cl-4919a22c">105</span></p></td><td class="cl-491d147b"><p class="cl-491ce3ce"><span class="cl-4919a22c">1985‑07‑07</span></p></td><td class="cl-491d1484"><p class="cl-491ce3ce"><span class="cl-4919a22c">1</span></p></td><td class="cl-491d1485"><p class="cl-491ce3c4"><span class="cl-4919a22c">170</span></p></td><td class="cl-491d1486"><p class="cl-491ce3c4"><span class="cl-4919a22c">75</span></p></td><td class="cl-491d148e"><p class="cl-491ce3c4"><span class="cl-4919a22c">false</span></p></td><td class="cl-491d148f"><p class="cl-491ce3ce"><span class="cl-4919a22c">125/82</span></p></td><td class="cl-491d1498"><p class="cl-491ce3c4"><span class="cl-4919a22c">5.5</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+<p>Immediately, we see that the column headers are not formatted in a very nice way, and especially not for coding purposes! The column headers contain (any combination of):</p>
+<ul>
+<li>Categorical variable coding,</li>
+<li>Full questions,</li>
+<li>Spacing,</li>
+<li>Inconsistent letter capitalisation,</li>
+<li>Punctuation (parentheses, equals signs, questions marks, dashes, slashes).</li>
+</ul>
+<p>The spaces and punctuation in these column names require us to use backticks (``) to avoid R interpreting these symbols literally.</p>
+<p>Beyond visually looking messy within final output, this set up can also be messy within your code, unnecessarily making simple operations more difficult to follow. For example, when forced to use the original column names, let’s see what implementing two trivial manipulations/changes to the data looks like in the code:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs"><li class="nav-item"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" aria-controls="tabset-1-1" aria-selected="true">i) Calculate BMI</a></li><li class="nav-item"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" aria-controls="tabset-1-2" aria-selected="false">ii) Re-code Sex variable</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" aria-labelledby="tabset-1-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">data_patient<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>bmi <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> data_patient<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">WHAT IS YOUR CURRENT WEIGHT? (kg)</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> (data_patient<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">WHAT IS YOUR HEIGHT? (cm)</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100.0</span>)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">^</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span></span></code></pre></div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" aria-labelledby="tabset-1-2-tab">
+<p>Recode the Sex column by replacing 0/1 with Male/Female, as defined in the existing column header.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">data_patient<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Sex (0=Male, 1=Female)</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">case_when</span>(</span>
+<span id="cb4-2">  data_patient<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Sex (0=Male, 1=Female)</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Male"</span>,</span>
+<span id="cb4-3">  data_patient<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Sex (0=Male, 1=Female)</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Female"</span>,</span>
+<span id="cb4-4">  <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NA_character_</span></span>
+<span id="cb4-5">)</span></code></pre></div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>Clearly, coding each of these changes is more cumbersome and time intensive than it needs to be, and the readability of our code is impacted.</p>
+</div></div><p><br></p>
+<p>Functions such as <code>janitor::clean_names()</code> can be very useful for standardising such column names into coding-friendly names. However, this approach is still imperfect, and the resulting names may remain just as problematic (as seen below).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">colnames</span>(janitor<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">clean_names</span>(data_patient[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>]))</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "do_you_currently_smoke_any_form_of_tobacco_products_including_cigarettes_cigars_or_pipes_on_a_regular_basis"</code></pre>
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>The “cleaned” version of this column name simply omits spaces and punctuation, however, it is still far too long.</p>
+</div></div></section>
+<section id="our-solution" class="level1 page-columns page-full">
+<h1>Our Solution</h1>
+<p>Ideally, we want to simultaneously</p>
+<ol type="1">
+<li>rename the columns, and</li>
+<li>retain human-readable labels for presentation/reporting.</li>
+</ol>
+<p>Therefore, our solution is to set up a dictionary that maps the <strong>old column names</strong> to <strong>newly-formatted column names</strong> as well as <strong>apply label attributes</strong>.</p>
+<section id="step-1-create-data-dictionary" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="step-1-create-data-dictionary">Step 1: Create Data Dictionary</h2>
+<p>The <code>make_column_dict()</code> function facilitates this process by giving you a ready-to-fill template based on the original column names in the data.</p>
+<p>For example:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">dict <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">make_column_dict</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> data_patient, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">auto_clean =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">quiet =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">FALSE</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>dict_patient &lt;- tribble(
+  ~old, ~new, ~label,
+  'Patient ID#', 'patient_id_number', '',
+  'DOB [YYYY-MM-DD]', 'dob_yyyy_mm_dd', '',
+  'Sex (0=Male, 1=Female)', 'sex_0_male_1_female', '',
+  'WHAT IS YOUR HEIGHT? (cm)', 'what_is_your_height_cm', '',
+  'WHAT IS YOUR CURRENT WEIGHT? (kg)', 'what_is_your_current_weight_kg', '',
+  'Do you currently smoke any form of tobacco products, including cigarettes, cigars, or pipes, on a regular basis?', 'do_you_currently_smoke_any_form_of_tobacco_products_including_cigarettes_cigars_or_pipes_on_a_regular_basis', '',
+  'bp (mmHg)', 'bp_mm_hg', '',
+  'Cholesterol / mmolL', 'cholesterol_mmol_l', '',
+  'bmi', 'bmi', '',
+) </code></pre>
+</div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>The output of <code>make_column_dict</code> is a <code>tribble</code> — a <em>row-wise</em> data-frame object (or <code>tibble</code>) which allows one to more easily visualise the format of the table.</p>
+</div></div><p>We can either directly add to, or modify, the <code>dict</code> object assigned above or copy-paste the output into our code and add/edit/update column names and labels as needed (see below):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">dict_patient <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tribble</span>(</span>
+<span id="cb9-2">  <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span>old, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span>new, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span>label,</span>
+<span id="cb9-3">  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Patient ID#'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'id'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Patient ID'</span>,</span>
+<span id="cb9-4">  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'DOB [YYYY-MM-DD]'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'dob'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Date of Birth'</span>,</span>
+<span id="cb9-5">  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Sex (0=Male, 1=Female)'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'sex'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Sex'</span>,</span>
+<span id="cb9-6">  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'WHAT IS YOUR HEIGHT? (cm)'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'height_cm'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Height (cm)'</span>,</span>
+<span id="cb9-7">  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'WHAT IS YOUR CURRENT WEIGHT? (kg)'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'weight_kg'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Weight (kg)'</span>,</span>
+<span id="cb9-8">  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Do you currently smoke any form of tobacco products, including cigarettes, cigars, or pipes, on a regular basis?'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'current_smoking'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Currently consumes tobacco'</span>,</span>
+<span id="cb9-9">  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'bp (mmHg)'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'bp_mmhg'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'BP (mmHg)'</span>,</span>
+<span id="cb9-10">  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Cholesterol / mmolL'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'cholesterol_mmol_l'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'Cholesterol (mmolL)'</span>,</span>
+<span id="cb9-11">  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'bmi'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'bmi'</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"BMI (kg/m^2)"</span></span>
+<span id="cb9-12">)</span></code></pre></div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>This <code>tribble</code> has been manually modified with “clean” column names and variable labels. Additionally, a row for the derived <code>bmi</code> variable has been included.</p>
+</div></div><div class="callout callout-style-default callout-important no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Naively renaming columns for easy manipulation in code risks dropping potentially useful information contained in the original column name (e.g., units and symbols). It is important to have a <em>data dictionary</em> to retain this information about variables, which is distinct from the column name dictionary we’re creating here. For example, neither our <code>new</code> or <code>label</code> value for the <code>sex</code> variable above captures the coding.</p>
+</div>
+</div>
+<p>As the number of columns in your dataset increases, editing/maintaining this within your code may become increasingly unwieldy. The option is also available to manage this via an external file (e.g., <em>.csv</em>, <em>.rds</em>, <em>.xlsx</em>), by specifying <code>file</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">make_column_dict</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> data_patient,</span>
+<span id="cb10-2">                 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">auto_clean =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>,</span>
+<span id="cb10-3">                 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">file =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"colnames.csv"</span>)</span></code></pre></div>
+</div>
+<p>If need be, we could read the dictionary back into R after having modified (in an external program) the column names and labels as necessary:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">dict_patient <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> readr<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">read_csv</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">file =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"colnames.csv"</span>)</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-4b2c68f6{table-layout:auto;}.cl-4b1aeba8{font-family:'Barlow';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-4b1aebbc{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-4b214e8a{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:0;padding-top:0;padding-left:8pt;padding-right:6pt;line-height: 1.5;background-color:transparent;}.cl-4b21c248{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b21c252{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b21c25c{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b21c266{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b21c267{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b21c270{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b21c27a{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b21c27b{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b21c284{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b21c285{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b21c286{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b21c28e{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b21c28f{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b21c298{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b21c299{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b21c2a2{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b21c2ac{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b21c2ad{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b21c2ae{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b21c2b6{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b21c2b7{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-4b2c68f6"><thead><tr style="overflow-wrap:break-word;"><th class="cl-4b21c248"><p class="cl-4b214e8a"><span class="cl-4b1aeba8">old</span></p></th><th class="cl-4b21c252"><p class="cl-4b214e8a"><span class="cl-4b1aeba8">new</span></p></th><th class="cl-4b21c25c"><p class="cl-4b214e8a"><span class="cl-4b1aeba8">label</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-4b21c266"><p class="cl-4b214e8a"><span class="cl-4b1aebbc">Patient ID#</span></p></td><td class="cl-4b21c267"><p class="cl-4b214e8a"><span class="cl-4b1aebbc">id</span></p></td><td class="cl-4b21c270"><p class="cl-4b214e8a"><span class="cl-4b1aebbc">Patient ID</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4b21c27a"><p class="cl-4b214e8a"><span class="cl-4b1aebbc">DOB [YYYY‑MM‑DD]</span></p></td><td class="cl-4b21c27b"><p class="cl-4b214e8a"><span class="cl-4b1aebbc">dob</span></p></td><td class="cl-4b21c284"><p class="cl-4b214e8a"><span class="cl-4b1aebbc">Date of Birth</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4b21c285"><p class="cl-4b214e8a"><span class="cl-4b1aebbc">Sex (0=Male, 1=Female)</span></p></td><td class="cl-4b21c286"><p class="cl-4b214e8a"><span class="cl-4b1aebbc">sex</span></p></td><td class="cl-4b21c28e"><p class="cl-4b214e8a"><span class="cl-4b1aebbc">Sex</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4b21c28f"><p class="cl-4b214e8a"><span class="cl-4b1aebbc">WHAT IS YOUR HEIGHT? (cm)</span></p></td><td class="cl-4b21c298"><p class="cl-4b214e8a"><span class="cl-4b1aebbc">height_cm</span></p></td><td class="cl-4b21c299"><p class="cl-4b214e8a"><span class="cl-4b1aebbc">Height (cm)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4b21c28f"><p class="cl-4b214e8a"><span class="cl-4b1aebbc">WHAT IS YOUR CURRENT WEIGHT? (kg)</span></p></td><td class="cl-4b21c298"><p class="cl-4b214e8a"><span class="cl-4b1aebbc">weight_kg</span></p></td><td class="cl-4b21c299"><p class="cl-4b214e8a"><span class="cl-4b1aebbc">Weight (kg)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4b21c2a2"><p class="cl-4b214e8a"><span class="cl-4b1aebbc">Do you currently smoke any form of tobacco products, including cigarettes, cigars, or pipes, on a regular basis?</span></p></td><td class="cl-4b21c2ac"><p class="cl-4b214e8a"><span class="cl-4b1aebbc">current_smoking</span></p></td><td class="cl-4b21c2ad"><p class="cl-4b214e8a"><span class="cl-4b1aebbc">Currently consumes tobacco</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4b21c28f"><p class="cl-4b214e8a"><span class="cl-4b1aebbc">bp (mmHg)</span></p></td><td class="cl-4b21c298"><p class="cl-4b214e8a"><span class="cl-4b1aebbc">bp_mmhg</span></p></td><td class="cl-4b21c299"><p class="cl-4b214e8a"><span class="cl-4b1aebbc">BP (mmHg)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4b21c285"><p class="cl-4b214e8a"><span class="cl-4b1aebbc">Cholesterol / mmolL</span></p></td><td class="cl-4b21c286"><p class="cl-4b214e8a"><span class="cl-4b1aebbc">cholesterol_mmol_l</span></p></td><td class="cl-4b21c28e"><p class="cl-4b214e8a"><span class="cl-4b1aebbc">Cholesterol (mmolL)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4b21c2ae"><p class="cl-4b214e8a"><span class="cl-4b1aebbc">bmi</span></p></td><td class="cl-4b21c2b6"><p class="cl-4b214e8a"><span class="cl-4b1aebbc">bmi</span></p></td><td class="cl-4b21c2b7"><p class="cl-4b214e8a"><span class="cl-4b1aebbc">BMI (kg/m^2)</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+</section>
+<section id="step-2-applying-the-column-dictionary" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="step-2-applying-the-column-dictionary">Step 2: Applying the column dictionary</h2>
+<p>Now that we have defined the column dictionary above, we can simply use <code>update_columns()</code> to apply these changes in a single line.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">data_clean <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">update_columns</span>(</span>
+<span id="cb12-2">  data_patient, </span>
+<span id="cb12-3">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">dict =</span> dict_patient</span>
+<span id="cb12-4">)</span></code></pre></div>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>The <code>update_columns()</code> function includes arguments <code>old</code>, <code>new</code>, <code>label</code> and these must correspond to the column names of the data dictionary object. By default, the names assigned by <code>make_column_dict()</code> are assumed. It is unlikely you will have to modify these arguments.</p>
+</div></div></section>
+<section id="previewing-output" class="level2">
+<h2 class="anchored" data-anchor-id="previewing-output">Previewing Output</h2>
+<p>Previewing this “cleaned” dataset:</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-4b74576a{table-layout:auto;}.cl-4b68cb70{font-family:'Barlow';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-4b68cb84{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-4b6df94c{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-4b6df960{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2.5pt;padding-top:2.5pt;padding-left:2.5pt;padding-right:2.5pt;line-height: 1.5;background-color:transparent;}.cl-4b6e2ff2{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b6e2ffc{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b6e3006{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b6e301a{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b6e301b{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b6e3024{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b6e3025{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b6e302e{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b6e302f{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b6e3038{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b6e3039{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b6e3042{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b6e3043{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b6e304c{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b6e3056{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b6e3057{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b6e3060{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b6e3061{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b6e306a{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b6e306b{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b6e3074{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b6e3075{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b6e307e{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b6e307f{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b6e3088{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b6e3089{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4b6e3092{background-color:rgba(238, 239, 239, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-4b74576a"><thead><tr style="overflow-wrap:break-word;"><th class="cl-4b6e2ff2"><p class="cl-4b6df94c"><span class="cl-4b68cb70">id</span></p></th><th class="cl-4b6e2ffc"><p class="cl-4b6df960"><span class="cl-4b68cb70">dob</span></p></th><th class="cl-4b6e3006"><p class="cl-4b6df960"><span class="cl-4b68cb70">sex</span></p></th><th class="cl-4b6e301a"><p class="cl-4b6df94c"><span class="cl-4b68cb70">height_cm</span></p></th><th class="cl-4b6e301b"><p class="cl-4b6df94c"><span class="cl-4b68cb70">weight_kg</span></p></th><th class="cl-4b6e3024"><p class="cl-4b6df94c"><span class="cl-4b68cb70">current_smoking</span></p></th><th class="cl-4b6e3025"><p class="cl-4b6df960"><span class="cl-4b68cb70">bp_mmhg</span></p></th><th class="cl-4b6e302e"><p class="cl-4b6df94c"><span class="cl-4b68cb70">cholesterol_mmol_l</span></p></th><th class="cl-4b6e302f"><p class="cl-4b6df94c"><span class="cl-4b68cb70">bmi</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-4b6e3038"><p class="cl-4b6df94c"><span class="cl-4b68cb84">101</span></p></td><td class="cl-4b6e3039"><p class="cl-4b6df960"><span class="cl-4b68cb84">1980‑05‑12</span></p></td><td class="cl-4b6e3042"><p class="cl-4b6df960"><span class="cl-4b68cb84">Male</span></p></td><td class="cl-4b6e3043"><p class="cl-4b6df94c"><span class="cl-4b68cb84">175</span></p></td><td class="cl-4b6e304c"><p class="cl-4b6df94c"><span class="cl-4b68cb84">70</span></p></td><td class="cl-4b6e3056"><p class="cl-4b6df94c"><span class="cl-4b68cb84">true</span></p></td><td class="cl-4b6e3057"><p class="cl-4b6df960"><span class="cl-4b68cb84">120/80</span></p></td><td class="cl-4b6e3060"><p class="cl-4b6df94c"><span class="cl-4b68cb84">5.2</span></p></td><td class="cl-4b6e3061"><p class="cl-4b6df94c"><span class="cl-4b68cb84">22.85714</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4b6e3038"><p class="cl-4b6df94c"><span class="cl-4b68cb84">102</span></p></td><td class="cl-4b6e3039"><p class="cl-4b6df960"><span class="cl-4b68cb84">1992‑08‑03</span></p></td><td class="cl-4b6e3042"><p class="cl-4b6df960"><span class="cl-4b68cb84">Female</span></p></td><td class="cl-4b6e3043"><p class="cl-4b6df94c"><span class="cl-4b68cb84">160</span></p></td><td class="cl-4b6e304c"><p class="cl-4b6df94c"><span class="cl-4b68cb84">55</span></p></td><td class="cl-4b6e3056"><p class="cl-4b6df94c"><span class="cl-4b68cb84">false</span></p></td><td class="cl-4b6e3057"><p class="cl-4b6df960"><span class="cl-4b68cb84">110/70</span></p></td><td class="cl-4b6e3060"><p class="cl-4b6df94c"><span class="cl-4b68cb84">4.8</span></p></td><td class="cl-4b6e3061"><p class="cl-4b6df94c"><span class="cl-4b68cb84">21.48437</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4b6e3038"><p class="cl-4b6df94c"><span class="cl-4b68cb84">103</span></p></td><td class="cl-4b6e3039"><p class="cl-4b6df960"><span class="cl-4b68cb84">1975‑12‑25</span></p></td><td class="cl-4b6e3042"><p class="cl-4b6df960"><span class="cl-4b68cb84">Female</span></p></td><td class="cl-4b6e3043"><p class="cl-4b6df94c"><span class="cl-4b68cb84">180</span></p></td><td class="cl-4b6e304c"><p class="cl-4b6df94c"><span class="cl-4b68cb84">80</span></p></td><td class="cl-4b6e3056"><p class="cl-4b6df94c"><span class="cl-4b68cb84">false</span></p></td><td class="cl-4b6e3057"><p class="cl-4b6df960"><span class="cl-4b68cb84">130/85</span></p></td><td class="cl-4b6e3060"><p class="cl-4b6df94c"><span class="cl-4b68cb84">6.1</span></p></td><td class="cl-4b6e3061"><p class="cl-4b6df94c"><span class="cl-4b68cb84">24.69136</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4b6e3038"><p class="cl-4b6df94c"><span class="cl-4b68cb84">104</span></p></td><td class="cl-4b6e3039"><p class="cl-4b6df960"><span class="cl-4b68cb84">2000‑01‑01</span></p></td><td class="cl-4b6e3042"><p class="cl-4b6df960"><span class="cl-4b68cb84">Male</span></p></td><td class="cl-4b6e3043"><p class="cl-4b6df94c"><span class="cl-4b68cb84">165</span></p></td><td class="cl-4b6e304c"><p class="cl-4b6df94c"><span class="cl-4b68cb84">60</span></p></td><td class="cl-4b6e3056"><p class="cl-4b6df94c"><span class="cl-4b68cb84">true</span></p></td><td class="cl-4b6e3057"><p class="cl-4b6df960"><span class="cl-4b68cb84">115/75</span></p></td><td class="cl-4b6e3060"><p class="cl-4b6df94c"><span class="cl-4b68cb84">5.0</span></p></td><td class="cl-4b6e3061"><p class="cl-4b6df94c"><span class="cl-4b68cb84">22.03857</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4b6e306a"><p class="cl-4b6df94c"><span class="cl-4b68cb84">105</span></p></td><td class="cl-4b6e306b"><p class="cl-4b6df960"><span class="cl-4b68cb84">1985‑07‑07</span></p></td><td class="cl-4b6e3074"><p class="cl-4b6df960"><span class="cl-4b68cb84">Female</span></p></td><td class="cl-4b6e3075"><p class="cl-4b6df94c"><span class="cl-4b68cb84">170</span></p></td><td class="cl-4b6e307e"><p class="cl-4b6df94c"><span class="cl-4b68cb84">75</span></p></td><td class="cl-4b6e307f"><p class="cl-4b6df94c"><span class="cl-4b68cb84">false</span></p></td><td class="cl-4b6e3088"><p class="cl-4b6df960"><span class="cl-4b68cb84">125/82</span></p></td><td class="cl-4b6e3089"><p class="cl-4b6df94c"><span class="cl-4b68cb84">5.5</span></p></td><td class="cl-4b6e3092"><p class="cl-4b6df94c"><span class="cl-4b68cb84">25.95156</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+<p>Because the labels we specified are stored as attributes, they are automatically recognised by many summary packages that respect label metadata (e.g., <code>gtsummary::tbl_summary()</code> tables).</p>
+<p><br></p>
+<p>So after the steps above, we no longer have this…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">data_patient <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb13-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tbl_summary</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">include =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Patient ID#</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span>,</span>
+<span id="cb13-3">              <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">type =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">list</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">WHAT IS YOUR HEIGHT? (cm)</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"continuous"</span>,</span>
+<span id="cb13-4">                          <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">WHAT IS YOUR CURRENT WEIGHT? (kg)</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"continuous"</span>,</span>
+<span id="cb13-5">                          <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Cholesterol / mmolL</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"continuous"</span>,</span>
+<span id="cb13-6">                          <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">bmi</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"continuous"</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb13-7">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">thekids_table</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">padding=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb13-8">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">modify_labels</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hline=</span><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">bold=</span><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-4d8e44fc{table-layout:auto;}.cl-4d799a3e{font-family:'Barlow';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-4d799a48{font-family:'Barlow';font-size:6.6pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;position: relative;bottom:3.3pt;}.cl-4d799a52{font-family:'Barlow';font-size:10pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-4d799a5c{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-4d799a66{font-family:'Barlow';font-size:6pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;position: relative;bottom:3pt;}.cl-4d799a67{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-4d82af02{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2pt;padding-top:2pt;padding-left:2pt;padding-right:2pt;line-height: 1.5;background-color:transparent;}.cl-4d82af34{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2pt;padding-top:2pt;padding-left:2pt;padding-right:2pt;line-height: 1.5;background-color:transparent;}.cl-4d82af3e{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2pt;padding-top:2pt;padding-left:2pt;padding-right:2pt;line-height: 1.5;background-color:transparent;}.cl-4d82af48{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2pt;padding-top:2pt;padding-left:2pt;padding-right:2pt;line-height: 1.5;background-color:transparent;}.cl-4d82af52{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2pt;padding-top:2pt;padding-left:15pt;padding-right:2pt;line-height: 1.5;background-color:transparent;}.cl-4d832842{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4d832856{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4d832860{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4d83286a{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4d83286b{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4d832874{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4d83287e{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4d832888{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4d832889{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4d832892{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4d83289c{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4d8328a6{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4d8328a7{background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4d8328b0{background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4d8328b1{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4d8328ba{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-4d8e44fc"><thead><tr style="overflow-wrap:break-word;"><th class="cl-4d832842"><p class="cl-4d82af02"><span class="cl-4d799a3e">Characteristic</span></p></th><th class="cl-4d832856"><p class="cl-4d82af34"><span class="cl-4d799a3e">N = 5</span><span class="cl-4d799a48">1</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-4d832860"><p class="cl-4d82af3e"><span class="cl-4d799a52">DOB [YYYY-MM-DD]</span></p></td><td class="cl-4d83286a"><p class="cl-4d82af48"><span class="cl-4d799a5c"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4d83286b"><p class="cl-4d82af52"><span class="cl-4d799a5c">1975-12-25</span></p></td><td class="cl-4d832874"><p class="cl-4d82af48"><span class="cl-4d799a5c">1 (20%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4d83286b"><p class="cl-4d82af52"><span class="cl-4d799a5c">1980-05-12</span></p></td><td class="cl-4d832874"><p class="cl-4d82af48"><span class="cl-4d799a5c">1 (20%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4d83286b"><p class="cl-4d82af52"><span class="cl-4d799a5c">1985-07-07</span></p></td><td class="cl-4d832874"><p class="cl-4d82af48"><span class="cl-4d799a5c">1 (20%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4d83286b"><p class="cl-4d82af52"><span class="cl-4d799a5c">1992-08-03</span></p></td><td class="cl-4d832874"><p class="cl-4d82af48"><span class="cl-4d799a5c">1 (20%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4d83286b"><p class="cl-4d82af52"><span class="cl-4d799a5c">2000-01-01</span></p></td><td class="cl-4d832874"><p class="cl-4d82af48"><span class="cl-4d799a5c">1 (20%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4d83287e"><p class="cl-4d82af3e"><span class="cl-4d799a52">Sex (0=Male, 1=Female)</span></p></td><td class="cl-4d832888"><p class="cl-4d82af48"><span class="cl-4d799a5c"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4d83286b"><p class="cl-4d82af52"><span class="cl-4d799a5c">Female</span></p></td><td class="cl-4d832874"><p class="cl-4d82af48"><span class="cl-4d799a5c">3 (60%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4d83286b"><p class="cl-4d82af52"><span class="cl-4d799a5c">Male</span></p></td><td class="cl-4d832874"><p class="cl-4d82af48"><span class="cl-4d799a5c">2 (40%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4d83287e"><p class="cl-4d82af3e"><span class="cl-4d799a52">WHAT IS YOUR HEIGHT? (cm)</span></p></td><td class="cl-4d832888"><p class="cl-4d82af48"><span class="cl-4d799a5c">170.0 (165.0, 175.0)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4d832889"><p class="cl-4d82af3e"><span class="cl-4d799a52">WHAT IS YOUR CURRENT WEIGHT? (kg)</span></p></td><td class="cl-4d832892"><p class="cl-4d82af48"><span class="cl-4d799a5c">70 (60, 75)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4d83289c"><p class="cl-4d82af3e"><span class="cl-4d799a52">Do you currently smoke any form of tobacco products, including cigarettes, cigars, or pipes, on a regular basis?</span></p></td><td class="cl-4d8328a6"><p class="cl-4d82af48"><span class="cl-4d799a5c">2 (40%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4d832889"><p class="cl-4d82af3e"><span class="cl-4d799a52">bp (mmHg)</span></p></td><td class="cl-4d832892"><p class="cl-4d82af48"><span class="cl-4d799a5c"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4d83286b"><p class="cl-4d82af52"><span class="cl-4d799a5c">110/70</span></p></td><td class="cl-4d832874"><p class="cl-4d82af48"><span class="cl-4d799a5c">1 (20%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4d83286b"><p class="cl-4d82af52"><span class="cl-4d799a5c">115/75</span></p></td><td class="cl-4d832874"><p class="cl-4d82af48"><span class="cl-4d799a5c">1 (20%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4d83286b"><p class="cl-4d82af52"><span class="cl-4d799a5c">120/80</span></p></td><td class="cl-4d832874"><p class="cl-4d82af48"><span class="cl-4d799a5c">1 (20%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4d83286b"><p class="cl-4d82af52"><span class="cl-4d799a5c">125/82</span></p></td><td class="cl-4d832874"><p class="cl-4d82af48"><span class="cl-4d799a5c">1 (20%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4d83286b"><p class="cl-4d82af52"><span class="cl-4d799a5c">130/85</span></p></td><td class="cl-4d832874"><p class="cl-4d82af48"><span class="cl-4d799a5c">1 (20%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4d83287e"><p class="cl-4d82af3e"><span class="cl-4d799a52">Cholesterol / mmolL</span></p></td><td class="cl-4d832888"><p class="cl-4d82af48"><span class="cl-4d799a5c">5.20 (5.00, 5.50)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4d8328a7"><p class="cl-4d82af3e"><span class="cl-4d799a52">bmi</span></p></td><td class="cl-4d8328b0"><p class="cl-4d82af48"><span class="cl-4d799a5c">22.86 (22.04, 24.69)</span></p></td></tr></tbody><tfoot><tr style="overflow-wrap:break-word;"><td colspan="2" class="cl-4d8328b1"><p class="cl-4d82af02"><span class="cl-4d799a66">1</span><span class="cl-4d799a67">n (%); Median (Q1, Q3)</span></p></td></tr></tfoot></table></div>
+</div>
+</div>
+<p>We have this!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1">data_clean <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb14-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tbl_summary</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">include =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>id,</span>
+<span id="cb14-3">              <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">type =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">list</span>(height_cm <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"continuous"</span>,</span>
+<span id="cb14-4">                          weight_kg <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"continuous"</span>,</span>
+<span id="cb14-5">                          cholesterol_mmol_l <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"continuous"</span>,</span>
+<span id="cb14-6">                          bmi <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"continuous"</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%&gt;%</span></span>
+<span id="cb14-7">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">thekids_table</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">padding=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb14-8">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">modify_labels</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">hline=</span><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">bold=</span><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-4f6d32ba{table-layout:auto;}.cl-4f5d91c0{font-family:'Barlow';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;}.cl-4f5d91d4{font-family:'Barlow';font-size:6.6pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(255, 255, 255, 1.00);background-color:transparent;position: relative;bottom:3.3pt;}.cl-4f5d91d5{font-family:'Barlow';font-size:10pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-4f5d91de{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 25, 33, 1.00);background-color:transparent;}.cl-4f5d91df{font-family:'Barlow';font-size:6pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;position: relative;bottom:3pt;}.cl-4f5d91e8{font-family:'Barlow';font-size:10pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-4f63c644{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2pt;padding-top:2pt;padding-left:2pt;padding-right:2pt;line-height: 1.5;background-color:transparent;}.cl-4f63c658{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2pt;padding-top:2pt;padding-left:2pt;padding-right:2pt;line-height: 1.5;background-color:transparent;}.cl-4f63c662{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2pt;padding-top:2pt;padding-left:2pt;padding-right:2pt;line-height: 1.5;background-color:transparent;}.cl-4f63c663{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2pt;padding-top:2pt;padding-left:2pt;padding-right:2pt;line-height: 1.5;background-color:transparent;}.cl-4f63c66c{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2pt;padding-top:2pt;padding-left:15pt;padding-right:2pt;line-height: 1.5;background-color:transparent;}.cl-4f640550{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4f640564{background-color:rgba(86, 95, 95, 1.00);vertical-align: middle;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4f64056e{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4f64056f{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4f640578{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4f640579{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4f64057a{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4f640582{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4f64058c{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4f64058d{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4f64058e{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4f640596{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4f6405a0{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4f6405a1{background-color:transparent;vertical-align: top;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4f6405a2{background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4f6405aa{background-color:transparent;vertical-align: top;border-bottom: 1pt solid rgba(102, 102, 102, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4f6405ab{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-4f6405b4{background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(255, 255, 255, 0.00);border-top: 0 solid rgba(255, 255, 255, 0.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-4f6d32ba"><thead><tr style="overflow-wrap:break-word;"><th class="cl-4f640550"><p class="cl-4f63c644"><span class="cl-4f5d91c0">Characteristic</span></p></th><th class="cl-4f640564"><p class="cl-4f63c658"><span class="cl-4f5d91c0">N = 5</span><span class="cl-4f5d91d4">1</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-4f64056e"><p class="cl-4f63c662"><span class="cl-4f5d91d5">Date of Birth</span></p></td><td class="cl-4f64056f"><p class="cl-4f63c663"><span class="cl-4f5d91de"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f640578"><p class="cl-4f63c66c"><span class="cl-4f5d91de">1975-12-25</span></p></td><td class="cl-4f640579"><p class="cl-4f63c663"><span class="cl-4f5d91de">1 (20%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f640578"><p class="cl-4f63c66c"><span class="cl-4f5d91de">1980-05-12</span></p></td><td class="cl-4f640579"><p class="cl-4f63c663"><span class="cl-4f5d91de">1 (20%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f640578"><p class="cl-4f63c66c"><span class="cl-4f5d91de">1985-07-07</span></p></td><td class="cl-4f640579"><p class="cl-4f63c663"><span class="cl-4f5d91de">1 (20%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f640578"><p class="cl-4f63c66c"><span class="cl-4f5d91de">1992-08-03</span></p></td><td class="cl-4f640579"><p class="cl-4f63c663"><span class="cl-4f5d91de">1 (20%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f640578"><p class="cl-4f63c66c"><span class="cl-4f5d91de">2000-01-01</span></p></td><td class="cl-4f640579"><p class="cl-4f63c663"><span class="cl-4f5d91de">1 (20%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f64057a"><p class="cl-4f63c662"><span class="cl-4f5d91d5">Sex</span></p></td><td class="cl-4f640582"><p class="cl-4f63c663"><span class="cl-4f5d91de"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f640578"><p class="cl-4f63c66c"><span class="cl-4f5d91de">Female</span></p></td><td class="cl-4f640579"><p class="cl-4f63c663"><span class="cl-4f5d91de">3 (60%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f640578"><p class="cl-4f63c66c"><span class="cl-4f5d91de">Male</span></p></td><td class="cl-4f640579"><p class="cl-4f63c663"><span class="cl-4f5d91de">2 (40%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f64058c"><p class="cl-4f63c662"><span class="cl-4f5d91d5">Height (cm)</span></p></td><td class="cl-4f64058d"><p class="cl-4f63c663"><span class="cl-4f5d91de">170.0 (165.0, 175.0)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f64058c"><p class="cl-4f63c662"><span class="cl-4f5d91d5">Weight (kg)</span></p></td><td class="cl-4f64058d"><p class="cl-4f63c663"><span class="cl-4f5d91de">70 (60, 75)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f64058e"><p class="cl-4f63c662"><span class="cl-4f5d91d5">Currently consumes tobacco</span></p></td><td class="cl-4f640596"><p class="cl-4f63c663"><span class="cl-4f5d91de">2 (40%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f64058c"><p class="cl-4f63c662"><span class="cl-4f5d91d5">BP (mmHg)</span></p></td><td class="cl-4f64058d"><p class="cl-4f63c663"><span class="cl-4f5d91de"></span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f640578"><p class="cl-4f63c66c"><span class="cl-4f5d91de">110/70</span></p></td><td class="cl-4f640579"><p class="cl-4f63c663"><span class="cl-4f5d91de">1 (20%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f640578"><p class="cl-4f63c66c"><span class="cl-4f5d91de">115/75</span></p></td><td class="cl-4f640579"><p class="cl-4f63c663"><span class="cl-4f5d91de">1 (20%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f640578"><p class="cl-4f63c66c"><span class="cl-4f5d91de">120/80</span></p></td><td class="cl-4f640579"><p class="cl-4f63c663"><span class="cl-4f5d91de">1 (20%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f640578"><p class="cl-4f63c66c"><span class="cl-4f5d91de">125/82</span></p></td><td class="cl-4f640579"><p class="cl-4f63c663"><span class="cl-4f5d91de">1 (20%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f640578"><p class="cl-4f63c66c"><span class="cl-4f5d91de">130/85</span></p></td><td class="cl-4f640579"><p class="cl-4f63c663"><span class="cl-4f5d91de">1 (20%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f6405a0"><p class="cl-4f63c662"><span class="cl-4f5d91d5">Cholesterol (mmolL)</span></p></td><td class="cl-4f6405a1"><p class="cl-4f63c663"><span class="cl-4f5d91de">5.20 (5.00, 5.50)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-4f6405a2"><p class="cl-4f63c662"><span class="cl-4f5d91d5">BMI (kg/m^2)</span></p></td><td class="cl-4f6405aa"><p class="cl-4f63c663"><span class="cl-4f5d91de">22.86 (22.04, 24.69)</span></p></td></tr></tbody><tfoot><tr style="overflow-wrap:break-word;"><td colspan="2" class="cl-4f6405ab"><p class="cl-4f63c644"><span class="cl-4f5d91df">1</span><span class="cl-4f5d91e8">n (%); Median (Q1, Q3)</span></p></td></tr></tfoot></table></div>
+</div>
+</div>
+</section>
+</section>
+<section id="closing-comments" class="level1">
+<h1>Closing comments</h1>
+<p>Overall, the <code>make_column_dict()</code> and <code>update_columns()</code> functions offer an efficient solution for transforming and labelling datasets with problematic column headers. More concise column names are easier to work with and enhance the readability/tractability of code, while user-defined labels allow users to easily produce more polished and publication-ready outputs.</p>
+</section>
+<section id="acknowledgements" class="level1">
+<h1>Acknowledgements</h1>
+<p>Thanks to Dr Matt Cooper, Wesley Billingham, Dr Haileab Wolde, and Dr Elizabeth McKinnon for providing feedback on and reviewing this post.</p>
+<section id="reproducibility-information" class="level2">
+<h2 class="anchored" data-anchor-id="reproducibility-information">Reproducibility Information</h2>
+<p>To access the .qmd (Quarto markdown) files as well as any R scripts or data that was used in this post, please visit our GitHub:</p>
+<p><a href="https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/" class="uri">https://github.com/The-Kids-Biostats/The-Kids-Biostats.github.io/tree/main/posts/</a></p>
+<p>The session information can also be seen below.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sessionInfo</span>()</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.5.2 (2025-10-31 ucrt)
+Platform: x86_64-w64-mingw32/x64
+Running under: Windows 11 x64 (build 26200)
+
+Matrix products: default
+  LAPACK version 3.12.1
+
+locale:
+[1] LC_COLLATE=English_Australia.utf8  LC_CTYPE=English_Australia.utf8   
+[3] LC_MONETARY=English_Australia.utf8 LC_NUMERIC=C                      
+[5] LC_TIME=English_Australia.utf8    
+
+time zone: Australia/Perth
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] thekidsbiostats_1.8.0 extrafont_0.20        flextable_0.9.10     
+ [4] gtsummary_2.5.0       lubridate_1.9.5       forcats_1.0.1        
+ [7] stringr_1.6.0         dplyr_1.2.0           purrr_1.2.1          
+[10] readr_2.1.6           tidyr_1.3.2           tibble_3.3.1         
+[13] ggplot2_4.0.2         tidyverse_2.0.0      
+
+loaded via a namespace (and not attached):
+ [1] gtable_0.3.6            xfun_0.56               htmlwidgets_1.6.4      
+ [4] tzdb_0.5.0              vctrs_0.7.1             tools_4.5.2            
+ [7] generics_0.1.4          parallel_4.5.2          pkgconfig_2.0.3        
+[10] data.table_1.18.2.1     RColorBrewer_1.1-3      S7_0.2.1               
+[13] uuid_1.2-2              lifecycle_1.0.5         compiler_4.5.2         
+[16] farver_2.1.2            textshaping_1.0.4       janitor_2.2.1          
+[19] snakecase_0.11.1        httpuv_1.6.16           fontquiver_0.2.1       
+[22] fontLiberation_0.1.0    htmltools_0.5.9         yaml_2.3.12            
+[25] Rttf2pt1_1.3.14         crayon_1.5.3            extrafontdb_1.1        
+[28] pillar_1.11.1           later_1.4.5             openssl_2.3.4          
+[31] mime_0.13               fontBitstreamVera_0.1.1 tidyselect_1.2.1       
+[34] zip_2.3.3               digest_0.6.39           stringi_1.8.7          
+[37] labelled_2.16.0         fastmap_1.2.0           grid_4.5.2             
+[40] cli_3.6.5               magrittr_2.0.4          cards_0.7.1            
+[43] patchwork_1.3.2         withr_3.0.2             gdtools_0.4.4          
+[46] scales_1.4.0            promises_1.5.0          bit64_4.6.0-1          
+[49] timechange_0.4.0        rmarkdown_2.30          officer_0.7.3          
+[52] bit_4.6.0               otel_0.2.0              hms_1.1.4              
+[55] askpass_1.2.1           ragg_1.5.0              shiny_1.12.1           
+[58] evaluate_1.0.5          haven_2.5.5             knitr_1.51             
+[61] rlang_1.1.7             Rcpp_1.1.1              xtable_1.8-4           
+[64] glue_1.8.0              xml2_1.5.2              vroom_1.7.0            
+[67] rstudioapi_0.18.0       jsonlite_2.0.0          R6_2.6.1               
+[70] systemfonts_1.3.1       fs_1.6.6                shinyFiles_0.9.3       </code></pre>
+</div>
+</div>
+
+
+</section>
+</section>
+
+ ]]></description>
+  <category>R</category>
+  <category>Data cleaning</category>
+  <category>Package</category>
+  <guid>https://the-kids-biostats.github.io/posts/2026-02-19_column_cleaning/column_cleaning.html</guid>
+  <pubDate>Wed, 18 Feb 2026 16:00:00 GMT</pubDate>
+</item>
 <item>
   <title>Accessing national health data via API</title>
   <dc:creator>Dr Matt Cooper and Dr Haileab Wolde</dc:creator>
@@ -26,7 +653,7 @@
 <p>Did you know, the <a href="https://www.aihw.gov.au/">Australian Institute of Health and Welfare</a> (AIHW) is a treasure trove of <strong>available</strong> health data?</p>
 <p>The AIHW works with a range of stakeholders from across Australia to carry out high-quality research covering a broad range of health domains; they also produce many reports each year contextualising the state of the nation’s health. While the data that supports these reports is often available for download from their website <em>(.xslx, .csv)</em>, a range of the data can can also by accessed via Application Programming Interface (API). The <a href="https://www.aihw.gov.au/hospitals/other-resources/myhospitals-api">MyHospitals API</a> opens the door to automated, real-time access, and offers much greater flexibility in how you explore and analyse the data.</p>
 <p>In this post, we’ll demonstrate—as an example—how to access emergency department presentation (ED) data for major hospitals here in Western Australia, process it in R, and create an insightful visualisation.</p>
-<div id="fig-source" class="quarto-figure quarto-figure-center quarto-float anchored" data-align="center">
+<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-10-10_AIHW_api/images/all4.png" class="img-fluid figure-img" style="width:100.0%" data-align="center">
@@ -36,7 +663,7 @@ Figure&nbsp;1: All 4 “Guess The Plots” Together
 </figcaption>
 </figure>
 </div>
-<div id="fig-source" class="quarto-figure quarto-figure-center quarto-float anchored" data-align="center">
+<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-10-10_AIHW_api/images/fig4.png" class="img-fluid figure-img" style="width:100.0%" data-align="center">
@@ -392,6 +1019,7 @@ font-style: inherit;"># Form a grob object of the map that we will reuse in each
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(latitude, longitude) {</span>
 <span id="cb3-17">  latitude <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -463,6 +1091,7 @@ font-style: inherit;">split</span>(my_aihw_dat, my_aihw_dat<span class="sc" styl
 background-color: null;
 font-style: inherit;">$</span>hospital), <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(df) {</span>
 <span id="cb4-2">  </span>
 <span id="cb4-3">  lat <span class="ot" style="color: #003B4F;
@@ -637,7 +1266,7 @@ background-color: null;
 font-style: inherit;">" "</span>)</span></code></pre></div>
 </details>
 </div>
-<div id="fig-source" class="quarto-figure quarto-figure-center quarto-float anchored" data-align="center">
+<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-10-10_AIHW_api/images/fig1.png" class="img-fluid figure-img" style="width:80.0%" data-align="center">
@@ -664,6 +1293,7 @@ font-style: inherit;">split</span>(my_aihw_dat, my_aihw_dat<span class="sc" styl
 background-color: null;
 font-style: inherit;">$</span>hospital), <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(df) {</span>
 <span id="cb5-2">  </span>
 <span id="cb5-3">  lat <span class="ot" style="color: #003B4F;
@@ -838,7 +1468,7 @@ background-color: null;
 font-style: inherit;">" "</span>)</span></code></pre></div>
 </details>
 </div>
-<div id="fig-source" class="quarto-figure quarto-figure-center quarto-float anchored" data-align="center">
+<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-10-10_AIHW_api/images/fig2.png" class="img-fluid figure-img" style="width:80.0%" data-align="center">
@@ -865,6 +1495,7 @@ font-style: inherit;">split</span>(my_aihw_dat, my_aihw_dat<span class="sc" styl
 background-color: null;
 font-style: inherit;">$</span>hospital), <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(df) {</span>
 <span id="cb6-2">  </span>
 <span id="cb6-3">  lat <span class="ot" style="color: #003B4F;
@@ -1030,7 +1661,7 @@ background-color: null;
 font-style: inherit;">"Data source: AIHW API, code: 'XXX-XX'"</span>)</span></code></pre></div>
 </details>
 </div>
-<div id="fig-source" class="quarto-figure quarto-figure-center quarto-float anchored" data-align="center">
+<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-10-10_AIHW_api/images/fig3.png" class="img-fluid figure-img" style="width:80.0%" data-align="center">
@@ -1057,6 +1688,7 @@ font-style: inherit;">split</span>(my_aihw_dat, my_aihw_dat<span class="sc" styl
 background-color: null;
 font-style: inherit;">$</span>hospital), <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(df) {</span>
 <span id="cb7-2">  </span>
 <span id="cb7-3">  lat <span class="ot" style="color: #003B4F;
@@ -1224,7 +1856,7 @@ background-color: null;
 font-style: inherit;">"Data source: AIHW API, code: 'MYH-ED'"</span>)</span></code></pre></div>
 </details>
 </div>
-<div id="fig-source" class="quarto-figure quarto-figure-center quarto-float anchored" data-align="center">
+<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-10-10_AIHW_api/images/fig4.png" class="img-fluid figure-img" style="width:100.0%" data-align="center">
@@ -1385,7 +2017,7 @@ background-color: null;
 font-style: inherit;">10</span>)</span></code></pre></div>
 </details>
 </div>
-<div id="fig-source" class="quarto-figure quarto-figure-center quarto-float anchored" data-align="center">
+<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="center">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-10-10_AIHW_api/images/all4.png" class="img-fluid figure-img" style="width:100.0%" data-align="center">
@@ -1472,7 +2104,7 @@ loaded via a namespace (and not attached):
   <category>AIHW</category>
   <category>Guess that plot</category>
   <guid>https://the-kids-biostats.github.io/posts/2025-10-10_AIHW_api/aihw_api_guess_plot.html</guid>
-  <pubDate>Sun, 19 Oct 2025 13:00:00 GMT</pubDate>
+  <pubDate>Sun, 19 Oct 2025 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Large-scale projects</title>
@@ -1487,7 +2119,7 @@ loaded via a namespace (and not attached):
 <section id="overview" class="level1">
 <h1>Overview</h1>
 <p>A recent collaboration of ours, led by Dr Melissa Licari of <a href="https://www.thekids.org.au">The Kids</a>, involved producing a summary report detailing the challenges faced by individuals <em>(and the families that care for them)</em> living with Tourette Syndrome (TS) and other tic disorders. The full report can be found <a href="https://www.thekids.org.au/impactfortourettes">here</a>.</p>
-<div id="fig-report_cover" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-report_cover" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-report_cover-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/report_cover.png" class="img-fluid figure-img">
@@ -1520,7 +2152,7 @@ Figure&nbsp;1: Report cover
 <li><em>Use of sub-directories in the project organisation is illustrated by Figure&nbsp;2.</em></li>
 </ul></li>
 </ul>
-<div id="fig-file_setup" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-file_setup" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-file_setup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/file_setup.png" style="height:4in" class="figure-img">
@@ -1534,7 +2166,7 @@ Figure&nbsp;2: Directory/subdirectory setup
 <li>The main output generating files are Quarto documents <em>(with the .qmd extension)</em>, which supersedes the previous framework withing RStudio - R Markdown <em>(.Rmd)</em>. Quarto documents have more flexibility and functionality, but still retain the header-text-code structure and simplicity of the markdown syntax. <em>(See a useful reference <a href="https://quarto.org/docs/authoring/markdown-basics.html">here</a>.)</em></li>
 </ul>
 <p>For those unfamiliar with Quarto, note that documents can be written and rendered from either a <strong>visual</strong> view or a <strong>source</strong> view. The <strong>visual</strong> view aims to show certain elements <em>(e.g.&nbsp;headers, code chunks, bold/italics)</em> formatted as they will appear in the rendered document. Experienced users, or those more comfortable with coding, may prefer the <strong>source</strong> view, which gives more direct control and access to the customising of the formatting.</p>
-<div id="fig-visual" class="quarto-figure quarto-figure-center quarto-float anchored" data-align="left">
+<div id="fig-visual" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="left">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-visual-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/visual_qmd.png" style="height:4in" data-align="left" class="figure-img">
@@ -1544,7 +2176,7 @@ Figure&nbsp;3: Visual screen of the default new QMD file
 </figcaption>
 </figure>
 </div>
-<div id="fig-source" class="quarto-figure quarto-figure-center quarto-float anchored" data-align="left">
+<div id="fig-source" class="quarto-float quarto-figure quarto-figure-center anchored" data-align="left">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-source-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/source_qmd.png" style="height:4in" data-align="left" class="figure-img">
@@ -1554,7 +2186,7 @@ Figure&nbsp;4: Source screen of the default new QMD file
 </figcaption>
 </figure>
 </div>
-<div id="fig-defaultHTML" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-defaultHTML" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-defaultHTML-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/defaultQMD-HTML.png" class="img-fluid figure-img">
@@ -1612,7 +2244,7 @@ Important
 <li>Further refinement and definition can be accomplished by utilisation of a .css file <em>(note: the reference to the styles.css file in the document header is required if creating a new document using the Quarto template in <code>thekidsbiostats</code> package)</em>,</li>
 </ul></li>
 </ul>
-<div id="fig-YAML" class="quarto-figure quarto-figure-center quarto-float anchored">
+<div id="fig-YAML" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-YAML-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/YAML.png" class="img-fluid figure-img">
@@ -1625,7 +2257,7 @@ Figure&nbsp;6: Example Quarto document header
 
 <div class="no-row-height column-margin column-container"><div class="">
 <p>Document-wide styling can be defined in the Quarto header as in Figure&nbsp;6.</p>
-</div></div><div id="fig-CSS" class="quarto-figure quarto-figure-center quarto-float anchored">
+</div></div><div id="fig-CSS" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-CSS-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/CSS.png" class="img-fluid figure-img">
@@ -1653,6 +2285,7 @@ background-color: null;
 font-style: inherit;">&lt;-</span></span>
 <span id="cb1-3">  <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(dat, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">missed =</span> <span class="st" style="color: #20794D;
@@ -1665,6 +2298,7 @@ font-style: inherit;">NULL</span>)</span>
 <span id="cb1-4">  {</span>
 <span id="cb1-5">    <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">is.null</span>(var_label))</span>
@@ -1745,6 +2379,7 @@ Tip
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">base_size =</span> <span class="dv" style="color: #AD0000;
@@ -2040,6 +2675,7 @@ font-style: inherit;"># Function to consistently present plots of the same type,
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(Rdat, p.title){</span>
 <span id="cb2-47">  </span>
 <span id="cb2-48">  <span class="fu" style="color: #4758AB;
@@ -3579,7 +4215,7 @@ attr(,"class")
 
 <div class="no-row-height column-margin column-container"><div class="">
 <p>Regular HTML report output of a <code>ggplot</code> generated figure.</p>
-</div></div><div id="fig-diagProf_cairo_pdf" class="quarto-figure quarto-figure-center quarto-float anchored">
+</div></div><div id="fig-diagProf_cairo_pdf" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-diagProf_cairo_pdf-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <img src="https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/examples/diagProf_cairo_pdf.png" class="img-fluid figure-img">
@@ -3668,7 +4304,7 @@ loaded via a namespace (and not attached):
   <category>Output</category>
   <category>Quarto</category>
   <guid>https://the-kids-biostats.github.io/posts/2025-07-03_large_scale_project/large_scale_project.html</guid>
-  <pubDate>Wed, 02 Jul 2025 14:00:00 GMT</pubDate>
+  <pubDate>Wed, 02 Jul 2025 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Managing RStudio addins using the rsam package</title>
@@ -3898,7 +4534,7 @@ loaded via a namespace (and not attached):
   <category>RStudio</category>
   <category>addins</category>
   <guid>https://the-kids-biostats.github.io/posts/2025-04-14_rsam/rsam.html</guid>
-  <pubDate>Sun, 13 Apr 2025 14:00:00 GMT</pubDate>
+  <pubDate>Sun, 13 Apr 2025 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>An Overview of our R Package: ‘thekidsbiostats’</title>
@@ -4481,7 +5117,7 @@ loaded via a namespace (and not attached):
   <category>R</category>
   <category>Summary</category>
   <guid>https://the-kids-biostats.github.io/posts/2025-01-23_thekids_package/thekids_package.html</guid>
-  <pubDate>Wed, 22 Jan 2025 13:00:00 GMT</pubDate>
+  <pubDate>Wed, 22 Jan 2025 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Models - Condensed code and output</title>
@@ -5176,7 +5812,7 @@ loaded via a namespace (and not attached):
   <category>Modelling</category>
   <category>Quarto</category>
   <guid>https://the-kids-biostats.github.io/posts/2025-01-10_model_function/model_function.html</guid>
-  <pubDate>Thu, 09 Jan 2025 13:00:00 GMT</pubDate>
+  <pubDate>Thu, 09 Jan 2025 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Visualisations for (bidirectional) Likert scale data</title>
@@ -5314,6 +5950,7 @@ font-style: inherit;"># Function to simulate post-survey responses with both imp
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(pre_response) {</span>
 <span id="cb1-20">  <span class="co" style="color: #5E5E5E;
 background-color: null;
@@ -5410,6 +6047,7 @@ font-style: inherit;">apply</span>(pre, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">2</span>, <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(x) <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">sapply</span>(x, simulate_post))</span>
@@ -5640,6 +6278,7 @@ font-style: inherit;">3</span>)</span></code></pre></div>
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(data,</span>
 <span id="cb3-2">                          grouping_var,</span>
 <span id="cb3-3">                          facet_var,</span>
@@ -6101,6 +6740,7 @@ font-style: inherit;">15</span>))</span>
 <span id="cb3-79">  </span>
 <span id="cb3-80">  <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (hline <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="cn" style="color: #8f5902;
@@ -6128,8 +6768,10 @@ background-color: null;
 font-style: inherit;">"red"</span>)</span>
 <span id="cb3-85">  } <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (hline <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="cn" style="color: #8f5902;
@@ -6193,6 +6835,7 @@ font-style: inherit;">"mode"</span>)</span></code></pre></div>
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(data, </span>
 <span id="cb5-2">                            <span class="at" style="color: #657422;
 background-color: null;
@@ -6398,6 +7041,7 @@ font-style: inherit;">"Saffron"</span>) </span></code></pre></div>
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(data,</span>
 <span id="cb8-2">                           <span class="at" style="color: #657422;
 background-color: null;
@@ -6713,7 +7357,7 @@ loaded via a namespace (and not attached):
   <category>Likert</category>
   <category>ggplot</category>
   <guid>https://the-kids-biostats.github.io/posts/2024-12-16_bidirectional_likert_visualisation/bidirectional_likert_visualisations.html</guid>
-  <pubDate>Sun, 15 Dec 2024 13:00:00 GMT</pubDate>
+  <pubDate>Sun, 15 Dec 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Sharing - Code v Functions</title>
@@ -7546,6 +8190,7 @@ font-style: inherit;"># Arrange legend items in a single row (applies if legend 
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(data,</span>
 <span id="cb4-2">                         <span class="at" style="color: #657422;
 background-color: null;
@@ -8558,7 +9203,7 @@ loaded via a namespace (and not attached):
   <category>Likert</category>
   <category>ggplot</category>
   <guid>https://the-kids-biostats.github.io/posts/2024-11-19_code_v_functions/code_v_functions.html</guid>
-  <pubDate>Mon, 18 Nov 2024 13:00:00 GMT</pubDate>
+  <pubDate>Mon, 18 Nov 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Visualisations for (ordinal) Likert scale data</title>
@@ -11120,7 +11765,7 @@ loaded via a namespace (and not attached):
   <category>Likert</category>
   <category>ggplot</category>
   <guid>https://the-kids-biostats.github.io/posts/2024-10-14_likert_visualisation/likert_visualisations.html</guid>
-  <pubDate>Sun, 13 Oct 2024 13:00:00 GMT</pubDate>
+  <pubDate>Sun, 13 Oct 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Small-sample analysis</title>
@@ -11395,7 +12040,7 @@ loaded via a namespace (and not attached):
   <category>Small Samples</category>
   <category>R</category>
   <guid>https://the-kids-biostats.github.io/posts/2024-09-10_small_n/small_sample_analysis.html</guid>
-  <pubDate>Mon, 09 Sep 2024 14:00:00 GMT</pubDate>
+  <pubDate>Mon, 09 Sep 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>AI in Biostatistics - Part 2</title>
@@ -11803,7 +12448,7 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
   <category>AI</category>
   <category>R</category>
   <guid>https://the-kids-biostats.github.io/posts/2024_08_09_ai_part_two/ai_part_two.html</guid>
-  <pubDate>Thu, 08 Aug 2024 14:00:00 GMT</pubDate>
+  <pubDate>Thu, 08 Aug 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>AI in Biostatistics - Part 1</title>
@@ -12038,7 +12683,7 @@ font-style: inherit;">print</span>(prob_no_more_than_1_dying)</span></code></pre
   <category>AI</category>
   <category>R</category>
   <guid>https://the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/ai_part_one.html</guid>
-  <pubDate>Wed, 07 Aug 2024 14:00:00 GMT</pubDate>
+  <pubDate>Wed, 07 Aug 2024 16:00:00 GMT</pubDate>
   <media:content url="https://the-kids-biostats.github.io/posts/2024_08_08_ai_part_one/weather_p8.png" medium="image" type="image/png" height="115" width="144"/>
 </item>
 <item>
@@ -15071,7 +15716,7 @@ loaded via a namespace (and not attached):
   <category>Mixed Models</category>
   <category>R</category>
   <guid>https://the-kids-biostats.github.io/posts/2024-07-22_pre_post/pre-post.html</guid>
-  <pubDate>Sun, 21 Jul 2024 14:00:00 GMT</pubDate>
+  <pubDate>Sun, 21 Jul 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Data Anonymiser</title>
@@ -15204,7 +15849,7 @@ loaded via a namespace (and not attached):
   <category>Shiny</category>
   <category>R</category>
   <guid>https://the-kids-biostats.github.io/posts/2024-07-19_data_anonymiser/data_anonymiser.html</guid>
-  <pubDate>Thu, 18 Jul 2024 14:00:00 GMT</pubDate>
+  <pubDate>Thu, 18 Jul 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Parallel Computing in R</title>
@@ -15430,8 +16075,10 @@ font-style: inherit;">data =</span> mtcars)))</span>
 <span id="cb9-6"></span>
 <span id="cb9-7"><span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">in</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
@@ -15498,6 +16145,7 @@ background-color: null;
 font-style: inherit;">2</span>, </span>
 <span id="cb9-25">                       <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(coefs){<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">quantile</span>(coefs, <span class="at" style="color: #657422;
@@ -15659,6 +16307,7 @@ background-color: null;
 font-style: inherit;">2</span>, </span>
 <span id="cb16-12">                       <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(coefs) {<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">quantile</span>(coefs, <span class="at" style="color: #657422;
@@ -15814,6 +16463,7 @@ background-color: null;
 font-style: inherit;">2</span>, </span>
 <span id="cb23-13">                       <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">function</span>(coefs) {<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">quantile</span>(coefs, <span class="at" style="color: #657422;
@@ -16070,8 +16720,10 @@ background-color: null;
 font-style: inherit;">list</span>()</span>
 <span id="cb32-3"><span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">in</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
@@ -16546,11 +17198,14 @@ font-style: inherit;"># To store our model output</span></span>
 <span id="cb50-3"></span>
 <span id="cb50-4"><span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">for</span> (i <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">in</span> outcome_vars){</span>
 <span id="cb50-5">  <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (i <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -16579,8 +17234,10 @@ font-style: inherit;">data =</span> flights)</span>
 <span id="cb50-8">    </span>
 <span id="cb50-9">  } <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (i <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -16667,6 +17324,7 @@ font-style: inherit;">map</span>(outcome_vars, </span>
 background-color: null;
 font-style: inherit;">~</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -16699,8 +17357,10 @@ font-style: inherit;">summary</span>()</span>
 <span id="cb53-10">        </span>
 <span id="cb53-11">        } <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -16804,6 +17464,7 @@ font-style: inherit;">future_map</span>(outcome_vars, </span>
 background-color: null;
 font-style: inherit;">~</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -16836,8 +17497,10 @@ font-style: inherit;">summary</span>()</span>
 <span id="cb56-12">        </span>
 <span id="cb56-13">        } <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (.x <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -16951,6 +17614,7 @@ background-color: null;
 font-style: inherit;">%dopar%</span> {</span>
 <span id="cb59-5">  <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (j <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -16978,8 +17642,10 @@ background-color: null;
 font-style: inherit;">data =</span> flights)</span>
 <span id="cb59-8">  } <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
 background-color: null;
+font-weight: bold;
 font-style: inherit;">if</span> (j <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
@@ -17143,7 +17809,7 @@ loaded via a namespace (and not attached):
   <category>R</category>
   <category>Parallel</category>
   <guid>https://the-kids-biostats.github.io/posts/2024-07-01_parallel/parallel.html</guid>
-  <pubDate>Sun, 30 Jun 2024 14:00:00 GMT</pubDate>
+  <pubDate>Sun, 30 Jun 2024 16:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Handling Missing Data with LMER</title>
@@ -22122,7 +22788,7 @@ loaded via a namespace (and not attached):
   <category>Mixed Models</category>
   <category>R</category>
   <guid>https://the-kids-biostats.github.io/posts/2024-06-07_lmer-missing/missing_lmer.html</guid>
-  <pubDate>Thu, 06 Jun 2024 14:00:00 GMT</pubDate>
+  <pubDate>Thu, 06 Jun 2024 16:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
