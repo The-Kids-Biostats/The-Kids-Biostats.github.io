@@ -1,18 +1,18 @@
 ---
 title: "Efficiently Cleaning and Labelling Data Columns with `thekidsbiostats`"
-author: "Zac Dempsey, Dr Robin van de Meeburg"
+author: "Zac Dempsey, Dr Robin van de Meeberg"
 format:
   html:
     code-fold: true
     tabset: true
     toc: true
     toc-location: left
-date: "2026-02-12"
+date: "2026-02-19"
 categories:
   - R
   - Data cleaning
   - Package
-draft: true
+draft: false
 css: _extensions/html/styles.css
 editor_options: 
   chunk_output_type: console
@@ -30,16 +30,16 @@ library(thekidsbiostats) # install with install.packages("thekidsbiostats", repo
 
 # Overview
 
-Datasets rarely come with clean and consistent formatting in their column names. Therefore, it is common practice when performing analysis to rename the original column names to coding-friendly names (i.e., unique, lower-case, no spaces or special characters, consistent prefixes/suffixes). 
+Datasets rarely come with clean and consistent formatting in their column names. Therefore, it is common practice when performing analysis to rename the original column names to coding-friendly names (i.e., unique, lower-case, no spaces or special characters, consistent prefixes/suffixes).
 
 Alongside these coding-friendly columns, it is then also useful to store (or link) *label attributes*, which provide clean, more descriptive or verbose labels for each coding-friendly variable name. These can be called upon when we are producing output for presentation, such as complete analytical reports, or exported tables and figures.
 
 While a variety of functions for **renaming columns** (e.g., `dplyr::rename()`) and **applying labels** (e.g., using the [`labelled`](https://cran.r-project.org/web/packages/labelled/index.html) or [`Hmisc`](https://cran.r-project.org/web/packages/Hmisc/index.html) packages) exist, a reasonable amount of leg work is needed to use such functions across an entire dataset.
 
-This post will demonstrate how two new functions within [`thekidsbiostats`](https://github.com/The-Kids-Biostats/thekidsbiostats) package can be used to streamline and expedite the process of standardising and labelling columns. Specifically, the following functions are introduced:
+This post will demonstrate how two new functions within [`thekidsbiostats`](https://github.com/The-Kids-Biostats/thekidsbiostats) package can be used to streamline and expedite the process of standardising and labelling columns. Specifically, let's introduce the following functions:
 
--   [`make_column_dict()`](https://the-kids-biostats.github.io/thekidsbiostats/reference/make_column_dict.html)–--create a copy-pasteable column name dictionary template.
--   [`update_columns()`](https://the-kids-biostats.github.io/thekidsbiostats/reference/update_columns.html)–--rename and label columns using a column dictionary.
+-   [`make_column_dict()`](https://the-kids-biostats.github.io/thekidsbiostats/reference/make_column_dict.html) — create a copy-pasteable column name dictionary template.
+-   [`update_columns()`](https://the-kids-biostats.github.io/thekidsbiostats/reference/update_columns.html) — renames and labels columns using a column name dictionary.
 
 # Motivating Example
 
@@ -54,10 +54,12 @@ Previewing this dataset:
 
 ```{r}
 data_patient %>%
-  thekids_table()
+  thekids_table() |> 
+  bg(bg=thekids_palettes$tint10[['CoolGrey']]) |> 
+  modify_labels(hline=TRUE)
 ```
 
-Immediately, we see that the column headers are not formatted in a very nice way, and especially not for programming! The column headers contain (any combination of):
+Immediately, we see that the column headers are not formatted in a very nice way, and especially not for coding purposes! The column headers contain (any combination of):
 
 -   Categorical variable coding,
 -   Full questions,
@@ -77,7 +79,7 @@ Beyond visually looking messy within final output, this set up can also be messy
 data_patient$bmi <- data_patient$`WHAT IS YOUR CURRENT WEIGHT? (kg)` / (data_patient$`WHAT IS YOUR HEIGHT? (cm)` / 100.0)^2
 ```
 
-## ii) Re-Code `Sex`
+## ii) Re-code Sex variable
 
 Recode the Sex column by replacing 0/1 with Male/Female, as defined in the existing column header.
 
@@ -95,6 +97,8 @@ data_patient$`Sex (0=Male, 1=Female)` = case_when(
 Clearly, coding each of these changes is more cumbersome and time intensive than it needs to be, and the readability of our code is impacted.
 :::
 
+<br>
+
 Functions such as `janitor::clean_names()` can be very useful for standardising such column names into coding-friendly names. However, this approach is still imperfect, and the resulting names may remain just as problematic (as seen below).
 
 ```{r echo=TRUE}
@@ -108,12 +112,12 @@ The "cleaned" version of this column name simply omits spaces and punctuation, h
 
 # Our Solution
 
-Ideally, we want to 
+Ideally, we want to simultaneously
 
-1. rename the columns, and 
-2. simultaneously retain human-readable labels for presentation/reporting.
+1.  rename the columns, and
+2.  retain human-readable labels for presentation/reporting.
 
-Therefore, our solution is to manually set up a dictionary that maps the **old column names** to **newly formatted column names** as well as **apply label attributes**.
+Therefore, our solution is to set up a dictionary that maps the **old column names** to **newly-formatted column names** as well as **apply label attributes**.
 
 ## Step 1: Create Data Dictionary
 
@@ -123,16 +127,14 @@ For example:
 
 ```{r echo=TRUE}
 #| code-fold: false
-dict <- make_column_dict(data = data_patient,
-                         auto_clean = TRUE)
-dict
+dict <- make_column_dict(data = data_patient, auto_clean = TRUE, quiet = FALSE)
 ```
 
 ::: column-margin
-The output of `make_column_dict` is a `tribble`---a *row-wise* data-frame object which allows one to more easily visualise the format of the table.
+The output of `make_column_dict` is a `tribble` — a *row-wise* data-frame object (or `tibble`) which allows one to more easily visualise the format of the table.
 :::
 
-We can either directly add to, or modify, the `dict` object (see above) or copy-paste the output into our code and then add/edit/update column names and labels as needed (see below):
+We can either directly add to, or modify, the `dict` object assigned above or copy-paste the output into our code and add/edit/update column names and labels as needed (see below):
 
 ```{r echo=TRUE}
 #| code-fold: false
@@ -158,7 +160,7 @@ This `tribble` has been manually modified with "clean" column names and variable
 Naively renaming columns for easy manipulation in code risks dropping potentially useful information contained in the original column name (e.g., units and symbols). It is important to have a *data dictionary* to retain this information about variables, which is distinct from the column name dictionary we're creating here. For example, neither our `new` or `label` value for the `sex` variable above captures the coding.
 :::
 
-As the number of columns in your dataset increases, editing/maintaining this within your code may be unwieldy. The option is also available to manage this via an external file (e.g., csv, rds, xlsx), by specifying `file`:
+As the number of columns in your dataset increases, editing/maintaining this within your code may become increasingly unwieldy. The option is also available to manage this via an external file (e.g., *.csv*, *.rds*, *.xlsx*), by specifying `file`:
 
 ```{r echo=TRUE, eval=FALSE}
 #| code-fold: false
@@ -167,7 +169,7 @@ make_column_dict(data = data_patient,
                  file = "colnames.csv")
 ```
 
-And then we would read the csv back in after having (externally to R) modified the column names and labels as necessary:
+If need be, we could read the dictionary back into R after having modified (in an external program) the column names and labels as necessary:
 
 ```{r echo=TRUE}
 #| code-fold: false
@@ -176,10 +178,12 @@ dict_patient <- readr::read_csv(file = "colnames.csv")
 
 ```{r}
 dict_patient %>%
-  thekids_table()
+  thekids_table(padding.left=8, padding.right=6, padding.bottom=0, padding.top=0) |> 
+  bg(bg=thekids_palettes$tint10[['CoolGrey']]) |> 
+  modify_labels(hline=TRUE)
 ```
 
-## Step 2: Apply column dictionary
+## Step 2: Applying the column dictionary
 
 Now that we have defined the column dictionary above, we can simply use `update_columns()` to apply these changes in a single line.
 
@@ -188,7 +192,7 @@ Now that we have defined the column dictionary above, we can simply use `update_
 data_clean <- update_columns(
   data_patient, 
   dict = dict_patient
-  )
+)
 ```
 
 ::: column-margin
@@ -202,12 +206,16 @@ Previewing this "cleaned" dataset:
 ```{r}
 data_clean %>%
   labelled::remove_labels() %>%
-  thekids_table()
+  thekids_table() |> 
+  bg(bg=thekids_palettes$tint10[['CoolGrey']]) |> 
+  modify_labels(hline=TRUE)
 ```
 
 Because the labels we specified are stored as attributes, they are automatically recognised by many summary packages that respect label metadata (e.g., `gtsummary::tbl_summary()` tables).
 
-And after these steps, we're don't have this...
+<br>
+
+So after the steps above, we no longer have this...
 
 ```{r echo=TRUE}
 #| code-fold: false
@@ -217,7 +225,8 @@ data_patient %>%
                           `WHAT IS YOUR CURRENT WEIGHT? (kg)` ~ "continuous",
                           `Cholesterol / mmolL` ~ "continuous",
                           `bmi` ~ "continuous")) %>%
-  thekids_table()
+  thekids_table(padding=2) |>
+  modify_labels(hline=TRUE, bold=TRUE)
 ```
 
 We have this!
@@ -230,12 +239,13 @@ data_clean %>%
                           weight_kg ~ "continuous",
                           cholesterol_mmol_l ~ "continuous",
                           bmi ~ "continuous")) %>%
-  thekids_table()
+  thekids_table(padding=2) |> 
+  modify_labels(hline=TRUE, bold=TRUE)
 ```
 
 # Closing comments
 
-Overall, the `make_column_dict()` and `update_columns()` functions from our package offer an efficient solution for transforming and labelling datasets with problematic column headers. More concise column names are easier to work with and enhance the readability/tractability of code, while user-defined labels allow users to easily produce more polished and publication-ready outputs.
+Overall, the `make_column_dict()` and `update_columns()` functions offer an efficient solution for transforming and labelling datasets with problematic column headers. More concise column names are easier to work with and enhance the readability/tractability of code, while user-defined labels allow users to easily produce more polished and publication-ready outputs.
 
 # Acknowledgements
 
