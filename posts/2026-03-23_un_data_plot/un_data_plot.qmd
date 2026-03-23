@@ -12,7 +12,7 @@ categories:
   - R
   - API
   - Guess that plot
-draft: true
+draft: false
 css: _extensions/html/styles.css
 editor_options: 
   chunk_output_type: console
