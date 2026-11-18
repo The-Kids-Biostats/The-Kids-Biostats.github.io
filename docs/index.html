@@ -2,17 +2,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.11.9">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>The Kids Biostats</title>
 <style>
-code{white-space: pre-wrap;}
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -34,15 +40,15 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-48eea8e06ff06eb442a2daacfce5ac08.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -92,16 +98,10 @@ ul.task-list li input[type="checkbox"] {
       window['quarto-listing-loaded']();
     }
   });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
   </script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 const typesetMath = (el) => {
@@ -133,11 +133,11 @@ window.Quarto = {
 <link rel="stylesheet" href="styles.css">
 <link rel="alternate" type="application/rss+xml" title="The Kids Biostats" href="index.xml" data-external="1"></head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
-    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
@@ -148,8 +148,7 @@ window.Quarto = {
     <span class="navbar-title">The Kids Biostats</span>
     </a>
   </div>
-            <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -185,6 +184,7 @@ window.Quarto = {
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
 </div>
+            <div id="quarto-search" class="" title="Search"></div>
       </div> <!-- /container-fluid -->
     </nav>
 </header>
@@ -210,9 +210,9 @@ window.Quarto = {
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(17)</span></div><div class="category" data-category="YWRkaW5z">addins <span class="quarto-category-count">(1)</span></div><div class="category" data-category="QUk=">AI <span class="quarto-category-count">(2)</span></div><div class="category" data-category="QUlIVw==">AIHW <span class="quarto-category-count">(1)</span></div><div class="category" data-category="QVBJ">API <span class="quarto-category-count">(1)</span></div><div class="category" data-category="RGF0YSUyMGNsZWFuaW5n">Data cleaning <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2dwbG90">ggplot <span class="quarto-category-count">(3)</span></div><div class="category" data-category="R3Vlc3MlMjB0aGF0JTIwcGxvdA==">Guess that plot <span class="quarto-category-count">(2)</span></div><div class="category" data-category="TGlrZXJ0">Likert <span class="quarto-category-count">(3)</span></div><div class="category" data-category="TWlzc2luZyUyMERhdGE=">Missing Data <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TWl4ZWQlMjBNb2RlbHM=">Mixed Models <span class="quarto-category-count">(2)</span></div><div class="category" data-category="TW9kZWxsaW5n">Modelling <span class="quarto-category-count">(1)</span></div><div class="category" data-category="T3V0cHV0">Output <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UGFja2FnZQ==">Package <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UGFyYWxsZWw=">Parallel <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UHJlLXBvc3Q=">Pre-post <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UXVhcnRv">Quarto <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Ug==">R <span class="quarto-category-count">(17)</span></div><div class="category" data-category="UlN0dWRpbw==">RStudio <span class="quarto-category-count">(1)</span></div><div class="category" data-category="U2hpbnk=">Shiny <span class="quarto-category-count">(1)</span></div><div class="category" data-category="U21hbGwlMjBTYW1wbGVz">Small Samples <span class="quarto-category-count">(1)</span></div><div class="category" data-category="U3VtbWFyeQ==">Summary <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VmlzdWFsaXNhdGlvbnM=">Visualisations <span class="quarto-category-count">(3)</span></div></div></div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(18)</span></div><div class="category" data-category="YWRkaW5z">addins <span class="quarto-category-count">(1)</span></div><div class="category" data-category="QUk=">AI <span class="quarto-category-count">(2)</span></div><div class="category" data-category="QUlIVw==">AIHW <span class="quarto-category-count">(1)</span></div><div class="category" data-category="QVBJ">API <span class="quarto-category-count">(1)</span></div><div class="category" data-category="RGF0YSUyMGNsZWFuaW5n">Data cleaning <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Z2dwbG90">ggplot <span class="quarto-category-count">(3)</span></div><div class="category" data-category="R3Vlc3MlMjB0aGF0JTIwcGxvdA==">Guess that plot <span class="quarto-category-count">(2)</span></div><div class="category" data-category="TGlrZXJ0">Likert <span class="quarto-category-count">(3)</span></div><div class="category" data-category="TWlzc2luZyUyMERhdGE=">Missing Data <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TWl4ZWQlMjBNb2RlbHM=">Mixed Models <span class="quarto-category-count">(2)</span></div><div class="category" data-category="TW9kZWxsaW5n">Modelling <span class="quarto-category-count">(1)</span></div><div class="category" data-category="T3V0cHV0">Output <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UGFja2FnZQ==">Package <span class="quarto-category-count">(2)</span></div><div class="category" data-category="UGFyYWxsZWw=">Parallel <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UHJlLXBvc3Q=">Pre-post <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UXVhcnRv">Quarto <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Ug==">R <span class="quarto-category-count">(18)</span></div><div class="category" data-category="UlN0dWRpbw==">RStudio <span class="quarto-category-count">(1)</span></div><div class="category" data-category="U2hpbnk=">Shiny <span class="quarto-category-count">(1)</span></div><div class="category" data-category="U21hbGwlMjBTYW1wbGVz">Small Samples <span class="quarto-category-count">(1)</span></div><div class="category" data-category="U3VtbWFyeQ==">Summary <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VHV0b3JpYWxz">Tutorials <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VmlzdWFsaXNhdGlvbnM=">Visualisations <span class="quarto-category-count">(3)</span></div></div></div>
 <!-- main -->
-<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content" tabindex="-1">
 
 
 
@@ -224,15 +224,51 @@ window.Quarto = {
 
 <div class="quarto-listing quarto-listing-container-default" id="listing-listing">
 <div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-categories="UiUyQ0FQSSUyQ0d1ZXNzJTIwdGhhdCUyMHBsb3Q=" data-listing-date-sort="1774195200000" data-listing-file-modified-sort="1774253371362" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1768">
-<div class="thumbnail"><a href="./posts/2026-03-23_un_data_plot/un_data_plot.html" class="no-external">
+<div class="quarto-post image-right" data-index="0" data-categories="UiUyQ1BhY2thZ2UlMkNUdXRvcmlhbHM=" data-listing-date-sort="1795017600000" data-listing-file-modified-sort="1794975959759" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2215">
+<div class="thumbnail"><a href="./posts/2026-11-18_package_demo/package_demo.html" class="no-external-icon">
 
-<p class="card-img-top"><img src="posts/2026-03-23_un_data_plot/images/fig1_gtp_4.png"  class="thumbnail-image card-img"/></p>
+<p class="card-img-top"><img loading='lazy' src="posts\2026-11-18_package_demo\data:image\png;base64,iVBORw0KGgoAAAANSUhEUgAABUAAAAPACAMAAADDuCPrAAABrVBMVEUAAAAAADoAAGYAOjoAOmYAOpAAZpAAZrYjwVMmxFYzMzM6AAA6OgA6Ojo6OmY6OpA6Zjo6ZmY6ZpA6ZrY6kJA6kLY6kNs+QEU+QUZNTU1NTW5NTY5Nbm5Nbo5NbqtNjshWXm5ZYnFmAABmADpmOgBmOjpmOmZmOpBmZjpmZmZmZpBmkJBmkLZmkNtmtttmtv9uTU1ubk1ubm5ubo5ujo5ujqtujshuq+R10pF2qPx5q\9\3JuOTU2Obk2Obm6Ojm6Ojo6Oq6uOq8iOq+SOyOSOyP+QOgCQOjqQZjqQZmaQkGaQkLaQtraQttuQ29uQ2\+mw\Wrbk2rjm6rq46ryOSr5OSr5P+wzf+2ZgC2Zjq2kDq2kGa2kJC2kLa2tpC2tra2ttu229u22\+2\Ijk3Ijm7Iq27Iq47IyKvI5OTI5P\I\bkDrbkGbbtmbbtpDbtrbb27bb29vb2\b\kq27kq47kyI7kyKvkyMjk5Mjk5P\k\r6+vysKz2iID5i4P7urb\tmb\yI7\25D\27b\29v\5Kv\5Mj\5OT\7b\8j\9v\+T\8V0+4hAAAACXBIWXMAAB2HAAAdhwGP5fFlAAAgAElEQVR4nO3d64NcR5nn+RSSx3TKdi\yIHcafEEj77YbY6uXxTYgs9uzoDHQGmwvi8umd9wY0TtrChlftGZnLYxLV6RS\s1z7teIc+Ie8Tzx+74AVVVWVmRUno\jXDJrs0cIIWTUJvYAEEKIagAUIYQMA6AIIWQYAEUIIcMAKEIIGQZAEULIMACKEEKGAVCEEDIMgCKEkGEAFCGEDAOgCCFkGABFCCHDAChCCBkWCNDrxKI34jhhnpSiN01hWGAQABVGb8RxwjwpRW+awrDAIAAqjN6I44R5UoreNIVhgUEAVBi9EccJ86QUvWkKwwKDAKgweiOOE+ZJKXrTFIYFBgFQYfRGHCfMk1L0pikMCwwCoMLojThOmCel6E1TGBYYBECF0RtxnDBPStGbpjAsMAiACqM34jhhnpSiN01hWGAQABVGb8RxwjwpRW+awrDAIAAqjN6I44R5UoreNIVhgUEAVBi9EccJ86QUvWkKwwKDAKgweiOOE+ZJKXrTFIYFBgFQYfRGHCfMk1L0pikMCwwCoMLojThOmCel6E1TGBYYBECF0RtxnDBPStGbpjAsMAiACqM34jhhnpSiN01hWGAQABVGb8RxwjwpRW+awrDAIAAqjN6I44R5UoreNIVhgUEAVBi9EccJ86QUvWkKwwKDAKgweiOOE+ZJKXrTFIYFBgFQYfRGHCfMk1L0pikMCwwCoMLojThOmCel6E1TGBYYBECF0RtxnDBPStGbpjAsMAiACqM34jhhnpSiN01hWGAQABVGb8RxwjwpRW+awrDAIAAqjN6I44R5UoreNIVhgUEAVBi9EccJ86QUvWkKwwKDAKgweiOOE+ZJKXrTFIYFBgFQYfRGHCfMk1L0pikMCwwCoMLojThOmCel6E1TGBYYBECF0RtxnDBPStGbpjAsMAiACqM34jhhnpSiN01hWGAQABVGb8RxwjwpRW+awrDAIAAqjN6I44R5UoreNIVhgUEAVBi9EccJ86QUvWkKwwKDAKgweiOOE+ZJKXrTFIYFBgFQYfRGHCfMk1L0pikMCwwCoMLojThOmCel6E1TGBYYBECFbbexR0Ajer\ZKNGbpjAsMAiACgOgatH7zUaJ3jSFYYFBAFQYAFWL3m82SvSmKQwLDAKgwgCoWvR+s1GiN01hWGAQABUGQNWi95uNEr1pCsMCgwCoqC0AVYvcbzZO9KYpDAsMAqCiAKhi5H6zcaI3TWFYYBAAFQVAFSP3m40TvWkKwwKDAKgoAKoYud9snOhNUxgWGARARW0hqFrkfrNxojdNYVhgEAAVBUAVI\ebjRO9aQrDAoMAqCgAqhi532yc6E1TGBYYBEBFAVDFyP1m40RvmsKwwCBTQO9ffKb5190f7Xa7731Qf\DgrQv9B4NiPx80A6CKkfvNxoneNBmykF+mgF7ZNYDeKcQsevJX5Qf3L1YffOP305vHfj5oBkAVI\ebjRO9aTIGJbfMAH1wZdcA+uDN3dMf7O8W\v5vmR18MGw2M8HzQCoYuR+s3GiN012qmSUEaB\em3XAnrnQrXcvH+xXIKOPhgV+\mgGQBVjNxvNk70nk12qmSUCaDXdruXP2sAvVH\f7EQ\Un5hWeaG7wy+ZbYzwfNAKhi5H6zcaL3bLIxJauMAH3qly2c40XnlVLRfafqoNjPB80AqGLkfrNxovdsskIlp0xPIt2YHgN9pvx3s+t+50J7EHTb5GCkISM4ZJRweDaxzRbQ\YPfVSfeX\4cgCIkDs8mtlkDeue1CtCnPhgBOr2QKfYeiW7YhVeL3m82SvSeTeaiZJYtoHculIvPYhla2ClYgbbFfj5ohmOgim2p\WbjRO\ZZEFKXtkCeqU54V5eWM8G0O32yy\pPecjhP\OqEVvmkw9yS5LQMdmcjkLD0AVA6Bq0ZsmU0+yyymg7fWf1K8DBaCKAVC16E2TqSfZ5XIXns0rkQCoYgBULXrTZAxKbtkCemPXn0QqLwp9isNr4QGoYgBULXrTZIVKTllfxnRtV1ctRO\yeDcmAKoYAFWL3jQZg5Jb1oDu\1v5fqDfbd4C9O5b5ZuDTtefAJRpAFQtetNkyEJ+4R3pBQFQxQCoWvSmKQwLDAKg87YloH+m96QPHwBVi940hWGBQQB03nb7ZwCqFABVi940hWGBQQB0HgBVDYCqRW+awrDAIAA6D4CqBkDVojdNYVhgEACdB0BVA6Bq0ZumMCwwCIDOA6CqAVC16E1TGBYYBEBnbWtAIeh6AFQtevMUhgUGAdBZhZ8AVC16MMSJ3jyFYYFBAHQWAFWOHgxxojdPYVhgEACdB0BVowdDnOjNUxgWGARAZ2EFqhw9GOJEb57CsMAgADqt9LMCFIKuRg+GONGbpzAsMAiATgOg6tGDIU705ikMCwwCoNMAqHr466VKEZymMCwwCIBO2vaAQtCVtgRliBHBaQrDAoMA6KTKTwCq1Hb7Q0yRQgCUbwB0GgBVDoCqBUD5BkAnDVegEHQ5AKoWAOUbAB1X+wlAlQKgagFQvgHQcQBUIwCqFgDlGwAdtR0DCkEXA6BqAVC+AdBRjZ8AVCkAqhYA5RsAHQdANQKgagFQvgHQUdMVKARdCoCqBUD5BkCHtX4CULUAqFIAlG8AdNgcUAi6ULEChaAKAVC+AdBBWwCq03b7KgBVCYDyDYAO6vwcAApBpQFQxbbbt6lNUxgWGARA+7YAVCsAqhgA5RsA7Rr4CUBVAqCKAVC+AdCugZ9DQCGoLACqGADlGwDtkgEKQSVVgL6K2VlrC0D5BkDbtgBUry0AVavwE4ByDYC2Df0cAwpBhRV+AlCVACjjAGjTdhFQYk\IAFQxQAo4wBo08jPCaBYgooCoIoBUMYB0LqxnwBUIQCqGABlHACtmvg5BRSCCmoAhaBrAVDGAdCqdUCJbQD+2wJQxUpA3yA2S2FYYBAALduuAQpBZ5V+AlCVACjjAOh1gZ9zQCHoNACq2BaAMg6AivwUAIrDoJMAqGLb7RsAlG0AVOQnAF2vAxSCLgdAOQdAZyeQJIBC0FFbAKoYAOUcAFUGFIIOq\wEoAoBUM4BUNEevAxQWhuB1waAQtDFakCJCRqGBQZlD6jQTzGgELRvC0CVA6CMyx1QsZ8SQCFoV+0nAFUIK1DOAVChlBJAcRi0C4AqVvgJQPmWOaASP6WAQtCm0QoUgi4EQFmXN6AyP+WAQtCqxk8Auh4AZV3WgEoOgK4ASmpD8BQAVa4FlJagYVhgUM6Ayv1cABSClk0AhaALAVDOZQzogp9LgELQ7iImAKoQVqCsyxfQJT8XAYWg3QK0AxSCyir9BKB8yxnQBSMXAc3+RNIWgCoHQHmXLaCLfq4AmrugnZ8AdDUAyrtcAV32cw3QzAUFoOr1gJISNAwLDMoU0MUDoEqAEtoYnCcAFIKK2wJQ3mUJ6HbNz1VAsxZ0C0CVq\wEoHzLEdB1P9cBLQUltD04rfdzACgEFQZAmZchoOt8qgCar6BbAKoRAOVdloCu4qgCaLZnkgZ+DgGFoKKGK1BKgoZhgUH5AaripxqgeQq6BaDq1X4CUL5lB6iSn4qAZino0E8AuhIA5V5ugKocANUBlM4m4SopoBB03hhQQoKGYYFBeQGqcP5dC9AMzyRtAahGAJR7WQGq7KcyoPkJOvJzDCgEnbYFoNzLDFBFFtUBze046HYZ0KzmQqHaTwDKt5wAVfdTB9CsBJ34OQEUS9BJ2wmgdAQNwwKDMgJUw08tQHMSdOLnFFAIOqr1E4DyLRtA1Y9\GgBKZbOwbboABaDLAVD25QKonp96gOZzJmnqJwBdbL4CJSNoGBYYlAmgenzqApqNoKuAQtBBnZ8AlG95AKrrpy6gmezGz\bgRYBmMA+qAVD+ZQGotp\6gOYg6NzPOaBYgvaJVqBUBA3DAoNyAFTfTwNAMxB07qcAUAja1vsJQPmWAaAGfpoAyl5QwQJUDCjvaVAPgGYQf0BN\DQClLmgIj9FgGIJ2iRegRIRNAwLDOIOqOblS1aAchd0biUAlTfwE4DyjTmghn4aAsr6cibRAlQIKAStA6A5xB5QIwhNAWW8BhX6KQYUgpbJVqA0BA3DAoN4A2ri56ZoBGj1CQ1CIz1WvwmPgAJQeUM\ASjfWANq6udmMwC0\kTugor9lAAKQa+P9uABKN8YA2p0\HPT9OX0ExqAUthANJMsQOWAMpwDveQrUBKChmGBQXwBtfKzA3P2CSVBCWwhWsn8lAGKJejIzwmgFAQNwwKD2AJqdvrdBaAMBZX5KQUUggLQPOIKqOHlS04A5bcbD0B1wwo0k5gCauinK0CZnUmS+ikHNHNBx35OASUgaBgWGMQTUFM\ezC3009o3k\6m4h6cj8XAM1a0C0AzSWWgJr72YI5uAMjPzntxUvPIAFQWRM\Z4CmL2gYFhjEEVAbP5vr5of3YOQnozNJC34uAZqzoAA0mxgCaudny5\1XXBZgy4tQFcAZfH4TQKg2cQOUJ3LP+VrSxeA8hB00c9FQPMVdOrnHNDkBQ3DAoM4Aqrjp0RQJ4CyEHTRz2VAc92Jn\kpADR1QcOwwCBugGrIt3R+3Q2gDARd9nMF0DwFnZ6CB6CcCwRoqLbbL1Xrr\AUfFF8P5IbL1RsTLGnxKrt9oc2EX\0Zm23byuU5dQwjNcKVOf80eIl8sL7MbmgifgadGUBurYCzXIJOl+AilagiS9Bw7DAIFaAap1\1wbU7JJ60oIun0FSApTwozcMgOYUJ0D1rl\SBdTwRZ2UBV31cxXQDAUV+CkENG1Bw7DAID6Aar99neZJJFNA6Qq67uc6oNkJKvJTDGjSgoZhgUGsANWUTe8yJmNAqQqq4KcCoPkJCkBzig2gxn\+SGKe8MY5vS5exU8VQDM7kYQVaF5xAdTyws2pi+5OIjV3l\C2IknFTwA6TeinBNCUBQ3DAoOYAGr5+veZjM4uY+ruL91tRZIzQLMSFIBmFg9Anfg5tFF8f8Z+EhR0vgdfPnplQIc3JvfYzRP7KQM0YUHDsMAgFoA68nOgo6OXcg4ipojYz5mgMkDHNyb22M1r\SwfvAqg6QoahgUGMQHUyrYggNJ6j3qZn1NBJYBOb5yLoA2g9YMHoDnEAVBb7cIASklQuZ8TQcWAzm+ch6AjP4eCSgFNVtAwLDCIAaDW2AUClI6ggiuYLAHNQtCJnwNB5YCmKmgYFhhEH1AHb0AvPolkccpIHBVERFeASgAVn6oX3ZjIY7dKCqjk3BIApR95QF38AQ\hZUyzz9lHRFCRigB0PfkKFICyjTqgTvwUXUg\X5U6iIagQhWFfkoAFd6YxEO3aXgKXh3QRAUNwwKDiAPqyM+5dILjok7uN83NZZTkNZwiP2WAim5M4aFb1Sk58xOA8o08oE5966HzBCiBE0nS18AL\JQCKroxc0EHSE79XAQ0TUHDsMAg2oD68tMfoMkLqvQeIuuAim+c+GO3aWTkxM9lQJMUNAwLDCINqDc\PQKauKB6fuoBylrQlUUmAGUaZUB9HQD9s7eTSPVde5kMN2n6qQkoY0HXiFz6aoqChmGBQYQB9einp8uY2vv2MRtu0gRRF1C2p+JXhVz8coKChmGBQaQB9aBbh5yHC+m7+05uc2nT9VAbUK6CAtBcA6AS5Pzdd7pLUG0O9QHlKeg6kMtfT0\QMCwwiC6gno3zeOepCqp7AFR4YdM6oGk+eJsUfFy5QXKChmGBQWQB9U2cz3tPU1AjPyFoNXEANNeoAurzDNKfswTU0E8Iur4AVQA0NUHDsMAgooB69tM3oAkKauwnBHUCaGKChmGBQWQB9Q2c7\tPanMx8NMCUG6CAtCMowmo7wWod0CTE1T\dLoFoLxOxSvtnwNQppEE1Luf\gFNbCde308rQDkJqobj+m3SEjQMCwwiCqh\3vz\BLdzYpWBn+YnkZgJCkCzDoBKePP9E1ISVP8A6EBQIz\5HAZVtFHhRkkJGoYFBlEE1P8efBhAU9leDP00u5CemaCqNKrcKiVBw7DAIIKABvAzBKDJLEGN\XzV5KWczAQFoJlHEtAQuPn\GYkIauOnDaAsBFWWUelmCQkahgUG0QM0xAI0L0DNDbQClMGJJHUY1W6XjqBhWGAQRUCD2BbkhzicFtOsCLQDlL6gADT7AKjEtgA\JAVB7QS0BJS6oBouKt4wGUHDsMAgcoAG2YPPBlCrA6AuAI0+AxbpsKh6y1QEDcMCgwgCGoa2ED8luqC2ftoCSltQAIrIARpmAZoJoNZ+WgNKWVAtFZVvmoigYVhgED1AnQom+7tHgQCNKujW3k97QEtBkxBDOz0U1W+bhqBhWGAQMUAdLkAX\J7BoC68NMBoGQFBaBoTxBQV3RtNgJBuw+yANTaPieAEj0Xr2mixo2TEDQMCwzKFdDNRiBo\wF\QJ3Q5wZQioLqkvjGG+VTi46gYVhgUKaAbkSADj4KBWg0Qd3I5whQgoJqA1o\tQAot2gB6uwQqAjQ4YfcAXVx\LOWz9HdxCdDKz0\CxHbpxYVQcOwwCBqgDpyK3NAXfnpClBqgmr6+ca2f24RETQMCwyiBeh1n4dAswHUyfn3Fj5ndxTdDI0AKGqiBajXk\CDTww+67kIW4pDP90BSkpQXT\1AY0uaBgWGEQKUJfrwpmfg5NIk897LfiW4pBPMaDl3JndFxFBtf00ADS2oGFYYFC2gP555md3GZPgK\6KAKitmiP0Zp+q587szgJPhWEGgGqeRAKgZMoW0PkKdDPxM4ygoTcUp34KAG3nzuzews6FWap+DrzUvIwpAUHDsMAgADq7ip4zoE73318VANpPntndpU+ojp+tmJoX0icgaBgWGJQToNth\ZY+\nj+lfXIAOry\FEj3uQT1oCmLuhWEdDRPrv+Tj8AJRIlQK2pWgB08CFfQF3z6RxQAmtQTT9rQY0AjSpoGBYYRAtQG6kKqr4Y1j7Bxx+VH4+\shoZQB37Wf8nRvBJG0CTFzQgoDEFDcMCg\IF9IuRkkNAx1\xDGgwQV3vvjeLdPGnjf1MfjcegKJhGQP6xVDJEaBf6PhJBFA\fgqgtPQzcUH1TiFZAhpR0DAsMChnQGea9m7+5S\KfpIB1MK0eQu76pZ+vpry5UzqEg79BKB8A6BjQb9gCqjr00fWxzoXS1ZQDQkHfgJQvgHQkaDtv5kB6v70u19AUz2VpAVh76cxoPEEDcMCgwCoMF6AOr\8MwSgCQqq4uCAzaGDhoBGEzQMCwwCoPwBdc\nqw7Otq+UoqAKDg533AFoBgFQ7oB6WH5WSS5jclZ6i1BlP2eCmgMaS9AwLDAIgDIH1JefkgvpHZaaoBp+TgW1ADSSoGFYYBAAjQyoZyW88dki5\feUxIUgKJ5lAC1FDRVQN3MjWzGvArnGdCkBFU9g+Qa0DiChmGBQQCUM6C+\fQNaEKCKhnoBdAogoZhgUEAlDGg3v30Dmg6gqoZ6P4kEgBNOwDKF1D\fvoHNBVBTd5G2RWgMQQNwwKDAChbQAP4GQDQNATVew28QEArQCMIGoYFBgFQpoD6u3xprNv0M+4vrk\icibbJSQAZRopQO0EzQrQMH7K3pHe9Q+JLqj1PjgAZRoAjQuoJxvC8DkH1NMLPGMLag+g3feHFzQMCwwCoLEBdTQ1k3kK4+cUUG9vMRJZUACKJAFQhoAG8zMYoHEFdeCf5R0EFzQMCwzKGdDhG4BOPk0a0HB+jgDdDPPwk6IJ6oI\23sILWgYFhhEC1ArQRf\qNz004QBDejnENCNX0AjCqrxd+QAaG7lC2i7qQv91PibclaAelAhpJ8DQH37GU9Qrb\D6Q3QwIKGYYFB2QLab+xCP4d\L94roK5mppugkH72gPr3M9blTJp\x9gboGEFDcMCgwDoIqAqq1G7XXhXM9POT1A\JYD6+2lRBNXxUywoAGUbAF0CVGl\PqUVaFg+hYB6\nlu50tpSgEokkYMUBtB9QGV3MYdoNT9DA5oeEE19+A9AhpU0DAsMChbQFVOIlEDNLifJaANmmH8DC8oAEVL5QuowmVMxAANfPyz5qxjM4yfoc\FK9O35KcjQEMKGoYFBlED1EJQ\QvpfQPqFoMIfr66HSw8g\gZWFAN+Rb8dAVoQEHDsMCgnAFdqHklkoqfVoC6m5cofgY79DksoKBbHfnkfgoBXbg5AKUTAF0C1PNlTC63hyh+RgE0oKDuVo6zTy0tWJfuKNAjD8MCgwDoIqB+L6R3uDnE8TMOoOEE9Qfo4iFTAEoncoCaC5rcuzG5dCCOn5EADXYq3hugyyftASidAGhMQB1OSlDAesmi+BlKUFd+ugM0mKBhWGAQAOUAaCw\h5cxhf7BruZuaVYd+ekQ0FCChmGBQfQANRZ0DdDh4c4QgLrbg490APTV4YX0wX+wf0gAKFoNgA797AQNA6izCYnl5+Qd6UNa6l9Qd366O4n0RihBw7DAIAA68rMVlBKgEf0cAxp2b963oA79dHcZ0xsANLEA6NjPhlBCgMb0U\gnPcL9bM+C2sPZozf\nKGfADStCAJqKqgqoJswgDra\qP6Kf6THuF+uE9LPK9Abe7M46NuC8MCg0wBvX\xmfYfu6pv\L786MFbF3a7730wu7nTX65vQDeBAHUzFzH9jAuo11Pxjs1zeGdBBDX1JLtMAb2yawC9c2EAaKNpjekwp79c74BuKAEajCsxYd0\AegSeQ7vDICmlBmgD67sWkBvtP8ou7J7+oP93Td3T38++Qa3v10PgH4RHFA3f80ja0A9CuqYPNMDnpK78y+omSYZZgTon17bdYBe2f2k+\ydC8069MlfTb7D7W\XjCyly5iIrUAj78FHPYn0qsejoG79HJ1yd2ApAE0nE0Cv7XYvf9YA+uDNAZbXmk9e270y+Ra3v10vgH4RFlAWfsa8jKn5+Q5mUTiz1mgOap9W\b\t7g+AppMRoE\9sttzv3\xqf9arEe\W503alejo936Kre\XT+ADq8FJQNoUK7KxkYuXUgfRFNPljhdgfb\Yba5gH6Yf0FtTMkq05NIrZHtOaSSzm41eudCexB02+RgpIO22y8N2m7\slb95F692TjT0biYh+0P3bddqp6hxZvIb+llsPbTKJrYtx3WAzr8p1V+HjbSzxbQG8Xu\Of7v761K+wMBqiZoAqA\sXATzNAncxJLD8Fgs4+Kbqlh9F6EXQLQJFitoC2hz2v7F4ZAjq9kMnxDobRXnNS78bkYids62UPfrv9qrR++28+8Td\M\zC0i2\+lU\xxt87M16OYVU7bgP9+at8r0Tb+pJdtkC2n\89OeCFWib418vAK1nwY9I+oDOsASgw3o0ASi3XAFaLjqpA1o+rwGoAaACLYMB6kNQ14AOTr078hOAppI7QAszQ52F9wNo\cymA6ifPXgA6t7P4YX0bvz0LqghC\llCeiDN4dmttd\+r4O1Aug7QZPCFBPIMkBne2rSwEV7NX7uubKNSXu\Ry9lNONn74FNfUku2xXoFeGkIZ6JZIPQHsEAKiDFajgvBIVQN1eRN9g5\wuAWgaObgO9OXP93dfq17+XjD6VIjXwpsJmhKgW\unv6c9eEcnkZpPDj+mAqjnFai7+3T7sMdZoZJT1sdArzVvxlS9FOlukHdjus4BUAdT4MsjNyvQWUQA9YOd+\v0K6gxKLllfxLp7o92uydfbpacd98q\PzedP0JQAEoFUC3ALTMkIX8oviO9Nd9ABr2JBJRQFdPIi0ZSgVQL9Z5uFOvgoZhgUEAdCLoFwB0aRk5QVIAqFRQAOr8Xl0+8HFhWGAQAB0L+gUAXQR0cmpochJpUVBvbx3lFBIAWhWGBQYBUGEAVK3xa+GXBSUBqC\qfNyrT0HDsMAgAApApxwZAKoiKAVAvUnn6W6dPfBpYVhgEAAFoFOOJvAtHdfsAB0bGhRQB9fUDmbVk3Se7tbdA58UhgUGAVAAOvVo7qdU0DQAdfCE6ibVk3Re7tajoGFYYBAA1QJ0cJ4pE0CXj2sOAV27HJQAoP6g83O\gQNwwKDaAK6jQTo8EonK0AdCBoG0BUUR4CuYEsAUE978ACUb1QBNTLLFtAWCAAqBnR5d58AoFiBtoVhgUEAVB3QHhMAKgZ08YRT+oB6dM7THXsTNAwLDAKgAHTqkQWgSyUPqJeXwTfMebpjABo7AEoV0EDvB6pxEok+oP6Y83fPjh78pDAsMAiAAtCpR2P3lC9jigSou8tAKQLqS9AwLDCIJKBGJ+HTOomU7j688YX00QB18ZS67nMPHoDyjSigZmTZAurwMiZCgC7FC1CPynm7a0+ChmGBQQBUB1BnF9InvA8PQH0gN\lE+Txydt+OHv+oMCwwCIBqASrKbDTJLkGJAersEKjHPfgZoPWejKv7dvP4x4VhgUEUATU7BMoPUD+CkgPUwTOqnkw3oImRG33YHkt3deeOZmBYGBYYRBNQQ7EAqJJIlAClcA5+Cmh\NYejO3c0A8PCsMAgAEoYUC+C6gG6dIo+DKD2s9hMJQAdFIYFBhEE1HAPPjVAU12CagG6eJFoAEBpLED9AupF0DAsMIgkoKZgsQP0emRAl1+mFADQV9N\HXxNXPuvzShX9+5qEvrCsMAgABoN0ESXoBqArrxQPgCgNPbgeyt9+AlAY0YPUNM9eACqahIdQAm8EdMbw4uWvPjpRdAwLDCIIqDGXvED1IOgAFSZLbXaOer\1X4sCYASCoDGA9TNEtQ1S4QAdXkKSZstXT8LMRXwBKDEIgfoFoBO5sO5SsqARj6J5M5PswXo95Xq1Rz+U57JwQT3goZhgUHUADX3M0FAkxTU+jImmageALWfvW4SAeioMCwwiB6gFlolCGh6O\G2F9JL16TupXe4AA0C6PcV\ASgtCIGqMUCNEVAU1yCWr6UU75X73yccf+YnCqgIzXX\TQC1L2gYVhgEDFAr1thBUCVYLIBdOG8kvNx2k9dP4UeAR2puXEnp7IAACAASURBVOonAKUVMUDtsEoP0AQFzRBQkz14DUAV1ASgVJMDevu9nz3\PPffu8TFz\G0a\V0iq2gLqkiQigsffgVwEdqvmDHyj7CUBpJQH0o+f6LWFz5jfWP8bNb9XmCGiigKa3BKUBqEs\vQA6OtrpHVDnglpv8bkkBPTq6c24ky9a\hg3v1VbqtIENDFBLf+oXKCTSG79dA\o+Hx7BajijjwAJZUA0A\PF7\pUy\8pt53v\3Hnz1SfnzZ6sc4+aXaLUATBTS5nXjbP2sc5DKm+AtQMaDjs+0dmSWgCifgASi9ZoAev1Nq+en4c1cLQx\dHpTjVz8Ti395AyoyyXoBFD5ilICaIgL6Z366RDQTs05oOMlqXNAXQtqsa3n1RTQe5c2p0SHPItl6UO\Nf8xLn6nllBpAFo+0YMB6khQlziJX8mt8qLv5Vs4G6O7twG9bvxOdgJAN4IaQCefAKBcmgH6H16U3PLD\zEXQOsnejBAEzuPZAqowq1cDdHpEVDTd7KbAyryE4Ayj851oNtQgLbPdFKAuhPUEFCVmzkaoVs\QL6\VCAOhY0DAsMIgOotZ+qgPZP9VCApnUeyQxQpdu5GaDjI6DF1PkD9PsAlHmEALVnSinlNVefg5G5mCBnPImmw8WsORug\WyNJs4HoNML6VX9BKC0kgB6++Nh9j\G+hfqhimVIgCa1E682WVM\axJbunuLHwafq6dRBp9wf9lTAA0UmJA752b7IqcfMHmIiZ7QN0opefnZvppf4CmtBNvdiF9OEC3ri95dAeo9A0\V9ID0AjpQjoZnPiFzY\xvb36QYpOz\lgqYBqKMlqOFLOVf9dASoez8dAirbUff\Uk7Xgtps7FklBvT4j+8WZP7De++999PTmxMvvPez5zabr1hcxUQG0EU\pYLajy2hi0FNXwu\5qezFaiDiRrOmblXYgBFC00AyjbJMdBiCXq2+efVis5b\SdMsvx1OlrlmZ6CF3\W3Vn4P6d0Hsn4zURW\HS2ArWfp\GkOQZUFABlmwTQgwGXh5uHi\892jxkcRjU7rfpapEn0HIF0PpfAQBNZyd+AdA5kaKXcnoF1L2fbAB1Kqj5pp5Zkl34S4NDnjdPl3TePG2zD2\1y3Tj5wxQEYkTKpt\hgA0mfNIckAFO+mhAU3mCCgARVWyk0gDLesPRp\Szu636UoooZViQf8y5pQIoC6WoFJA2zmICKhzPwGoJPNNPbNkgI5WoJEBdSbU0s76+PPVuzHN\RQK6mh4qQgqA7Sfg5iAOpiiyXzxAdSloOabemZJj4E+PPl3vGOg7oBSAbQ+7DkBdHEn3tX4EtmJTxhQ9wtQACrJfFPPLAmgR937f5bvD\pS9Sb1kc7COzoCqgxo1RTQpZsnBaj9EjRdQL34CUCFWWzreSV7LfxBsaE89vzzzz9a\P\D1YX1VlfSWz3HnfmUOKBpvK+dLqCTz3gF1H56ZrNloVVygDoU1GJbzysZoOXCs+nrn5aAnnjJ5sfYPMX9ALr8rnV\+cvkJoEATUBQzZNI888BUACaTwt\1vjX5erz5Avln0Y6\unPI70W3p2fSpcxdYAO150rC1Z3I0ziKKjeZUwiVT0BmtYePABFZcm\nZ1LnSbyyf3s5OxvIl+wJgao7RJU60J64X69N0AdTM50qmywAqAoeUCd6iTRUuan6PWcghs7HGIKgmq9lDMgoB4WoOwAdSdoGBYYlDigbnHS9XMuqOjWADQEoH78BKCSwrDAoCmgxz99ft4\2B0A3RsD6vAIqD2gslyOMQFBkwXUwcTM5snKKgCK5n+Vc\5OoJbvZFdl\Ax3ahMJQGOfiNd7N6ZQJ5F8LEAZAupMUK2t+2Dihc0V4666\evnThdDebQ6Ce6xpAF1ugClAWj8a0E1385O2U9bQO2nZT5NAFSW1tZtCejVv7Xcw53fwa3X+9Gcsd5\Xkp2DLSA1J7NPtOnuFuaVAHV+8vG6QFqJaju+4Gq+pkioHZUAdAmO0APrF4kLryDm6eHwznlELJZSQPqmia5lmJB1bR1O8roS1DjN1T2CWh6e\AyQMvnTURAXQlqsI0fXxq8gYZG7gGt\HzscvnJj14\vTEblmIpA+pcpoXV5uSTf1H3M0VAbQRNFFAHkzKbIw+A1s8mAKqRc0CLgWy+8n770a1zln\PbbnsARXvrdcv5YwCaOwlaIqAJrgATe+PygHQpqPxWZtiPepxCZowoG5PIUkAlZwvog6ohaBpAupgSuZT5BzQ\tkUDVBHghps4yNAiw9e+vD8ZnOyXPzdKvejT5zpFoXVfvXm0epPpR+2h02rby+\5UT5PnAfPlee\mm\Y3QH5d9rO\71I+3fWu\uoOugev+4vnfOXF4cUf8H4A439Vsflz+guMGpy+uPOmlAXcMEQGkC6mkBCkDlGWzjU0CfL+ehROSwnZTH6y9171N06rdjQP9dczbqK79tbtLse4\voKDp358X3EGbhC7RiE58p\mGKaBfv1TfYH1tnC6grhegZACN\CeOEwTU9Z8yrifIGioAOmoKaMnfrcuVVuVS7\Y7DYCH9XsN3zrfnN1p9sDL7yi\UPp6cnPmk\3xuw1gkzuo3lvzO5\ub11q2Jzswkt22ccjOvWbYiF8vl6qCgDdVAN4R+H8U8qAOncpK0BNuUoQ0BT34JMF1I2gBtv4DNB6P7r37LBaURay1B8X\6jgGwB6tvl8c4uDyiDBHdR3XXzH8A7ajsTXUfUjan9w+al2l739AS2g7QBWzz\lDmiCJ5FoAVrOnWdAPfnpAdAETiKlA2jjx2EHSX2Doxal9iY9oM0ND\pd9\If0zvo\GuAlQN6fKndVf\FeEQtizerv7MhALS5ZYe9vOwBlVzGBEDVAK1njySg1k7J\Yy6AnUiqME2PgW0W+V1n51IdzAFdOxiY+3sDnrVDjUBnd5\c1cCQNufuH6FQLKAOj8EqnUhfVRA4wpq9GYiABSATgHtdtQHtabc\ui9nz6ymQLafPsY0NkdTL2THwOdAvpw+9n29vU\RWfh95OhSEv2tfA+WFJHEYBq+en1zUS8nIMHoMsZbOPKgF59ZPSha0D7Xfx9e7MpoLMl7RTQl\bDTywFQAFo8oA6mI357NgzlSqgLgQ12MalgD48vVnRo8\JPZLrwM0PEdrAE6uw50DqjHFWgy7wcKQG0zBGsZ0DGWZAF1opRAP7GfOQM64KrusPuL6WqAzu5gFdDJK5GmgC4cAz2YA2p6DNRxJs9x9ywBUFtAJ1qGANTTHrwfQOO\Fj41QAeXAlUU9h62p1lWAJ3ewTqgzRWfbbcuTQA97Fao9fmmbo3bX9bUD3HtnaWSBRQrUNs8ADrjUsNPc0BdTMZsbjwBGv3dmBwJarCNSwC9ebrl6KiEqwf0UO0Y6PQO1gGtj0Oeuly+lfLH\1K+aGkM6PQ60G5IzdK1\PazzUiMrwN1nMEz3LVKhACNehB05a9yjsEMcBlTonvwib4faHqAVq\7ubzvXljU7MJ\1MJW7WEffyIHdHoHM0CbOxh08\zoHM6p9+cjal6JdLb5+KH399XL37tXIn390+pdmVff2lQO6B\f6\rX8MdAAah1QQD1fyF9onvwAHSaDND+pezVOu9ei9uZd+td6aPyg4cXAJ3ewRTQ5g5GY3mnf66eeHF2Qer4tfDd5U4PvdsC+rXmHZnX3xpaBugfhu\pHOEsPAC1z0wsNUAbNwO8lBMrUKPBWc6QwTYuBbRYypUXLj3WvLdR9U5KJ878pjv2eLV8z+NPFwAd38EM0OYOJqP5sPqbSCeLnyMcUfluTI+3y9b6zZ1eHJyFr\4mSP\+UfIkgB6NlsAAFICOAW3Xof4BTe3PwQ+MShhQa0FtN3jKKZw66hMDWmh94vLHXfZ\2M7gOe5BJUURSxsAqJKgIQB1MRWTeQGga1lv8YRzAOjgWnw3GTzJPaik7qfg73kIP5kZoDNBiQLqhqgVCcv5AaAEcwKoyxfC70kB2tqgxmpmgH61OwAKQFcArScoFqC2gjrd+onlZBc+NqDRrgPtcVBh1Q+gjo77+QC0U5QuoG724NcAbWcIgJLLAaD7w9i78IkBKmHVG6BWT\5+CgGocFocCaXiZy0oAKWUC0DvnXP7p0BNnubuWcoMUDNBVd5MhPRJpDwAtRTU5cbPOtl1oLfObU5l+WYiAFTl3ZgaP\0D6uEqJgCqkO0Gn00yQAdX8sd5O7tobyayeAg0DKB\Th7QYBfSJ+tn8oDaCWq7wWeT9BhofEBDvSO9WFAVVvNdgbbRA9ShT4sODv0EoHxbuJDeer99kNEz3TlLaoCKL6SX+pno30SqpxCAzifFmU\LEA78BKB8k10H6vYcEi1AvxC+lFPmJwAlBWioFejwQvr+XyEBtRLU6dbPuVQvpL\uXlAqr4V3d94EgAqmxB1PqiQO16IAlFnJXkgfDlDR0jIuoObP++kMAtDZnLjjSctPZUEBKKmkJ5HULyVVyey57homqZ8p\V14hxfuAFDBlLjjSc9PVUHdjdBGUKdbP+ckgB5fOvFi0HGI2m6\dNl2+xdB7bNb9DW1nA\T4QT+UL\t9m\8ZDgaZ7NRz8jbrtpuf6BUD6ja7R0O8W3Hs4fmSXbhf\r3m82Jr8W8kL5eLjhe2s3rn97CL6vlcpQO9+CxAhVMicPlne4KVG0J6nAFarEEtd3gs0n6dnbRrwO9HhlQKarzLzgepemTXjB\AHQ6Iw5x0gZUSVB6gPq7ZwIlDaiPN7Wb1D\ICWOCTw6\w9uAXIoBQGcT4hInNUBHgioo6nKM5oLqbdwae2t5AOo84ye8b0FlgAo\O\wGT+NxuQAFoPMZcWmTIqCaghIEVMNPAGqW8RPes6ASP6Wfl3\BTU79BKDzCXFpk3JTQVdu7m6MwQBVf34DUKMsnvJeoGrSd9I7oMYzJZw8ADqeD6c2+RLU6SANp0pr4wagouL+Xfj+Oe8Fqjq5hpEAdX7KBICOJ8SpTQQANRZUa+MWbqSST+YCaOy\C98\5z0Kmhqg7q8adw5o+cjJAhphBdpwCUC7Z7gtJYmV6t+FHzzp\Qkq1zDOSaT0Aa0fO1FAXdOk6KdAUADKplT\Lvzwae9N0AVAt5Iv+LyMaZs8oO10CQCdLE1dAepSUNc0qZ9\8EP1C8HBaCkSvXvwo+e994FFfyi5StNQn46BrQnYAbodGkKQEfXL\1g+ImAlzEZC6q1cQPQaUm8nd3gie\DqyoZkoNdLm8\e\Yz3b\1pZlYBoDOlqYAVASoyjuDUgVU5YhGNoAm8XZ2w2e+N7UkREYA1Mdf\wkF6PwLCQLq\OiiAaAKEQVU6ZBwNoAm8HfhJ8\9AIINtQwOqPP99+sAdDYdjmUCoM3GXQOq8r6P2QAa\+\CT577oV4V33oWGNAtCUBne+rtvwHosqBR\iZSO0yjydLauAHovOh\F3765Hcu6ATHsZdLJ5E85INPH4BOzhV1HwHQRUHj\FG5dphGk6W1cQPQefH\Lvzs6e9W0AmPkxVn8cPI++kD0NHVSgM0FfzMEtDmrFFEQA0F1dq4AeisBP4u\Pz571LQ6QJzDqi3y5VmefLTC6Cz1ehI0MXbZwlo3RDQmlQAOuyj109vNifOvL\8c45\bjkK86vGlIv3b8LL9gA3Jk18VIIaKh8+RkU0PQvpHd8Et4U0GanHoD2Fdo0Lf8htqPNw5KvJAdoCn8XXrQJOEMrIUC9+RkW0PWiA+oaJhNA2yljD2j5INUAvXduc\LFYrV2+50VQUkBmtR1oP024Mq1GaCzk0iOftBq\vwEoJPZcA2TAaD9nDEHtH6QSoAebB5qdnYPlw8WEgI0sQvp+23AFWybYcNPday5+TmrefTTN6BKZ44A6BqgU01ZANo+SgVAb57urCn25asl6K3Xi2+tj4gebF66+kj1Qb2j\3DB6NmrpzenfjG8WXKApvF34YVbgSPaJIL2rjn5KWt5ufxzMFl+AVU5cwRAW0ArKOeAztajHADtH+Y6oAcDam5XS9Gj+q00T7xUffXR6oOv\LYH9GvF14tF6+Bm6QHq+u\CO9oI\Ao6ks3JD1nJr5\+AVU4cwRAG0A3kyZLUgaADuof5upLOQsXJy96vHl6c+aT\fE7m\I8zEFh5qf7Ysn5UrsLf7Spd\mHN0sO0ET+LrxkQ3Cj16KgQQD1y2cIQP2\HygXQFf8HAiaGaDz89WHzaHOg\L\mwOk1TK1BbT+huHNkgM0lT9rLNkSXAkWF1DffgLQyWy4hkkDUImfrAA124WfAdotSY9KOw9qJistW0ArUkc3A6Cam4LzRegcNzc\YSHvfgLQ6XQ4hskI0PFJI6aAapxEOr40AbQTtVKxOUI6B3R0s+QAdZ6rjaDZEpwfB53r5uQHyPN8+LOZJwA6mg7HMJkBOioAoG+kfRnT7Bhoh6EU0IdnNwOg2tuCG+FkfnoHNISfAHQ6HW5dcgEop5NIX8wE\UIB0O5YZtnR5vFP11egDaBYgVptDC4FFQHn4t5lBeETgM6mwzFMGoD+QOKn\8uYkn83psF1oNURz+kxUAmgqR4DPf5X6U3\aHEu3tVG0OeI0M7PMaReAQ3kJwCdTodjmXQAlb+Gc\rJ3AAdvBLpanWCfXIWXgJoqmfh7507JX5PlFvnbcboaiMY5PYtQidLUZ+ABuLTL6DlbAFQdUCH+\BCR\MFtH0tfPnColLL+gLP268314EOAS2lbQEd3iwhQMs3shO8rdRH59feKmU5VxvBKIeCTg+GegQ0mJ\+AG1nixagEf6ssRBQyUo0W0CLtVk7NzUx41ci9YDerF6B1L0iPtVXIpUP5+QLwz8Ff+tnxVBPWb09k7ONYJS\65n8ARrOT2+A9rMFQPUBle7LewHU9OmmtXFbvx\oh8+N3g909Fr4HtD9H04PAU33tfBXK9ofe\6f33vvvf\yfPVa1BMv2r0YydlGMM712XjvgIY6\NnMjplYKw0VWL3xKACqIKjrUZrNldbGjXekn3RcE9p10pJPb4C6PJUUANBtUD89ATp6ZpAC1K2glq+F5weoQrkAui932x9tfs+PjnbnDXO3EUxzQmgYQMPyed1U0JUmgHr4CaO4ANoe+gwLqPEzTmvjBqCSPv74Y0c\xt1GMMupoL111nc5KzSfLAB1OmlRAW1OvocG1HCqtDZu4dYi+WRWgLrL3UYgyJ2gy799u8L76R\QVwMA6nZCXNqkCWjTip8AlFYcAHUm6Mpv36oIfvoBdCDoqwBUH9CglzEBUN+xANTxRfWy377V\UXw07egr5ID1KWgxoAGvJDefPa0Nm4A6j2XG4GorWNC3QK6jeSnJ0BfbfR81T+gzufNHU\mgC7n1HjjedLauAGo9xxuApLcCupY4zh8egN0CJzv+3c+I+50Sh5Qs3eyq9LauNW3FgBqmMNNQJpLQh0CGo9PACqaEWc4pQ9o1BWoZGMAoEY53ATkJQloTD9dA9rvuvfAOf0Bs9zPnTOf0gfUZvK0Nm6la0CbAKhR7jaAxZy55\CO4vF53bGg3amjIXAO718QALUaofk0aW3cANR77jaA5VwtQl0BGtlPF4B2aA5Ovnef9gyoj+lzBVTygFrNnb+N2xcxkZL8WeP\y\oPGY+z+FVq5epsvBtAo+6+txNiaViH5vDyz+7T3gH1MiWOfEobULu587dxu4UletK\ynnCxUvgu2x+l3q5EdSRwtH9tAa0R3MEaJiXcvqZPwCqkN7GjV34SfWfNT4heGdlw1w9+VVyQagDQFPg0xrQgZpDQPt\ewbU05y4ASppQC3nTmvjxjHQeR++Xm8gZy47+TGOnvpqJQFoGn4CUPGkOBFKycPqZUfhAbWdOq2NW\1Jlg+g++aN6Iseu2x\QNTNE185a\8c3EEKfF63FVSk5qsMAHWAlBqg9SwB0P43am1JWi2fhT\+l+rPldi\X76bJ756totQW0CT8dMhoIPLmMIA6m8SXQiqBGg7TaEBtZ45rY1b+ByTfDIvQAtCPzxHFFArAm2\Oxk\XQnafTD+tNeTSB4n0YGgKoD2\6GRfdULoA6eflobNwCV9NHPHql++39rvQ\v4kmvlx2hVoAm5aebo6CyT\sE1OssRgW0\oREVgBKKimgt39d\7HRky+4OBXv4jmvmdUloRaApsXndSeCSj\tF1C\sxIN0M0o94C6mDitjRuATjv+T9Xv9oSjc\BRALVahNrQm5if5TR4RM7jXfudR9u9eGNAN5tFQR3I7mB2tDZuADqtvA70xM8dXknv4FdqUnhAk+Pzutf3ZPJ3194ncmspqNJVj\2x4uaDyV817b42zNZPABqwpQvp3ey9Vzn4lRplCqH596XnJ1VAA8yLd0C3Ez+Lf84AnRGagJ8GgKrMRjaAlodA6\NHj\2zk1fFu\idGrU1o9AQ0CT99CkoaUDd\pVOSeVG9Eb5gwRwdrn7ca6egVobd\ksUPrPSUaAln3009P1kdB\tf4xTn6pJm3NBDVlN0k\PR4F9XjHQQANIGjN2qKf7gR1Nm1aG3cN6FfXyg7QfXkZaPmSTnrXgQ4yItQE0G2qfnpcgvq640BTGUrQVUAdCepu2rQ2bgAq74+vnyYOqJGgRuYm66c\Qf3db6h5CSLoCNA3WjKdA+rwGai1cQNQcbea46AnXiB4If2wEICmzKe\nXhvdxtqMsMIOgb0jUZM14C6nDWtjdsO0PqMtdYy7aC77dHmYZ2huk8G6PGHz9UP69TPXZxFcvaLNUvbQ4NvSNlPb4L6utdwkxlE0OFJpP6zjgF1OmtaG7cdoDdP6wJ671ynZqKAtv9RoH0h\SDdvXhdQFP309dOvOxeyyePzd0GnRj\glY\Yi5lun7aA1o+KjVA9Q28efqs+Tc7buFC+m87uwo0CUC1SNT2NnU\wwJaq2Bxr2Fnxrug9U+YS5msn9aA1o9LCdCDzUuamhye+EX7z1QBfc7pH\SID6juGlSX2+T99CRofXn49LOtC8Z3GnpmfAsq\QGp+mkLaPsMUAD0+FLPYVNB6s3zmxPf2e\cHpzstoLPn5nszn1\uGmWnoePFQeVrx6enPixQbQ6oDjyfJczdGm+uL+MJCszP4q50JagurdloKffo6CbkVS9numZvcZfDqtX\6zzpvXu3\D\VNQa+OeAdo\A9YBvXfu1H85v9k8NtjfPdh8uzouevagOof9i1LZ6l9\XwFaHwKtvrZ5vnLyneanPVx+sTqWWnyD7rrWLCGgxx9\PPjgj+\9K\Gz8HU6u\EagBLx04+gQintAI0xnQwAdTwjWhv37JVI\TNg\ZVI7TmkAXiFjY9\evxuIeaL+1uXShYPNycu728Vzp6tvuOlcqVZfPH4oELzqPxqsSStrK2PCDSO+k8A6M3qfey6Pyh37xzx60C7fAEa+3Gp5l5QMZVWgEb6z5Ff4rz77Hw+tDZuK0CPSi33t1\f9HvyB9VueCHr2X29T96sJ5vPHNZOlv88rnit\92sOuud+mDHRueAHjUPvTwEUcYHUI3LmXSojf2g1CMAaLTlvNdFqFdAvUyZ1sZttQvfHqxsFOz\ee9cRWoJ6M3T9YHN6gvHl4oPmi\2hzpv\Fn56tVbL321D8zZdgM0HJFfeqf3ytfgPR49QlOgCoLqiFt7Iekk2tBJVRaLUCjTY1H5fzinB6gOieR2tqzP3sBoO16sjqJVB0CbXfR66\cOj84DFDaGWwPfg7owaZ+ILcu1QccuAGqJqM6tABUYKXNEdCIk+ONOa82e5kxrY3b7jKmppunO2baw5hiQI\Kr7a3rr5SLvpOPPbt39Q7+kfFjcJd3TQFtDzd9dLoX6wAVRVU2VlSfvoTdPjx8P91izqf\gT1SbOfGdPauO0upG9qd9P3QkDba5MKQA9LjoYr0PJAaPnl5kjpvXMPfRpsD34G6IDLYjzlI+AFqKKgqswS89O5oNu5nzYvQYo8n94E9SizpxnT2rhtXsrZXW80WDTOAB0eA60OgY6Ogbb\LqSq7urgxH++FGoPfgnQ5t\MAFU7DKoKaOwHo53jM\HjC+ktjn029xZ5Qn0J6g9mXxOmtXFbvRb+oIZzeOHmDNBubVkAeu9cfTF9fxa+BfSoOeh4tPna6WCvTxLswg9fJ1UMnhugSoIqKhv7oRjkVtDRnVldvvRqAn56O5XkB1CfVyBrbdxWgN48XV7GdOt8fw5pDmh5HegvmutAj2poq0uaytcntbvw5XWj3Vmb\oy+70QnkfoffliMjx2gKoKqIRv7gRjlVFCXgCbgp681qDdAvc2D1sZt925Mh\Vz5iv9S5HmgA5eidS+lV39bc\XF9JXPfRut5idvTrUWzNAjzbDn15w+rXT\ABd5VHJ2AS2d5NcCuoQ0FTm0wd2nlT2OAtaG7flGyrfeq4w5\HBqx3ngDavhS\22+tDoGVXH+leC\9hsTY9+eLgdfAPOflLbirNL6QvX2Pai1m9ypQZoAqCqhCbxvZuUKqAxp6XJg+LUA+Aen7+aW3cwd6RXvHk+mG4PXgBoKX1AzH\QP5PeghaFVRB2FS2d4PcCTq+JxZ++jgO6oPk5ABVyBTQ5qrP9mzRSoL3d\KX6M1Ebv\6fxqIefsdfoCuCroObDLbu0nOBJ3cEQc\r3tYg3oQ2fN8aW3c3gG9d646TXSgtmt+NeR7hObzdnbjrAGN\QCscnYYdHo\1A+ANrlehLoH2fd0aW3cwmeT5JNmu\BX6\80q6wsD9Ru5ioAagJoWpu7Qa4EdXY3iU1o2oAGmC6tjds\oNU7Jp84o\I3Mt4t3+cuXLkCuiLo2ldjj946R4K6upf0JtSpea459j9dWht3AECTLWNAl4xkD6gjQR3dSYrz6XIR6hJQ36eP6rQ2bgDqPf+\ce0WBV3RNcUNXjcngrq5jySn0xLQ8pDdAD1rNwf3FWK6tDZuAOq9AL9y7UwBTXSD1y4dQGPPNsj9zwAAIABJREFUhCQb9uqTHj16Luhs7irIY9fauAFo373nHp33GLvLmKqMV6CxB+4oJf2Wz6s7ADRZP20Woe0VsZ16zvgMNFtaG7f6syADQM9t5vG7DrRqQcnhl8oZGH8t9sBdpfDEX7my0x7QlGfT+GqmftPJBFD1uANavzt+HivQBUEHX6k3BI5+KhwGXXttkTWgiR8PMRTUF6DhJktr4wagw\r3pHdYqN+7XiqAtltC\5Wkt3i91gRdfXW7LaDJz6aZoH4ADTlZ\jZu17RETnASqRDU+fs5+\ktWycVtPtCvynwW4BeXxXUN6DJ+2koqBdAw1y\1ORv43YsS+xEZ+Fvnnb+YlI\v2Xr9AElsMlrtSyoZ0BJTKaVoJ19TvwM+Kj1Nm7swo87dP5q0oC\eq1kgsoAJbHJa7UoqF9AiUymhaA9fsT8xDFQ1YSAHv+nRx2\oV7I371OuoCyuYSpT2kJKjfQCtDYj10tY0EH+jkANOhj1tq41R9eJoC6L+gvX6NVQCcnkahs8zopCLpgIH8\Hbyq0x7Q0JOltXEDUO+F\e1rJBFUchkTnW1ep1VBlxDMwE97Qe0BDj1ZWhu38OFJPglA6+5ffKb5159+tNs9+b0P6g8evHVht2s\GBT416\eOqDDC+kpbfTqrV3MtKig+XdSmksAuhAANejKrgH0d7uqJ39VfnD\YvXBN34\vXngX79GYkFln6W00atnLqjFN9KaSjsCrf0N\nh1LACg2j24smsAvbF78sf7\d03azSv7J7+oPzg6c8n3xD8CaCcHqCxR+spY0HNv4\aVFrtxVsBGmWudDQAoLr96bVdA+iDN3c\Kf+\WHoW\3\nQsXo\Yv1enRQ+GeAchqAMjwH32QqqPG3kZtJACoNgGp2bbd7+bMa0PsXm931K7tXyi8809zglcm3hH8GKCe0MrMVqLGgpt9FcSItFLTDN8aD1fEAgGp27alfFrvuz4w+VwF6pV6Ozr7IBFCSm71qYQGN\WiNMmfQyt4oj1XHg3piVK6iB6BdEyOrvfYHbza77ncutAdB25mzGaLvttsvZ4k+92XaD8O27faH+hl+U+zHatZ2+7Zh5t\5NoHJqgBVehkSAO2aAFrtvDMHNPGHYZ0JhmbfE\uRmmbsoA29sR\0eg2g318LgA4aA3qjuoxpAOj0QqYouyGKiXbXxZ+LPVK\mRwGNfoWuvNoeibJeBc+2lzpWABA532y9n0jQG9ceLI8+ClYgbZFehqoJdAyR0BNBDX5DsLTGBrQeJOlYwgAHXf8zunNZnPyxU+Xvm8I6LXmMnregJLe8tXSF9TgG2jPohmFxu5GmywdQxwAeu9c+waax68X+px5X+PHH3TvXnzk\G0415sDevN08\YZp5beVXkA6O927WWfJM\CqwMae5z+0xZU\bUZ9HIQlN2402WjiEOAD1o6Wv+JpvGO7r39qYBaPUITv4PjxT\+9DCGrQz8sGV3VPtAc\2+k9S14EC0EGeAaXvZ1hA4z1MHUOEgJYMqgJ6fLBp6TvYPPT+\talRXvG3TzdvfVmEoAebup3U\7w9OKfRuoAvTJ43SbJVyJdFwmaK6DXfa9AYz8++0wwNFQ34qPUMUQEaL0Tqwboh+Xfsazpu3m6WnveO6f+ju6H\U1TALT\k3KHm6Xh3OhedDQ43Pngzd1T1F4LX6YCKIPFk0raS0rNm8d+fA4y0NAM3ZgPUscQAaDtu+iqAFpA8\jVxprD7v+7ZeXB5qWb5zcnvrPf\+H05uTlCql3NptT7ze3OagWq1dPb0682AD64XPlTvQLn5ai1ivZQ3+yCgBtRL95emkdfaN9Keeurfz4Lr13YypTAzT2KMOkR6LurWM\OhcB0OnGPQO0\zsOKoCeutytHQ+a1dtgLXmw+XZ1VubsQfm\JU7lIq\4199XgNaHQKuvbZ6vvuud5kc\XH6xWtAW3+D87wy3TQG9d649gNv\S1QD6I3dCND93beKf31vuv7kACjfNxIZp3ceSfPGPOZQn0Mjc6M+Rh1D5q9E6gFVfCVSA+bxpW711i3eChsf\T43ULMF8uDow9Xf7Lt8v5Wsd9\trrlS+W3F19sjqQelV8tlqSVtTXIjaNeMgVUs6hPhtWwAh2kJajebblMobaHJuTGfYhaG7dnQMt\FvvDZ\f1Pnmznmw+c1g7ebb67vJe6n83q876fn0eGwWgZTMvBZ+IPcZg6QiqdVM2UxgA0DfoAWq6C182B7Sz56DZU6++UgLa4lp94fhS8UF7zqk71Hn7jz87X53LqdeeB\724AFoFQAdpiGozi35zCBWoOON2+4kUtniCnQC6NHwRFN1CLTdRa+\Uu7cV720r+30uQcPQKsA6CgPgHLyU19QA3EjP0KtjdvyMqb9CqD1YUwxoEflV9v1avWV8oVAJx779m\qHf2j4kZer24CoGUAdJQXQGM\KJcB0NHGbXsh\X75LPwM0PbapALQw9Ko4Qq0PBBafrk5Unrv3EOf+tyDB6B1UzDnH8d+RgdNw8UsAdUVVB\c2A9Qa+O2fynn0eT6z\F1oHvpMdDqEOjoGGj774Kvis2DE\5ksc9eBGg8+wHEPv5sNY6oLFHGDTlo6Dqt2M2gXokansb++HFAlTwSqQZoN3asgD03rn6Yvr+LHz7rUf1VU7F\3\ttM\XJwHQKgA6TlXQ6c3KZ0sOfvoFNPYp+OvRAC0MPDV5LfwM0PI60F8014Ee1cvM6pKm8vVJ7S58ed1oDWgJ2lnBT3TV7JVIP31+3j8ov7JfVuznw1oAdJKioJNb1f+9zcBPrECHG7c7QPe3Zu\GNAd08Eqk9q3sDvtXIh3VT8KH3m3PS23UX1dvkOk70msW+\mwFgCdZgJou8fC309NQXW5jf3g4gG6v\V68QQ6M1ixzQFtXgtf7LfXh0DLrj7SvRa+fG+Sky8OXgev\s5OBgHQKgA6S0nQ0Y36Yz7TG8V+LB7yB2gS\73R2rjjvCO94sn1Q6978AC0aSLm7MMEntOBA6DL6aCoCWjsh3bd9qWcspwAqveWd92lpZ5aAvT2rx999NEXVv88kkqxnw+rrQEae3wRUhFUBVCmkwdAu407LKD3zlWniQ7Uds2v+ryKfi8E9Ob5zeax99sDs+V7odj\mNjPh9UA6DwFQRUAZTt3ngBNY29Ha+MWPjzJJx3swl+tn2QqK8sDtZtZNAf0sBndUbc5OCA89vNhNQA6TxdQ8UkktnOnoaIeoLEfWJnWxh0Y0Oodk08o\eG5d8v3ufPaDNDypaSnnj+\OfnIZvP1T\a3X98s\mkPxWI\H1YDoILWBV2\jCmNBZWPAGi7cYcGNKVEfxOpfYvn+uzVgYslaOznw2oAVND6xaCrF9Lz9VNnH17L2iQmTGvjBqB97XWnxUJU6U97KBb7+bDemMzpR0k8qcOnDej864xnTp1FLUBjP6wqrY0bgPbdO1fD6fhNRWI\H9ZbBjT26GK1DuTa12M\Ao8B0GbjBqB9LZe5A1ruiwJQALqUD0BTWbJrbdw6Dw+AGhX7+bDeGND6bAgAXRN09cuxx+8zP4DGflR1Whu30jWgTQDUqNjPh\VGgLbX4wBQK0C5z5uyiwAUgNoV+\mg0EDQ\orw7AFdERSAugU0lT14PUC93TOBAGibHNBkntUxWr6UaeWLzOfNB6CxH1OT7QafTQC0bQnQ2GOLmTGg7P1UFxSAsg3vSN8GQCUtI7n0tdgj955zQBN4L\o62w0+mwBo2\AsEg6BDjIENIMFKFagCH\So01wGh4n4atMV6Cxx+0\14Cm80yz3eCzCW+o3DUU9EtcBtq3uMxs\jF7EXwOe\DKL4cHoGwDoF0jQL\s\53DvuhyckHbr2T0NqCjVmUspwWAMg6AdskBjT2y2K0COn8j0Ez+q7MmYz0tAJRvYkA\rv\v1uuPPvoPKu9bulrs54NKAFSaVND6C\3pxswWoGuAttOiCGhC\9VxsdFnkQDQ49eb0+7N3\Rw8UftYj8fVAKg0rQBTYgCry3L2M+LKqCxH0+Xg20+j+aAln\avgK0\Jse5fvSuxA09vNBJQAqTyboD38oAzT2iMMEQHNvBujxpc3m1OX6H195v\oLTvaXgZIAdCgoAB2nCWguC9CV0\C6gCZzGT0AVW4GaLHurN+A\qj5W0gHLpagsZ8PSokBzQeDpRYBnZ9EymbKFpegWIHybwboQfs35A6blWcnqk2xnw9KyQCNPa4UkixBG0CnlzHlM2dq+\BqJ5FSmjXbDT6bZH8TqfxH7ebN03m8lBOALiYWtAX01Uz9VDsN31\GVF8WCkD5JHs3pvIfZ8efsSn280Ep2THQ2ONKohVAh+V00EPlQtD+QvrGUwDKJymgxcLzpfFnbIr9fFAKK9ClhIJKAI091oAp7Z03N2r36AEon6SAHg7+rHEmgA4E7QFN6VkdNWVAc1qAagHan1OS3Sz2g+mz3eCzSXoM9KA9dZTPSSQAuphIUDGgsUcaMoeApjRxtht8NonOwpfHPouV6MOjT9gV+\mgFgBdShHQvBagDgFNat6st\hcmgFa7LGXS9DhHnzzL5tiPx\UAqCLqa5AY48zbAA06+Yv5SxWnJtHT2+aBeiH3b+siv18UAuALiZYggpXoLHHGTaVJajSSaSkJs5+k8+kOaDlazmLTjV\Wq75l2Wxnw+KzQHNbId0MSVAs5svdUAJnYQHoKqJ3s7uw+ceffSF6rxRCegZ6zNIezqAbueAxh5TQs0FBaDqgK76mdLMOdjm82j5DZWPf\rCJ05+TOzng2IAdDEFQNNiIESqgK74mdYCFICqhnekHwZAl5sJKgA09hiDpyBocZP1i0CTmrkwLDAIgA4DoMutAprfAtQZoCldRg9AlQOgo1pBAai49RVo7BGGDyvQnAOgo6aA5riiWmq6BJ2vQGOPMHxuAE1s5sKwwCAAOmoOaOwRpdUKoHlOlxKg6yeRYj+MUWFYYBAAHQVAlwOggtaXoIPLmOQ3if0wRoVhgUEAdBQAXWkiKAC9rgzo4rsppzZzYVhgEAAdBUBXWgQ01yPGioAu3yL2gxgXhgUGAdBxjaANoLmKsNBY0CmgsUcXp1UfASjbAOi4KaCxx5NcC4Bm+58bkY+j\XUAyjYAOg6ArrW0Ao09tljNfRyfMVJYoiY2d2FYYBAAHQdA1xotQScr0Nhji9UMyMk1SwqAxn4Ik8KwwCAAOg6AriUFNOPJmgI5vWoegLINgI4DoGsB0Hm2gCa3Bw9AVQOgk2pBa0DTe16n0FBQAFq1BujbbxNbgAJQ1QDopDGgsUeTYhJAs\6vzURQAJpNAHQSAF1tIOgI0NjjiphsCfqGEqAJ\rcnDAsMAqCTAOhqQkATRCBgktPw7UergMYe\6wwLDAIgE4CoKtJAI09rKgJBe0+AKBsA6CTAOhqAHTe8nn2ZUBTXLyHYYFBAHRaJWgFaIpP7CTqBQWgTXaAxh79vDAsMAiAThsCGnssiSYANPv\2CwKCkDZBkCnAdDVhIDGHlTkzAFN8r89YVhgEACdBkDX6wQFoF1Lgq4AGnvogsKwwCAAOg2ArjcDNMlVVNgAaJYB0GkAdD0BoLGHFD9DQNP8b08YFhgEQGeVgpaApvnMTqP5LnzsEcVvYQm6DGjsgYsKwwKDAOisHtDYI0m3dgmKFWgfAM0xADoLgK43ARRTVWYEaKL7OWFYYBAAnQVA1wOgguRL0EVAYw9bWBgWGARAZwFQhRpBAeggAJphAHQWAFVoBGiiu6HBA6D5BUBnAVCFJoDGHk4aSZegckBTnbowLDAIgM4rBC0AxbJqsVpQADpMH9BkZy4MCwwCoPNaQGOPI+mGgOIq0CaDFWjsIUsKwwKDAOg8AKoQVqCCZEtQrEDZBkDnAVCFBoBiptp0AU135sKwwCAAOg+AKgRARWmvQGMPWFYYFhgEQOcBUJUqQQHoOMkSFCtQtgHQeQBUJQAqSA\QhCcuDAsMAqDzAKhKHaC43muQ5go09nClhWGBQQB0XgUoWFhpAGjsoSSUeAmKFSjbAKig7bYENPYoEg+AitIBNOWJC8MCgwCoIACqEAAVprUCjT1YeWFYYBAAFQRAVSoFBaDThEtQrEDZBkAFAVCVGkBxsHiUOqBJz1sYFhgEQAUBUJU6QGMPJK00VqCxh7pQGBYYBEAFAVCVAKgw0RIUK1C2AVBBAFQlACpMFdC05y0MCwwCoIIAqEoAVJzyCjT2QJcKwwKDAgFKqxrQ2KNIve32h2WYqEnb7dsqYd5YhBWoIKxAlSqWoFiBzhPswwtWoIlPWxgWGARABQFQpSpAcRXTLACaUQBUUAEoXFivATT2MJJrvgQFoGwDoKK28FMhACoOgGYUABUFQFUCoOJUAE39CRaGBQYBUFEAVCUAKk4N0NijXC4MCwwCoKIAqEoAVNJMUADKNgAqCoCqBEAlrQOa\PMrDAsMAqCiAKhS5aX0mKh5KoDGHuNKYVhgEAAVBUCVKgDFRAkCoPkEQEUBUKUqQGMPIsUAaDYBUFEAVCkAKmm6BAWgbAOgogCoUgBUEgDNJgAqCoAqBUAlrQGa\tMrDAsMAqCiAKhSAFTSOqCxR7hWGBYYBEBFAVClAKgkAJpNAFQUAFUKgMoCoLkEQEUBUKUAqKzJEhSAsg2AigKgSgFQWQA0lwCoKACqFACVtQwogWdXGBYYBEBFAVC1ME2S1gCNPb7VwrDAIAAqCoCqhXmSBEBzCYCKggtqYZ4kAdBcAqCiAINamCdJADSXAKgwAk\xFAKgssaCAlC2AVBhBJ7iKQRAZQHQTAKgwgg8xVMIgMoCoJkEQIUReIqnEACVBUAzCYAKI\AUTyEAKmsJUAqzFoYFBgFQYQSe4ilEgYI4LQMae3TrhWGBQQBUGIXneAIBUFkANJMAqDAKz\EEAqCyAGgmAVBhFJ7jCQRAZQHQTAKgwig8xxMIgMoCoJkEQIVReI4nEACVBUAzCYAKo\AcTyAAKguAZhIAFUbhOZ5AAFQWAM0kACqMwnM8gQCoLACaSQBUGIXneAIBUFkANJMAqDAKz\EEAqCyAGgmAVBhFJ7jCQRAZQHQTAKgwig8xxMIgMqSAropIjBpYVhgEAAVBhiUAqCyZIBuqmKPbr0wLDAIgAoDDEoBUFkSQDcbIoKGYYFBAFQYYFAKgMoaAfrs3\3dsyM\0xc0DAsMAqDCAINSAFTWENAnnvjWt554AoCyDIAKAwxKAVBZA0CfePbZb33r2WefAKAcA6DC6I04SgBUVg\osy2gzwJQhgFQYfRGHCUAKqsHtPCzAnS0BI09vNXCsMAgACqM3oijBEBlSQDFZUzcAqDC6I04SgBUlngXHhfSswuACqM34igBUFnik0h4KSe7AKgweiOOEwULoiS+jAmAsguACqM34jhhniSJL6QHoOwCoMLojThOmCdJeDemTAKgwuiNOE6YJ0kANJMAqDB6I44T5kkSAM0kACqM3ojjhHmSBEAzCYAKozfiOGGeJAHQTAKgwuiNOE6YJ0kANJMAqDB6I44T5kkSAM0kACqM3ojjhHmSBEAzCYAKozfiOGGeJAHQTAKgwuiNOE6YJ0kANJMAqDB6I44T5kkSAM0kACqM3ojjhHmSBEAzCYAKozfiOGGeJAHQTAKgwuiNOE6YJ0kANJMAqDB6I44T5kkSAM0kACqM3ojjhHmSBEAzCYAKozfiOGGeJAHQTAKgwuiNOE6YJ0kANJMAqDB6I44T5kkSAM0kACqM3ojjhHmSBEAzCYAKozfiOGGeJAHQTAKgwuiNOE6YJ0kANJMAqDB6I44T5kkSAM0kACqM3ojjhHmSBEAzCYAKozfiOGGeZI0EBaBsA6DC6I04TpgnWQA0jwCoMHojjhPmSRYAzSMAKozeiOOEeZIFQPMIgAqjN+I4YZ5kLQD6BgDlEwAVRm\EccI8ycIKNI8AqDB6I44T5kmWHFAKfgJQ1QCoMHojjhPmSRYAzSMAKozeiOOEeZIFQPMIgAqjN+I4YZ5kAdA8AqDC6I04TpgnWQA0jwCoMHojjhPmSRYAzSMAKozeiOOEeZIFQPMIgAqjN+I4YZ5kAdA8AqDC6I04TpgnaQA0iwCoMHojjhPmSdpwCQpA2QZAhdEbcZwwT9IGgD77d3\3LADlGQAVRm\EccI8SesBfeKJb33riSd6PwEoowCoMHojjhPmSVoH6BPPPvutbz377BP9AnRTFHt4K4VhgUEAVBi9EccJ8yStBfTZFtBnW0A3m\QFDcMCgwCoMHojjhPmSVoLaOFnBWi7BG38TFzQMCwwyB7Quz\a7Z78j5\XHzx468Ju970PZjeK\XzQjd6I44R5kiYDdLOhIKg1C7lkDehnu6qnfl9+cP9i9cE3fj+9Vezng270RhwnzJM02S48AGWVLaB3Luye\mD\4He7p8s16JXyg7tv1h8Mi\180I3eiOOEeZInOYkEQFllC+iVBssru5+UmlZrz\sXn\zV5Gaxnw+60RtxnDBP8vrT8KPLmAAoqywBffBmCWfRjd0z+\218n\25f+\Mrld7OeDbvRGHCfMk7z+QtDRhfQ4icQqa0CbxeadC8VK9MpQ01Gxnw+60RtxnDBP8gYvRRq8lHOLy5hY5RLQsaZV2ya7n4IQvbbbtwWV20LpZ+zRITfZHwN9pvl\AIrQIDmgiE8OzsK\Hl5Fn73jd8PAJ1eyBR7j0Q3eiOOE+ZJnmwXPva4lLJkIZ+sdyWu1deB\pN4F74t9vNBN3ojjhPmSR4AzSH7YzF\em23++4HkmOgbbGfD7rRG3GcME8L9YICULa5OphdnXjHWfjcwjwtJAKUxpvZAVDlXAF6pbz0s73+E9eB5hLmaSExoLFHpZYjFvhnC2hj5Z0L5d47XomUW5inhQBoBtkCemP35I\3+z9dqBx98ObuKbwWPqcwTwsB0Ayy3oX\XX0WvibzLt6NKa8wTwsB0AyyPwb62T\udt\8cfPB3bcKP783XX\S28zojThOmKelOkEBKNvwjvTC6I04TpinpQSAvgFAeQVAhdEbcZwwT0thBco\ACqM3ojjhHlaag4oFT8BqGoAVBi9EccJ87QUAOUfABVGb8RxwjwtBUD5B0CF0RtxnDBPi7WCAlC2AVBh9EYcJ8zTYjNAqZyEB6CqAVBh9EYcJ8zTYliBsg+ACqM34jhhnhabAkrGTwCqGgAVRm\EccI8LQZA2QdAhdEbcZwwT4sBUPYBUGH0RhwnzNNyjaAAlG0AVBi9EccJ87TcBFAyJ+EBqGoAVBi9EccJ87QcVqDcA6DC6I04Tpin5caA0vETgKoGQIXRG3GcME\LAVDuAVBh9EYcJ8zTcgCUewBUGL0RxwnztFItKABlGwAVRm\EccI8rTQClM5JeACqGgAVRm\EccI8rYQVKPMAqDB6I44T5mmlIaCE\ASgqgFQYfRGHCfM00oAlHkAVBi9EccJ87QSAGUeABVGb8RxwjytVQkKQNkGQIXRG3GcME9rDQAldBIegKoGQIXRG3GcME9rYQXKOwAqjN6I44R5WqsHlJKfAFQ1ACqM3ojjhHlaC4DyDoAKozfiOGGe1gKgvAOgwuiNOE6Yp7UAKO8AqDB6I44T5mk1AMo6ACqM3ojjhHlarVyCAlC2AVBh9EYcJ8zTagCUdQBUGL0RxwnztFoL6BaAcgyACqM34jhhnlbrAY09Ep3CsMAgACqM3ojjhHlaDYCyDoAKozfiOGGeVgOgrAOgwuiNOE6Yp9UAKOsAqDB6I44T5mm9QlAAyjYAKozeiOOEeVqvAZTSm9kBUOUAqDB6I44T5mk9rEA5B0CF0RtxnDBP69WA0vITgKoGQIXRG3GcME\rAVDOAVBh9EYcJ8zTegCUcwBUGL0RxwnztB4A5RwAFUZvxHHCPK0HQDkHQIXRG3GcME\rAVDOAVBh9EYcJ8yTQtstAGUbABVGb8RxwjwpVAFK6zp6AKoaABVGb8RxwjwphBUo4wCoMHojjhPmSaESUGJ+AlDVAKgweiOOE+ZJIQDKOAAqjN6I44R5UgiAMg6ACqM34jhhnhQCoIwDoMLojThOmCeFACjjAKgweiOOE+ZJIQDKOAAqjN6I44R5UgiAMg6ACqM34jhhnhQCoIwDoMLojThOmCeFACjjAKgweiOOE+ZJpUJQAMo0ACqM3ojjhHlSqQCU2EvhAahqAFQYvRHHCfOkElagfAOgwuiNOE6YJ5W2W2p+AlDVAKgweiOOE+ZJJQDKNwAqjN6I44R5UgmA8g2ACqM34jhhnlQCoHwDoMLojThOmCeVACjfAKgweiOOE+ZJJQDKNwAqjN6I44R5UgmA8g2ACqM34jhhnlQCoHwDoMLojThOmCeVACjfAKgweiOOE+ZJJQDKNwAqjN6I44R5UgmA8g2ACqM34jhhnlQCoHwDoMLojThOmCeVACjfAKgweiOOE+ZJJQDKNwAqjN6I44R5UgmA8g2ACqM34jhhnlQCoHwDoMLojThOmCelACjbAKgweiOOE+ZJKQDKNgAqjN6I44R5UgqAsg2ACqM34jhhnpQCoGwDoMLojThOmCelACjbAKgweiOOE+ZJKQDKNgAqjN6I44R5UgqAsg2ACqM34jhhnpQCoGwDoMLojThOmCelyPkJQFUDoMLojThOmCelACjbAKgweiOOE+ZJKQDKNgAqjN6I44R5UgqAsg2ACqM34jhhnpQCoGwDoMLojThOmCelACjbAKgweiOOE+ZJKQDKNgAqjN6I44R5UgqAsg2ACqM34jhhnpQCoGwDoMLojThOmCelACjbAKgweiOOE+ZJKQDKtkCAIpRx223sESBPYQUqjN6I44R5UgorULYBUGH0RhwnzJNSAJRtAFQYvRHHCfOkFABlGwAVRm\EccI8KQVA2QZAhdEbcZwwT0oBULYBUGH0RhwnzJNSAJRtAFQYvRHHCfOkFABlGwAVRm\EccI8KQV8AD5RAAAM60lEQVRA2QZAhdEbcZwwT0oBULYBUGH0RhwnzJNSAJRtAFQYvRHHCfOkFL1pCsMCgwCoMHojjhPmSSl60xSGBQYBUGH0RhwnzJNS9KYpDAsMAqDC6I04TpgnpehNUxgWGARAhdEbcZwwT0rRm6YwLDAIgAqjN+I4YZ6UojdNYVhgEAAVRm\EccI8KUVvmsKwwCAAKozeiOOEeVKK3jSFYYFBAFQYvRHHCfOkFL1pCsMCgwCoMHojjhPmSSl60xSGBQYBUGH0RhwnzJNS9KYpDAsMAqDC6I04TpgnpehNUxgWGARAhdEbcZwwT0rRm6YwLDAIgAqjN+I4YZ6UojdNYVhgEAAVRm\EccI8KUVvmsKwwCAAKozeiOOEeVKK3jSFYYFBAFQYvRHHCfOkFL1pCsMCgwCoMHojjhPmSSl60xSGBQYBUGH0RhwnzJNS9KYpDAsMAqDC6I04TpgnpehNUxgWGARAhdEbcZwwT0rRm6YwLDAIgAqjN+I4YZ6UojdNYVhgEAAVRm\EccI8KUVvmsKwwCAAKozeiOOEeVKK3jSFYYFBAFQYvRHHCfOkFL1pCsMCgwCoMHojjhPmSSl60xSGBQYBUGH0RhwnzJNS9KYpDAsMAqDC6I04TpgnpehNUxgWGARAhdEbcZwwT0rRm6YwLDAIgAqjN+I4YZ6UojdNYVhgEAAVRm\EccI8KUVvmsKwwCAAKozeiOOEeVKK3jSFYYFBAFQYvRHHCfOkFL1pCsMCgwCoMHojjhPmSSl60xSGBQYBUGH0RhwnzJNS9KYpDAsMAqDC6I04TpgnpehNUxgWGARAhdEbcZwwT0rRm6YwLDAIgAqjN+I4YZ6UojdNYVhgEAAVRm\EccI8KUVvmsKwwKBAgFJru409AhphnpTCNLENgArDM14tzJNSmCa2AVBheMarhXlSCtPENgAqDM94tTBPSmGa2AZAheEZrxbmSSlME9sAqDA849XCPCmFaWIbABWGZ7xamCelME1sA6DC8IxXC\OkFKaJbQAUIYQMA6AIIWQYAEUIIcMAKEIIGQZAEULIMACKEEKGAVCEEDIMgCKEkGG5Avrf3rqw2z35vQ+Wb\Xg\35Z8pX7F7\xe+eDSqT7F3dVGo\wSnfbG7tn\Iwqse5fbB\ng\KptPZMGpXfbPEtT0AfvLlremXxdvLnN2dA71zQBbTXJBsSrrSPs\nPjcbTIcPZ4luWgBbP+W\++PP9\q+\WxE0T0D1t+o7F7ppzIOEB1d27eO8snv6g\3dN3dPf676zdnNFueyBPRK92y\trxyyBPQK7ufaH7HtSd\1f4zCxL+9NquBfTOheqJcP9iPwVr5TZbrMsR0OY5X1bsy1ergbtv7drjWAUfn\1j9UG9o\9M8Sx\5bMLu6d+NbwZY0AfvDmzoJiTO6\tnvzf9\v\98Lum7+sblWs3p\64Fo9fVeq\yAVk\TkjxsS\vSjYqa++R8\L42o\2t1jY8V13a7lz9rHs617v+7ZSVmK6NyBPTKYL\9r9XT9UZ91O\Jn1Rf\Z+bg1o9oP9L8fXiiT24GWNA71986r8WK6zvDk6LXNn9U\XQX7lSPf5ftUeRn\xfq6msD+pVX9v9b9WW\7vmEPMz3UwV36C7rk22a0\9sls7tsv1wVoSs5VRGQI6f3LeubD73v9frhLKJ3t5dOvzcn3wk3aruLGrlwXDmzEGtD2HNJilYk5e\vzBvxUG\Lg83PdMuUJ68pf7u6\Vx5DvXKjmqvhic2zwRvnVYpHVTGh5R9wmrAGzW67fudAdBMVsZVSGgM4PV13rVhPPdAdIq2VqC2j9DcObMX6G3yi3\1f39r101TPSSHrK\t6L7P5j1DzmWv1ll\+88Gb9RxWa\z6Vu0k8tonXQQUs5VNAHSwJK0OQDXXp1yr1wbP7LvjUqObMQa0\+\E4Kheve9ZTVz58Fsuqi88eLP4oJ3V7uDdX\+\+O1ahVbT5X+mam0mwPaPSEwWxmVIaCzkySdqNWTt3FjDujoZowBbbuxG6ypJiS0K6TqtEh1UK+dkPor5e5qdxig1IDdfC2uQDFb2ZQloJP\vHdPVymgz8xulsFTfLSmqg\MiUm4UX61vXX1lfIw6pPf\af\p57pG8WN2O2TLgKK2cqmDAEdXSJyY\fy5+sr0AbQvFagyyS0V9sUk3WtnIrhmqo8tDc46HH\4tOfs9snXTwLj9nKphwBHSytqiOe02OgEkAzOQY6eJhyEoZH9aqDeqOjeu2\71+s7+rKk\nm9yma7Sq3E+vA91jtjIpR0AHr0SqLx2ZnIWXAJrLWfgrk\9e7AUkdKulYrLuX6wvD+\PK7ck3GheKVteSMttn7R9UgheiYTZyqgsAW1fC1++sKi+Mq+8wLO5cGcM6NOfD7eV\maMAS0e5suflyc2+ld3z0gor2z8VXNl440a2uoinfIVN+1OaXklZD2X5fttLL9rC73aJ0XxWJ+avBYes5VRWQLan\ZsnqnjVyL1gN6pXoHU7cvm8Uqk8pWK1Uux+pcizUkYvLamfXO2a\1ra27U9\D0v3WLWfVXihOpe1Lcnb0bE2Yro\IEtHz18ej9QEevhe8BLV\MPAA0j9fCFw\zR8XcvDx4d6E5Cc2ru4vJqg\qlX32j92ru8t32\jmjwev7FZ\ryIiTZ8UmK08yxVQ5CTF08XXsE9ahtniFwBFBum9iZvg\Z2yCrPFNwCKDLp\sTrxcUVtZ\OzXd5nlTFbfAOgyKTP6hMfKmulK2o34xxmi20AFBlVvgfw6h\lq\q38p3bMg+zxTUAihBChgFQhBAyDIAihJBhABQhhAwDoAghZBgARQghwwAoQggZBkARQsgwAMqsg824s7EHVHT718+dLoby6AufxB4JQm4DoMyyBPTq335q9\Pnd3Dr9X40ZyzvHaG0AqDMsgP0YPOQHXHzO7h5ejicU7+1unuE0gqAsuz40uZhk+9zD2jl52OXy09+9Hrxb6NhIZRoAJRlyQBaDGTzlffbj26d25z4hdX9I5RUAJRlyQB6VPg52Gsv1qNYgiJGAVCWjQAtPnjpw\Obzcly8Xer3I8+caZbFFb71ZtHXyjZO2wPm1bfXn7LiceLz3\4XHn6p\2O0R3cO7c5e\zrR4r7Ht9B18Fm89JwYO+cubw4ovIO61seVvLWP6C4wanLjqcIIQcBUJZNAX2+dK0E6bA9m\N4\aV3hmd3hoD+u+Zs1Fd+29yk2fce30Hh278\L7iDtuLrXxGcNhKN6MR3mm+YAvr1S\UNLNfGCHkIgLJsCmjJ363LlVblUu\2Ow2AxcflGvPW+ebsTrMHXn5H+YXS15ObM5\sj99tAJvcQeFbId+n+1uXGjYnu\CSXfbxiE79plgIn6+XqgJAN9UA3sH5J5RgAJRlM0Dr\ejes8NqRVnwVH9c\KOCbwDo2ebzzS0OKs8Ed1DfdfEdwztoOxJfR9WPqP3B5afaXfb2B7SAtgPA+SeUXACUZVNAm\3ow26Hur7BUYtSe5Me0OaGB\2ue\mP6R10\jXAygE9vrTpDwUMR9SyWNh8Vghoc8sOe4TSCYCybApot8rrPjuR7mAK6NjFxtrZHfSqHWoCOr3\5q4EgLY\0foKAYScB0BZNgW021Ef1Mp1+6P3fvrIZgpo8+1jQGd3MPVOfgx0CujD7Wfb29f\FJ2F30+GglAyAVCWKQN69ZHRh64B7Xfx9+3NpoDOlrRTQF\aDz+BUEoBUJZJAX14erPyItDnf\7JbBdeBuj4DtYAnV0HOgcUK1BEOADKMjGgA67qmquY9oJjoEJAZ3ewCujklUhTQBeOgR7MAcUxUJRaAJRlYkAHlwJVFPYetie7VwCd3sE6oM0Vn223Lk0APexWqPX5pm6N21\W1A8xhfc2RWgYAGWZBNCbp1uOjkq4ekAP1Y6BTu9gHdD6sOmpy+VbKX\8L+enJ5Fm14F2Q2qWruW3n21GgutAUXIBUJZJAK1e93N5372wqNmF\6iFrdrDPv5EDuj0DmaANncw6Ob54Ymnzan35yNqXol0tvn4off31cvfu1ciff3T6l2ZsQBFyQVAWSYDtH8pe7XOu9fidubdelf6qPzg4QVAp3cwBbS5g9FY3un5PPHi7ILU8Wvhu8udHnq3BfRrzTsyw0+UXgCUZVJAi6VceeHSY817G1XvpHTizG+6Y49Xy\c8\nQB0PEdzABt7mAymg+rv4l0svg5whGV78b0eLtsrd\c6cXBWfjqb4L07x+FUDoBUJRyOHWEkg6AopQDoCjpAChKOQCKkg6AopQDoCjpAChKOQCKkg6AopQDoCjpAChCCBkGQBFCyDAAihBChgFQhBAyDIAihJBhABQhhAwDoAghZBgARQghwwAoQggZBkARQsgwAIoQQoYBUIQQMgyAIoSQYQAUIYQM+++ggqubJSNbYwAAAABJRU5ErkJggg=="  class="thumbnail-image card-img"/></p>
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
-<a href="./posts/2026-03-23_un_data_plot/un_data_plot.html" class="no-external">United Nations Population data | API extract and dependency plotting</a>
+<a href="./posts/2026-11-18_package_demo/package_demo.html" class="no-external-icon">thekidsbiostats Package Demo: An interactive tour of the key functions of the package</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('Ug=='); return false;">R</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('UGFja2FnZQ=='); return false;">Package</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('VHV0b3JpYWxz'); return false;">Tutorials</div>
+
+</div>
+<div class="listing-description">
+<a href="./posts/2026-11-18_package_demo/package_demo.html" class="no-external-icon">
+There are two ways to create a new “project” (that is, a directory structure for use in either RStudio or Positron):
+</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./posts/2026-11-18_package_demo/package_demo.html" class="no-external-icon">
+<div class="listing-date">
+Nov 19, 2026
+</div>
+<div class="listing-author">
+Biostats Team
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="1" data-categories="UiUyQ0FQSSUyQ0d1ZXNzJTIwdGhhdCUyMHBsb3Q=" data-listing-date-sort="1774195200000" data-listing-file-modified-sort="1794971111669" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1738">
+<div class="thumbnail"><a href="./posts/2026-03-23_un_data_plot/un_data_plot.html" class="no-external-icon">
+
+<p class="card-img-top"><img loading='lazy' src="posts\2026-03-23_un_data_plot\images\fig1_gtp_4.png"  class="thumbnail-image card-img"/></p>
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/2026-03-23_un_data_plot/un_data_plot.html" class="no-external-icon">United Nations Population data | API extract and dependency plotting</a>
 </h3>
 <div class="listing-categories">
 
@@ -243,12 +279,14 @@ window.Quarto = {
 <div class="listing-category" onclick="window.quartoListingCategory('R3Vlc3MlMjB0aGF0JTIwcGxvdA=='); return false;">Guess that plot</div>
 
 </div>
-<div class="delink listing-description"><a href="./posts/2026-03-23_un_data_plot/un_data_plot.html" class="no-external">
+<div class="listing-description">
+<a href="./posts/2026-03-23_un_data_plot/un_data_plot.html" class="no-external-icon">
 The United Nations Population Division, in addition to doing really important and interesting work, also make a lot of robustly collected and compiled data available to the…
-</a></div>
+</a>
+</div>
 </div>
 <div class="metadata">
-<a href="./posts/2026-03-23_un_data_plot/un_data_plot.html" class="no-external">
+<a href="./posts/2026-03-23_un_data_plot/un_data_plot.html" class="no-external-icon">
 <div class="listing-date">
 Mar 23, 2026
 </div>
@@ -258,15 +296,15 @@ Dr Matt Cooper
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="1" data-categories="UiUyQ0RhdGElMjBjbGVhbmluZyUyQ1BhY2thZ2U=" data-listing-date-sort="1771430400000" data-listing-file-modified-sort="1773966632655" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1415">
-<div class="thumbnail"><a href="./posts/2026-02-19_column_cleaning/column_cleaning.html" class="no-external">
+<div class="quarto-post image-right" data-index="2" data-categories="UiUyQ0RhdGElMjBjbGVhbmluZyUyQ1BhY2thZ2U=" data-listing-date-sort="1771430400000" data-listing-file-modified-sort="1771562371162" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1415">
+<div class="thumbnail"><a href="./posts/2026-02-19_column_cleaning/column_cleaning.html" class="no-external-icon">
 
 <img loading="lazy" src="./posts/2026-02-19_column_cleaning/favicon.svg" class="thumbnail-image">
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
-<a href="./posts/2026-02-19_column_cleaning/column_cleaning.html" class="no-external">Efficiently Cleaning and Labelling Data Columns with <code>thekidsbiostats</code></a>
+<a href="./posts/2026-02-19_column_cleaning/column_cleaning.html" class="no-external-icon">Efficiently Cleaning and Labelling Data Columns with <code>thekidsbiostats</code></a>
 </h3>
 <div class="listing-categories">
 
@@ -277,12 +315,14 @@ Dr Matt Cooper
 <div class="listing-category" onclick="window.quartoListingCategory('UGFja2FnZQ=='); return false;">Package</div>
 
 </div>
-<div class="delink listing-description"><a href="./posts/2026-02-19_column_cleaning/column_cleaning.html" class="no-external">
+<div class="listing-description">
+<a href="./posts/2026-02-19_column_cleaning/column_cleaning.html" class="no-external-icon">
 Datasets rarely come with clean and consistent formatting in their column names. Therefore, it is common practice when performing analysis to rename the original column…
-</a></div>
+</a>
+</div>
 </div>
 <div class="metadata">
-<a href="./posts/2026-02-19_column_cleaning/column_cleaning.html" class="no-external">
+<a href="./posts/2026-02-19_column_cleaning/column_cleaning.html" class="no-external-icon">
 <div class="listing-date">
 Feb 19, 2026
 </div>
@@ -292,15 +332,15 @@ Zac Dempsey, Dr Robin van de Meeberg
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="2" data-categories="UiUyQ0FJSFclMkNHdWVzcyUyMHRoYXQlMjBwbG90" data-listing-date-sort="1760889600000" data-listing-file-modified-sort="1773966632649" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2392">
-<div class="thumbnail"><a href="./posts/2025-10-10_AIHW_api/aihw_api_guess_plot.html" class="no-external">
+<div class="quarto-post image-right" data-index="3" data-categories="UiUyQ0FJSFclMkNHdWVzcyUyMHRoYXQlMjBwbG90" data-listing-date-sort="1760889600000" data-listing-file-modified-sort="1771301240714" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2392">
+<div class="thumbnail"><a href="./posts/2025-10-10_AIHW_api/aihw_api_guess_plot.html" class="no-external-icon">
 
-<p class="card-img-top"><img src="posts/2025-10-10_AIHW_api/images/all4.png"  class="thumbnail-image card-img"/></p>
+<p class="card-img-top"><img loading='lazy' src="posts\2025-10-10_AIHW_api\images\all4.png"  class="thumbnail-image card-img"/></p>
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
-<a href="./posts/2025-10-10_AIHW_api/aihw_api_guess_plot.html" class="no-external">Accessing national health data via API</a>
+<a href="./posts/2025-10-10_AIHW_api/aihw_api_guess_plot.html" class="no-external-icon">Accessing national health data via API</a>
 </h3>
 <div class="listing-categories">
 
@@ -311,12 +351,14 @@ Zac Dempsey, Dr Robin van de Meeberg
 <div class="listing-category" onclick="window.quartoListingCategory('R3Vlc3MlMjB0aGF0JTIwcGxvdA=='); return false;">Guess that plot</div>
 
 </div>
-<div class="delink listing-description"><a href="./posts/2025-10-10_AIHW_api/aihw_api_guess_plot.html" class="no-external">
+<div class="listing-description">
+<a href="./posts/2025-10-10_AIHW_api/aihw_api_guess_plot.html" class="no-external-icon">
 Did you know, the Australian Institute of Health and Welfare (AIHW) is a treasure trove of <strong>available</strong> health data?
-</a></div>
+</a>
+</div>
 </div>
 <div class="metadata">
-<a href="./posts/2025-10-10_AIHW_api/aihw_api_guess_plot.html" class="no-external">
+<a href="./posts/2025-10-10_AIHW_api/aihw_api_guess_plot.html" class="no-external-icon">
 <div class="listing-date">
 Oct 20, 2025
 </div>
@@ -326,15 +368,15 @@ Dr Matt Cooper and Dr Haileab Wolde
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="3" data-categories="UiUyQ091dHB1dCUyQ1F1YXJ0bw==" data-listing-date-sort="1751472000000" data-listing-file-modified-sort="1773966632647" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2197">
-<div class="thumbnail"><a href="./posts/2025-07-03_large_scale_project/large_scale_project.html" class="no-external">
+<div class="quarto-post image-right" data-index="4" data-categories="UiUyQ091dHB1dCUyQ1F1YXJ0bw==" data-listing-date-sort="1751472000000" data-listing-file-modified-sort="1771301240708" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2197">
+<div class="thumbnail"><a href="./posts/2025-07-03_large_scale_project/large_scale_project.html" class="no-external-icon">
 
-<p class="card-img-top"><img src="posts/2025-07-03_large_scale_project/examples/report_cover.png"  class="thumbnail-image card-img"/></p>
+<p class="card-img-top"><img loading='lazy' src="posts\2025-07-03_large_scale_project\examples\report_cover.png"  class="thumbnail-image card-img"/></p>
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
-<a href="./posts/2025-07-03_large_scale_project/large_scale_project.html" class="no-external">Large-scale projects</a>
+<a href="./posts/2025-07-03_large_scale_project/large_scale_project.html" class="no-external-icon">Large-scale projects</a>
 </h3>
 <div class="listing-categories">
 
@@ -345,12 +387,14 @@ Dr Matt Cooper and Dr Haileab Wolde
 <div class="listing-category" onclick="window.quartoListingCategory('UXVhcnRv'); return false;">Quarto</div>
 
 </div>
-<div class="delink listing-description"><a href="./posts/2025-07-03_large_scale_project/large_scale_project.html" class="no-external">
+<div class="listing-description">
+<a href="./posts/2025-07-03_large_scale_project/large_scale_project.html" class="no-external-icon">
 A recent collaboration of ours, led by Dr Melissa Licari of The Kids, involved producing a summary report detailing the challenges faced by individuals <em>(and the families…</em>
-</a></div>
+</a>
+</div>
 </div>
 <div class="metadata">
-<a href="./posts/2025-07-03_large_scale_project/large_scale_project.html" class="no-external">
+<a href="./posts/2025-07-03_large_scale_project/large_scale_project.html" class="no-external-icon">
 <div class="listing-date">
 Jul 3, 2025
 </div>
@@ -360,15 +404,15 @@ Dr Bethy McKinnon and Dr Matt Cooper
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="4" data-categories="UiUyQ1JTdHVkaW8lMkNhZGRpbnM=" data-listing-date-sort="1744560000000" data-listing-file-modified-sort="1773966632642" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="690">
-<div class="thumbnail"><a href="./posts/2025-04-14_rsam/rsam.html" class="no-external">
+<div class="quarto-post image-right" data-index="5" data-categories="UiUyQ1JTdHVkaW8lMkNhZGRpbnM=" data-listing-date-sort="1744560000000" data-listing-file-modified-sort="1771301240687" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="690">
+<div class="thumbnail"><a href="./posts/2025-04-14_rsam/rsam.html" class="no-external-icon">
 
-<p class="card-img-top"><img src="posts/2025-04-14_rsam/01-addins-pre.png"  class="thumbnail-image card-img"/></p>
+<p class="card-img-top"><img loading='lazy' src="posts\2025-04-14_rsam\01-addins-pre.png"  class="thumbnail-image card-img"/></p>
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
-<a href="./posts/2025-04-14_rsam/rsam.html" class="no-external">Managing RStudio addins using the <code>rsam</code> package</a>
+<a href="./posts/2025-04-14_rsam/rsam.html" class="no-external-icon">Managing RStudio addins using the <code>rsam</code> package</a>
 </h3>
 <div class="listing-categories">
 
@@ -379,12 +423,14 @@ Dr Bethy McKinnon and Dr Matt Cooper
 <div class="listing-category" onclick="window.quartoListingCategory('YWRkaW5z'); return false;">addins</div>
 
 </div>
-<div class="delink listing-description"><a href="./posts/2025-04-14_rsam/rsam.html" class="no-external">
+<div class="listing-description">
+<a href="./posts/2025-04-14_rsam/rsam.html" class="no-external-icon">
 RStudio addins are a useful (and likely underutilised) feature that allow users to execute various pre-set R commands with a simple click from a drop down menu. They can…
-</a></div>
+</a>
+</div>
 </div>
 <div class="metadata">
-<a href="./posts/2025-04-14_rsam/rsam.html" class="no-external">
+<a href="./posts/2025-04-14_rsam/rsam.html" class="no-external-icon">
 <div class="listing-date">
 Apr 14, 2025
 </div>
@@ -394,15 +440,15 @@ Zac Dempsey and Dr Matt Cooper
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="5" data-categories="UiUyQ1N1bW1hcnk=" data-listing-date-sort="1737561600000" data-listing-file-modified-sort="1773966632640" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1714">
-<div class="thumbnail"><a href="./posts/2025-01-23_thekids_package/thekids_package.html" class="no-external">
+<div class="quarto-post image-right" data-index="6" data-categories="UiUyQ1N1bW1hcnk=" data-listing-date-sort="1737561600000" data-listing-file-modified-sort="1771301240678" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="9" data-listing-word-count-sort="1716">
+<div class="thumbnail"><a href="./posts/2025-01-23_thekids_package/thekids_package.html" class="no-external-icon">
 
-<p class="card-img-top"><img src="posts/2025-01-23_thekids_package/project1.PNG"  class="thumbnail-image card-img"/></p>
+<p class="card-img-top"><img loading='lazy' src="posts\2025-01-23_thekids_package\project1.PNG"  class="thumbnail-image card-img"/></p>
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
-<a href="./posts/2025-01-23_thekids_package/thekids_package.html" class="no-external">An Overview of our R Package: ‘thekidsbiostats’</a>
+<a href="./posts/2025-01-23_thekids_package/thekids_package.html" class="no-external-icon">An Overview of our R Package: ‘thekidsbiostats’</a>
 </h3>
 <div class="listing-categories">
 
@@ -411,12 +457,14 @@ Zac Dempsey and Dr Matt Cooper
 <div class="listing-category" onclick="window.quartoListingCategory('U3VtbWFyeQ=='); return false;">Summary</div>
 
 </div>
-<div class="delink listing-description"><a href="./posts/2025-01-23_thekids_package/thekids_package.html" class="no-external">
+<div class="listing-description">
+<a href="./posts/2025-01-23_thekids_package/thekids_package.html" class="no-external-icon">
 We created a package!
-</a></div>
+</a>
+</div>
 </div>
 <div class="metadata">
-<a href="./posts/2025-01-23_thekids_package/thekids_package.html" class="no-external">
+<a href="./posts/2025-01-23_thekids_package/thekids_package.html" class="no-external-icon">
 <div class="listing-date">
 Jan 23, 2025
 </div>
@@ -426,15 +474,15 @@ Wesley Billingham
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="6" data-categories="UiUyQ01vZGVsbGluZyUyQ1F1YXJ0bw==" data-listing-date-sort="1736438400000" data-listing-file-modified-sort="1773966632638" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2097">
-<div class="thumbnail"><a href="./posts/2025-01-10_model_function/model_function.html" class="no-external">
+<div class="quarto-post image-right" data-index="7" data-categories="UiUyQ01vZGVsbGluZyUyQ1F1YXJ0bw==" data-listing-date-sort="1736438400000" data-listing-file-modified-sort="1771301240669" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2097">
+<div class="thumbnail"><a href="./posts/2025-01-10_model_function/model_function.html" class="no-external-icon">
 
-<p class="card-img-top"><img src="posts/2025-01-10_model_function/function_output.png"  class="thumbnail-image card-img"/></p>
+<p class="card-img-top"><img loading='lazy' src="posts\2025-01-10_model_function\function_output.png"  class="thumbnail-image card-img"/></p>
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
-<a href="./posts/2025-01-10_model_function/model_function.html" class="no-external">Models - Condensed code and output</a>
+<a href="./posts/2025-01-10_model_function/model_function.html" class="no-external-icon">Models - Condensed code and output</a>
 </h3>
 <div class="listing-categories">
 
@@ -445,12 +493,14 @@ Wesley Billingham
 <div class="listing-category" onclick="window.quartoListingCategory('UXVhcnRv'); return false;">Quarto</div>
 
 </div>
-<div class="delink listing-description"><a href="./posts/2025-01-10_model_function/model_function.html" class="no-external">
+<div class="listing-description">
+<a href="./posts/2025-01-10_model_function/model_function.html" class="no-external-icon">
 We are constantly working on the appearance of the reports we generate for our colleagues and collaborators. This includes managing <code>.html</code> and <code>.docx</code> output for different use…<code></code><code></code>
-</a></div>
+</a>
+</div>
 </div>
 <div class="metadata">
-<a href="./posts/2025-01-10_model_function/model_function.html" class="no-external">
+<a href="./posts/2025-01-10_model_function/model_function.html" class="no-external-icon">
 <div class="listing-date">
 Jan 10, 2025
 </div>
@@ -460,15 +510,15 @@ Dr Matt Cooper and Wesley Billingham
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="7" data-categories="UiUyQ1Zpc3VhbGlzYXRpb25zJTJDTGlrZXJ0JTJDZ2dwbG90" data-listing-date-sort="1734278400000" data-listing-file-modified-sort="1773966632627" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="19" data-listing-word-count-sort="3778">
-<div class="thumbnail"><a href="./posts/2024-12-16_bidirectional_likert_visualisation/bidirectional_likert_visualisations.html" class="no-external">
+<div class="quarto-post image-right" data-index="8" data-categories="UiUyQ1Zpc3VhbGlzYXRpb25zJTJDTGlrZXJ0JTJDZ2dwbG90" data-listing-date-sort="1734278400000" data-listing-file-modified-sort="1771301240628" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="19" data-listing-word-count-sort="3778">
+<div class="thumbnail"><a href="./posts/2024-12-16_bidirectional_likert_visualisation/bidirectional_likert_visualisations.html" class="no-external-icon">
 
-<p class="card-img-top"><img src="posts/2024-12-16_bidirectional_likert_visualisation/bidirectional_likert_visualisations_files/figure-html/unnamed-chunk-5-1.png"  class="thumbnail-image card-img"/></p>
+<p class="card-img-top"><img loading='lazy' src="posts\2024-12-16_bidirectional_likert_visualisation\bidirectional_likert_visualisations_files\figure-html\unnamed-chunk-5-1.png"  class="thumbnail-image card-img"/></p>
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
-<a href="./posts/2024-12-16_bidirectional_likert_visualisation/bidirectional_likert_visualisations.html" class="no-external">Visualisations for (bidirectional) Likert scale data</a>
+<a href="./posts/2024-12-16_bidirectional_likert_visualisation/bidirectional_likert_visualisations.html" class="no-external-icon">Visualisations for (bidirectional) Likert scale data</a>
 </h3>
 <div class="listing-categories">
 
@@ -481,12 +531,14 @@ Dr Matt Cooper and Wesley Billingham
 <div class="listing-category" onclick="window.quartoListingCategory('Z2dwbG90'); return false;">ggplot</div>
 
 </div>
-<div class="delink listing-description"><a href="./posts/2024-12-16_bidirectional_likert_visualisation/bidirectional_likert_visualisations.html" class="no-external">
+<div class="listing-description">
+<a href="./posts/2024-12-16_bidirectional_likert_visualisation/bidirectional_likert_visualisations.html" class="no-external-icon">
 Bidirectional Likert-style questions are widely employed as a survey instrument within research. Unlike ordinal Likert-style responses, which are often used to broadly…
-</a></div>
+</a>
+</div>
 </div>
 <div class="metadata">
-<a href="./posts/2024-12-16_bidirectional_likert_visualisation/bidirectional_likert_visualisations.html" class="no-external">
+<a href="./posts/2024-12-16_bidirectional_likert_visualisation/bidirectional_likert_visualisations.html" class="no-external-icon">
 <div class="listing-date">
 Dec 16, 2024
 </div>
@@ -496,15 +548,15 @@ Zac Dempsey and Dr Matt Cooper
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="8" data-categories="UiUyQ1Zpc3VhbGlzYXRpb25zJTJDTGlrZXJ0JTJDZ2dwbG90" data-listing-date-sort="1731945600000" data-listing-file-modified-sort="1773966632626" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="18" data-listing-word-count-sort="3408">
-<div class="thumbnail"><a href="./posts/2024-11-19_code_v_functions/code_v_functions.html" class="no-external">
+<div class="quarto-post image-right" data-index="9" data-categories="UiUyQ1Zpc3VhbGlzYXRpb25zJTJDTGlrZXJ0JTJDZ2dwbG90" data-listing-date-sort="1731945600000" data-listing-file-modified-sort="1771301240628" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="18" data-listing-word-count-sort="3408">
+<div class="thumbnail"><a href="./posts/2024-11-19_code_v_functions/code_v_functions.html" class="no-external-icon">
 
-<p class="card-img-top"><img src="posts/2024-11-19_code_v_functions/pre_post_plot.png"  class="thumbnail-image card-img"/></p>
+<p class="card-img-top"><img loading='lazy' src="posts\2024-11-19_code_v_functions\pre_post_plot.png"  class="thumbnail-image card-img"/></p>
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
-<a href="./posts/2024-11-19_code_v_functions/code_v_functions.html" class="no-external">Sharing - Code v Functions</a>
+<a href="./posts/2024-11-19_code_v_functions/code_v_functions.html" class="no-external-icon">Sharing - Code v Functions</a>
 </h3>
 <div class="listing-categories">
 
@@ -517,12 +569,14 @@ Zac Dempsey and Dr Matt Cooper
 <div class="listing-category" onclick="window.quartoListingCategory('Z2dwbG90'); return false;">ggplot</div>
 
 </div>
-<div class="delink listing-description"><a href="./posts/2024-11-19_code_v_functions/code_v_functions.html" class="no-external">
+<div class="listing-description">
+<a href="./posts/2024-11-19_code_v_functions/code_v_functions.html" class="no-external-icon">
 (Lengthy) readable code. Efficient functions comprised of the minimum number of characters necessary. An age old battle in programming.
-</a></div>
+</a>
+</div>
 </div>
 <div class="metadata">
-<a href="./posts/2024-11-19_code_v_functions/code_v_functions.html" class="no-external">
+<a href="./posts/2024-11-19_code_v_functions/code_v_functions.html" class="no-external-icon">
 <div class="listing-date">
 Nov 19, 2024
 </div>
@@ -532,15 +586,15 @@ Dr Matt Cooper and Zac Dempsey
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="9" data-categories="UiUyQ1Zpc3VhbGlzYXRpb25zJTJDTGlrZXJ0JTJDZ2dwbG90" data-listing-date-sort="1728835200000" data-listing-file-modified-sort="1773966632626" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="19" data-listing-word-count-sort="3671">
-<div class="thumbnail"><a href="./posts/2024-10-14_likert_visualisation/likert_visualisations.html" class="no-external">
+<div class="quarto-post image-right" data-index="10" data-categories="UiUyQ1Zpc3VhbGlzYXRpb25zJTJDTGlrZXJ0JTJDZ2dwbG90" data-listing-date-sort="1728835200000" data-listing-file-modified-sort="1771301240626" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="19" data-listing-word-count-sort="3671">
+<div class="thumbnail"><a href="./posts/2024-10-14_likert_visualisation/likert_visualisations.html" class="no-external-icon">
 
-<p class="card-img-top"><img src="posts/2024-10-14_likert_visualisation/likert_visualisations_files/figure-html/unnamed-chunk-3-1.png"  class="thumbnail-image card-img"/></p>
+<p class="card-img-top"><img loading='lazy' src="posts\2024-10-14_likert_visualisation\likert_visualisations_files\figure-html\unnamed-chunk-3-1.png"  class="thumbnail-image card-img"/></p>
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
-<a href="./posts/2024-10-14_likert_visualisation/likert_visualisations.html" class="no-external">Visualisations for (ordinal) Likert scale data</a>
+<a href="./posts/2024-10-14_likert_visualisation/likert_visualisations.html" class="no-external-icon">Visualisations for (ordinal) Likert scale data</a>
 </h3>
 <div class="listing-categories">
 
@@ -553,12 +607,14 @@ Dr Matt Cooper and Zac Dempsey
 <div class="listing-category" onclick="window.quartoListingCategory('Z2dwbG90'); return false;">ggplot</div>
 
 </div>
-<div class="delink listing-description"><a href="./posts/2024-10-14_likert_visualisation/likert_visualisations.html" class="no-external">
+<div class="listing-description">
+<a href="./posts/2024-10-14_likert_visualisation/likert_visualisations.html" class="no-external-icon">
 Likert scale variables (and hence data) are widely utilised in research—they are useful for getting participants to rate things, or to provide an average quantity as a…
-</a></div>
+</a>
+</div>
 </div>
 <div class="metadata">
-<a href="./posts/2024-10-14_likert_visualisation/likert_visualisations.html" class="no-external">
+<a href="./posts/2024-10-14_likert_visualisation/likert_visualisations.html" class="no-external-icon">
 <div class="listing-date">
 Oct 14, 2024
 </div>
@@ -568,15 +624,15 @@ Dr Matt Cooper and Zac Dempsey
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="10" data-categories="U21hbGwlMjBTYW1wbGVzJTJDUg==" data-listing-date-sort="1725897600000" data-listing-file-modified-sort="1773966632626" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="16" data-listing-word-count-sort="3135">
-<div class="thumbnail"><a href="./posts/2024-09-10_small_n/small_sample_analysis.html" class="no-external">
+<div class="quarto-post image-right" data-index="11" data-categories="U21hbGwlMjBTYW1wbGVzJTJDUg==" data-listing-date-sort="1725897600000" data-listing-file-modified-sort="1771301240626" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="16" data-listing-word-count-sort="3135">
+<div class="thumbnail"><a href="./posts/2024-09-10_small_n/small_sample_analysis.html" class="no-external-icon">
 
-<p class="card-img-top"><img src="posts/2024-09-10_small_n/small_sample_analysis_files/figure-html/unnamed-chunk-2-1.png"  class="thumbnail-image card-img"/></p>
+<p class="card-img-top"><img loading='lazy' src="posts\2024-09-10_small_n\small_sample_analysis_files\figure-html\unnamed-chunk-2-1.png"  class="thumbnail-image card-img"/></p>
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
-<a href="./posts/2024-09-10_small_n/small_sample_analysis.html" class="no-external">Small-sample analysis</a>
+<a href="./posts/2024-09-10_small_n/small_sample_analysis.html" class="no-external-icon">Small-sample analysis</a>
 </h3>
 <div class="listing-categories">
 
@@ -585,12 +641,14 @@ Dr Matt Cooper and Zac Dempsey
 <div class="listing-category" onclick="window.quartoListingCategory('Ug=='); return false;">R</div>
 
 </div>
-<div class="delink listing-description"><a href="./posts/2024-09-10_small_n/small_sample_analysis.html" class="no-external">
+<div class="listing-description">
+<a href="./posts/2024-09-10_small_n/small_sample_analysis.html" class="no-external-icon">
 The sample size in research projects is often limited by practical constraints e.g.&nbsp;cost of equipment, logistics of animal breeding and management, or the (low) prevalence…
-</a></div>
+</a>
+</div>
 </div>
 <div class="metadata">
-<a href="./posts/2024-09-10_small_n/small_sample_analysis.html" class="no-external">
+<a href="./posts/2024-09-10_small_n/small_sample_analysis.html" class="no-external-icon">
 <div class="listing-date">
 Sep 10, 2024
 </div>
@@ -600,15 +658,15 @@ Dr Bethy McKinnon, Dr Matt Cooper
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="11" data-categories="QUklMkNS" data-listing-date-sort="1723132800000" data-listing-file-modified-sort="1773966632636" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2788">
-<div class="thumbnail"><a href="./posts/2024_08_09_ai_part_two/ai_part_two.html" class="no-external">
+<div class="quarto-post image-right" data-index="12" data-categories="QUklMkNS" data-listing-date-sort="1723132800000" data-listing-file-modified-sort="1771301240661" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2788">
+<div class="thumbnail"><a href="./posts/2024_08_09_ai_part_two/ai_part_two.html" class="no-external-icon">
 
-<p class="card-img-top"><img src="posts/2024_08_09_ai_part_two/ai_part_two_files/figure-html/unnamed-chunk-2-1.png"  class="thumbnail-image card-img"/></p>
+<p class="card-img-top"><img loading='lazy' src="posts\2024_08_09_ai_part_two\ai_part_two_files\figure-html\unnamed-chunk-2-1.png"  class="thumbnail-image card-img"/></p>
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
-<a href="./posts/2024_08_09_ai_part_two/ai_part_two.html" class="no-external">AI in Biostatistics - Part 2</a>
+<a href="./posts/2024_08_09_ai_part_two/ai_part_two.html" class="no-external-icon">AI in Biostatistics - Part 2</a>
 </h3>
 <div class="listing-categories">
 
@@ -617,12 +675,14 @@ Dr Bethy McKinnon, Dr Matt Cooper
 <div class="listing-category" onclick="window.quartoListingCategory('Ug=='); return false;">R</div>
 
 </div>
-<div class="delink listing-description"><a href="./posts/2024_08_09_ai_part_two/ai_part_two.html" class="no-external">
+<div class="listing-description">
+<a href="./posts/2024_08_09_ai_part_two/ai_part_two.html" class="no-external-icon">
 If you haven’t read part one of this two-part series on AI, do that first here:
-</a></div>
+</a>
+</div>
 </div>
 <div class="metadata">
-<a href="./posts/2024_08_09_ai_part_two/ai_part_two.html" class="no-external">
+<a href="./posts/2024_08_09_ai_part_two/ai_part_two.html" class="no-external-icon">
 <div class="listing-date">
 Aug 9, 2024
 </div>
@@ -632,15 +692,15 @@ Wesley Billingham, Dr Matthew Cooper
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="12" data-categories="QUklMkNS" data-listing-date-sort="1723046400000" data-listing-file-modified-sort="1773966632628" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10" data-listing-word-count-sort="1824">
-<div class="thumbnail"><a href="./posts/2024_08_08_ai_part_one/ai_part_one.html" class="no-external">
+<div class="quarto-post image-right" data-index="13" data-categories="QUklMkNS" data-listing-date-sort="1723046400000" data-listing-file-modified-sort="1771301240628" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="10" data-listing-word-count-sort="1824">
+<div class="thumbnail"><a href="./posts/2024_08_08_ai_part_one/ai_part_one.html" class="no-external-icon">
 
 <img loading="lazy" src="./posts/2024_08_08_ai_part_one/weather_p8.png" class="thumbnail-image">
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
-<a href="./posts/2024_08_08_ai_part_one/ai_part_one.html" class="no-external">AI in Biostatistics - Part 1</a>
+<a href="./posts/2024_08_08_ai_part_one/ai_part_one.html" class="no-external-icon">AI in Biostatistics - Part 1</a>
 </h3>
 <div class="listing-categories">
 
@@ -649,12 +709,14 @@ Wesley Billingham, Dr Matthew Cooper
 <div class="listing-category" onclick="window.quartoListingCategory('Ug=='); return false;">R</div>
 
 </div>
-<div class="delink listing-description"><a href="./posts/2024_08_08_ai_part_one/ai_part_one.html" class="no-external">
+<div class="listing-description">
+<a href="./posts/2024_08_08_ai_part_one/ai_part_one.html" class="no-external-icon">
 AI is a hot topic in most fields right now, and biostatistics is no exception! We (the Telethon Kids Institute biostats team) were asked to present at the weekly Institute…
-</a></div>
+</a>
+</div>
 </div>
 <div class="metadata">
-<a href="./posts/2024_08_08_ai_part_one/ai_part_one.html" class="no-external">
+<a href="./posts/2024_08_08_ai_part_one/ai_part_one.html" class="no-external-icon">
 <div class="listing-date">
 Aug 8, 2024
 </div>
@@ -664,15 +726,15 @@ Wesley Billingham, Dr Matthew Cooper
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="13" data-categories="UHJlLXBvc3QlMkNNaXhlZCUyME1vZGVscyUyQ1I=" data-listing-date-sort="1721577600000" data-listing-file-modified-sort="1773966632625" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="17" data-listing-word-count-sort="3375">
-<div class="thumbnail"><a href="./posts/2024-07-22_pre_post/pre-post.html" class="no-external">
+<div class="quarto-post image-right" data-index="14" data-categories="UHJlLXBvc3QlMkNNaXhlZCUyME1vZGVscyUyQ1I=" data-listing-date-sort="1721577600000" data-listing-file-modified-sort="1771301240622" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="17" data-listing-word-count-sort="3375">
+<div class="thumbnail"><a href="./posts/2024-07-22_pre_post/pre-post.html" class="no-external-icon">
 
-<p class="card-img-top"><img src="posts/2024-07-22_pre_post/pre-post_files/figure-html/unnamed-chunk-4-1.png"  class="thumbnail-image card-img"/></p>
+<p class="card-img-top"><img loading='lazy' src="posts\2024-07-22_pre_post\pre-post_files\figure-html\unnamed-chunk-4-1.png"  class="thumbnail-image card-img"/></p>
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
-<a href="./posts/2024-07-22_pre_post/pre-post.html" class="no-external">Analysing pre-post data</a>
+<a href="./posts/2024-07-22_pre_post/pre-post.html" class="no-external-icon">Analysing pre-post data</a>
 </h3>
 <div class="listing-categories">
 
@@ -683,12 +745,14 @@ Wesley Billingham, Dr Matthew Cooper
 <div class="listing-category" onclick="window.quartoListingCategory('Ug=='); return false;">R</div>
 
 </div>
-<div class="delink listing-description"><a href="./posts/2024-07-22_pre_post/pre-post.html" class="no-external">
+<div class="listing-description">
+<a href="./posts/2024-07-22_pre_post/pre-post.html" class="no-external-icon">
 Pre-post designs are in use everywhere we look. Before and after treatment, e.g.&nbsp;in a randomised clinical trial, might be the example that most readily comes to mind for…
-</a></div>
+</a>
+</div>
 </div>
 <div class="metadata">
-<a href="./posts/2024-07-22_pre_post/pre-post.html" class="no-external">
+<a href="./posts/2024-07-22_pre_post/pre-post.html" class="no-external-icon">
 <div class="listing-date">
 Jul 22, 2024
 </div>
@@ -698,15 +762,15 @@ Dr Matthew Cooper
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="14" data-categories="U2hpbnklMkNS" data-listing-date-sort="1721318400000" data-listing-file-modified-sort="1773966632624" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="684">
-<div class="thumbnail"><a href="./posts/2024-07-19_data_anonymiser/data_anonymiser.html" class="no-external">
+<div class="quarto-post image-right" data-index="15" data-categories="U2hpbnklMkNS" data-listing-date-sort="1721318400000" data-listing-file-modified-sort="1771301240619" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="684">
+<div class="thumbnail"><a href="./posts/2024-07-19_data_anonymiser/data_anonymiser.html" class="no-external-icon">
 
-<p class="card-img-top"><img src="posts/2024-07-19_data_anonymiser/app_preview.png"  class="thumbnail-image card-img"/></p>
+<p class="card-img-top"><img loading='lazy' src="posts\2024-07-19_data_anonymiser\app_preview.png"  class="thumbnail-image card-img"/></p>
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
-<a href="./posts/2024-07-19_data_anonymiser/data_anonymiser.html" class="no-external">Data Anonymiser</a>
+<a href="./posts/2024-07-19_data_anonymiser/data_anonymiser.html" class="no-external-icon">Data Anonymiser</a>
 </h3>
 <div class="listing-categories">
 
@@ -715,12 +779,14 @@ Dr Matthew Cooper
 <div class="listing-category" onclick="window.quartoListingCategory('Ug=='); return false;">R</div>
 
 </div>
-<div class="delink listing-description"><a href="./posts/2024-07-19_data_anonymiser/data_anonymiser.html" class="no-external">
+<div class="listing-description">
+<a href="./posts/2024-07-19_data_anonymiser/data_anonymiser.html" class="no-external-icon">
 Data access and security is a really important topic and one that can be challenging to navigate. Research ethics and governance approvals typically require detail about…
-</a></div>
+</a>
+</div>
 </div>
 <div class="metadata">
-<a href="./posts/2024-07-19_data_anonymiser/data_anonymiser.html" class="no-external">
+<a href="./posts/2024-07-19_data_anonymiser/data_anonymiser.html" class="no-external-icon">
 <div class="listing-date">
 Jul 19, 2024
 </div>
@@ -730,15 +796,15 @@ Dr Matthew Cooper, Wesley Billingham
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="15" data-categories="UiUyQ1BhcmFsbGVs" data-listing-date-sort="1719763200000" data-listing-file-modified-sort="1773966632622" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="25" data-listing-word-count-sort="4992">
-<div class="thumbnail"><a href="./posts/2024-07-01_parallel/parallel.html" class="no-external">
+<div class="quarto-post image-right" data-index="16" data-categories="UiUyQ1BhcmFsbGVs" data-listing-date-sort="1719763200000" data-listing-file-modified-sort="1771301240611" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="25" data-listing-word-count-sort="4992">
+<div class="thumbnail"><a href="./posts/2024-07-01_parallel/parallel.html" class="no-external-icon">
 
-<p class="card-img-top"><img src="posts/2024-07-01_parallel/parallel_comps.png"  class="thumbnail-image card-img"/></p>
+<p class="card-img-top"><img loading='lazy' src="posts\2024-07-01_parallel\parallel_comps.png"  class="thumbnail-image card-img"/></p>
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
-<a href="./posts/2024-07-01_parallel/parallel.html" class="no-external">Parallel Computing in R</a>
+<a href="./posts/2024-07-01_parallel/parallel.html" class="no-external-icon">Parallel Computing in R</a>
 </h3>
 <div class="listing-categories">
 
@@ -747,12 +813,14 @@ Dr Matthew Cooper, Wesley Billingham
 <div class="listing-category" onclick="window.quartoListingCategory('UGFyYWxsZWw='); return false;">Parallel</div>
 
 </div>
-<div class="delink listing-description"><a href="./posts/2024-07-01_parallel/parallel.html" class="no-external">
+<div class="listing-description">
+<a href="./posts/2024-07-01_parallel/parallel.html" class="no-external-icon">
 While most of the datasets we work with are of a manageable size here at the Telethon Kids Institute, occasionally we are presented with data containing <em>millions</em> of rows…<em></em>
-</a></div>
+</a>
+</div>
 </div>
 <div class="metadata">
-<a href="./posts/2024-07-01_parallel/parallel.html" class="no-external">
+<a href="./posts/2024-07-01_parallel/parallel.html" class="no-external-icon">
 <div class="listing-date">
 Jul 1, 2024
 </div>
@@ -762,15 +830,15 @@ Zac Dempsey
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="16" data-categories="TWlzc2luZyUyMERhdGElMkNNaXhlZCUyME1vZGVscyUyQ1I=" data-listing-date-sort="1717689600000" data-listing-file-modified-sort="1773966632622" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="27" data-listing-word-count-sort="5210">
-<div class="thumbnail"><a href="./posts/2024-06-07_lmer-missing/missing_lmer.html" class="no-external">
+<div class="quarto-post image-right" data-index="17" data-categories="TWlzc2luZyUyMERhdGElMkNNaXhlZCUyME1vZGVscyUyQ1I=" data-listing-date-sort="1717689600000" data-listing-file-modified-sort="1771301240611" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="27" data-listing-word-count-sort="5210">
+<div class="thumbnail"><a href="./posts/2024-06-07_lmer-missing/missing_lmer.html" class="no-external-icon">
 
-<p class="card-img-top"><img src="posts/2024-06-07_lmer-missing/missing_lmer_files/figure-html/unnamed-chunk-3-1.png"  class="thumbnail-image card-img"/></p>
+<p class="card-img-top"><img loading='lazy' src="posts\2024-06-07_lmer-missing\missing_lmer_files\figure-html\unnamed-chunk-3-1.png"  class="thumbnail-image card-img"/></p>
 
 </a></div>
 <div class="body">
 <h3 class="no-anchor listing-title">
-<a href="./posts/2024-06-07_lmer-missing/missing_lmer.html" class="no-external">Handling Missing Data with LMER</a>
+<a href="./posts/2024-06-07_lmer-missing/missing_lmer.html" class="no-external-icon">Handling Missing Data with LMER</a>
 </h3>
 <div class="listing-categories">
 
@@ -781,12 +849,14 @@ Zac Dempsey
 <div class="listing-category" onclick="window.quartoListingCategory('Ug=='); return false;">R</div>
 
 </div>
-<div class="delink listing-description"><a href="./posts/2024-06-07_lmer-missing/missing_lmer.html" class="no-external">
+<div class="listing-description">
+<a href="./posts/2024-06-07_lmer-missing/missing_lmer.html" class="no-external-icon">
 As consultant statisticians, we are often approached by people who have already carried out some preliminary data analysis and who are now looking to move onto something…
-</a></div>
+</a>
+</div>
 </div>
 <div class="metadata">
-<a href="./posts/2024-06-07_lmer-missing/missing_lmer.html" class="no-external">
+<a href="./posts/2024-06-07_lmer-missing/missing_lmer.html" class="no-external-icon">
 <div class="listing-date">
 Jun 7, 2024
 </div>
@@ -877,7 +947,8 @@ Dr Matthew Cooper
           return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
       }
       // Inspect non-navigation links and adorn them if external
-     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
       for (var i=0; i<links.length; i++) {
         const link = links[i];
         if (!isInternal(link.href)) {
@@ -886,8 +957,69 @@ Dr Matthew Cooper
           if (link.dataset.originalHref !== undefined) {
             link.href = link.dataset.originalHref;
           }
+          if (!link.classList.contains('no-external-icon')) {
+          }
         }
       }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
     function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
       const config = {
         allowHTML: true,
@@ -901,6 +1033,7 @@ Dr Matthew Cooper
         interactiveBorder: 10,
         theme: 'quarto',
         placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
       };
       if (contentFn) {
         config.content = contentFn;
@@ -1063,44 +1196,54 @@ Dr Matthew Cooper
           const lineIds = lines.map((line) => {
             return targetCell + "-" + line;
           })
-          let top = null;
-          let height = null;
-          let parent = null;
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
           if (lineIds.length > 0) {
-              //compute the position of the single el (top and bottom and make a div)
-              const el = window.document.getElementById(lineIds[0]);
-              top = el.offsetTop;
-              height = el.offsetHeight;
-              parent = el.parentElement.parentElement;
-            if (lineIds.length > 1) {
-              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
-              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
-              height = bottom - top;
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
             }
-            if (top !== null && height !== null && parent !== null) {
-              // cook up a div (if necessary) and position it 
-              let div = window.document.getElementById("code-annotation-line-highlight");
-              if (div === null) {
-                div = window.document.createElement("div");
-                div.setAttribute("id", "code-annotation-line-highlight");
-                div.style.position = 'absolute';
-                parent.appendChild(div);
-              }
-              div.style.top = top - 2 + "px";
-              div.style.height = height + 4 + "px";
-              div.style.left = 0;
-              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
-              if (gutterDiv === null) {
-                gutterDiv = window.document.createElement("div");
-                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
-                gutterDiv.style.position = 'absolute';
-                const codeCell = window.document.getElementById(targetCell);
-                const gutter = codeCell.querySelector('.code-annotation-gutter');
-                gutter.appendChild(gutterDiv);
-              }
-              gutterDiv.style.top = top - 2 + "px";
-              gutterDiv.style.height = height + 4 + "px";
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
             }
+            placeBand(gutterDiv, el, lastEl);
             selectedAnnoteEl = annoteEl;
           }
         };
@@ -1198,6 +1341,9 @@ Dr Matthew Cooper
       }
     }
   });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
   </script>
 </div> <!-- /content -->
 

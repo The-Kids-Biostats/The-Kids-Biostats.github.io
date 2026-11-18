@@ -42,9 +42,9 @@ Here is the final plot we came up with. It shows the ratio of Youth (0-24 year o
 ::: callout-important
 ## Notes
 
--   The age groups selected need to be considered when interpretting the plot. Many people are productively working well before the age of 25 years, more so in certain countries? Likewise, being 70+ years of age in different countries may be characterised by different health and wellbeing profiles.
--   Some countries demographic profile will look very different in 2045 compared to 2010 (some near 2-fold (up and down) changes observed).
--   We're only \~15 months off being closer to 2045 than 20... I won't go there!
+- The age groups selected need to be considered when interpretting the plot. Many people are productively working well before the age of 25 years, more so in certain countries? Likewise, being 70+ years of age in different countries may be characterised by different health and wellbeing profiles.
+- Some countries demographic profile will look very different in 2045 compared to 2010 (some near 2-fold (up and down) changes observed).
+- We're only \~15 months off being closer to 2045 than 20... I won't go there!
 :::
 
 # Sourcing the data
@@ -127,11 +127,11 @@ plot_ids <- paste(plot_ids, collapse = ",")
 Not all the code is needed, but essentially what we're doing here is.
 
 1.  pulling a table of the indicators into a data frame
-    -   these are the variable names/IDs and we need to know the IDs for those particular variables/data we want
+    - these are the variable names/IDs and we need to know the IDs for those particular variables/data we want
 2.  pulling a table of the locations into a data frame
-    -   we want to request the data for a limited number of locations (countries) to reduce the size of the data request, so we also need to know the IDs for those countries
+    - we want to request the data for a limited number of locations (countries) to reduce the size of the data request, so we also need to know the IDs for those countries
 3.  pulling the current population size for all countries
-    -   a quick way to find the IDs for the larger countries, as I knew we wanted to explore some of the larger countries data
+    - a quick way to find the IDs for the larger countries, as I knew we wanted to explore some of the larger countries data
 4.  viewing (filtering, arranging etc) the population size data and creating a vector of the IDs (self explantory)
 
 ## Step 2: Running the API call
@@ -148,10 +148,10 @@ Note - we are not calculating the ratios from the population estimates, the rati
 
 I'm no API wizard, but I don't think this is too hard to follow! It is essentially a range of filtering criteria joined together with the `&` symbol.
 
--   `startYear=2010&endYear=2045` the window of years we would like `&`
--   `startAge=24&endAge=2569` these relate to the numerator and denominator boundaries we are interested in, there are different ratios available for different numerator and denominator boundaries and combinations `&`
--   `variants=4` we just want the median estimate, otherwise we would also get lower and upper bounds of the estimates `&`
--   `sexes=3` both sexes combined, otherwise we would get 3x the output (male, female, combined).
+- `startYear=2010&endYear=2045` the window of years we would like `&`
+- `startAge=24&endAge=2569` these relate to the numerator and denominator boundaries we are interested in, there are different ratios available for different numerator and denominator boundaries and combinations `&`
+- `variants=4` we just want the median estimate, otherwise we would also get lower and upper bounds of the estimates `&`
+- `sexes=3` both sexes combined, otherwise we would get 3x the output (male, female, combined).
 
 ```{r echo = T, eval = F}
 target = paste0("/data/indicators/",83,"/locations/",plot_ids,"?startYear=2010&endYear=2045&startAge=24&endAge=2569&variants=4&sexes=3&pagingInHeader=false&format=json")
@@ -175,8 +175,8 @@ So now we plot.
 
 First, a little bit of data tidying work was required:
 
--   select only the variables we need, filter down our country list, because we like to be nice to ggplot by only giving it what it needs
--   to add the country labels to the plot, we identify the `y-axis` height value for the last datapoint (2045) for each country
+- select only the variables we need, filter down our country list, because we like to be nice to ggplot by only giving it what it needs
+- to add the country labels to the plot, we identify the `y-axis` height value for the last datapoint (2045) for each country
 
 ```{r echo = T, eval = F}
 # Reduce the dataset
@@ -227,9 +227,9 @@ cp_f_4 <- dat_cdep_reduced |>
 ::: callout-important
 ## Notes
 
--   The plot is called `cp_f_4` because we generated four versions, increasingly revealing more information (Guess That Plot)
--   We `set.seed()` because we are using *(read, 'wrestling')* with `ggrepel` to place the labels, and we don't want them jumping around (even slightly) between plots.
--   `geom_label_repel()` is from the `ggrepel` package
+- The plot is called `cp_f_4` because we generated four versions, increasingly revealing more information (Guess That Plot)
+- We `set.seed()` because we are using *(read, 'wrestling')* with `ggrepel` to place the labels, and we don't want them jumping around (even slightly) between plots.
+- `geom_label_repel()` is from the `ggrepel` package
 :::
 
 The two plots (Youth + Older age) were joining together with `patchwork`.

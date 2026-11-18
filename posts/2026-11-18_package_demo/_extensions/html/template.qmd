@@ -1,0 +1,86 @@
+---
+title: "TheKidsBiostatsTemplate"
+subtitle: "A biostatistics report template"
+author:
+  name: "J Smith, Biostatistician"
+  affiliation:
+  - "The Kids Research Institute Australia, Perth, WA, Australia"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+title-block-banner: "#1F3B73"
+format:
+  html:
+    embed-resources: true
+    code-fold: true
+    toc: true
+    toc-location: left
+    html-table-processing: none
+    self-contained: true
+    mainfont: "Barlow"
+    include-in-header: 
+      text: |
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Barlow&display=swap');
+        </style>
+reference-location: margin 
+citation-location: margin 
+css: _extensions/html/styles.css
+editor_options: 
+  chunk_output_type: inline
+execute:
+  echo: false
+  warning: false
+  message: false
+  error: false
+callout-icon: false
+---
+
+```{r init, include = F}
+library(thekidsbiostats)
+```
+
+## Introduction
+
+### Project Summary
+
+A blurb describing the project, which team or individual is conducting the research
+
+### Research Question
+
+A succinct, specific research question to be answered in this report.
+
+::: {.callout-note collapse="true"}
+### Azure Blue Callout
+Use other callout presets for different colours:
+
+- **tip**: teal
+- **warning**: saffron:
+- **caution**: pumpkin
+- **important**: red (*should be used to indicate key information and collapse set to "false"*)
+:::
+
+## Data Summary
+
+Tables, explanatory plots, etc to examine the data prior to analysis.
+
+
+
+## Analysis
+
+```{r echo = T}
+mod <- thekidsbiostats::thekids_model(mtcars, y = "mpg", x = "cyl")
+```
+
+**Try out the "Insert Model Panel Tabs" addin with the mod object above!**
+
+## Supplementary Material
+
+
+## Reproducibility Information
+
+::: {.callout-note collapse="true"}
+## Click to expand and see Session Info
+```{r}
+sessionInfo()
+```
+:::
+
