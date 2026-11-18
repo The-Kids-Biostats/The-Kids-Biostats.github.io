@@ -37,39 +37,63 @@ callout-icon: false
 ---
 
 ```{r}
-#| include = F
+#| include: false
 library(thekidsbiostats)
 ```
 
 # Package Demo
 
+This document contains a walkthrough for using the [`thekidsbiostats` R package](https://github.com/The-Kids-Biostats/thekidsbiostats) to faciliate/standardise the common tasks performed in a typical statistical analysis from initialising a project to generating a formatted report.
+
 ## Step 0: Installing the Package
 
+First, run this code in an R session to install the package.
+
 ```{r}
-#| eval = F
+#| eval: false
+
 install.packages("thekidsbiostats", repos = "https://the-kids-biostats.r-universe.dev", dependencies = TRUE)
+```
+
+... or if you have the `remotes::` package installed.
+
+```{r}
+#| eval: false
+
+remotes::install_github("The-Kids-Biostats/thekidsbiostats")
+```
+
+
+<br>
+
+Now load the package into your R session
+
+```{r}
+#| eval: false
 
 library(thekidsbiostats)
 ```
 
 ## Step 1: Creating a Project
 
-There are two ways to create a new "project" (that is, a directory structure for use in either RStudio or Positron):
+There are two ways to create a new "project" (i.e. a directory structure for use in either RStudio or Positron):
 
-1.  Use the Shiny application, which features an interactive interface to create the project. Open the app from the Addins menu in RStudio, or by running the code below in the R console:
+1.  Use the Shiny app, which features an interactive interface to create a project. Open the app from the Addins menu in RStudio, or by running the code below in the R console:
 
 ```{r}
 #| eval: false
 
-create_project_addin()
+thekidsbiostats::create_project_addin()
 ```
 
-2.  Alternatively, you can bypass the interactive app and run the code below, changing parameters manually:
+<br>
+
+2.  Alternatively, you can bypass the interactive app and run the code below, entering the relevant parameters manually:
 
 ```{r}
 #| eval: false
 
-create_project(
+thekidsbiostats::create_project(
   project_name = "demo", # required
   path = "your/path/", # required
   folders = c("data", "admin", "scripts", "reports"), # optional
@@ -78,26 +102,43 @@ create_project(
 )
 ```
 
-If you have opted for `open_project = TRUE` (the default), a new window of either RStudio or Positron will open with your new project ready for you.
+<br>
 
-## Step 2: Create a report template
 
-If you chose not to create a report template in the project creation stage, you can also do so manually. In the same way as Create Project, this can be done in two ways:
+::: {.callout-tip collapse="true"}
+## open_project = TRUE
 
-1.  With the Shiny application, found either in the addins menu or by running the code below in the console:
+If you have opted for `open_project = TRUE` (the default), a new RStudio (or Positron) window will automatically open with your new project ready for you.
+
+:::
+
+
+<br>
+
+## Step 2: Create a Report Template
+
+If you chose not to create a report template in the previous project creation stage, you can also do so manually. In the same way as *Create Project*, this can be done in two ways:
+
+::: {.column-margin}
+Remember to run `library(thekidsbiostats)` if you have started a new R session.
+:::
+
+1. With the Shiny app, found either in the Addins menu or by running the code below in the console:
 
 ```{r}
 #| eval: false
 
-create_template_addin()
+thekidsbiostats::create_template_addin()
 ```
 
-2.  Directly in the console, changing parameters manually.
+<br>
+
+2. Directly in the console, entering the relevant parameters manually.
 
 ```{r}
 #| eval: false
 
-create_template(
+thekidsbiostats::create_template(
   file_name = "my_report", # requried
   directory = "reports", # optional
   ext_name = "html", # optional
@@ -112,13 +153,21 @@ create_template(
 
 This creates a ready-to-go Quarto document for your project. Try pressing "Render" in RStudio, or "Preview" in Positron. The folder that contains your Quarto document should also now contain an HTML document, complete with The Kids branding and the title, subtitle, author(s) and affiliation(s) you specified, as well as some precompleted text (which can easily be changed).
 
+> Everything we do from now on will be entered into R chunks within your Quarto document (`xyz.qmd`).
+
+<br>
+
 ## Step 3: Load Data
 
-Let's go ahead and load some data. We will do this within our Quarto document for now.
 
-You'll notice there is already an R code 'chunk' where we loaded `thekidsbiostats`. Beneath that, let's load some data with the following code:
+<br>
+
+Let's go ahead and load some data.
+
+You'll notice there is already an R code 'chunk' where we loaded `thekidsbiostats`. Beneath that, let's load some example data by inserting and running the following code:
 
 ```{r}
+#| echo: fenced
 
 data(patients_raw, package = 'thekidsbiostats')
 
@@ -127,22 +176,26 @@ data(patients_raw, package = 'thekidsbiostats')
 Let's inspect the data to see what we're working with.
 
 ```{r}
-#| eval = F
+#| eval: false
 
 View(patients_raw)
 
 ```
 
-## Step 4: Clean Column Names
+<br>
 
-Column names like `Height (cm)` or `Diabetes (Y/N)` are a hassle to work with in R, as we need to surround them with backticks (\`s) each time we reference them due to the spaces and special characters. However, they are visually nicer than `patient_id` and `height_cm` when viewed in a plot or table. How can we get the best of both worlds?
+## Step 4: Cleaning Column Names
+
+Column names like `Height (cm)` or `Diabetes (Y/N)` are all too common in real-world datasets, but are a hassle to work with in R. We would need to surround them with backticks (\`s) each time we reference them due to the spaces and special characters. However, they are visually nicer than `patient_id` and `height_cm` when viewed in a plot or table. 
+
+> How can we get the best of both worlds?
 
 The answer lies with assigning **label** attributes to each column, which is made easy with the functions in `thekidsbiostats`:
 
 1.  `make_column_dict`
 2.  `update_columns` (and `relabel_columns`)
 
-Let's start with creating a *column dictionary* that will be referenced to automatically rename and give labels to our dataset. Run this in the console:
+Let's start with creating a *column dictionary* that will be referenced when renaming and giving labels to our dataset. Run this in the R console:
 
 ```{r}
 #| eval: true
@@ -182,15 +235,17 @@ Each line specifies *three* important values for each variable:
 1.  `old`: The original ("old") name in the dataset
 2.  `new`: The "new: name we want to replace it with.
 
-- This is automatically generated for each variable, replacing whitespace with underscores and removing special characters. This may be sufficient in many cases, but we'll manually adjust some shortly.
+  - Automatically generated for each variable, replacing whitespace with underscores and removing special characters. This may be sufficient in many cases, but we'll manually adjust some ourselves.
 
 3.  `label`: A place to give the variables a 'human-readable' label for displaying in tables and plots. More often than not these need to be manually entered.
 
-- As an aside, AI is very useful here for performing a first pass at assigning the labels.
+  - As an aside, AI is a very useful tool here for performing a first pass at assigning the labels.
 
 Let's write some `new` variable names and give a `label` to each one.
 
 ```{r}
+#| echo: fenced
+
 dict_patients_raw <- tribble(
   ~old, ~new, ~label,
   "Patient ID", "patient_id", "Patient ID",
@@ -209,27 +264,43 @@ dict_patients_raw <- tribble(
   "SBP_baseline_mmHg", "sbp_baseline", "SBP Baseline (mmHg)",
   "DBP Baseline (mmHg)", "dbp_baseline", "DBP Baseline (mmHg)",
   "sbp.wk12", "sbp_week12", "SBP 12w (mmHg)",
-  "DBP_Week12", "dbp_week12", "HBP 12w (mmHg)",
+  "DBP_Week12", "dbp_week12", "DBP 12w (mmHg)",
 ) 
 ```
 
 Let's run that code to store the dictionary, and then create a new chunk.
 
-In the new chunk, simply do the following to update the columns:
+<br>
+
+In the new R chunk, simply run the following to update the columns:
 
 ```{r}
-patients_clean <- update_columns(patients_raw, dict_patients_raw)
+#| echo: fenced
+
+patients_clean <- update_columns(data=patients_raw, dict=dict_patients_raw)
 ```
 
 Now, if you `View(patients_clean)`, you'll notice that the new column names have been applied. If you are in RStudio, you'll also notice the labels are also apparent in the data viewer. In Positron, you must hover over a variable name to see its label.
 
 In any case, the data is now ready for some preliminary analysis.
 
+<br>
+
 ## Step 5: Creating a Table.
 
-We'd like to create a classic "Table 1" where we investigate our patient demographics by treatment group. We'll use `gtsummary::tbl_summary` for this, before applying our own style to the table.
+We'd now like to generate a classic "Table 1" to inspect our patient demographics by treatment group. We'll use `gtsummary::tbl_summary()` for this, before applying our own stylistic adjustments to the table.
+
+
+::: {.column-margin}
+
+Notice that the `tbl_summary` function worked out of the gate, we did not need to load the `gtsummary` package using `library(gtsummary)`.
+
+**This is because `thekidsbiostats` loads many of the packages we use on a day-to-day basis, including `tidyverse`, `gtsummary` and `flextable`!**
+
+:::
 
 ```{r}
+#| echo: fenced
 
 table1 <- tbl_summary(
   patients_clean,
@@ -242,31 +313,29 @@ table1 <- tbl_summary(
 table1
 ```
 
-<br>
 
-::: {.callout-note collapse="true"}
-## Note
-
-Notice that the `tbl_summary` function worked out of the gate, we did not need to load the `gtsummary` package using `library(gtsummary)`.
-
-**This is because `thekidsbiostats` loads many of the packages we use on a day-to-day basis, including `tidyverse`, `gtsummary` and `flextable`!**
-:::
-
-The table above looks *fine*, but we want to make it consistent with the aesthetic of the rest of the report in terms of fonts, colours and minimalism. This can be done in one simple command:
+The table above looks *fine*, but ultimately we want to make it consistent with the aesthetic of the rest of the report in terms of fonts, colours and minimalism. This can be done in one simple command:
 
 ```{r}
+#| echo: fenced
+
 thekids_table(table1)
 ```
 
-This outputs a custom `flextable` object that already looks great, and we can modify further if we wish with any `flextable` function.
 
-Additionally, some common changes are also possible through the `modify_labels()` function which ships with `thekidsbiostats`.
+The output is itself a `flextable` object that already looks great, but we can modify it further if we wish with any `flextable::` function.
 
-For example, perhaps we want to add horizontal lines between variables to more easily distinguish them from each other.
+<br>
+
+Additionally, some common changes to the *row labels* are also possible through the `modify_labels()` function which ships with `thekidsbiostats`.
+
+For example, perhaps we want to add horizontal lines between variables and bold them to more easily distinguish them from each other and their sublevels.
 
 ```{r}
+#| echo: fenced
+
 thekids_table(table1) |> 
-  modify_labels(hline = T)
+  modify_labels(hline = T, bold = T)
 ```
 
 Some customisation is also possible within `thekids_table()` using various parameters. Let's use some of these parameters to:
@@ -279,6 +348,8 @@ Some customisation is also possible within `thekids_table()` using various param
 6.  Modify the row labels to be bolded and be separated with a horizontal line (hline)
 
 ```{r}
+#| echo: fenced
+
 thekids_table(
   table1,
   colour = "saffron",
@@ -294,13 +365,19 @@ thekids_table(
 Note that the variable names are labelled automatically thanks to our hard work above using `update_columns`!
 :::
 
+<br>
+
 ## Step 6: Creating a Plot
 
-Let's suppose we wish to compare the Systolic Blood Pressure at the 12-week follow up between treatment groups. We might want to do this with a favourite combination of ours; a jitter plot on top of a boxplot on top of a violin plot.
+Let's suppose we wish to compare the Systolic Blood Pressure at the 12-week follow up between treatment groups. We might want to do this with a favourite combination of ours: **a jitter plot on top of a boxplot on top of a violin plot.**
 
 Let's do this as basically as possible in a new chunk:
 
 ```{r}
+#| fig.height: 4
+#| fig.width: 6
+#| echo: fenced
+
 plot1 <- ggplot(aes(x = treatment, y = sbp_week12, fill = treatment), data = patients_clean) +
   geom_violin(alpha = 0.5, trim = FALSE) +
   geom_boxplot(width = 0.3, alpha = 0.7) +
@@ -316,6 +393,8 @@ Let's instantly give the plot a The Kids' aesthetic using a couple of functions 
 ```{r}
 #| fig.height: 4
 #| fig.width: 6
+#| echo: fenced
+
 
 plot1 +
   thekids_theme(base_size = 12) +
@@ -330,16 +409,31 @@ Quarto provides two particular features that we can use to draw attention:
 1.  Callouts
 2.  Column Margins
 
-We have seen both already in this guide.
+We have seen both being used troughout this guide already.
+
+
+::: {.callout-tip}
+## Callouts
 
 A **callout** is a highlighted box that sits within the flow of the text. It is ideal for notes, tips, warnings, or a key finding you don't want the reader to miss. Callouts can also be collapsed (`collapse="true"`) so that supporting detail doesn't clutter the page.
 
-A **column margin** places text in the margin beside the main body of the report. This is perfect for short asides, such as a caveat or a pointer to the right part of a figure, without interrupting the main narrative.
+:::
 
-You could type the syntax for either by hand, but `thekidsbiostats` ships with addins that insert it for you. In Positron, open the Command Palette (Ctrl-Shift-P) and search for the addin by name; in RStudio they are found in the Addins menu. You can also call them from the console:
+::: {.column-margin}
+
+A **column-margin** places text in the margin beside the main body of the report. This is perfect for short asides, such as a caveat or a pointer to the right part of a figure, without interrupting the main narrative.
+
+:::
+
+
+<br><br>
+
+
+You could type the syntax for either by hand, but `thekidsbiostats` ships with shortcut addins that insert these for you. In Positron, open the Command Palette (Ctrl+Shift+P) and search for the addin by name; in RStudio they are found in the Addins menu. You can also call them from the console:
 
 ```{r}
-#| eval = F
+#| eval: false
+
 insert_callout()
 insert_callout_2()
 insert_margin()
@@ -347,25 +441,31 @@ insert_margin()
 
 Place your cursor where you'd like the new element to go in your Quarto document, run the addin, and the template code is inserted at the cursor, ready for you to fill in.
 
-For example, let's draw attention to the 10 mg/day group with a callout:
+For example, let's draw attention to the 10 mg/day group with a callout, add the following to your Quarto document:
 
+```markdown
 ::: callout-note
 ## Lower blood pressure at 10 mg/day
 
 At 12 weeks, systolic blood pressure appears lower in the 10 mg/day group than in the other two groups.
 :::
+```
 
 And add a more subtle aside in the margin:
 
+```markdown
 ::: column-margin
 This is a descriptive impression from the plot only; no formal comparison has been made yet.
 :::
+```
 
-::: {.callout-tip collapse="true"}
+::: {.callout-tip collapse="false"}
 ## Tip
 
-Callouts come in several types (`note`, `tip`, `warning`, `important` and `caution`) which determine their colour.
+Callouts come in several types (`note`, `tip`, `warning`, `important` and `caution`) which determines their colour.
 :::
+
+<br>
 
 ### Choosing your own colours
 
