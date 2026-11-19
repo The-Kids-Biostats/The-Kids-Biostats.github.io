@@ -1,10 +1,11 @@
 ---
-title: "thekidsbiostats Package Demo: An interactive tour of the key functions of the package"
+title: "thekidsbiostats Package Demo: An interactive tour of the flagship functions"
 author:
   name: "Biostats Team"
   affiliation:
   - "The Kids Research Institute Australia, Perth, WA, Australia"
 date: "2026-11-19"
+image: images/thekidsbiostats.png
 categories:
     - R
     - Package
@@ -25,7 +26,6 @@ format:
         </style>
 reference-location: margin 
 citation-location: margin 
-css: _extensions/html/styles.css
 editor_options: 
   chunk_output_type: inline
 execute:
@@ -62,7 +62,6 @@ install.packages("thekidsbiostats", repos = "https://the-kids-biostats.r-univers
 
 remotes::install_github("The-Kids-Biostats/thekidsbiostats")
 ```
-
 
 <br>
 
@@ -104,14 +103,11 @@ thekidsbiostats::create_project(
 
 <br>
 
-
 ::: {.callout-tip collapse="true"}
 ## open_project = TRUE
 
 If you have opted for `open_project = TRUE` (the default), a new RStudio (or Positron) window will automatically open with your new project ready for you.
-
 :::
-
 
 <br>
 
@@ -119,11 +115,11 @@ If you have opted for `open_project = TRUE` (the default), a new RStudio (or Pos
 
 If you chose not to create a report template in the previous project creation stage, you can also do so manually. In the same way as *Create Project*, this can be done in two ways:
 
-::: {.column-margin}
+::: column-margin
 Remember to run `library(thekidsbiostats)` if you have started a new R session.
 :::
 
-1. With the Shiny app, found either in the Addins menu or by running the code below in the console:
+1.  With the Shiny app, found either in the Addins menu or by running the code below in the console:
 
 ```{r}
 #| eval: false
@@ -133,7 +129,7 @@ thekidsbiostats::create_template_addin()
 
 <br>
 
-2. Directly in the console, entering the relevant parameters manually.
+2.  Directly in the console, entering the relevant parameters manually.
 
 ```{r}
 #| eval: false
@@ -158,7 +154,6 @@ This creates a ready-to-go Quarto document for your project. Try pressing "Rende
 <br>
 
 ## Step 3: Load Data
-
 
 <br>
 
@@ -186,7 +181,7 @@ View(patients_raw)
 
 ## Step 4: Cleaning Column Names
 
-Column names like `Height (cm)` or `Diabetes (Y/N)` are all too common in real-world datasets, but are a hassle to work with in R. We would need to surround them with backticks (\`s) each time we reference them due to the spaces and special characters. However, they are visually nicer than `patient_id` and `height_cm` when viewed in a plot or table. 
+Column names like `Height (cm)` or `Diabetes (Y/N)` are all too common in real-world datasets, but are a hassle to work with in R. We would need to surround them with backticks (\`s) each time we reference them due to the spaces and special characters. However, they are visually nicer than `patient_id` and `height_cm` when viewed in a plot or table.
 
 > How can we get the best of both worlds?
 
@@ -235,11 +230,11 @@ Each line specifies *three* important values for each variable:
 1.  `old`: The original ("old") name in the dataset
 2.  `new`: The "new: name we want to replace it with.
 
-  - Automatically generated for each variable, replacing whitespace with underscores and removing special characters. This may be sufficient in many cases, but we'll manually adjust some ourselves.
+- Automatically generated for each variable, replacing whitespace with underscores and removing special characters. This may be sufficient in many cases, but we'll manually adjust some ourselves.
 
 3.  `label`: A place to give the variables a 'human-readable' label for displaying in tables and plots. More often than not these need to be manually entered.
 
-  - As an aside, AI is a very useful tool here for performing a first pass at assigning the labels.
+- As an aside, AI is a very useful tool here for performing a first pass at assigning the labels.
 
 Let's write some `new` variable names and give a `label` to each one.
 
@@ -290,13 +285,10 @@ In any case, the data is now ready for some preliminary analysis.
 
 We'd now like to generate a classic "Table 1" to inspect our patient demographics by treatment group. We'll use `gtsummary::tbl_summary()` for this, before applying our own stylistic adjustments to the table.
 
-
-::: {.column-margin}
-
+::: column-margin
 Notice that the `tbl_summary` function worked out of the gate, we did not need to load the `gtsummary` package using `library(gtsummary)`.
 
 **This is because `thekidsbiostats` loads many of the packages we use on a day-to-day basis, including `tidyverse`, `gtsummary` and `flextable`!**
-
 :::
 
 ```{r}
@@ -313,7 +305,6 @@ table1 <- tbl_summary(
 table1
 ```
 
-
 The table above looks *fine*, but ultimately we want to make it consistent with the aesthetic of the rest of the report in terms of fonts, colours and minimalism. This can be done in one simple command:
 
 ```{r}
@@ -321,7 +312,6 @@ The table above looks *fine*, but ultimately we want to make it consistent with 
 
 thekids_table(table1)
 ```
-
 
 The output is itself a `flextable` object that already looks great, but we can modify it further if we wish with any `flextable::` function.
 
@@ -411,23 +401,17 @@ Quarto provides two particular features that we can use to draw attention:
 
 We have seen both being used troughout this guide already.
 
-
-::: {.callout-tip}
+::: callout-tip
 ## Callouts
 
 A **callout** is a highlighted box that sits within the flow of the text. It is ideal for notes, tips, warnings, or a key finding you don't want the reader to miss. Callouts can also be collapsed (`collapse="true"`) so that supporting detail doesn't clutter the page.
-
 :::
 
-::: {.column-margin}
-
+::: column-margin
 A **column-margin** places text in the margin beside the main body of the report. This is perfect for short asides, such as a caveat or a pointer to the right part of a figure, without interrupting the main narrative.
-
 :::
-
 
 <br><br>
-
 
 You could type the syntax for either by hand, but `thekidsbiostats` ships with shortcut addins that insert these for you. In Positron, open the Command Palette (Ctrl+Shift+P) and search for the addin by name; in RStudio they are found in the Addins menu. You can also call them from the console:
 
@@ -443,7 +427,7 @@ Place your cursor where you'd like the new element to go in your Quarto document
 
 For example, let's draw attention to the 10 mg/day group with a callout, add the following to your Quarto document:
 
-```markdown
+``` markdown
 ::: callout-note
 ## Lower blood pressure at 10 mg/day
 
@@ -453,7 +437,7 @@ At 12 weeks, systolic blood pressure appears lower in the 10 mg/day group than i
 
 And add a more subtle aside in the margin:
 
-```markdown
+``` markdown
 ::: column-margin
 This is a descriptive impression from the plot only; no formal comparison has been made yet.
 :::
