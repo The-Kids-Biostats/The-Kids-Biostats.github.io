@@ -63,6 +63,14 @@ install.packages("thekidsbiostats", repos = "https://the-kids-biostats.r-univers
 remotes::install_github("The-Kids-Biostats/thekidsbiostats")
 ```
 
+We also need to ensure Barlow is installed such that R can see it
+
+```{r}
+#| eval: false
+#| 
+extrafont::font_import()
+```
+
 <br>
 
 Now load the package into your R session
@@ -520,13 +528,13 @@ round_vec(mean(patients_clean$sbp_week12), digits = 1)
 
 Let's suppose we want to run a model comparing SBP at follow-up (week 12) by treatment, adjusted for baseline SBP (ANCOVA framework to adjust for baseline imbalance) and BMI category (the variable we just created with `fct_case_when`).
 
-We define the model as usual here:
+We can define the model as usual here:
 
 ```{r}
 mod <- lm(sbp_week12 ~ treatment + sbp_baseline + bmi_cat, data = patients_model)
 ```
 
-Then we can run `thekids_model_output` to create a selection of ready-to-go tables and plots to describe the model.
+Then we can run `thekids_model_output()` to create a selection of ready-to-go tables and plots to describe the model.
 
 ```{r}
 mod_output <- thekids_model_output(mod, by = "treatment")
